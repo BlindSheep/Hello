@@ -133,7 +133,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         //Дата объявления
         holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.get(position).date_pub));
         //Текст объявления
-        holder.boardText.setText(boardItem.get(position).seo_desc);
+        holder.boardText.setText(boardItem.get(position).content);
         // Первая фотография
         DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
         int width = displaymetrics.widthPixels;

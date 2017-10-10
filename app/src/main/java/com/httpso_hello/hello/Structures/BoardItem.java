@@ -15,7 +15,7 @@ public class BoardItem {
     public String seo_desc;
     public Image avatar;
     public boolean is_voted;
-
+    public String content;
 
     public BoardItem(){
 
