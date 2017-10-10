@@ -1,0 +1,179 @@
+<resources>
+    <string name="app_name">Hello</string>
+    <string name="nav_header_title">Hello - Портал знакомств</string>
+    <string name="nav_header_description">Макс, 24 года</string>
+
+
+    <string name="nav_profile">Мой профиль</string>
+    <string name="nav_messages">Сообщения</string>
+    <string name="nav_frinds">Друзья</string>
+    <string name="nav_simpatii">Симпатии</string>
+    <string name="nav_guests">Гости</string>
+    <string name="nav_notises">Уведомления</string>
+
+    <string name="nav_datting">Знакомства</string>
+    <string name="nav_looking_for">Поиск</string>
+    <string name="nav_board">Объявления</string>
+    <string name="nav_servises">Услуги</string>
+
+    <string name="nav_edit">Настройки</string>
+    <string name="nav_edit_profile">Редактировать профиль</string>
+    <string name="nav_exit">Выход</string>
+
+
+    <string name="friends_all">Все друзья</string>
+    <string name="friends_online">Онлайн</string>
+    <string name="edit_profile">Редактировать профиль</string>
+
+
+    <string name="profile_title">Мой профиль</string>
+    <string name="messages_title">Сообщения</string>
+    <string name="notises_title">Уведомления</string>
+    <string name="guests_title">Гости</string>
+    <string name="friends_title">Друзья</string>
+    <string name="datting_title">Знакомтсва</string>
+    <string name="board_title">Объявления</string>
+    <string name="edit_profile_title">Редактировать профиль</string>
+    <string name="registration_title">Регистрация</string>
+    <string name="exit_title">Выход из профиля</string>
+    <string name="register_title">Регистрация</string>
+    <string name="login_title">Вход</string>
+
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+
+    <string name="hint_name">Имя</string>
+    <string name="btn_register">Готово</string>
+    <string name="btn_link_to_login">Есть аккаунт? Вход</string>
+    <string name="title_activity_notises">Уведомления</string>
+    <string name="title_activity_friends">Все друзья</string>
+    <string name="title_activity_guests">Гости</string>
+    <string name="title_activity_datting">DattingActivity</string>
+    <string name="title_activity_edit">EditActivity</string>
+    <string name="title_activity_exit">ExitActivity</string>
+    <string name="title_activity_fullscreen_photo">Фотография</string>
+    <string name="title_activity_fullscreen">Фотографии</string>
+    <string name="title_activity_like">Понравилось</string>
+    <string name="title_activity_my_profile">Мой профиль</string>
+    <string name="title_activity_simpation">Вы понравились</string>
+
+    <string name="hint_email">E-mail</string>
+    <string name="hint_password">Пароль</string>
+    <string name="btn_login">Войти</string>
+    <string name="btn_link_to_register">Нет аккаунта? Регистрация</string>
+    <string name="logout">Вы уверены, что хотите выйти из аккаунта?</string>
+    <string name="btn_logout">Выйти</string>
+    <string name="title_activity_messages">Сообщения</string>
+
+    <string name="action_settings">Настройки</string>
+    <string name="title_activity_up_anket">Поднять анкету</string>
+    <string name="title_activity_settings">Настройки</string>
+    <string name="title_activity_chat"> Контактное лицо</string>
+    <string name="title_activity_servises">Услуги</string>
+    <string name="title_activity_billing">Пополнить кошелек</string>
+    <string name="input_your_message">Напишите сообщение</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_activity_board">Объявления</string>
+    <string name="title_activity_profile"> </string>
+    <string name="title_activity_search">Поиск</string>
+    <string name="title_activity_add_board">Новое объявление</string>
+
+    <string-array name="ageFrom">
+        <item> </item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>33</item>
+        <item>34</item>
+        <item>35</item>
+        <item>36</item>
+        <item>37</item>
+        <item>38</item>
+        <item>39</item>
+        <item>40</item>
+        <item>41</item>
+        <item>42</item>
+        <item>43</item>
+        <item>44</item>
+        <item>45</item>
+        <item>46</item>
+        <item>47</item>
+        <item>48</item>
+        <item>49</item>
+        <item>50</item>
+        <item>51</item>
+        <item>52</item>
+        <item>53</item>
+        <item>54</item>
+        <item>55</item>
+        <item>56</item>
+        <item>57</item>
+        <item>58</item>
+        <item>59</item>
+        <item>60</item>
+        <item>61</item>
+        <item>62</item>
+        <item>63</item>
+        <item>64</item>
+        <item>65</item>
+        <item>66</item>
+        <item>67</item>
+        <item>68</item>
+        <item>69</item>
+        <item>70</item>
+        <item>71</item>
+        <item>72</item>
+        <item>73</item>
+        <item>74</item>
+        <item>75</item>
+        <item>76</item>
+        <item>77</item>
+        <item>78</item>
+        <item>79</item>
+        <item>80</item>
+
+    </string-array>
+
+    <string-array name="region">
+        <item>Кировская обл.</item>
+    </string-array>
+
+    <string-array name="city">
+        <item>Киров</item>
+    </string-array>
+
+</resources>

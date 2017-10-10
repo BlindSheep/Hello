@@ -1,0 +1,57 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/main_black_color_hello"
+    tools:context="com.httpso_hello.hello.activity.FullscreenPhotoActivity">
+
+    <!-- The primary full-screen view. This can be replaced with whatever view
+         is needed to present your content, e.g. VideoView, SurfaceView,
+         TextureView, etc. -->
+    <com.httpso_hello.hello.helper.HackyViewPager
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+            <ImageButton
+                android:id="@+id/like_button"
+                style="?metaButtonBarButtonStyle"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center"
+                android:backgroundTint="@color/main_grey_color_hello"
+                android:background="@mipmap/ic_action_favorite"/>
+
+            <TextView
+                android:id="@+id/like_string"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="Понравилось 3 людям"
+                android:textSize="20dp"
+                android:textColor="@color/main_white_color_hello" />
+
+        </LinearLayout>
+    </FrameLayout>
+
+</FrameLayout>

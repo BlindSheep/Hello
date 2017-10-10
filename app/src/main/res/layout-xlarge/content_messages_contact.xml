@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="63dp"
+        android:layout_height="58dp"
+        android:adjustViewBounds="false"
+        app:srcCompat="@mipmap/ic_action_accept" />
+
+    <TextView
+        android:id="@+id/lastMessage"
+        android:layout_width="252dp"
+        android:layout_height="61dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/contactNickname"
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="1"
+        android:text="TextView" />
+
+</TableLayout>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zalivon"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.httpso_hello.hello.activity.AddBoardActivity"
+    tools:showIn="@layout/app_bar_add_board">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginRight="6dp"
+        android:layout_marginLeft="6dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/board">
+
+        <EditText
+            android:id="@+id/boardText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:layout_margin="20dp"
+            android:hint="Текст объявления"
+            android:inputType="textMultiLine"/>
+
+        <TextView
+            android:id="@+id/boardPhotos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:textColor="@color/main_blue_color_hello"
+            android:textSize="15sp"
+            android:text="Добавить фотографии"/>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/boadrForImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:orientation="horizontal">
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="end"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/boardCancel"
+                android:layout_marginRight="30dp"
+                android:textColor="@color/main_blue_color_hello"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="Отмена" />
+
+            <TextView
+                android:id="@+id/boardSave"
+                android:layout_marginRight="20dp"
+                android:textColor="@color/main_white_color_hello"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:paddingLeft="30dp"
+                android:paddingRight="30dp"
+                android:background="@color/main_blue_color_hello"
+                android:text="Сохранить" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

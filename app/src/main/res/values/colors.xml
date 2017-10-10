@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2a4a84</color>
+    <color name="colorPrimaryDark">#001b4d</color>
+    <color name="colorAccent">#1f4b9a</color>
+    <color name="bg_login">#1f4b9a</color>
+    <color name="input_login">#535353</color>
+    <color name="input_login_hint">#535353</color>
+    <color name="white">#ffffff</color>
+    <color name="btn_login_bg">#c7c7c7</color>
+    <color name="btn_login">#1f4b9a</color>
+    <color name="btn_logut_bg">#1f4b9a</color>
+    <color name="main_blue_color_hello">#2a4a84</color>
+    <color name="main_grey_color_hello">#c7c7c7</color>
+    <color name="main_black_color_hello">#000000</color>
+    <color name="main_blue_light_color_hello">#0076af</color>
+    <color name="main_blue_lightest_color_hello">#beeaff</color>
+    <color name="main_white_color_hello">#ffffff</color>
+    <color name="main_white_grey_color_hello">#f2f2f2</color>
+    <color name="main_dark_grey_color_hello">#8f8f8f</color>
+    <color name="main_darkest_grey_color_hello">#696969</color>
+    <color name="main_red_color_hello">#ff0000</color>
+    <color name="main_green_color_hello">#06cf00</color>
+    <color name="main_polublack">#56000000</color>
+    <color name="main_polublue">#2a0043</color>
+    <color name="zalivon">#e5ebec</color>
+
+    <color name="black_overlay">#66000000</color>
+</resources>
+

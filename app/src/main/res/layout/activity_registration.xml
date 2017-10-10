@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="30dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.httpso_hello.hello.activity.RegistrationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@mipmap/ic_action_user"
+            android:backgroundTint="@color/main_dark_grey_color_hello"/>
+
+        <EditText
+            android:id="@+id/inputNameForReg"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:inputType="textCapWords"
+            android:layout_marginLeft="30dp"
+            android:hint="Ваше имя"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@mipmap/ic_action_mail"
+            android:backgroundTint="@color/main_dark_grey_color_hello"/>
+
+        <EditText
+            android:id="@+id/inputEmailForReg"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:inputType="textEmailAddress"
+            android:layout_marginLeft="30dp"
+            android:hint="Электронная почта"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@mipmap/ic_action_about"
+            android:backgroundTint="@color/main_dark_grey_color_hello"/>
+
+        <EditText
+            android:id="@+id/inputPasswordForReg1"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:inputType="textPassword"
+            android:layout_marginLeft="30dp"
+            android:hint="Пароль"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:background="@mipmap/ic_action_about"
+            android:backgroundTint="@color/main_dark_grey_color_hello"/>
+
+        <EditText
+            android:id="@+id/inputPasswordForReg2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:inputType="textPassword"
+            android:layout_marginLeft="30dp"
+            android:hint="Повторите пароль"/>
+
+    </LinearLayout>
+
+    <CheckBox
+        android:id="@+id/checkBoxPrivatePolice"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:text="Даю свое согласие на обработку персональных данных"/>
+
+    <TextView
+        android:id="@+id/btnForReg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:layout_marginTop="30dp"
+        android:textColor="@color/main_red_color_hello"
+        android:gravity="end"
+        android:text="ЗАРЕГИСТРИРОВАТЬСЯ"/>
+
+    <TextView
+        android:id="@+id/btnLinkToEnter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:textColor="@color/main_blue_color_hello"
+        android:text="Есть аккаунт? Войдите"/>
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBarRegistration"
+        style="@android:style/Widget.ProgressBar.Inverse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

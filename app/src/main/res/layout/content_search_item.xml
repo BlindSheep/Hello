@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/listUsersItem"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:background="@drawable/board"
+    android:elevation="1.5dp"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/search_profile_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"/>
+
+        <ImageView
+            android:id="@+id/isOnline"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginRight="7dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/rounded_button"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/search_profile_nickname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:text="Имя"
+            android:maxLines="1"
+            android:textColor="@color/main_blue_color_hello" />
+
+        <TextView
+            android:id="@+id/search_profile_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Город"
+            android:maxLines="1"
+            android:layout_alignTop="@+id/guest_profile_nickname"
+            android:textColor="@color/main_blue_color_hello" />
+
+    </RelativeLayout>
+
+</LinearLayout>

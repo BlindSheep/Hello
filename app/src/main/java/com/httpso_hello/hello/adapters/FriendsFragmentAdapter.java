@@ -1,0 +1,128 @@
+package com.httpso_hello.hello.adapters;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.FriendItem;
+import com.httpso_hello.hello.Structures.Image;
+import com.httpso_hello.hello.activity.FriendsActivity;
+import com.httpso_hello.hello.activity.ProfileActivity;
+import com.httpso_hello.hello.helper.CircularTransformation;
+import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.ConverterDate;
+import com.httpso_hello.hello.helper.Friend;
+import com.httpso_hello.hello.helper.Settings;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+
+/**
+ * Created by mixir on 23.08.2017.
+ */
+
+public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
+
+    private ArrayList<FriendItem> friends;
+    private final Activity context;
+    private boolean isRequests;
+    private Settings stgs;
+
+    public FriendsFragmentAdapter(Activity context, ArrayList<FriendItem> friends, boolean isRequests) {
+        super(context, R.layout.content_friends, friends);
+        this.friends = friends;
+        this.context = context;
+        this.stgs = new Settings(getContext());
+        this.isRequests = isRequests;
+    }
+
+    private class ViewHolder {
+        public ImageView userAvatarFriend;
+        public TextView userNicknameFriend;
+        public TextView userInfoFriend;
+        public ImageView acceptRequestInFriend;
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        final FriendsFragmentAdapter.ViewHolder holder;
+        View rowView = convertView;
+        if (rowView == null) {
+            LayoutInflater inflater = context.getLayoutInflater();
+            rowView = inflater.inflate(R.layout.content_friends_item, null, true);
+            holder = new FriendsFragmentAdapter.ViewHolder();
+            holder.userAvatarFriend = (ImageView) rowView.findViewById(R.id.userAvatarFriend);
+            holder.userNicknameFriend = (TextView) rowView.findViewById(R.id.userNicknameFriend);
+            holder.userInfoFriend = (TextView) rowView.findViewById(R.id.userInfoFriend);
+            holder.acceptRequestInFriend = (ImageView) rowView.findViewById(R.id.acceptRequestInFriend);
+            rowView.setTag(holder);
+        } else {
+            holder = (FriendsFragmentAdapter.ViewHolder) rowView.getTag();
+        }
+
+        final FriendItem friend = this.friends.get(position);
+
+        //Устанавливаем аватар
+        if(friend.avatar != null) {
+            Picasso
+                    .with(getContext())
+                    .load(Constant.upload + friend.avatar.micro)
+                    .transform(new CircularTransformation(0))
+                    .into(holder.userAvatarFriend);
+        }
+
+        //Устанавливаем имя
+        holder.userNicknameFriend.setText(friend.nickname);
+
+        //Устанавливаем инфу о юзере
+        if ((friend.birth_date != null) && (friend.city_cache != null)) holder.userInfoFriend.setText(ConverterDate.convertDateToAge(friend.birth_date) + ", " + friend.city_cache);
+        else if (friend.birth_date != null) holder.userInfoFriend.setText(ConverterDate.convertDateToAge(friend.birth_date));
+        else if (friend.city_cache != null) holder.userInfoFriend.setText(friend.city_cache);
+        else holder.userInfoFriend.setText("");
+
+        //Кнопка принять заявку
+        if (isRequests) holder.acceptRequestInFriend.setVisibility(View.VISIBLE);
+        if (isRequests) holder.acceptRequestInFriend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Friend.getInstance(getContext()).acceptFriend(friend.id, new Friend.AcceptFriendCallback() {
+                    @Override
+                    public void onSuccess() {
+                        FriendsActivity FA = ((FriendsActivity) getContext());
+                        Intent intent = new Intent(getContext(), FriendsActivity.class);
+                        intent.putExtra("profile_id", 0);
+                        FA.startActivity(intent);
+                        FA.finish();
+                        Toast.makeText(getContext(), friend.nickname + " теперь Ваш друг", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        Toast.makeText(getContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onInternetError() {
+                        Toast.makeText(getContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+        });
+
+
+        return rowView;
+
+    }
+}
