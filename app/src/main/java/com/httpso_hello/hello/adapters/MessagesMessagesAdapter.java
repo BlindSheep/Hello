@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -70,6 +71,10 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         public ProgressBar progressPhoto1;
         public ProgressBar progressPhoto2;
         public ProgressBar progressPhoto3;
+        public LinearLayout LLchat;
+        public TextView cloud_1;
+        public TextView cloud_2;
+        public TextView cloud_3;
     }
 
     @Override
@@ -95,6 +100,10 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
             holder.progressPhoto1 = (ProgressBar) rowView.findViewById(R.id.progressPhoto1);
             holder.progressPhoto2 = (ProgressBar) rowView.findViewById(R.id.progressPhoto2);
             holder.progressPhoto3 = (ProgressBar) rowView.findViewById(R.id.progressPhoto3);
+            holder.LLchat = (LinearLayout) rowView.findViewById(R.id.LLchat);
+            holder.cloud_1 = (TextView) rowView.findViewById(R.id.cloud_1);
+            holder.cloud_2 = (TextView) rowView.findViewById(R.id.cloud_2);
+            holder.cloud_3 = (TextView) rowView.findViewById(R.id.cloud_3);
             rowView.setTag(holder);
         } else {
             holder = (ViewHolder) rowView.getTag();
@@ -118,13 +127,39 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                             .with(getContext())
                             .load(userAvatar)
                             .transform(new CircularTransformation(0))
-                            .into(holder.avatar);
+                            .into(holder.avatar, new Callback(){
+                                @Override
+                                public void onSuccess(){
+
+                                }
+                                @Override
+                                public void onError(){
+                                    Picasso
+                                            .with(getContext())
+                                            .load(R.mipmap.avatar)
+                                            .transform(new CircularTransformation(0))
+                                            .into(holder.avatar);
+                                }
+                            });
                 } else {
                     Picasso
                             .with(getContext())
                             .load(contactAvatar)
                             .transform(new CircularTransformation(0))
-                            .into(holder.avatar);
+                            .into(holder.avatar, new Callback(){
+                                @Override
+                                public void onSuccess(){
+//                                    notifyDataChanged();
+                                }
+                                @Override
+                                public void onError(){
+                                    Picasso
+                                            .with(getContext())
+                                            .load(R.mipmap.avatar)
+                                            .transform(new CircularTransformation(0))
+                                            .into(holder.avatar);
+                                }
+                            });;
                 }
             } else {
                 holder.cloudMessage.setVisibility(View.INVISIBLE);
@@ -151,6 +186,10 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         }
 
         if (this.user_id == message.from_id) {
+            holder.LLchat.setBackgroundResource(R.drawable.message);
+            holder.cloud_1.setBackgroundResource(R.drawable.message);
+            holder.cloud_2.setBackgroundResource(R.drawable.message);
+            holder.cloud_3.setBackgroundResource(R.drawable.message);
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -160,6 +199,10 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                 }
             });
         } else {
+            holder.LLchat.setBackgroundResource(R.drawable.message2);
+            holder.cloud_1.setBackgroundResource(R.drawable.message2);
+            holder.cloud_2.setBackgroundResource(R.drawable.message2);
+            holder.cloud_3.setBackgroundResource(R.drawable.message2);
             holder.avatar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

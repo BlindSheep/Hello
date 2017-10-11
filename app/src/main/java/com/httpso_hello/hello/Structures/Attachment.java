@@ -1,5 +1,6 @@
 package com.httpso_hello.hello.Structures;
 
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -9,10 +10,12 @@ import android.widget.ImageView;
 
 public class Attachment {
 
+    public int id;
     public String type;
     public Image image;
-    public Object previewAttachment;
+//    public Object previewAttachment;
     public String pathPreviewAttachment;
+    public Uri previewAttachmentUri;
     public boolean isUploaded;
 
     public Attachment(){

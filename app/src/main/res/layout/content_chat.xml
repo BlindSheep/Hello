@@ -36,15 +36,16 @@
 
             <LinearLayout
                 android:id="@+id/forImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="1dp"
+                android:layout_height="100dp"
                 android:background="@drawable/board_white"
                 android:orientation="horizontal">
 
 
             <GridView
                 android:id="@+id/messageAttachments"
-                android:layout_width="wrap_content"
+                android:numColumns="20"
+                android:layout_width="100dp"
                 android:layout_height="120dp"
                 android:paddingLeft="10dp"
                 android:columnWidth="120dp"
@@ -53,8 +54,7 @@
                 android:scrollbarAlwaysDrawHorizontalTrack="true"
                 android:scrollbarAlwaysDrawVerticalTrack="true"
                 android:scrollbars="horizontal"
-                android:stretchMode="none"
-                android:verticalSpacing="1dp"/>
+                android:stretchMode="none" />
             </LinearLayout>
         </HorizontalScrollView>
 

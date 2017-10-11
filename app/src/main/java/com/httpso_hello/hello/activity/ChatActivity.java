@@ -22,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -43,6 +44,7 @@ import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Messages;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
@@ -81,8 +83,8 @@ public class ChatActivity extends SuperMainActivity{
     private ArrayList<Message> sendedMessages = new ArrayList<>();
     private Uri sendingImageUri;
     private int user_id;
-//    private MessagesAttachmentsAdapter maAdapter;
-//    private GridView attachmentsListView;
+    private MessagesAttachmentsAdapter maAdapter;
+    private GridView attachmentsListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -152,7 +154,7 @@ public class ChatActivity extends SuperMainActivity{
                 finish();
             }
         });
-        ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
+        final ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
         TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
         TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
         Picasso
@@ -161,7 +163,20 @@ public class ChatActivity extends SuperMainActivity{
                 .resize(300, 300)
                 .centerCrop()
                 .transform(new CircularTransformation(0))
-                .into(headerImageView);
+                .into(headerImageView, new Callback(){
+                    @Override
+                    public void onSuccess(){
+
+                    }
+                    @Override
+                    public void onError(){
+                        Picasso
+                                .with(getApplicationContext())
+                                .load(R.mipmap.avatar)
+                                .transform(new CircularTransformation(0))
+                                .into(headerImageView);
+                    }
+                });
         if(stgs.getSettingStr("user_age") != null) {
             user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
         } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
@@ -321,6 +336,9 @@ public class ChatActivity extends SuperMainActivity{
                                     mmAdapter.setMessage(message, message_number);
                                     sendedMessages.add(message);
                                     ll.removeAllViews();
+                                    if(maAdapter!=null){
+                                        maAdapter.deleteAllAttachments();
+                                    }
                                 }
 
                             }, new Help.ErrorCallback() {
@@ -339,7 +357,7 @@ public class ChatActivity extends SuperMainActivity{
             }
         });
 
-//        attachmentsListView = (GridView)findViewById(R.id.messageAttachments);
+        attachmentsListView = (GridView)findViewById(R.id.messageAttachments);
     }
 
     @Override
@@ -553,7 +571,7 @@ public class ChatActivity extends SuperMainActivity{
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
 
             //Показ миниатюры для отправки
-            ImageView iv = new ImageView(getApplicationContext());
+            /*ImageView iv = new ImageView(getApplicationContext());
             iv.setPadding((int) (density * 5), (int) (density * 5), 0, (int) (density * 5));
             Picasso.with(getApplicationContext())
                     .load(this.sendingImageUri)
@@ -561,21 +579,37 @@ public class ChatActivity extends SuperMainActivity{
                     .into(iv);
 
 //            ll.addView(iv);
-
-     /*       if(maAdapter != null){
-
-            } else {
+*/
+            int position = 0;
+            if(maAdapter != null){
                 Attachment defoltAttachment = new Attachment();
-                defoltAttachment.image = new Image();
-                defoltAttachment.previewAttachment = iv;
+                defoltAttachment.previewAttachmentUri = this.sendingImageUri;
+                position = maAdapter.addAttachment(defoltAttachment);
+//                attachmentsListView.setNumColumns(attachmentsListView.getColumnWidth()+1);
+            } else {
+
+                Attachment defoltAttachment = new Attachment();
+                defoltAttachment.previewAttachmentUri = this.sendingImageUri;
                 ArrayList <Attachment> defoltListAttachment = new ArrayList<>();
                 defoltListAttachment.add(defoltAttachment);
+
                 maAdapter = new MessagesAttachmentsAdapter(
                         ChatActivity.this,
-                        defoltListAttachment
+                        defoltListAttachment,
+                        messages
                 );
                 this.attachmentsListView.setAdapter(maAdapter);
-            }*/
+                attachmentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        Attachment attachment = maAdapter.getItem(position);
+//                        messages.deleteAttachment(position, attachment.id);
+//                        maAdapter.deleteAttachment(position);
+                    }
+                });
+            }
+
+            attachmentsListView.getLayoutParams().width = attachmentsListView.getLayoutParams().width + 100;
             /*if(maAdapter!=null){
                 maAdapter.addAttachment(iv);
             } else {
@@ -587,22 +621,27 @@ public class ChatActivity extends SuperMainActivity{
 */
             //Преобразование для отправки на серв
             final String file_base64 = Help.getBase64FromImage(selectedImage, Bitmap.CompressFormat.JPEG);
-            messages.addFileToMessage("photo", "jpg", file_base64, new Messages.AddFileToMessageCallback() {
-                @Override
-                public void onSuccess(boolean response, int id) {
-                    Log.d("r_add_file_to_message", Boolean.toString(response));
-                }
-            }, new Help.ErrorCallback() {
-                @Override
-                public void onError(int error_code, String error_msg) {
+            messages.addFileToMessage(
+                    "photo",
+                    "jpg",
+                    file_base64,
+                    position,
+                    new Messages.AddFileToMessageCallback() {
+                        @Override
+                        public void onSuccess(boolean response, final int id, final int position) {
+                            maAdapter.setLoadedAttachment(position, id);
+                        }
+                    }, new Help.ErrorCallback() {
+                        @Override
+                        public void onError(int error_code, String error_msg) {
 
-                }
+                        }
 
-                @Override
-                public void onInternetError() {
+                        @Override
+                        public void onInternetError() {
 
-                }
-            });
+                        }
+                    });
         } catch (Exception e){
             e.printStackTrace();
         }

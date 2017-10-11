@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/main_white_color_hello"
+    android:orientation="vertical">
+
+    <ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/chat_attachments_item_image_preview"
+        android:layout_width="120dp"
+        android:layout_height="120dp"/>
 
     <ImageView
-        android:id="@+id/chat_attachments_item_image_preview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srcCompat="@mipmap/avatar" />
-</LinearLayout>
+        android:id="@+id/attachment_delete"
+        android:src="@mipmap/ic_menu_exit"
+        android:tint="@color/main_black_color_hello"
+        app:layout_anchor="@+id/avatar"
+        android:layout_margin="10dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@color/white" />
+
+    <ProgressBar
+        android:id="@+id/attachment_progress_load"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerInParent="true" />
+
+</RelativeLayout>

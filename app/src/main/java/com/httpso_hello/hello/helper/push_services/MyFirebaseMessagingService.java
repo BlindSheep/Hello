@@ -144,10 +144,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 // Вставка аватарки
-        byte[] bytes = Base64.decode(base64_necode_ava.getBytes(), Base64.DEFAULT);
+        Bitmap bitmap;
+        if(base64_necode_ava!=null && base64_necode_ava.length()!=0) {
+            byte[] bytes = Base64.decode(base64_necode_ava.getBytes(), Base64.DEFAULT);
 
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-
+             bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        } else {
+            bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.avatar);
+        }
         int radius = 50;
 
         int diam = radius << 1;

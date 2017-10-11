@@ -400,6 +400,7 @@ public class Messages extends Help {
             final String type,
             final String ext,
             final String file_base64,
+            final int position,
             final AddFileToMessageCallback addFileToMessageCallback,
             final Help.ErrorCallback errorCallback
     ){
@@ -414,7 +415,7 @@ public class Messages extends Help {
                                 AddFileToMessage addFileToMessage = gson.fromJson(response, AddFileToMessage.class);
                                 if(addFileToMessage.error == null){
                                     attachemts.add(addFileToMessage.id);
-                                    addFileToMessageCallback.onSuccess(addFileToMessage.response, addFileToMessage.id);
+                                    addFileToMessageCallback.onSuccess(addFileToMessage.response, addFileToMessage.id, position);
                                     return;
                                 }
                                 errorCallback.onError(addFileToMessage.error.error_code, addFileToMessage.error.error_msg);
@@ -447,12 +448,15 @@ public class Messages extends Help {
         }
     }
 
-    public void deleteAttachment(int nuber){
-        this.attachemts.remove(nuber);
+    public void deleteAttachment(int nuber, int id){
+        if(this.attachemts.get(nuber) == id){
+            this.attachemts.remove(nuber);
+        }
+
     }
 
     public interface AddFileToMessageCallback {
-        void onSuccess(boolean response, int id);
+        void onSuccess(boolean response, final int id, final int position);
     }
 
     public interface GetContactsCallback {
