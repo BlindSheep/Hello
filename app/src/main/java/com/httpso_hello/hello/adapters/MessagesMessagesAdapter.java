@@ -27,6 +27,7 @@ import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+
 import java.util.ArrayList;
 
 /**
@@ -34,6 +35,7 @@ import java.util.ArrayList;
  */
 
 public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
+
 
     private final Activity context;
     private ArrayList<Message> messages;// = new ArrayList<>();
@@ -68,6 +70,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         public ImageView chat_message_imgae3;
         public TextView otherPhotos;
         public View customView;
+
         public ProgressBar progressPhoto1;
         public ProgressBar progressPhoto2;
         public ProgressBar progressPhoto3;
@@ -146,18 +149,19 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                             .with(getContext())
                             .load(contactAvatar)
                             .transform(new CircularTransformation(0))
-                            .into(holder.avatar, new Callback(){
+                            .into(holder.avatar, new Callback() {
                                 @Override
-                                public void onSuccess(){
-//                                    notifyDataChanged();
+                                public void onSuccess() {
+
                                 }
+
                                 @Override
-                                public void onError(){
-                                    Picasso
-                                            .with(getContext())
-                                            .load(R.mipmap.avatar)
-                                            .transform(new CircularTransformation(0))
-                                            .into(holder.avatar);
+                                public void onError() {
+                                Picasso
+                                        .with(getContext())
+                                        .load(R.mipmap.avatar)
+                                        .transform(new CircularTransformation(0))
+                                        .into(holder.avatar);
                                 }
                             });;
                 }
@@ -174,13 +178,42 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                         .with(getContext())
                         .load(userAvatar)
                         .transform(new CircularTransformation(0))
-                        .into(holder.avatar);
+                        .into(holder.avatar, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso
+                                        .with(getContext())
+                                        .load(R.mipmap.avatar)
+                                        .transform(new CircularTransformation(0))
+                                        .into(holder.avatar);
+                            }
+                        });
             } else {
                 Picasso
                         .with(getContext())
                         .load(contactAvatar)
                         .transform(new CircularTransformation(0))
-                        .into(holder.avatar);
+                        .into(holder.avatar, new Callback() {
+                            @Override
+                            public void onSuccess() {
+
+                            }
+
+                            @Override
+                            public void onError() {
+                                Picasso
+                                        .with(getContext())
+                                        .load(R.mipmap.avatar)
+                                        .transform(new CircularTransformation(0))
+                                        .into(holder.avatar);
+
+                            }
+                        });
             }
 
         }

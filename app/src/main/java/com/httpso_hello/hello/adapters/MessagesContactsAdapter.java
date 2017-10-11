@@ -17,6 +17,7 @@ import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.Settings;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -52,7 +53,7 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
 
-        ViewHolder holder;
+        final ViewHolder holder;
         View rowView = convertView;
         if (rowView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
@@ -132,11 +133,25 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
                     .with(getContext())
                     .load(Uri.parse(Constant.upload + contact.avatar.micro))
                     .transform(new CircularTransformation(0))
-                    .into(holder.avatar);
+                    .into(holder.avatar, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso
+                                    .with(getContext())
+                                    .load(R.mipmap.avatar)
+                                    .transform(new CircularTransformation(0))
+                                    .into(holder.avatar);
+                        }
+                    });
         } else {
             Picasso
                     .with(getContext())
-                    .load(Uri.parse(Constant.default_avatar))
+                    .load(R.mipmap.avatar)
                     .transform(new CircularTransformation(0))
                     .into(holder.avatar);
         }
