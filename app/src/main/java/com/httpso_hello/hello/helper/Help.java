@@ -2,11 +2,14 @@ package com.httpso_hello.hello.helper;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +44,9 @@ public class Help {
     public static final int REQUEST_UPDATE_AVATAR_CAMERA = 3;
     public static final int REQUEST_ADD_PHOTO_GALLERY = 4;
     public static final int REQUEST_ADD_PHOTO_CAMERA = 5;
+
+    public static final int DEFAULT_NEED_SIZE = 1048576;
+    public static final int DEFAULT_QUALITY = 100;
 
     public Help(){
         GsonBuilder GB = new GsonBuilder();
@@ -112,14 +118,54 @@ public class Help {
         }
         return false;
     }
+    private static ByteArrayOutputStream compressImage(Bitmap image, Bitmap.CompressFormat compressFormat, int quality){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        if(quality == 0){
+            quality = DEFAULT_QUALITY;
+        }
+        image.compress(compressFormat, quality, baos);
+        return baos;
+    }
 
+    public static long getBitmapSize(Bitmap image, Bitmap.CompressFormat compressFormat){
+        return (compressImage(image, compressFormat, 100)).toByteArray().length;
+    }
     // Поулчение изображения в формате base64
     public static String getBase64FromImage(Bitmap image, Bitmap.CompressFormat compressFormat){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        image.compress(compressFormat, 100, baos);
+        ByteArrayOutputStream baos = compressImage(image, compressFormat, 0);
         byte[] bytes = baos.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     }
+    // Поулчение изображения в формате base64 с указанием качества
+    public static String getBase64FromImage(Bitmap image, Bitmap.CompressFormat compressFormat, int quality){
+        ByteArrayOutputStream baos = compressImage(image, compressFormat, quality);
+        byte[] bytes = baos.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+    // Получение изображения в формате base64 с автоматическим сжатием до указанного размера. В случаее если указанный
+    // размер равен нулю берется дефолтное значение
+    public static String getBase64FromImage(Bitmap image, Bitmap.CompressFormat compressFormat, Activity activity, long size, long need_size){
+        if(need_size == 0){
+            need_size = DEFAULT_NEED_SIZE;
+        }
+        int quality = 100;
+        if(size>need_size){
+            // Если разрешение превышет максимально доступное
+
+            if(image.getWidth()>2551){
+                image = Bitmap.createScaledBitmap(image, 2551, 1795, false);
+                size = (compressImage(image, compressFormat, 100)).toByteArray().length;
+            }
+//            File file = createImageFile(activity);
+//            image.sa
+            float fQuality = (float)((float)need_size/(float)size) * 100;
+            quality = Math.round(fQuality);
+        }
+
+       return getBase64FromImage(image, compressFormat, quality);
+    }
+
+    // Создание файла для изображения
     public static File createImageFile(Activity activity) throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -135,4 +181,27 @@ public class Help {
         return image;
     }
 
+    // Поулчение пикселей из dp
+    public static int getPxFromDp(int dp, Context context){
+        return Math.round(dp * context.getResources().getDisplayMetrics().density);
+    }
+    // Поулчение dp из пикселей
+    public static int getDpFromPx(int px, Context context){
+        return Math.round(px / context.getResources().getDisplayMetrics().density);
+    }
+
+    public static String getFileByUri(Uri file, Context context){
+        Cursor cursor = null;
+        try {
+            String[] proj = { MediaStore.Images.Media.DATA };
+            cursor = context.getContentResolver().query(file,  proj, null, null, null);
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(column_index);
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+    }
 }

@@ -12,7 +12,9 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Attachment;
 import com.httpso_hello.hello.Structures.Contact;
 import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Messages;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -61,8 +63,18 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
 //            holder.imagePreview.setImageDrawable(((ImageView)attachment.previewAttachment).getDrawable());
             Picasso.with(this.activity.getApplicationContext())
                     .load(attachment.previewAttachmentUri)
-//                    .resize(0, (int) (density * 100))
-                    .into(holder.imagePreview);
+                    .resize(0, Help.getPxFromDp(100, getContext()))
+                    .into(holder.imagePreview, new Callback() {
+                        @Override
+                        public void onSuccess() {
+//                            attachment.widthPreviewAttachment = holder.imagePreview.getWidth();
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
         }
 
         if(attachment.isUploaded){
@@ -75,7 +87,7 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
             @Override
             public void onClick(View v) {
 
-                parentClass.deleteAttachment(position, attachment.id);
+                parentClass.deleteAttachment(position);
                 deleteAttachment(position);
             }
         });
@@ -109,5 +121,9 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
     public void deleteAllAttachments(){
         this.attachments.clear();
     }
+
+//    public int getWidthPreview(int position){
+//        return this.attachments.get(position).widthPreviewAttachment;
+//    }
 
 }

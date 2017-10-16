@@ -164,8 +164,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/ic_home_black_24dp"
-                    android:backgroundTint="@color/main_dark_grey_color_hello" />
+                    app:srcCompat="@drawable/ic_home_black_24dp"/>
 
                 <TextView
                     android:id="@+id/cityCache"
@@ -190,8 +189,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/ic_action_otnosheniya"
-                    android:backgroundTint="@color/main_dark_grey_color_hello" />
+                    app:srcCompat="@drawable/ic_action_otnosheniya"/>
 
                 <TextView
                     android:id="@+id/spProfile"
@@ -216,8 +214,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
-                    android:background="@mipmap/ic_action_call"
-                    android:backgroundTint="@color/main_dark_grey_color_hello" />
+                    app:srcCompat="@mipmap/ic_action_call"/>
 
                 <TextView
                     android:id="@+id/phoneNumProfile"
@@ -243,8 +240,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/ic_action_skype"
-                    android:backgroundTint="@color/main_dark_grey_color_hello" />
+                    app:srcCompat="@drawable/ic_action_skype"/>
 
                 <TextView
                     android:id="@+id/skypeProfile"
@@ -270,8 +266,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/ic_action_dohod"
-                    android:backgroundTint="@color/main_dark_grey_color_hello" />
+                    app:srcCompat="@drawable/ic_action_dohod" />
 
                 <TextView
                     android:id="@+id/dohodProfile"
@@ -296,8 +291,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
-                    android:background="@drawable/ic_action_auto"
-                    android:backgroundTint="@color/main_dark_grey_color_hello" />
+                    app:srcCompat="@drawable/ic_action_auto" />
 
                 <TextView
                     android:id="@+id/autoProfile"

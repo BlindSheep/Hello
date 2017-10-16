@@ -1,115 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/rootView"
-    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@color/zalivon"
-    android:focusable="true"
-    android:focusableInTouchMode="true">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/rootView"
+                xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+                android:orientation="vertical"
+                android:background="@color/zalivon"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context="com.httpso_hello.hello.activity.MessagesActivity"
+                tools:showIn="@layout/app_bar_messages">
 
     <ListView
-        android:id="@+id/chatList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="55dp"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"
-        android:divider="#00000000"
-        android:layout_above="@+id/asdasd"
-        android:dividerHeight="5dp"/>
-
-    <LinearLayout
-        android:id="@+id/asdasd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/board_white"
-        android:orientation="vertical">
-
-        <HorizontalScrollView
+            android:id="@+id/chatList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none"
-            android:background="@drawable/board_white">
+            android:stackFromBottom="true"
+            android:transcriptMode="alwaysScroll"
+            android:divider="#00000000"
+            android:layout_above="@+id/asdasd"
+            android:dividerHeight="5dp"/>
+
+    <LinearLayout
+            android:id="@+id/asdasd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/board_white"
+            android:orientation="vertical">
+
+        <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:background="@drawable/board_white">
 
             <LinearLayout
-                android:id="@+id/forImage"
-                android:layout_width="1dp"
-                android:layout_height="100dp"
-                android:background="@drawable/board_white"
-                android:orientation="horizontal">
+                    android:id="@+id/forImage"
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:maxHeight="100dp"
+                    android:background="@drawable/board_white"
+                    android:orientation="horizontal">
 
 
-            <GridView
-                android:id="@+id/messageAttachments"
-                android:numColumns="20"
-                android:layout_width="100dp"
-                android:layout_height="120dp"
-                android:paddingLeft="10dp"
-                android:columnWidth="120dp"
-                android:gravity="center"
-                android:horizontalSpacing="4dp"
-                android:scrollbarAlwaysDrawHorizontalTrack="true"
-                android:scrollbarAlwaysDrawVerticalTrack="true"
-                android:scrollbars="horizontal"
-                android:stretchMode="none" />
+                <GridView
+                        android:id="@+id/messageAttachments"
+                        android:numColumns="20"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:columnWidth="120dp"
+                        android:gravity="center"
+                        android:horizontalSpacing="4dp"
+                        android:scrollbarAlwaysDrawHorizontalTrack="true"
+                        android:scrollbarAlwaysDrawVerticalTrack="true"
+                        android:scrollbars="horizontal"
+                        android:stretchMode="none" />
             </LinearLayout>
         </HorizontalScrollView>
 
         <LinearLayout
-            android:id="@+id/layout_bottom_bar"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/board_white"
-            android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="5dip">
+                android:id="@+id/layout_bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/board_white"
+                android:clickable="true"
+                android:orientation="horizontal"
+                android:padding="5dip">
 
-        <ImageButton
-            android:id="@+id/docSend"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center"
-            android:background="@mipmap/ic_action_photo"
-            android:backgroundTint="@color/main_darkest_grey_color_hello"
-            android:padding="5dip" />
+            <ImageButton
+                    android:id="@+id/docSend"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@mipmap/ic_action_photo"
+                    android:backgroundTint="@color/main_darkest_grey_color_hello"
+                    android:padding="5dip" />
 
-        <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
-            android:id="@+id/messageContent"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            emojicon:emojiconSize="28sp"
-            android:background="@color/main_white_color_hello"
-            android:hint="@string/input_your_message"
-            android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:layout_weight="1"
-            android:inputType="textCapSentences"/>
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+                    android:id="@+id/messageContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    emojicon:emojiconSize="28sp"
+                    android:background="@color/main_white_color_hello"
+                    android:hint="@string/input_your_message"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:layout_weight="1"
+                    android:inputType="textCapSentences"/>
 
-        <ImageButton
-            android:id="@+id/emojiKeyboard"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:src="@drawable/smiley"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center"
-            android:background="@color/main_white_color_hello"
-            android:padding="5dip" />
+            <ImageButton
+                    android:id="@+id/emojiKeyboard"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/smiley"
+                    android:layout_marginLeft="10dp"
+                    android:layout_gravity="center"
+                    android:background="@color/main_white_color_hello"
+                    android:padding="5dip" />
 
-        <ImageButton
-            android:id="@+id/messageSend"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@mipmap/ic_action_send"
-            android:layout_marginLeft="10dp"
-            android:backgroundTint="@color/main_darkest_grey_color_hello"
-            android:padding="5dip" />
+            <ImageButton
+                    android:id="@+id/messageSend"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    app:srcCompat="@mipmap/ic_action_send"
+                    android:layout_marginLeft="10dp"
+                    android:backgroundTint="@color/main_darkest_grey_color_hello"
+                    android:padding="5dip" />
 
         </LinearLayout>
 

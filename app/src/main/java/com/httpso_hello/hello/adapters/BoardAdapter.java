@@ -69,6 +69,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         public ImageButton likeButtonBoard;
         public TextView likeTextBoard;
         public LinearLayout linearLayoutForPhoto;
+        public TextView countReaded;
 
     }
 
@@ -93,6 +94,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             holder.likeButtonBoard = (ImageButton) rowView.findViewById(R.id.likeButtonBoard);
             holder.likeTextBoard = (TextView) rowView.findViewById(R.id.likeTextBoard);
             holder.linearLayoutForPhoto = (LinearLayout) rowView.findViewById(R.id.linearLayoutForPhoto);
+            holder.countReaded = (TextView) rowView.findViewById(R.id.countReaded);
 
             rowView.setTag(holder);
         } else {
@@ -134,6 +136,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.get(position).date_pub));
         //Текст объявления
         holder.boardText.setText(boardItem.get(position).content);
+        //Кол-во просмотров
+        holder.countReaded.setText(Integer.toString(boardItem.get(position).count_readed) + " просмотров");
         // Первая фотография
         DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
         int width = displaymetrics.widthPixels;

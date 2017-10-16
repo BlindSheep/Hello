@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -47,6 +48,8 @@ import com.httpso_hello.hello.helper.Messages;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileDescriptor;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,6 +75,7 @@ public class ChatActivity extends SuperMainActivity{
     private Timer timer = new Timer(), sendedMessagesTimer = new Timer(), onlineTimer = new Timer();
     private ProgressBar progressBarChat;
     private ImageButton emojiKeyboard;
+    private View headerForSupport;
     private View header;
     public EmojIconActions emojIcon;
     private PopupWindow popUpWindow;
@@ -102,6 +106,7 @@ public class ChatActivity extends SuperMainActivity{
         emojiKeyboard = (ImageButton) findViewById(R.id.emojiKeyboard) ;
         emojIcon = new EmojIconActions(this, rootView, messageContent, emojiKeyboard);
         header = getLayoutInflater().inflate(R.layout.header, null);
+        headerForSupport = getLayoutInflater().inflate(R.layout.header_for_support, null);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_msg, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ll = (LinearLayout) findViewById(R.id.forImage);
@@ -211,12 +216,28 @@ public class ChatActivity extends SuperMainActivity{
                     .resize(300, 300)
                     .centerCrop()
                     .transform(new CircularTransformation(0))
-                    .into((ImageView) findViewById(R.id.imageAvatar));
+                    .into((ImageView) findViewById(R.id.imageAvatar), new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso
+                                    .with(getApplicationContext())
+                                    .load(R.mipmap.avatar)
+                                    .resize(300, 300)
+                                    .centerCrop()
+                                    .transform(new CircularTransformation(0))
+                                    .into((ImageView) findViewById(R.id.imageAvatar));
+                        }
+                    });
             this.pathContactAvatar = extras.getString("avatar");
         } else {
             Picasso
                     .with(getApplicationContext())
-                    .load(Constant.default_avatar)
+                    .load(R.mipmap.avatar)
                     .resize(300, 300)
                     .centerCrop()
                     .transform(new CircularTransformation(0))
@@ -277,6 +298,8 @@ public class ChatActivity extends SuperMainActivity{
                         user_avatar_micro,
                         Constant.upload + chatActivity.pathContactAvatar
                 );
+                if(contact_id == 3008) chatList.addHeaderView(headerForSupport);
+                else chatList.addHeaderView(header);
                 chatList.addHeaderView(header);
                 chatList.addFooterView(header);
                 chatList.setAdapter(mmAdapter);
@@ -313,7 +336,7 @@ public class ChatActivity extends SuperMainActivity{
         messageSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String messageContentString = ((ChatActivity) v.getContext()).messageContent.getText().toString();
+                String messageContentString = messageContent.getText().toString();
                 if (!messageContentString.isEmpty() || messages.getCountAttachments()!=0) {
                     ChatActivity.this.messageContent.setText(null);
 
@@ -569,17 +592,6 @@ public class ChatActivity extends SuperMainActivity{
         try {
             final InputStream imageStream = getContentResolver().openInputStream(this.sendingImageUri);
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-
-            //Показ миниатюры для отправки
-            /*ImageView iv = new ImageView(getApplicationContext());
-            iv.setPadding((int) (density * 5), (int) (density * 5), 0, (int) (density * 5));
-            Picasso.with(getApplicationContext())
-                    .load(this.sendingImageUri)
-                    .resize(0, (int) (density * 100))
-                    .into(iv);
-
-//            ll.addView(iv);
-*/
             int position = 0;
             if(maAdapter != null){
                 Attachment defoltAttachment = new Attachment();
@@ -609,18 +621,26 @@ public class ChatActivity extends SuperMainActivity{
                 });
             }
 
-            attachmentsListView.getLayoutParams().width = attachmentsListView.getLayoutParams().width + 100;
-            /*if(maAdapter!=null){
-                maAdapter.addAttachment(iv);
-            } else {
-                ArrayList<ImageView> defolt = new ArrayList<>();
-                defolt.add(iv);
-                maAdapter = new MessagesAttachmentsAdapter(this, defolt);
-                attachmentsList.setAdapter(maAdapter);
+            attachmentsListView.getLayoutParams().width =
+                    attachmentsListView.getLayoutParams().width +
+                            Help.getPxFromDp(130, this);
+
+//            ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(this.sendingImageUri, "r");
+//            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
+            File defolt_file = new File(Help.getFileByUri(this.sendingImageUri, this));
+            long size = 0;
+
+            if(defolt_file.exists()){
+                size = defolt_file.length();
             }
-*/
             //Преобразование для отправки на серв
-            final String file_base64 = Help.getBase64FromImage(selectedImage, Bitmap.CompressFormat.JPEG);
+            final String file_base64 = Help.getBase64FromImage(
+                    selectedImage,
+                    Bitmap.CompressFormat.JPEG,
+                    this,
+                    size,
+                    0
+            );
             messages.addFileToMessage(
                     "photo",
                     "jpg",

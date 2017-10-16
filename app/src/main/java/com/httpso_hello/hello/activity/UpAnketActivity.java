@@ -81,7 +81,7 @@ public class UpAnketActivity extends SuperMainActivity{
         } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
         user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
 
-        billing.getInstance(getApplicationContext()).getRaisingToken(new Billing.GetRaisingTokenCallback() {
+        billing.getInstance(getApplicationContext()).getRaisingToken(null, new Billing.GetRaisingTokenCallback() {
             @Override
             public void onSuccess(String token) {
                 raisingToken = token;
@@ -146,7 +146,7 @@ public class UpAnketActivity extends SuperMainActivity{
                                         if(error_code==401){
                                             // Если время вышло повторяем получение токена и оплату
                                             Log.d("paid_raising", "error");
-                                            billing.getInstance(getApplicationContext()).getRaisingToken(new Billing.GetRaisingTokenCallback() {
+                                            billing.getInstance(getApplicationContext()).getRaisingToken(null, new Billing.GetRaisingTokenCallback() {
                                                 @Override
                                                 public void onSuccess(String token) {
                                                     billing.getInstance(getApplicationContext()).paidRaising(token, new Billing.PaidRaisingCallback() {

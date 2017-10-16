@@ -355,5 +355,23 @@ public class ConverterDate {
 
         return age + ageStr;
     }
-
+    //Метод для получения кол-ва баллов по ID
+    public static int getSummaById(String id) {
+        if (id.equals("tobuy10points")) return 10;
+        else if (id.equals("buy20points")) return 20;
+        else if (id.equals("buy30points")) return 30;
+        else if (id.equals("buy40points")) return 40;
+        else if (id.equals("buy50points")) return 50;
+        else if (id.equals("buy60points")) return 60;
+        else if (id.equals("buy70points")) return 70;
+        else if (id.equals("buy80points")) return 80;
+        else if (id.equals("buy90points")) return 90;
+        else if (id.equals("buy100points")) return 100;
+        else if (id.equals("buy200points")) return 200;
+        else if (id.equals("buy300points")) return 300;
+        else if (id.equals("buy400points")) return 400;
+        else if (id.equals("buy500points")) return 500;
+        else if (id.equals("buy1000points")) return 1000;
+        else return 1;
+    }
 }

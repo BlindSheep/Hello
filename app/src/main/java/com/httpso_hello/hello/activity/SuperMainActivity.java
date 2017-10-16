@@ -99,6 +99,14 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
                 finish();
                 break;
+            case R.id.nav_support:
+                intent = new Intent(getApplicationContext(), ChatActivity.class);
+                intent.putExtra("contact_id", 3008);
+                intent.putExtra("nickname", "Поддержка");
+                intent.putExtra("avatar", "ic_launcher.png");
+                startActivity(intent);
+                finish();
+                break;
             case R.id.nav_exit:
                 auth = new Auth(getApplicationContext());
                 auth.logout(new Auth.LogoutFinishingCallback() {

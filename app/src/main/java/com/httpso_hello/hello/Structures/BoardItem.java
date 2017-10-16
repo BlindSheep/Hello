@@ -16,6 +16,7 @@ public class BoardItem {
     public Image avatar;
     public boolean is_voted;
     public String content;
+    public int count_readed;
 
     public BoardItem(){
 

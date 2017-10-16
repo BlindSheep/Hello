@@ -9,14 +9,21 @@ import android.widget.ImageView;
  */
 
 public class Attachment {
-
+// ID после загрузки
     public int id;
+    // Тип прикладываемого файла
     public String type;
+    // Пути до загруженных изображений
     public Image image;
-//    public Object previewAttachment;
+    // Строковое представлвение до прикладываемого файла на устройстве
     public String pathPreviewAttachment;
+    // URI до preview изображения прикладываемого файла
     public Uri previewAttachmentUri;
+    // Ширина превью изображения прикладываемого файла
+    public int widthPreviewAttachment;
+    // Флаг, устанавливается в true когда прикладываемый файл загружен на сервер
     public boolean isUploaded;
+
 
     public Attachment(){
 

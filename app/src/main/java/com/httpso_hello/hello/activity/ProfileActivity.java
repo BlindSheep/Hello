@@ -474,7 +474,7 @@ public class ProfileActivity extends SuperMainActivity{
                 }
 
                 //скрываем блок с друзьями и подарками если их нет
-                if ((user.friends_count != 0) && (user.gifts.length != 0)) friendsAndGiftsBlock.setVisibility(View.VISIBLE);
+                if ((user.friends_count != 0) || (user.gifts.length != 0)) friendsAndGiftsBlock.setVisibility(View.VISIBLE);
                 else friendsAndGiftsBlock.setVisibility(View.GONE);
 
                 //Кол-во друзей
@@ -1249,7 +1249,13 @@ public class ProfileActivity extends SuperMainActivity{
         public void onClick(View v) {
             progressBarProfile.setVisibility(View.VISIBLE);
             ((TextView) popUpWindow3.getContentView().findViewById(R.id.savePhoto)).setText("Сохраняем...");
-            final String base64_code_ava = Help.getBase64FromImage(selectedImage, Bitmap.CompressFormat.JPEG);
+            final String base64_code_ava = Help.getBase64FromImage(
+                    selectedImage,
+                    Bitmap.CompressFormat.JPEG,
+                    ProfileActivity.this,
+                    Help.getBitmapSize(selectedImage, Bitmap.CompressFormat.JPEG),
+                    0
+            );
             Profile.getInstance(getApplicationContext()).updateAvatar(
                     base64_code_ava,
                     "jpg",

@@ -52,6 +52,10 @@
                 android:icon="@mipmap/ic_menu_settings"
                 android:title="@string/nav_edit_profile" />
             <item
+                    android:id="@+id/nav_support"
+                    android:icon="@mipmap/ic_action_edit"
+                    android:title="@string/nav_edit_support" />
+            <item
                 android:id="@+id/nav_exit"
                 android:icon="@mipmap/ic_menu_exit"
                 android:title="@string/nav_exit" />

@@ -40,8 +40,9 @@ public class Billing extends Help {
     }
 
 
-
+    /*
     public void getToken(
+            final String action,
             final Billing.GetTokenCallback getTokenCallback
     ) {
         if (Constant.api_key != "") {
@@ -76,6 +77,9 @@ public class Billing extends Help {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    if(action!=null){
+                        params.put("action", action);
+                    }
                     return params;
                 }
 
@@ -84,7 +88,7 @@ public class Billing extends Help {
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "rating.send_like");
         }
     }
-
+*/
     public void sendToken(
             final Billing.SendTokenCallback sendTokenCallback
     ) {
@@ -130,6 +134,7 @@ public class Billing extends Help {
     }
 
     public void getRaisingToken(
+            final String action,
             final Billing.GetRaisingTokenCallback getRaisingTokenCallback
     ) {
         if (Constant.api_key != "") {
@@ -164,6 +169,9 @@ public class Billing extends Help {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    if(action!=null){
+                        params.put("action", action);
+                    }
                     return params;
                 }
 
@@ -219,6 +227,56 @@ public class Billing extends Help {
         }
     }
 
+    public void addBalance(
+            final int summa,
+            final String token,
+            final Billing.AddBalanceCallback addBalanceCallback,
+            final ErrorCallback errorCallback
+    ) {
+        if (Constant.api_key != "") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.paid_services_add_balance_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response) {
+                            Log.d("add_balance", response);
+                            if (response != null) {
+                                TokenReq tokenReq = gson.fromJson(response, TokenReq.class);
+                                if (tokenReq.error == null) {
+                                    addBalanceCallback.onSuccess();
+                                    return;
+                                }
+                                errorCallback.onError(tokenReq.error.error_code, tokenReq.error.error_msg);
+                                return;
+                            }
+                            errorCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            errorCallback.onInternetError();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("api_key", Constant.api_key);
+                    params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    params.put("action", "add_balance");
+                    params.put("paid_token", token);
+                    params.put("balance", Integer.toString(summa));
+                    return params;
+                }
+
+                ;
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.addBalance");
+        }
+    }
+
     public interface GetTokenCallback {
         public void onSuccess();
         public void onError(int error_code, String error_msg);
@@ -240,5 +298,8 @@ public class Billing extends Help {
         void onSuccess(Boolean response);
         void onError(int error_code, String error_msg);
         void onInternetError();
+    }
+    public interface AddBalanceCallback{
+        void onSuccess();
     }
 }

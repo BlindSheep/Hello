@@ -444,16 +444,17 @@ public class Messages extends Help {
                     return params;
                 };
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_contacts");
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.addFileToMessage_" + Integer.toString(position));
         }
     }
 
-    public void deleteAttachment(int nuber, int id){
-        if(this.attachemts.get(nuber) == id){
+    public void deleteAttachment(int nuber){
+//        if(this.attachemts.get(nuber) == id){
             this.attachemts.remove(nuber);
-        }
+//        }
 
     }
+
 
     public interface AddFileToMessageCallback {
         void onSuccess(boolean response, final int id, final int position);
@@ -488,8 +489,6 @@ public class Messages extends Help {
                        String dateLastUpdate,
                        boolean contactIsOnline
         );
-//        void onError(int error_code, String error_msg);
-//        void onInternetError();
     }
 
     public interface MessagesSendMessage{

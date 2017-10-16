@@ -1,108 +1,155 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/zalivon"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.httpso_hello.hello.activity.BillingActivity"
-    tools:showIn="@layout/app_bar_billing">
-
+            android:id="@+id/SRV"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/zalivon"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:context="com.httpso_hello.hello.activity.BillingActivity"
+            tools:showIn="@layout/app_bar_billing">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/toBuy50Points"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginLeft="6dp"
-            android:background="@drawable/board"
-            android:elevation="1.5dp"
-            android:padding="20dp"
-            android:orientation="horizontal">
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/main_blue_color_hello"
-                android:text="Купить 50 баллов"
-                android:textSize="15sp" />
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/board"
+                android:elevation="1.5dp"
+                android:padding="20dp"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_blue_color_hello"
+                        android:text="Купить: "
+                        android:textSize="15sp" />
+
+                <Spinner
+                        android:id="@+id/productSpinner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/points" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_blue_color_hello"
+                        android:textSize="15sp"
+                        android:text="баллов" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_blue_color_hello"
+                        android:text="Цена: "
+                        android:textSize="15sp" />
+
+                <TextView
+                        android:id="@+id/priceOfPoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_blue_color_hello"
+                        android:textSize="15sp"
+                        android:text="10" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_blue_color_hello"
+                        android:textSize="15sp"
+                        android:text=" руб." />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_marginTop="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_blue_color_hello"
+                        android:text="1 балл = "
+                        android:textSize="15sp" />
+
+                <TextView
+                        android:id="@+id/priceOfOnePoints"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_blue_color_hello"
+                        android:textSize="15sp"
+                        android:text="10" />
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_blue_color_hello"
+                        android:textSize="15sp"
+                        android:text=" руб. " />
+
+                <TextView
+                        android:id="@+id/skidka"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/main_red_color_hello"
+                        android:textSize="15sp"
+                        android:text="" />
+
+            </LinearLayout>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textSize="15sp"
-                android:text="Цена: 50 руб" />
+                    android:id="@+id/buyBotton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:gravity="end"
+                    android:textSize="20sp"
+                    android:textColor="@color/main_red_color_hello"
+                    android:text="Купить" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/toBuy100Points"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="20dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginLeft="6dp"
-            android:elevation="1.5dp"
-            android:background="@drawable/board"
-            android:orientation="horizontal">
-
-            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/main_blue_color_hello"
-                android:text="Купить 100 баллов"
-                android:textSize="15sp" />
+                android:layout_marginTop="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginLeft="6dp"
+                android:background="@drawable/board"
+                android:elevation="1.5dp"
+                android:padding="20dp"
+                android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textSize="15sp"
-                android:text="Цена: 100 руб" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/toBuy500Points"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="20dp"
-            android:layout_marginTop="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginBottom="6dp"
-            android:elevation="1.5dp"
-            android:background="@drawable/board"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/main_blue_color_hello"
-                android:text="Купить 500 баллов"
-                android:textSize="15sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textSize="15sp"
-                android:text="Цена: 500 руб" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Чем больше баллов Вы покупаете, тем больше Ваша скидка!\n\n - от 50 баллов - 5%\n\n - от 100 баллов - 10%\n\n - от 500 баллов - 15%\n\nВы сможете потратить баллы на: \n\n - поднятие анкеты \n\n - подарки"
+                    android:textSize="15sp" />
 
         </LinearLayout>
 
