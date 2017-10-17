@@ -36,6 +36,7 @@
             android:layout_marginBottom="20dp"
             android:textColor="@color/main_blue_color_hello"
             android:textSize="15sp"
+            android:visibility="gone"
             android:text="Добавить фотографии"/>
 
         <HorizontalScrollView

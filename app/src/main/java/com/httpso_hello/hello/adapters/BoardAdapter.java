@@ -382,7 +382,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
 //Подгрузка новых обьявлений
         BoardActivity ba = ((BoardActivity) getContext());
-        if(position == (this.boardItems.size() - 5)) ba.getNew();
+        if(position == (this.boardItems.size() - 2)) ba.getNew();
 
         return rowView;
 

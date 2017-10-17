@@ -23,19 +23,6 @@
 
     <include layout="@layout/content_board"  android:id="@+id/include" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|left"
-        android:layout_margin="@dimen/fab_margin"
-        app:rippleColor="@color/main_dark_grey_color_hello"
-        app:borderWidth="9dp"
-        app:backgroundTint="@color/main_blue_color_hello"
-        app:layout_anchor="@+id/include"
-        app:layout_anchorGravity="bottom|right"
-        app:srcCompat="@mipmap/ic_action_sort_by_size"/>
-
     <ProgressBar
         android:id="@+id/progressBarBoard"
         style="?android:attr/progressBarStyle"

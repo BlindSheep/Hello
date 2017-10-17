@@ -50,7 +50,7 @@ public class BoardActivity extends SuperMainActivity{
         setContentView(R.layout.activity_board);
         progressBarBoard = (ProgressBar) findViewById(R.id.progressBarBoard);
         LV = (ListView) findViewById(R.id.boardList);
-        header = getLayoutInflater().inflate(R.layout.header, null);
+        header = getLayoutInflater().inflate(R.layout.header_for_board, null);
         footerLoading = getLayoutInflater().inflate(R.layout.footer_loading, null);
 
         LV.addHeaderView(header);
@@ -58,7 +58,7 @@ public class BoardActivity extends SuperMainActivity{
 
         getBoard();
 
-        ((FloatingActionButton) findViewById(R.id.fab)).setOnClickListener(new View.OnClickListener() {
+        header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BoardActivity.this, AddBoardActivity.class);

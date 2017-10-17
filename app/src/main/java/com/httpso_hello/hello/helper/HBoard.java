@@ -90,7 +90,8 @@ public class HBoard extends Help{
 
 
                             if (response != null) {
-                                Board board = gson.fromJson(response, Board.class);
+                                                                    addBoardCallback.onSuccess();
+//                                Board board = gson.fromJson(response, Board.class);
 //                                Log.d("add_item", board.content_error);
 //                                if (board.error==null){
 //                                    Log.d("board", Integer.toString(board.items[0].id));
