@@ -17,6 +17,7 @@ public class BoardItem {
     public boolean is_voted;
     public String content;
     public int count_readed;
+    public String city_cache;
 
     public BoardItem(){
 
