@@ -1,12 +1,15 @@
 package com.httpso_hello.hello.fragments;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
@@ -19,11 +22,14 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.FlirtikItem;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.activity.ProfileActivity;
+import com.httpso_hello.hello.activity.SettingsActivity;
 import com.httpso_hello.hello.adapters.FlirtikiFragmentAdapter;
 import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.Profile;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +48,11 @@ public class SettingsProfileFragment extends Fragment {
     private EditText userEditPhone;
     private EditText userEditSkype;
     private EditText userEditAuto;
+    private TextView currentDateTime;
+    private Calendar dateAndTime;
+    public static int year;
+    public static int month;
+    public static int day;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,9 +76,12 @@ public class SettingsProfileFragment extends Fragment {
         userEditGenderWoman = (RadioButton) rootView.findViewById(R.id.userEditGenderWoman);
         userEditPhone = (EditText) rootView.findViewById(R.id.userEditPhone);
         userEditSkype = (EditText) rootView.findViewById(R.id.userEditSkype);
+        dateAndTime = Calendar.getInstance();
+        currentDateTime = (TextView) rootView.findViewById(R.id.currentDateTime);
+        setInitialDateTime();
 
 
-        //Профиль
+//Профиль
         userEditName.setText(user.nickname);
 
         if (user.gender == 0) {
@@ -81,9 +95,19 @@ public class SettingsProfileFragment extends Fragment {
             userEditGenderWoman.setChecked(true);
         }
 
+        if (user.birth_date != null) currentDateTime.setText(ConverterDate.getBirthdate(user.birth_date));
+        else currentDateTime.setText("01 января 1990 г.");
+
+        currentDateTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDate(v);
+            }
+        });
+
         userEditAuto.setText(user.avto);
 
-        //Контакты
+//Контакты
         userEditPhone.setText(user.phone);
         userEditSkype.setText(user.skype);
 
@@ -96,7 +120,6 @@ public class SettingsProfileFragment extends Fragment {
                 String userEditPhoneString = "";
                 String userEditSkypeString = "";
                 String userEditAutoString = "";
-
                 userEditNameString = userEditName.getText().toString();
 
                 if (userEditGenderMan.isChecked()) genderString = "1";
@@ -113,6 +136,7 @@ public class SettingsProfileFragment extends Fragment {
                 params.put("nickname", userEditNameString);
                 params.put("gender", genderString);
                 params.put("phone", userEditPhoneString);
+                params.put("birth_date", ConverterDate.sendBirthdate(year, month, day));
                 params.put("skype", userEditSkypeString);
                 params.put("avto", userEditAutoString);
 
@@ -148,6 +172,41 @@ public class SettingsProfileFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    // установка обработчика выбора даты
+    DatePickerDialog.OnDateSetListener d = new DatePickerDialog.OnDateSetListener() {
+        public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+            dateAndTime.set(Calendar.YEAR, year);
+            dateAndTime.set(Calendar.MONTH, monthOfYear);
+            dateAndTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            SettingsProfileFragment.year = year;
+            SettingsProfileFragment.month = monthOfYear;
+            SettingsProfileFragment.day = dayOfMonth;
+            currentDateTime.setText(Integer.toString(dayOfMonth) + ConverterDate.getMonthName(monthOfYear + 1) + Integer.toString(year) + " г.");
+        }
+    };
+
+    // отображаем диалоговое окно для выбора даты
+    public void setDate(View v) {
+        new DatePickerDialog(getContext(), d,
+                dateAndTime.get(Calendar.YEAR),
+                dateAndTime.get(Calendar.MONTH),
+                dateAndTime.get(Calendar.DAY_OF_MONTH))
+                .show();
+    }
+
+    // установка начальных даты и времени
+    private void setInitialDateTime() {
+        if (user.birth_date != null) {
+            dateAndTime.set(Calendar.YEAR, ConverterDate.getYear(user.birth_date));
+            dateAndTime.set(Calendar.MONTH, ConverterDate.getMonth(user.birth_date));
+            dateAndTime.set(Calendar.DAY_OF_MONTH, ConverterDate.getDay(user.birth_date));
+        } else {
+            dateAndTime.set(Calendar.YEAR, 1900);
+            dateAndTime.set(Calendar.MONTH, 0);
+            dateAndTime.set(Calendar.DAY_OF_MONTH, 1);
+        }
     }
 
 }

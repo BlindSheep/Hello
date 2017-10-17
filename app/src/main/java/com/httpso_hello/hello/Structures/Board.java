@@ -9,6 +9,7 @@ public class Board {
     public BoardItem[] items;
     public int count;
     public Error error;
+//    public String content_error;
 
     public Board(){
 

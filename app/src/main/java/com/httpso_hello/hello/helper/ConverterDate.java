@@ -374,4 +374,78 @@ public class ConverterDate {
         else if (id.equals("buy1000points")) return 1000;
         else return 1;
     }
+    //Конвертер даты рождения с сервера
+    public static String getBirthdate(String oldDate) {
+        String monthStr = "";
+        char[] chOldDate = oldDate.toCharArray();
+        String year = Character.toString(chOldDate[0]) + Character.toString(chOldDate[1]) + Character.toString(chOldDate[2]) + Character.toString(chOldDate[3]);
+        String month = Character.toString(chOldDate[5]) + Character.toString(chOldDate[6]);
+        String day = Character.toString(chOldDate[8]) + Character.toString(chOldDate[9]);
+        if (month.equals("01")) monthStr = " января ";
+        else if (month.equals("02")) monthStr = " февраля ";
+        else if (month.equals("03")) monthStr = " марта ";
+        else if (month.equals("04")) monthStr = " апреля ";
+        else if (month.equals("05")) monthStr = " мая ";
+        else if (month.equals("06")) monthStr = " июня ";
+        else if (month.equals("07")) monthStr = " июля ";
+        else if (month.equals("08")) monthStr = " августа ";
+        else if (month.equals("09")) monthStr = " сентября ";
+        else if (month.equals("10")) monthStr = " октября ";
+        else if (month.equals("11")) monthStr = " ноября ";
+        else if (month.equals("12")) monthStr = " декабря ";
+
+        return day + monthStr + year + " г.";
+    }
+
+    //Конвертер даты рождения на сервер
+    public static String sendBirthdate(int year, int month, int day) {
+        String newBirthDate = "";
+        if ((month > 9) && (day > 9)) newBirthDate = Integer.toString(year) + "-" + Integer.toString(month+1) + "-" + Integer.toString(day) + " 00:00:00";
+        else if ((month <= 9) && (day > 9)) newBirthDate = Integer.toString(year) + "-0" + Integer.toString(month+1) + "-" + Integer.toString(day) + " 00:00:00";
+        else if ((month > 9) && (day <= 9)) newBirthDate = Integer.toString(year) + "-" + Integer.toString(month+1) + "-0" + Integer.toString(day) + " 00:00:00";
+        else if ((month <= 9) && (day <= 9)) newBirthDate = Integer.toString(year) + "-0" + Integer.toString(month+1) + "-0" + Integer.toString(day) + " 00:00:00";
+
+        return newBirthDate;
+    }
+
+    //Получения года
+    public static int getYear(String oldDate) {
+        char[] chOldDate = oldDate.toCharArray();
+        String year = Character.toString(chOldDate[0]) + Character.toString(chOldDate[1]) + Character.toString(chOldDate[2]) + Character.toString(chOldDate[3]);
+
+        return Integer.parseInt(year);
+    }
+
+    //Получение месяца
+    public static int getMonth(String oldDate) {
+        char[] chOldDate = oldDate.toCharArray();
+        String month = Character.toString(chOldDate[5]) + Character.toString(chOldDate[6]);
+
+        return Integer.parseInt(month) - 1;
+    }
+
+    //Получение название месяца
+    public static String getMonthName(int id) {
+        if (id == 1) return " января ";
+        else if (id == 2) return " февраля ";
+        else if (id == 3) return " марта ";
+        else if (id == 4) return " апреля ";
+        else if (id == 5) return " мая ";
+        else if (id == 6) return " июня ";
+        else if (id == 7) return " июля ";
+        else if (id == 8) return " августа ";
+        else if (id == 9) return " сентября ";
+        else if (id == 10) return " октября ";
+        else if (id == 11) return " ноября ";
+        else if (id == 12) return " декабря ";
+        else return "";
+    }
+
+    //Получение дня
+    public static int getDay(String oldDate) {
+        char[] chOldDate = oldDate.toCharArray();
+        String day = Character.toString(chOldDate[8]) + Character.toString(chOldDate[9]);
+
+        return Integer.parseInt(day);
+    }
 }

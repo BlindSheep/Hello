@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.HBoard;
+import com.httpso_hello.hello.helper.Help;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -111,7 +112,7 @@ public class AddBoardActivity extends SuperMainActivity {
                 @Override
                 public void onClick(View v) {
                     boardTextString = boardText.getText().toString();
-                    if ((!boardTextString.isEmpty()) && (!photos.isEmpty())) {
+                    if ((!boardTextString.isEmpty()) /*&& (!photos.isEmpty())*/) {
                         HBoard hBoard = new HBoard(getApplicationContext());
                         hBoard.addBoard(boardTextString, new HBoard.AddBoardCallback() {
                             @Override
@@ -120,6 +121,8 @@ public class AddBoardActivity extends SuperMainActivity {
                                 finish();
                             }
 
+
+                        }, new Help.ErrorCallback() {
                             @Override
                             public void onError(int error_code, String error_message) {
                                 Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();

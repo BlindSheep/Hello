@@ -113,7 +113,7 @@ public class BoardActivity extends SuperMainActivity{
     }
 
     public void getNew(){
-        if (page < 3) {
+//        if (page < 3) {
             HBoard hBoard = new HBoard(getApplicationContext());
             hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
                 @Override
@@ -134,6 +134,6 @@ public class BoardActivity extends SuperMainActivity{
                 public void onInternetError() {
                 }
             });
-        }
+//        }
     }
 }

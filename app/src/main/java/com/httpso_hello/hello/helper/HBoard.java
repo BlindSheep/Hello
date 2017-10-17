@@ -42,7 +42,8 @@ public class HBoard extends Help{
                             if (response != null) {
                                 Board board = gson.fromJson(response, Board.class);
                                 if (board.error==null){
-                                    Log.d("board", Integer.toString(board.items[0].id));
+//                                    Log.d("board_error", board.content_error);
+//                                    Log.d("board", Integer.toString(board.items[0].id));
                                     getBoardCallback.onSuccess(board.items, activity);
                                     return;
                                 }
@@ -76,33 +77,37 @@ public class HBoard extends Help{
 
     public void addBoard(
             final String content,
-            final AddBoardCallback addBoardCallback){
+            final AddBoardCallback addBoardCallback,
+            final Help.ErrorCallback errorCallback){
         Log.d("board", "Enter");
         if (Constant.api_key !="") {
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
-                    Constant.board_get_board_uri,
+                    Constant.board_add_item_uri,
                     new Response.Listener<String>() {
                         public void onResponse(String response){
-                            Log.d("board", response);
+
+
+
                             if (response != null) {
                                 Board board = gson.fromJson(response, Board.class);
-                                if (board.error==null){
-                                    Log.d("board", Integer.toString(board.items[0].id));
-                                    addBoardCallback.onSuccess();
-                                    return;
-                                }
-                                addBoardCallback.onError(board.error.error_code, board.error.error_msg);
-                                return;
+//                                Log.d("add_item", board.content_error);
+//                                if (board.error==null){
+//                                    Log.d("board", Integer.toString(board.items[0].id));
+//                                    addBoardCallback.onSuccess();
+//                                    return;
+//                                }
+//                                addBoardCallback.onError(board.error.error_code, board.error.error_msg);
+//                                return;
                             }
-                            addBoardCallback.onInternetError();
-                            return;
+//                            addBoardCallback.onInternetError();
+//                            return;
                         }
                     },
                     new Response.ErrorListener(){
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            addBoardCallback.onInternetError();
+                            errorCallback.onInternetError();
                         }
                     }
             )
@@ -113,6 +118,7 @@ public class HBoard extends Help{
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("content", content);
+                    params.put("ctype_name", "board");
                     return params;
                 };
             };
@@ -128,8 +134,6 @@ public class HBoard extends Help{
 
     public interface AddBoardCallback{
         void onSuccess();
-        void onError(int error_code, String error_message);
-        void onInternetError();
     }
 
 }

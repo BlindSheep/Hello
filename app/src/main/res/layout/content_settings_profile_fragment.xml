@@ -1,210 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:scrollbars="none"
-    android:scrollbarSize="0dp"
-    android:scrollbarAlwaysDrawVerticalTrack="false"
-    android:background="@color/zalivon"
-    tools:context="com.httpso_hello.hello.activity.SettingsActivity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:scrollbars="none"
+            android:scrollbarSize="0dp"
+            android:scrollbarAlwaysDrawVerticalTrack="false"
+            android:background="@color/zalivon"
+            tools:context="com.httpso_hello.hello.activity.SettingsActivity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginTop="115dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:textColor="@color/main_blue_color_hello"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
-                android:text="Имя" />
-
-            <EditText
-                android:id="@+id/userEditName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Имя"
-                android:inputType="textCapWords"/>
+                android:background="@drawable/board"
+                android:layout_marginTop="115dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:textColor="@color/main_blue_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:text="Имя" />
+
+            <EditText
+                    android:id="@+id/userEditName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Имя"
+                    android:inputType="textCapWords"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:textColor="@color/main_blue_color_hello"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
-                android:text="Пол" />
-
-            <RadioGroup
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="13dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:textSize="15sp">
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/userEditGenderMan"
+            <TextView
+                    android:textColor="@color/main_blue_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:text="Пол" />
+
+            <RadioGroup
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Мужской" />
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp">
 
                 <RadioButton
-                    android:id="@+id/userEditGenderWoman"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Женский" />
+                        android:id="@+id/userEditGenderMan"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Мужской" />
+
+                <RadioButton
+                        android:id="@+id/userEditGenderWoman"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Женский" />
 
             </RadioGroup>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:textColor="@color/main_blue_color_hello"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
-                android:text="Телефон" />
-
-            <EditText
-                android:id="@+id/userEditPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Телефон"
-                android:inputType="phone"/>
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:textColor="@color/main_blue_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:text="Дата рождения" />
+
+            <TextView
+                    android:id="@+id/currentDateTime"
+                    android:textColor="@color/main_black_color_hello"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="15sp"
+                    android:hint="1 янваля 1990"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:textColor="@color/main_blue_color_hello"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
-                android:text="Skype" />
-
-            <EditText
-                android:id="@+id/userEditSkype"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Skype"
-                android:inputType="textCapSentences"/>
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:textColor="@color/main_blue_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:text="Телефон" />
+
+            <EditText
+                    android:id="@+id/userEditPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Телефон"
+                    android:inputType="phone"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:textColor="@color/main_blue_color_hello"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
-                android:text="Автомобиль" />
-
-            <EditText
-                android:id="@+id/userEditAuto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Автомобиль"
-                android:inputType="textCapSentences"/>
+                android:background="@drawable/board"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:layout_marginBottom="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:textColor="@color/main_blue_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:text="Skype" />
+
+            <EditText
+                    android:id="@+id/userEditSkype"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Skype"
+                    android:inputType="textCapSentences"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/board"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:textColor="@color/main_blue_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:text="Автомобиль" />
+
+            <EditText
+                    android:id="@+id/userEditAuto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Автомобиль"
+                    android:inputType="textCapSentences"/>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/saveButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textSize="20sp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/main_red_color_hello"
-            android:text="Сохранить"/>
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textSize="20sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/main_red_color_hello"
+                android:text="Сохранить"/>
 
     </LinearLayout>
 
