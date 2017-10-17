@@ -71,7 +71,7 @@ public class PhotosUserAdapter extends ArrayAdapter<Photo>{
 
         final Photo photo = this.photos.get(position);
         if(photo != null){
-            if(photo.image.micro!="")
+//            if(photo.image.micro.length()>0)
                 Picasso.with(getContext())
                         .load(Constant.upload + photo.image.micro)
                         .into(holder.profile_photos_item, new Callback() {

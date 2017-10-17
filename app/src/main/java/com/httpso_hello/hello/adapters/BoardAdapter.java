@@ -101,7 +101,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             holder = (BoardAdapter.ViewHolder) rowView.getTag();
         }
         final BoardItem boardItem = this.boardItems.get(position);
-        //Аватар отправителя
+//Аватар отправителя
         if(boardItem.avatar != null) {
             Picasso
                     .with(getContext())
@@ -130,16 +130,16 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     .into(holder.userAvatarBoard);
         }
 
-        //Имя отправителя
+//Имя отправителя
         holder.userNameBoard.setText(boardItem.user_nickname);
-        //Дата объявления
+//Дата объявления
         holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.date_pub));
-        //Текст объявления
+//Текст объявления
         holder.boardText.setText(boardItem.content);
         if (boardItem.city_cache != null) holder.cityCache.setText(boardItem.city_cache);
-        //Кол-во просмотров
+//Кол-во просмотров
         holder.countReaded.setText(Integer.toString(boardItem.count_readed) + " просмотров");
-        // Первая фотография
+// Первая фотография
         DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
         int width = displaymetrics.widthPixels;
         holder.firstPhoto.setMinimumWidth(width);
@@ -178,7 +178,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 holder.anotherPhotoBoard.setAdapter(puAdapter);
                 holder.anotherPhotoBoard.setVisibility(View.VISIBLE);
 
-                //Клик по фотке в ленте
+//Клик по фотке в ленте
                 holder.anotherPhotoBoard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
@@ -201,11 +201,11 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         }
 
 
-        //Цвет кнопки лайка
+//Цвет кнопки лайка
         if (!boardItem.is_voted) holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
-        else  holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+        else holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
 
-        //Рейтинг
+//Рейтинг
         if (boardItem.rating != 0) {
             holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
             holder.likeTextBoard.setText(ConverterDate.likeStr(boardItem.rating));
@@ -214,7 +214,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             holder.likeTextBoard.setText("Нет оценок");
         }
 
-        // обработка клика по аватарке
+// обработка клика по аватарке
         holder.userAvatarBoard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -224,7 +224,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 boardActivity.startActivity(intent);
             }
         });
-        // обработка клика по имени
+// обработка клика по имени
         holder.userNameBoard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -234,7 +234,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 boardActivity.startActivity(intent);
             }
         });
-        // обработка клика по дате
+// обработка клика по дате
         holder.datePubBoard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,7 +244,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 boardActivity.startActivity(intent);
             }
         });
-        //обработка клика по кнопке "Написать сообщение"
+//обработка клика по кнопке "Написать сообщение"
         holder.writeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -259,7 +259,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 boardActivity.startActivity(intent);
             }
         });
-        //обработка клика по кнопке лайк
+//обработка клика по кнопке лайк
         holder.likeButtonBoard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -350,7 +350,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 }
             }
         });
-        //обработка клика по кол-ву лайков
+//обработка клика по кол-ву лайков
         holder.likeTextBoard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -364,7 +364,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             }
         });
 
-        //Клик по большой фотке
+//Клик по большой фотке
         holder.firstPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -380,9 +380,9 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             }
         });
 
-        //Подгрузка новых обьявлений
+//Подгрузка новых обьявлений
         BoardActivity ba = ((BoardActivity) getContext());
-        if(position == (this.boardItems.size() - 19)) ba.getNew();
+        if(position == (this.boardItems.size() - 5)) ba.getNew();
 
         return rowView;
 
@@ -396,7 +396,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         return this.boardItems;
     }
 
-    public BoardItem getItem(int position){
+    public
+    BoardItem getItem(int position){
         return this.boardItems.get(position);
     }
 
