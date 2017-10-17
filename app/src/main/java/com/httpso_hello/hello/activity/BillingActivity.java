@@ -114,6 +114,23 @@ public class BillingActivity extends SuperMainActivity {
         } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
         user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
 
+        /*Billing.getInstance(getApplicationContext())
+                .getRaisingToken(
+                        "add_balance",
+                        new Billing.GetRaisingTokenCallback() {
+                            @Override
+                            public void onSuccess(String token) {
+                                SendAddBalance("buy20points", token, token);
+                            }
+
+                            @Override
+                            public void onError(int error_code, String error_msg) {
+                            }
+
+                            @Override
+                            public void onInternetError() {
+                            }
+                        });*/
 //Запросить на сервере кол-во баллов
         Profile.getInstance(getApplicationContext())
                 .getBalance(new Profile.GetBalanceCallback() {

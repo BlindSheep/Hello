@@ -178,4 +178,9 @@ public class BoardActivity extends SuperMainActivity{
             });
         }
     }
+    @Override
+    public void onPause(){
+        super.onPause();
+        timer.cancel();
+    }
 }
