@@ -136,7 +136,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.date_pub));
         //Текст объявления
         holder.boardText.setText(boardItem.content);
-        if (boardItem.city_cache != null) holder.cityCache.setText(boardItem.get(position).city_cache);
+        if (boardItem.city_cache != null) holder.cityCache.setText(boardItem.city_cache);
         //Кол-во просмотров
         holder.countReaded.setText(Integer.toString(boardItem.count_readed) + " просмотров");
         // Первая фотография

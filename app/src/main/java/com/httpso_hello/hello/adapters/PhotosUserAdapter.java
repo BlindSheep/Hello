@@ -71,39 +71,40 @@ public class PhotosUserAdapter extends ArrayAdapter<Photo>{
 
         final Photo photo = this.photos.get(position);
         if(photo != null){
-            Picasso.with(getContext())
-                    .load(Constant.upload + photo.image.micro)
-                    .into(holder.profile_photos_item, new Callback() {
-                        @Override
-                        public void onSuccess() {
-                        }
-                        @Override
-                        public void onError() {
-                            Picasso.with(getContext())
-                                    .load(Constant.upload + photo.image.small)
-                                    .into(holder.profile_photos_item, new Callback() {
-                                        @Override
-                                        public void onSuccess() {
-                                        }
-                                        @Override
-                                        public void onError() {
-                                            Picasso.with(getContext())
-                                                    .load(Constant.upload + photo.image.normal)
-                                                    .into(holder.profile_photos_item, new Callback() {
-                                                        @Override
-                                                        public void onSuccess() {
-                                                        }
-                                                        @Override
-                                                        public void onError() {
-                                                            Picasso.with(getContext())
-                                                                    .load(Constant.default_avatar)
-                                                                    .into(holder.profile_photos_item);
-                                                        }
-                                                    });
-                                        }
-                                    });
-                        }
-                    });
+            if(photo.image.micro!="")
+                Picasso.with(getContext())
+                        .load(Constant.upload + photo.image.micro)
+                        .into(holder.profile_photos_item, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                            }
+                            @Override
+                            public void onError() {
+                                Picasso.with(getContext())
+                                        .load(Constant.upload + photo.image.small)
+                                        .into(holder.profile_photos_item, new Callback() {
+                                            @Override
+                                            public void onSuccess() {
+                                            }
+                                            @Override
+                                            public void onError() {
+                                                Picasso.with(getContext())
+                                                        .load(Constant.upload + photo.image.normal)
+                                                        .into(holder.profile_photos_item, new Callback() {
+                                                            @Override
+                                                            public void onSuccess() {
+                                                            }
+                                                            @Override
+                                                            public void onError() {
+                                                                Picasso.with(getContext())
+                                                                        .load(Constant.default_avatar)
+                                                                        .into(holder.profile_photos_item);
+                                                            }
+                                                        });
+                                            }
+                                        });
+                            }
+                        });
         } else {
             Picasso.with(getContext())
                     .load(Constant.default_avatar)
