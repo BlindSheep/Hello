@@ -51,31 +51,31 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/board"
                 android:layout_marginBottom="6dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
+                android:background="@drawable/board"
                 android:elevation="1.5dp"
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Пол" />
+                    android:text="Пол"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:textSize="15sp" />
 
             <RadioGroup
-                    android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
                     android:layout_marginLeft="13dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
                     android:textSize="15sp">
 
                 <RadioButton
@@ -127,6 +127,91 @@
                     android:layout_marginTop="10dp"
                     android:textSize="15sp"
                     android:hint="1 янваля 1990"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:textColor="@color/main_blue_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:text="Место проживания" />
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                <Spinner
+                        android:id="@+id/region"
+                        android:textColor="@color/main_black_color_hello"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="14dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="10dp"
+                        android:textSize="15sp"/>
+
+                <Spinner
+                        android:id="@+id/sity"
+                        android:textColor="@color/main_black_color_hello"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="10dp"
+                        android:textSize="15sp"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:textColor="@color/main_blue_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:text="Материальное положение" />
+
+            <Spinner
+                    android:id="@+id/mat_pol"
+                    android:textColor="@color/main_black_color_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="14dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginTop="10dp"
+                    android:entries="@array/mat_pol"
+                    android:textSize="15sp"/>
 
         </LinearLayout>
 
@@ -202,6 +287,7 @@
                 android:background="@drawable/board"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
+                android:layout_marginBottom="6dp"
                 android:elevation="1.5dp"
                 android:orientation="vertical">
 
@@ -225,6 +311,73 @@
                     android:textSize="15sp"
                     android:hint="Автомобиль"
                     android:inputType="textCapSentences"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/board"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="horizontal">
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:textColor="@color/main_blue_color_hello"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="20dp"
+                        android:textSize="15sp"
+                        android:text="Рост (см)" />
+
+                <EditText
+                        android:id="@+id/userRostAuto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="15sp"
+                        android:hint="160"
+                        android:inputType="number"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:textColor="@color/main_blue_color_hello"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginTop="20dp"
+                        android:textSize="15sp"
+                        android:text="Вес (кг)" />
+
+                <EditText
+                        android:id="@+id/userVesAuto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="15sp"
+                        android:hint="50"
+                        android:inputType="number"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 

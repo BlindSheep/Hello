@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +22,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.FlirtikItem;
+import com.httpso_hello.hello.Structures.Region;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.activity.SettingsActivity;
 import com.httpso_hello.hello.adapters.FlirtikiFragmentAdapter;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
+import com.httpso_hello.hello.helper.CountryRegionCity;
 import com.httpso_hello.hello.helper.Profile;
 
 import java.util.ArrayList;
@@ -49,10 +53,15 @@ public class SettingsProfileFragment extends Fragment {
     private EditText userEditSkype;
     private EditText userEditAuto;
     private TextView currentDateTime;
+    private EditText userRostAuto;
+    private EditText userVesAuto;
     private Calendar dateAndTime;
     public static int year;
     public static int month;
     public static int day;
+    private Spinner matPol;
+    private Spinner region;
+    private Spinner sity;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,9 +85,34 @@ public class SettingsProfileFragment extends Fragment {
         userEditGenderWoman = (RadioButton) rootView.findViewById(R.id.userEditGenderWoman);
         userEditPhone = (EditText) rootView.findViewById(R.id.userEditPhone);
         userEditSkype = (EditText) rootView.findViewById(R.id.userEditSkype);
+        userRostAuto = (EditText) rootView.findViewById(R.id.userRostAuto);
+        userVesAuto = (EditText) rootView.findViewById(R.id.userVesAuto);
         dateAndTime = Calendar.getInstance();
         currentDateTime = (TextView) rootView.findViewById(R.id.currentDateTime);
+        matPol = (Spinner) rootView.findViewById(R.id.mat_pol);
+        region = (Spinner) rootView.findViewById(R.id.region);
+        sity = (Spinner) rootView.findViewById(R.id.sity);
         setInitialDateTime();
+
+
+//Заполнение спинеров Регионов и Городов
+        String[] regionsArray = new String[CountryRegionCity.getRegionsForSpinner().length];
+        for(int i = 0; i < CountryRegionCity.getRegionsForSpinner().length; i++){
+            regionsArray[i] = CountryRegionCity.getRegionsForSpinner()[i].getName();
+        }
+
+        String[] citysArray = new String[CountryRegionCity.getCitysForSpinner().length];
+        for(int i = 0; i < CountryRegionCity.getCitysForSpinner().length; i++){
+            citysArray[i] =
+                    CountryRegionCity.getCitysForSpinner()[i].getName();
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, regionsArray);
+        region.setAdapter(adapter);
+
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, citysArray);
+        sity.setAdapter(adapter2);
+//Конец заполнения спинеров Регионов и Городов
 
 
 //Профиль
@@ -107,6 +141,17 @@ public class SettingsProfileFragment extends Fragment {
 
         userEditAuto.setText(user.avto);
 
+        if (user.rost != 0) userRostAuto.setText(Integer.toString(user.rost));
+        if (user.ves != 0) userVesAuto.setText(Integer.toString(user.ves));
+
+        if (user.mat_poloz != 0) {
+            if (user.mat_poloz == 1) matPol.setSelection(0);
+            else if (user.mat_poloz == 2) matPol.setSelection(1);
+            else if (user.mat_poloz == 3) matPol.setSelection(2);
+            else if (user.mat_poloz == 4) matPol.setSelection(3);
+            else if (user.mat_poloz == 5) matPol.setSelection(4);
+        }
+
 //Контакты
         userEditPhone.setText(user.phone);
         userEditSkype.setText(user.skype);
@@ -120,11 +165,19 @@ public class SettingsProfileFragment extends Fragment {
                 String userEditPhoneString = "";
                 String userEditSkypeString = "";
                 String userEditAutoString = "";
+                String userEditVesString = "";
+                String userEditRostString = "";
+                String userEditMatString = "";
+
                 userEditNameString = userEditName.getText().toString();
 
                 if (userEditGenderMan.isChecked()) genderString = "1";
                 else if (userEditGenderWoman.isChecked()) genderString = "2";
                 else genderString = "0";
+
+                userEditRostString = userRostAuto.getText().toString();
+
+                userEditVesString = userVesAuto.getText().toString();
 
                 userEditPhoneString = userEditPhone.getText().toString();
 
@@ -132,13 +185,18 @@ public class SettingsProfileFragment extends Fragment {
 
                 userEditAutoString = userEditAuto.getText().toString();
 
+                userEditMatString = Integer.toString(matPol.getSelectedItemPosition() + 1);
+
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("nickname", userEditNameString);
                 params.put("gender", genderString);
                 params.put("phone", userEditPhoneString);
-                params.put("birth_date", ConverterDate.sendBirthdate(year, month, day));
+                if (day != 0) params.put("birth_date", ConverterDate.sendBirthdate(year, month, day));
                 params.put("skype", userEditSkypeString);
                 params.put("avto", userEditAutoString);
+                params.put("ves", userEditVesString);
+                params.put("rost", userEditRostString);
+                params.put("mat_poloz", userEditMatString);
 
                 GsonBuilder GB = new GsonBuilder();
                 Gson gson = GB.create();
@@ -164,7 +222,8 @@ public class SettingsProfileFragment extends Fragment {
                     @Override
                     public void onInternetError() {
                         saveButton.setText("Сохранить");
-                        Toast.makeText(getContext().getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext().getApplicationContext(),
+                                "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
                     }
                 });
             }

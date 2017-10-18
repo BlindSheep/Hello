@@ -193,5 +193,11 @@
         <item>500</item>
         <item>1000</item>
     </string-array>
-
+    <string-array name="mat_pol">
+        <item>...</item>
+        <item>Нет дохода</item>
+        <item>Низкий доход</item>
+        <item>Стабильный средний доход</item>
+        <item>Высокий доход</item>
+    </string-array>
 </resources>

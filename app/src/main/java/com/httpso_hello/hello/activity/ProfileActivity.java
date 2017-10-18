@@ -165,6 +165,8 @@ public class ProfileActivity extends SuperMainActivity{
     File photoFile;
     private int width;
     private Bitmap selectedImage;
+    private PopupWindow popUpWindow4;
+    private View popupView4;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -270,7 +272,13 @@ public class ProfileActivity extends SuperMainActivity{
         popUpWindow2 = new PopupWindow(popupView2, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupView3 = getLayoutInflater().inflate(R.layout.popup_accept_new_photo, null);
         popUpWindow3 = new PopupWindow(popupView3, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-
+        popupView4 = getLayoutInflater().inflate(R.layout.popup_for_wait, null);
+        popUpWindow4 = new PopupWindow(popupView4, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ((TextView) popupView4.findViewById(R.id.textForWaiting)).setText("Загружаем фото...");
+        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+        popUpWindow4.setWidth(displaymetrics.widthPixels);
+        popUpWindow4.setHeight(displaymetrics.heightPixels);
+        popUpWindow4.setAnimationStyle(Animation_Dialog);
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -1121,7 +1129,6 @@ public class ProfileActivity extends SuperMainActivity{
             //загрузка нового фото из галереи в ленту
             case 1:
                 if (resultCode == RESULT_OK) {
-                    progressBarProfile.setVisibility(View.VISIBLE);
                     imageUri = imageReturnedIntent.getData();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         if (Help.runTaskAfterPermission(
@@ -1142,7 +1149,6 @@ public class ProfileActivity extends SuperMainActivity{
             case 2:
                 if (resultCode == RESULT_OK) {
 //                    try {
-                    progressBarProfile.setVisibility(View.VISIBLE);
                     imageUri = Uri.fromFile(photoFile);
                     openAvatarUpdateWindow(sendPhotoClick);
                     /*
@@ -1165,7 +1171,6 @@ public class ProfileActivity extends SuperMainActivity{
             //загрузка новой аватарки из галереи
             case 3:
                 if (resultCode == RESULT_OK) {
-                    progressBarProfile.setVisibility(View.VISIBLE);
                     imageUri = imageReturnedIntent.getData();
                     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                         if(Help.runTaskAfterPermission(
@@ -1186,7 +1191,6 @@ public class ProfileActivity extends SuperMainActivity{
             //загрузка новой аватарки с камеры
             case 4:
                 if (resultCode == RESULT_OK) {
-                    progressBarProfile.setVisibility(View.VISIBLE);
                     imageUri = Uri.fromFile(photoFile);
                     openAvatarUpdateWindow(updateAvatarClick);
                     /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
@@ -1262,35 +1266,29 @@ public class ProfileActivity extends SuperMainActivity{
                     new Profile.UpdateAvatarCallback() {
                         @Override
                         public void onSuccess(Image avatar) {
-                            if (avatar != null) {
-                                Picasso.with(getApplicationContext())
-                                        .load(Uri.parse(Constant.upload + avatar.normal))
-                                        .resize(width, width)
-                                        .centerCrop()
-                                        .error(R.mipmap.avatar)
-                                        .into(ProfileActivity.this.avatar);
-                            } else {
-                                Picasso.with(getApplicationContext())
-                                        .load(Constant.default_avatar)
-                                        .resize(width, width)
-                                        .centerCrop()
-                                        .error(R.mipmap.avatar)
-                                        .into(ProfileActivity.this.avatar);
-                            }
-                            progressBarProfile.setVisibility(View.GONE);
-                            popUpWindow3.dismiss();
+                            popUpWindow4.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                            startActivity(intent);
+                            finish();
                         }
                     }, new Help.ErrorCallback() {
                         @Override
                         public void onError(int error_code, String error_msg) {
-                            progressBarProfile.setVisibility(View.GONE);
-                            popUpWindow3.dismiss();
+                            popUpWindow4.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                            startActivity(intent);
+                            finish();
                         }
 
                         @Override
                         public void onInternetError() {
-                            progressBarProfile.setVisibility(View.GONE);
-                            popUpWindow3.dismiss();
+                            popUpWindow4.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                            startActivity(intent);
+                            finish();
                         }
                     }
             );
@@ -1300,8 +1298,8 @@ public class ProfileActivity extends SuperMainActivity{
     private View.OnClickListener sendPhotoClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            progressBarProfile.setVisibility(View.VISIBLE);
-            ((TextView) popUpWindow3.getContentView().findViewById(R.id.savePhoto)).setText("Сохраняем...");
+            popUpWindow3.dismiss();
+            popUpWindow4.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
             final String base64_code_ava = Help.getBase64FromImage(selectedImage, Bitmap.CompressFormat.JPEG);
             Photo.getInstance(getApplicationContext()).addPhoto(
                     base64_code_ava,
@@ -1309,17 +1307,17 @@ public class ProfileActivity extends SuperMainActivity{
                     new Photo.AddPhotoCallback() {
                         @Override
                         public void onSuccess() {
-
+                            popUpWindow4.dismiss();
                         }
                     }, new Help.ErrorCallback() {
                         @Override
                         public void onError(int error_code, String error_msg) {
-
+                            popUpWindow4.dismiss();
                         }
 
                         @Override
                         public void onInternetError() {
-
+                            popUpWindow4.dismiss();
                         }
                     }
             );
