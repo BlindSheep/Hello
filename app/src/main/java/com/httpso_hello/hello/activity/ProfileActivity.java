@@ -199,7 +199,8 @@ public class ProfileActivity extends SuperMainActivity{
         celZnakomstvaProfile7 = (TextView) findViewById(R.id.celZnakomstvaProfile7);
         celZnakomstvaProfile8 = (TextView) findViewById(R.id.celZnakomstvaProfile8);
         celZnakomstvaProfile9 = (TextView) findViewById(R.id.celZnakomstvaProfile9);
-        celZnakomstvaProfile10 = (TextView) findViewById(R.id.celZnakomstvaProfile10);
+        celZnakomstvaProfile10 = (TextView)
+                findViewById(R.id.celZnakomstvaProfile10);
         celZnakomstvaProfile11 = (TextView) findViewById(R.id.celZnakomstvaProfile11);
         ageLookinFor = (TextView)findViewById(R.id.ageLookinFor);
         GV = (GridView) findViewById(R.id.profile_photos_list);
@@ -262,7 +263,8 @@ public class ProfileActivity extends SuperMainActivity{
         gift8 = (ImageView) findViewById(R.id.gift8);
         gift9 = (ImageView) findViewById(R.id.gift9);
         giftsBlock = (LinearLayout) findViewById(R.id.giftsBlock);
-        giftsLayout1 = (LinearLayout) findViewById(R.id.giftsLayout1);
+        giftsLayout1 = (LinearLayout)
+                findViewById(R.id.giftsLayout1);
         giftsLayout2 = (LinearLayout) findViewById(R.id.giftsLayout2);
         giftsLayout3 = (LinearLayout) findViewById(R.id.giftsLayout3);
         friendsAndGiftsBlock = (LinearLayout) findViewById(R.id.friendsAndGiftsBlock);
@@ -279,6 +281,7 @@ public class ProfileActivity extends SuperMainActivity{
         popUpWindow4.setWidth(displaymetrics.widthPixels);
         popUpWindow4.setHeight(displaymetrics.heightPixels);
         popUpWindow4.setAnimationStyle(Animation_Dialog);
+
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -293,7 +296,7 @@ public class ProfileActivity extends SuperMainActivity{
 
         toggle.syncState();
 
-        //Заполнение шапки в меню
+//Заполнение шапки в меню
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
@@ -322,24 +325,25 @@ public class ProfileActivity extends SuperMainActivity{
         String id = Integer.toString(stgs.getSettingInt("user_id"));
         user_id_header.setText("Ваш ID " + id);
 
-        //Парсинг юзера
+//Парсинг юзера
         Profile profile = new Profile(getApplicationContext());
         profile.getProfile(extras.getInt("profile_id"), this, new Profile.GetProfileCallback() {
             @Override
             public void onSuccess(final User user, Activity activity) {
-                ///////////////////////////////////////////
-                ///Отображение информации о пользователе///
-                ///////////////////////////////////////////
+///////////////////////////////////////////
+///Отображение информации о пользователе///
+///////////////////////////////////////////
 
-                // Является ли открытая анкета, анкетой залогинившегося юзера
+// Является ли открытая анкета, анкетой залогинившегося юзера
                 isUserProfile = (stgs.getSettingInt("user_id") == user.id);
 
-                //Устанавливаем имя и возраст в тулбар
+//Устанавливаем имя и возраст в тулбар
                 if (user.birth_date != null) {
-                    nameToolbar.setText(user.nickname + ", " + convertDateToAge(user.birth_date));
+                    nameToolbar.setText(user.nickname + ", " +
+                            convertDateToAge(user.birth_date));
                 } else nameToolbar.setText(user.nickname);
 
-                //Устанавливаем дату последнего захода в тулбар
+//Устанавливаем дату последнего захода в тулбар
                 if (user.is_online) {
                     onlineToolbar.setText("В сети");
                     onlineToolbar.setTextColor(getResources().getColor(R.color.main_green_color_hello));
@@ -348,12 +352,12 @@ public class ProfileActivity extends SuperMainActivity{
                     onlineToolbar.setTextColor(getResources().getColor(R.color.main_white_color_hello));
                 }
 
-                //Устанавливаем аватар
+//Устанавливаем аватар
                 DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
                 width = displaymetrics.widthPixels;
                 ProfileActivity.this.avatar.setMinimumWidth(width);
                 ProfileActivity.this.avatar.setMinimumHeight(width);
-                //// TODO: 13.08.2017 Сделать проверку наличия пути
+//// TODO: 13.08.2017 Сделать проверку наличия пути
                 if (user.avatar != null) {
                     Picasso.with(getApplicationContext())
                             .load(Uri.parse(Constant.upload + user.avatar.normal))
@@ -370,11 +374,11 @@ public class ProfileActivity extends SuperMainActivity{
                             .into(ProfileActivity.this.avatar);
                 }
 
-                //Кнопка загрузки новых фотографий
+//Кнопка загрузки новых фотографий
                 if (isUserProfile) newPhotoButton.setVisibility(View.VISIBLE);
                 else newPhotoButton.setVisibility(View.GONE);
 
-                //Устанавливаем дополнительные фотки и их кол-во
+//Устанавливаем дополнительные фотки и их кол-во
                 if(user.photos != null) {
                     GV.setVisibility(View.VISIBLE);
                     final ArrayList<com.httpso_hello.hello.Structures.Photo> defolt = new ArrayList<com.httpso_hello.hello.Structures.Photo>();
@@ -392,7 +396,7 @@ public class ProfileActivity extends SuperMainActivity{
                     GV.setNumColumns(defolt.size());
                     GV.setAdapter(plAdapter);
 
-                    // Обработчик клика по фотке
+// Обработчик клика по фотке
                     GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -421,45 +425,46 @@ public class ProfileActivity extends SuperMainActivity{
                     GV.setVisibility(View.GONE);
                 }
 
-                //Устанавливаем город
+//Устанавливаем город
                 if (user.city_cache != null) cityCache.setText(user.city_cache);
 
-                //Семейное положение
+//Семейное положение
                 if (user.sp != null) {
                     spProfileContener.setVisibility(View.VISIBLE);
                     if (user.sp.equals("1")) if (user.gender != 1) spProfile.setText("Свободна"); else spProfile.setText("Свободен");
                     if (user.sp.equals("2")) spProfile.setText("В активном поиске");
                     if (user.sp.equals("3")) if (user.gender != 1) spProfile.setText("Есть друг"); else spProfile.setText("Есть подруга");
-                    if (user.sp.equals("4")) if (user.gender != 1) spProfile.setText("Влюблёна"); else spProfile.setText("Влюблён");
+                    if
+                            (user.sp.equals("4")) if (user.gender != 1) spProfile.setText("Влюблёна"); else spProfile.setText("Влюблён");
                     if (user.sp.equals("5")) if (user.gender != 1) spProfile.setText("Замужем"); else spProfile.setText("Женат");
                 } else spProfileContener.setVisibility(View.GONE);
 
-                //Устанавливаем телефон
+//Устанавливаем телефон
                 if(user.phone != null) {
                     phoneNumProfileConteiner.setVisibility(View.VISIBLE);
                     phoneNumProfile.setText(user.phone);
                 } else phoneNumProfileConteiner.setVisibility(View.GONE);
 
-                //Устанавливаем скайп
+//Устанавливаем скайп
                 if(user.skype != null) {
                     skypeProfileConteiner.setVisibility(View.VISIBLE);
                     skypeProfile.setText(user.skype);
                 } else skypeProfileConteiner.setVisibility(View.GONE);
 
-                //Материальное положение
+//Материальное положение
                 if ((user.mat_poloz == 0) || (user.mat_poloz == 1)) dohodProfileContener.setVisibility(View.GONE);
                 if (user.mat_poloz == 2) dohodProfile.setText("Нет дохода");
                 if (user.mat_poloz == 3) dohodProfile.setText("Низкий доход");
                 if (user.mat_poloz == 4) dohodProfile.setText("Стабильный средний доход");
                 if (user.mat_poloz == 5) dohodProfile.setText("Высокий доход");
 
-                //Автомобиль
+//Автомобиль
                 if (user.avto != null) {
                     autoProfile.setText(user.avto);
                     autoProfileContener.setVisibility(View.VISIBLE);
                 } else autoProfileContener.setVisibility(View.GONE);
 
-                //Рост и вес
+//Рост и вес
                 if ((user.rost == 0) && (user.ves == 0)) rostAndVesProfileContener.setVisibility(View.GONE);
                 else {
                     rostAndVesProfileContener.setVisibility(View.VISIBLE);
@@ -481,11 +486,11 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 }
 
-                //скрываем блок с друзьями и подарками если их нет
+//скрываем блок с друзьями и подарками если их нет
                 if ((user.friends_count != 0) || (user.gifts.length != 0)) friendsAndGiftsBlock.setVisibility(View.VISIBLE);
                 else friendsAndGiftsBlock.setVisibility(View.GONE);
 
-                //Кол-во друзей
+//Кол-во друзей
                 if(user.friends_count != 0) {
                     String friendsStr = Integer.toString(user.friends_count);
                     if(user.friends_count == 1) friendsCount.setText(friendsStr + " друг");
@@ -576,7 +581,7 @@ public class ProfileActivity extends SuperMainActivity{
                             .into(friend9);
                 }
 
-                //Кол-во подарков
+//Кол-во подарков
                 if(user.gifts.length != 0) {
                     String giftsStr = Integer.toString(user.gifts.length);
                     if(user.gifts.length == 1) giftsCount.setText(giftsStr + " подарок");
@@ -635,7 +640,8 @@ public class ProfileActivity extends SuperMainActivity{
                             .error(R.mipmap.avatar)
                             .into(gift6);
                 }
-                if (user.gifts.length > 6) {
+                if
+                        (user.gifts.length > 6) {
                     gift7.setVisibility(View.VISIBLE);
                     giftsLayout3.setVisibility(View.VISIBLE);
                     Picasso.with(getApplicationContext())
@@ -658,15 +664,15 @@ public class ProfileActivity extends SuperMainActivity{
                             .into(gift9);
                 }
 
-                //Скрыть блок "Ищу", если нет никакой инфы
+//Скрыть блок "Ищу", если нет никакой инфы
                 if ((user.looking_for == 0) && (user.looking_for_age == 0) && (user.age_do == 0) && (user.reg_cel == null)) lookinForBar.setVisibility(View.GONE);
                 else lookinForBar.setVisibility(View.VISIBLE);
 
-                //Скрываем полосочку в блоке Ищу
+//Скрываем полосочку в блоке Ищу
                 if ((user.looking_for_age == 0) && (user.looking_for == 0) && (user.age_do == 0)) findView.setVisibility(View.GONE);
                 else findView.setVisibility(View.VISIBLE);
 
-                //С кем хочет познакомиться
+//С кем хочет познакомиться
                 if (user.looking_for != 0) {
                     if (user.looking_for == 1) {
                         looking_for.setVisibility(View.VISIBLE);
@@ -682,7 +688,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 } else looking_for.setVisibility(View.GONE);
 
-                //Диапазон возраста для поиска
+//Диапазон возраста для поиска
                 if ((user.looking_for_age != 0) && (user.age_do != 0)) {
                     ageLookinFor.setVisibility(View.VISIBLE);
                     ageLookinFor.setText("Возраст от " + Integer.toString(user.looking_for_age) + " до " + Integer.toString(user.age_do) + " лет");
@@ -697,7 +703,7 @@ public class ProfileActivity extends SuperMainActivity{
                 }
                 else ageLookinFor.setVisibility(View.GONE);
 
-                //Цель знакомства
+//Цель знакомства
                 if (user.reg_cel != null) {
                     celZnakomstvaProfileLL.setVisibility(View.VISIBLE);
                     char[] cel = user.reg_cel.toCharArray();
@@ -715,8 +721,8 @@ public class ProfileActivity extends SuperMainActivity{
                     if (cel.length >= 12) if (cel[11] == '1') celZnakomstvaProfile11.setVisibility(View.VISIBLE);
                 } else celZnakomstvaProfileLL.setVisibility(View.GONE);
 
-                //Интересы
-                if (    (user.music != null) ||
+//Интересы
+                if ( (user.music != null) ||
                         (user.movies != null) ||
                         (user.books != null) ||
                         (user.games != null) ||
@@ -724,46 +730,45 @@ public class ProfileActivity extends SuperMainActivity{
                         ) anketaBar.setVisibility(View.VISIBLE);
                 else anketaBar.setVisibility(View.GONE);
 
-                //Любимая музыка
+//Любимая музыка
                 if (user.music != null) {
                     musicProfile.setText(user.music);
                     musicProfileContener.setVisibility(View.VISIBLE);
                 } else musicProfileContener.setVisibility(View.GONE);
-
-                //Любимые фильмы
+//Любимые фильмы
                 if (user.movies != null) {
                     moviesProfile.setText(user.movies);
                     moviesProfileContener.setVisibility(View.VISIBLE);
                 } else moviesProfileContener.setVisibility(View.GONE);
 
-                //Любимые книги
+//Любимые книги
                 if (user.books != null) {
                     booksProfile.setText(user.books);
                     booksProfileContener.setVisibility(View.VISIBLE);
                 } else booksProfileContener.setVisibility(View.GONE);
 
-                //Любимые игры
+//Любимые игры
                 if (user.games != null) {
                     gamesProfile.setText(user.games);
                     gamesProfileContener.setVisibility(View.VISIBLE);
                 } else gamesProfileContener.setVisibility(View.GONE);
 
-                //Другие интересы
+//Другие интересы
                 if (user.interes != null) {
                     intrestingProfile.setText(user.interes);
                     intrestingProfileContener.setVisibility(View.VISIBLE);
                 } else intrestingProfileContener.setVisibility(View.GONE);
 
-                //Скрытия индикатора загрузки и открытие профиля
+//Скрытия индикатора загрузки и открытие профиля
                 progressBarProfile.setVisibility(View.INVISIBLE);
                 profile_content.setVisibility(View.VISIBLE);
                 profile_content2.setVisibility(View.VISIBLE);
 
-                //Скрыть кнопок "Написать сообщение" и "Добавить в друзья" если профиль юзера
+//Скрыть кнопок "Написать сообщение" и "Добавить в друзья" если профиль юзера
                 if (isUserProfile) msgAndFrndBtn.setVisibility(View.GONE);
                 else msgAndFrndBtn.setVisibility(View.VISIBLE);
 
-                //Кнопка отправки симпатии, скрыть если профиль юзера или если уже отправлял
+//Кнопка отправки симпатии, скрыть если профиль юзера или если уже отправлял
                 if((isUserProfile) || (user.flirt_state == 4)) fab.setVisibility(View.GONE);
                 else fab.setVisibility(View.VISIBLE);
 
@@ -840,7 +845,7 @@ public class ProfileActivity extends SuperMainActivity{
                             });
                         }
                     });
-                } else if (user.flirt_state == 3) {  //симпатия взаимна
+                } else if (user.flirt_state == 3) { //симпатия взаимна
                     fab.setImageResource(R.drawable.ic_action_two_heart);
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -851,7 +856,7 @@ public class ProfileActivity extends SuperMainActivity{
                     });
                 }
 
-                // клик по аве
+// клик по аве
                 if (!isUserProfile){
                     avatar.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View view) {
@@ -873,7 +878,7 @@ public class ProfileActivity extends SuperMainActivity{
                         popUpWindow.setAnimationStyle(Animation_Dialog);
                         popUpWindow.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
 
-                        // отмена поп-ап-а
+// отмена поп-ап-а
                         popUpWindow.getContentView().findViewById(R.id.popup_for_avatar).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -881,7 +886,7 @@ public class ProfileActivity extends SuperMainActivity{
                             }
                         });
 
-                        // Загрузить аву из галереи
+// Загрузить аву из галереи
                         popUpWindow.getContentView().findViewById(R.id.avaOpen).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -896,7 +901,7 @@ public class ProfileActivity extends SuperMainActivity{
                             }
                         });
 
-                        // Загрузить аву из галереи
+// Загрузить аву из галереи
                         popUpWindow.getContentView().findViewById(R.id.avaFromGalery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -907,7 +912,7 @@ public class ProfileActivity extends SuperMainActivity{
                             }
                         });
 
-                        // Загрузить аву с камеры
+// Загрузить аву с камеры
                         popUpWindow.getContentView().findViewById(R.id.avaFromCamera).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -929,7 +934,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-                // Обработчик клика по кнопке загрузки новых фоток
+// Обработчик клика по кнопке загрузки новых фоток
                 newPhotoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -940,7 +945,7 @@ public class ProfileActivity extends SuperMainActivity{
                         popUpWindow2.setAnimationStyle(Animation_Dialog);
                         popUpWindow2.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
 
-                        // отмена поп-ап-а
+// отмена поп-ап-а
                         popUpWindow2.getContentView().findViewById(R.id.popup_for_new_photo).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -948,7 +953,7 @@ public class ProfileActivity extends SuperMainActivity{
                             }
                         });
 
-                        // Загрузка новых фоток из галереи
+// Загрузка новых фоток из галереи
                         popUpWindow2.getContentView().findViewById(R.id.newPhotoFromGalery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -959,7 +964,7 @@ public class ProfileActivity extends SuperMainActivity{
                             }
                         });
 
-                        // Загрузка новых фоток с камеры
+// Загрузка новых фоток с камеры
                         popUpWindow2.getContentView().findViewById(R.id.newPhotoFromCamera).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -980,7 +985,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-                // Обработчик клика по кол-ву друзей
+// Обработчик клика по кол-ву друзей
                 friendsCountButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         Intent intent = new Intent(ProfileActivity.this, FriendsActivity.class);
@@ -989,7 +994,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-                //Обработка нажатия кнопки "Сообщение"
+//Обработка нажатия кнопки "Сообщение"
                 Button writeMes = (Button) findViewById(R.id.write_message);
                 writeMes.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -1006,7 +1011,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-                //Обработка нажатия кнопки "Добавить в друзья"
+//Обработка нажатия кнопки "Добавить в друзья"
                 final Button toFriends = (Button) findViewById(R.id.to_friends);
                 if (user.friends_state == 0) {
                     toFriends.setHint("Добавить в друзья");
@@ -1071,34 +1076,35 @@ public class ProfileActivity extends SuperMainActivity{
                     });
                 } else if (user.friends_state == 2) {
                     toFriends.setHint("Принять заявку");
-                    toFriends.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                            toFriends.setHint("Принимаем заявку...");
-                            Friend.getInstance(getApplicationContext()).acceptFriend(user.id, new Friend.AcceptFriendCallback() {
-                                @Override
-                                public void onSuccess() {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                                    toFriends.setHint("Добавлен в друзья");
-                                }
+                    toFriends.setOnClickListener(new
+                                                         View.OnClickListener() {
+                                                             @Override
+                                                             public void onClick(View view) {
+                                                                 toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
+                                                                 toFriends.setHint("Принимаем заявку...");
+                                                                 Friend.getInstance(getApplicationContext()).acceptFriend(user.id, new Friend.AcceptFriendCallback() {
+                                                                     @Override
+                                                                     public void onSuccess() {
+                                                                         toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
+                                                                         toFriends.setHint("Добавлен в друзья");
+                                                                     }
 
-                                @Override
-                                public void onError(int error_code, String error_msg) {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
-                                    toFriends.setHint("Принять заявку");
-                                    Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                                }
+                                                                     @Override
+                                                                     public void onError(int error_code, String error_msg) {
+                                                                         toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
+                                                                         toFriends.setHint("Принять заявку");
+                                                                         Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                                                                     }
 
-                                @Override
-                                public void onInternetError() {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
-                                    toFriends.setHint("Принять заявку");
-                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                                }
-                            });
-                        }
-                    });
+                                                                     @Override
+                                                                     public void onInternetError() {
+                                                                         toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
+                                                                         toFriends.setHint("Принять заявку");
+                                                                         Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                                                     }
+                                                                 });
+                                                             }
+                                                         });
                 } else if (user.friends_state == 1) {
                     toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                     toFriends.setHint("Заявка отправлена");
@@ -1126,7 +1132,7 @@ public class ProfileActivity extends SuperMainActivity{
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
 
         switch (requestCode) {
-            //загрузка нового фото из галереи в ленту
+//загрузка нового фото из галереи в ленту
             case 1:
                 if (resultCode == RESULT_OK) {
                     imageUri = imageReturnedIntent.getData();
@@ -1145,30 +1151,30 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 }
                 break;
-            //загрузка нового фото с камеры в ленту
+//загрузка нового фото с камеры в ленту
             case 2:
                 if (resultCode == RESULT_OK) {
-//                    try {
+// try {
                     imageUri = Uri.fromFile(photoFile);
                     openAvatarUpdateWindow(sendPhotoClick);
-                    /*
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                        if(Help.runTaskAfterPermission(
-                                ProfileActivity.this,
-                                new String[]{
-                                        Manifest.permission.READ_EXTERNAL_STORAGE
-                                },
-                                Help.REQUEST_READ_EXTERNAL_STORAGE
-                        )){
-                            openAvatarUpdateWindow(sendPhotoClick);
-                        }
-                    } else{
-                            openAvatarUpdateWindow(sendPhotoClick);
-                    }
-                    */
+/*
+if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+if(Help.runTaskAfterPermission(
+ProfileActivity.this,
+new String[]{
+Manifest.permission.READ_EXTERNAL_STORAGE
+},
+Help.REQUEST_READ_EXTERNAL_STORAGE
+)){
+openAvatarUpdateWindow(sendPhotoClick);
+}
+} else{
+openAvatarUpdateWindow(sendPhotoClick);
+}
+*/
                 }
                 break;
-            //загрузка новой аватарки из галереи
+//загрузка новой аватарки из галереи
             case 3:
                 if (resultCode == RESULT_OK) {
                     imageUri = imageReturnedIntent.getData();
@@ -1188,25 +1194,25 @@ public class ProfileActivity extends SuperMainActivity{
 
                 }
                 break;
-            //загрузка новой аватарки с камеры
+//загрузка новой аватарки с камеры
             case 4:
                 if (resultCode == RESULT_OK) {
                     imageUri = Uri.fromFile(photoFile);
                     openAvatarUpdateWindow(updateAvatarClick);
-                    /*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                        if(Help.runTaskAfterPermission(
-                                ProfileActivity.this,
-                                new String[]{
-                                        Manifest.permission.READ_EXTERNAL_STORAGE
-                                },
-                                Help.REQUEST_READ_EXTERNAL_STORAGE
-                        )){
-                            openAvatarUpdateWindow(updateAvatarClick);
-                        }
-                    } else{
-                        openAvatarUpdateWindow(updateAvatarClick);
-                    }
-                    */
+/*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+if(Help.runTaskAfterPermission(
+ProfileActivity.this,
+new String[]{
+Manifest.permission.READ_EXTERNAL_STORAGE
+},
+Help.REQUEST_READ_EXTERNAL_STORAGE
+)){
+openAvatarUpdateWindow(updateAvatarClick);
+}
+} else{
+openAvatarUpdateWindow(updateAvatarClick);
+}
+*/
                 }
                 break;
             default:
@@ -1215,7 +1221,8 @@ public class ProfileActivity extends SuperMainActivity{
         }
     }
 
-    public void openAvatarUpdateWindow(View.OnClickListener saveButtonClick){
+    public void openAvatarUpdateWindow(View.OnClickListener
+                                               saveButtonClick){
         try{
 
             final InputStream imageStream = getContentResolver().openInputStream(imageUri);
@@ -1251,13 +1258,14 @@ public class ProfileActivity extends SuperMainActivity{
     private View.OnClickListener updateAvatarClick = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            progressBarProfile.setVisibility(View.VISIBLE);
-            ((TextView) popUpWindow3.getContentView().findViewById(R.id.savePhoto)).setText("Сохраняем...");
+            popUpWindow3.dismiss();
+            popUpWindow4.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
+
+
             final String base64_code_ava = Help.getBase64FromImage(
                     selectedImage,
                     Bitmap.CompressFormat.JPEG,
-                    ProfileActivity.this,
-                    Help.getBitmapSize(selectedImage, Bitmap.CompressFormat.JPEG),
+                    Help.getFileSize(imageUri, getApplicationContext()),
                     0
             );
             Profile.getInstance(getApplicationContext()).updateAvatar(
@@ -1300,7 +1308,14 @@ public class ProfileActivity extends SuperMainActivity{
         public void onClick(View v) {
             popUpWindow3.dismiss();
             popUpWindow4.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
-            final String base64_code_ava = Help.getBase64FromImage(selectedImage, Bitmap.CompressFormat.JPEG);
+            File defolt_file = new File(Help.getFileByUri(imageUri, getApplicationContext()));
+
+            final String base64_code_ava = Help.getBase64FromImage(
+                    selectedImage,
+                    Bitmap.CompressFormat.JPEG,
+                    Help.getFileSize(imageUri, getApplicationContext()),
+                    0
+            );
             Photo.getInstance(getApplicationContext()).addPhoto(
                     base64_code_ava,
                     "jpg",
@@ -1308,23 +1323,35 @@ public class ProfileActivity extends SuperMainActivity{
                         @Override
                         public void onSuccess() {
                             popUpWindow4.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                            startActivity(intent);
+                            finish();
                         }
                     }, new Help.ErrorCallback() {
                         @Override
                         public void onError(int error_code, String error_msg) {
                             popUpWindow4.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                            startActivity(intent);
+                            finish();
                         }
 
                         @Override
                         public void onInternetError() {
                             popUpWindow4.dismiss();
+                            Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                            intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                            startActivity(intent);
+                            finish();
                         }
                     }
             );
         }
     };
 
-    // Обработка запроса получения доступа
+// Обработка запроса получения доступа
     @Override
     public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -1332,42 +1359,42 @@ public class ProfileActivity extends SuperMainActivity{
             case Help.REQUEST_UPDATE_AVATAR_GALLERY:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted.
+// Permission granted.
                     openAvatarUpdateWindow(updateAvatarClick);
                 } else {
-                    // User refused to grant permission.
-//                    Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
+// User refused to grant permission.
+// Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
 
                 }
                 break;
             case Help.REQUEST_UPDATE_AVATAR_CAMERA:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted.
+// Permission granted.
                     openCameraWindow(4);
                 } else {
-                    // User refused to grant permission.
-//                    Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
+// User refused to grant permission.
+// Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
                 }
                 break;
             case Help.REQUEST_ADD_PHOTO_CAMERA:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted.
+// Permission granted.
                     openCameraWindow(2);
                 } else {
-                    // User refused to grant permission.
-//                    Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
+// User refused to grant permission.
+// Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
                 }
                 break;
             case Help.REQUEST_ADD_PHOTO_GALLERY:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted.
+// Permission granted.
                     openAvatarUpdateWindow(sendPhotoClick);
                 } else {
-                    // User refused to grant permission.
-//                    Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
+// User refused to grant permission.
+// Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
 
                 }
                 break;
@@ -1407,6 +1434,6 @@ public class ProfileActivity extends SuperMainActivity{
         }
     }
 
-    // Создание файла для камеры
+// Создание файла для камеры
 
 }

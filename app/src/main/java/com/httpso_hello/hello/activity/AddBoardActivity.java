@@ -1,32 +1,29 @@
 package com.httpso_hello.hello.activity;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.DisplayMetrics;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.httpso_hello.hello.R;
-import com.httpso_hello.hello.helper.CircularTransformation;
-import com.httpso_hello.hello.helper.HBoard;
-import com.httpso_hello.hello.helper.Help;
+import com.httpso_hello.hello.Structures.Attachment;
+import com.httpso_hello.hello.adapters.FilesAdapter;
+import com.httpso_hello.hello.adapters.MessagesAttachmentsAdapter;
+import com.httpso_hello.hello.helper.*;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
+import java.io.File;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class AddBoardActivity extends SuperMainActivity {
 
@@ -34,60 +31,28 @@ public class AddBoardActivity extends SuperMainActivity {
     private TextView boardSave;
     private EditText boardText;
     private TextView boardPhotos;
-    private LinearLayout ll;
-    private float density;
     private String photos = "";
     private String boardTextString = "";
+    private Uri sendingImageUri;
+    private FilesAdapter faAdapter;
+    private GridView filesLine;
+    private Files files;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_board);
+        setHeader();
 
         boardCancel = (TextView) findViewById(R.id.boardCancel);
         boardSave = (TextView) findViewById(R.id.boardSave);
         boardText = (EditText) findViewById(R.id.boardText);
         boardPhotos = (TextView) findViewById(R.id.boardPhotos);
-        ll = (LinearLayout) findViewById(R.id.boadrForImage);
-        density = getApplicationContext().getResources().getDisplayMetrics().density;
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        filesLine = (GridView) findViewById(R.id.addBoardPhotos);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        //Во все активности перенести, заполнение шапки в меню
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerLayout = navigationView.getHeaderView(0);
-        headerLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddBoardActivity.this, ProfileActivity.class);
-                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
-                startActivity(intent);
-                finish();
-            }
-        });
-        ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
-        TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
-        TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
-        Picasso
-                .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
-                .resize(300, 300)
-                .centerCrop()
-                .transform(new CircularTransformation(0))
-                .into(headerImageView);
-        if(stgs.getSettingStr("user_age") != null) {
-            user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
-        } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
-        user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
+        files = new Files(getApplicationContext(), this);
 
         //Кнопка "Добавить фото"
         boardPhotos.setOnClickListener(new View.OnClickListener() {
@@ -109,39 +74,42 @@ public class AddBoardActivity extends SuperMainActivity {
 
         //Кнопка "Сохранить"
         boardSave.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    boardTextString = boardText.getText().toString();
-                    if ((!boardTextString.isEmpty()) /*&& (!photos.isEmpty())*/) {
-                        HBoard hBoard = new HBoard(getApplicationContext());
-                        hBoard.addBoard(boardTextString, new HBoard.AddBoardCallback() {
-                            @Override
-                            public void onSuccess() {
-                                Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
-                                finish();
-                            }
+            @Override
+            public void onClick(View v) {
+                boardTextString = boardText.getText().toString();
+                if ((!boardTextString.isEmpty()) /*&& (!photos.isEmpty())*/) {
+                    HBoard hBoard = new HBoard(getApplicationContext());
+                    hBoard.addBoard(
+                            boardTextString,
+                            files.getUploadedFiles(),
+                            new HBoard.AddBoardCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
 
 
-                        }, new Help.ErrorCallback() {
-                            @Override
-                            public void onError(int error_code, String error_message) {
-                                Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
-                                finish();
-                            }
+                            }, new Help.ErrorCallback() {
+                                @Override
+                                public void onError(int error_code, String error_message) {
+                                    Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
 
-                            @Override
-                            public void onInternetError() {
-                                Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
-                                finish();
-                            }
-                        });
-                    } else if (boardTextString.isEmpty()){
-                        Toast.makeText(getApplicationContext(), "Напишите текст объявления", Toast.LENGTH_LONG).show();
-                    } else if (photos.isEmpty()){
-                        Toast.makeText(getApplicationContext(), "Добавьте хотябы одну фотографию", Toast.LENGTH_LONG).show();
-                    }
+                                @Override
+                                public void onInternetError() {
+                                    Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
+                            });
+                } else if (boardTextString.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Напишите текст объявления", Toast.LENGTH_LONG).show();
+                } else if (photos.isEmpty()){
+                    Toast.makeText(getApplicationContext(), "Добавьте хотябы одну фотографию", Toast.LENGTH_LONG).show();
                 }
-            });
+            }
+        });
     }
 
 
@@ -153,30 +121,19 @@ public class AddBoardActivity extends SuperMainActivity {
         switch (requestCode) {
             case 1:
                 if (resultCode == RESULT_OK) {
-                    try {
-                        final Uri imageUri = imageReturnedIntent.getData();
-                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    sendingImageUri = imageReturnedIntent.getData();
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        if(Help.runTaskAfterPermission(
+                                AddBoardActivity.this,
+                                new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE
+                                },
+                                Help.REQUEST_ADD_PHOTO_MESSAGE
+                        )){
+                            sendImageFromGallery();
+                        }
 
-                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                        selectedImage.compress(Bitmap.CompressFormat.PNG, 0, baos);
-                        byte[] bytes = baos.toByteArray();
-                        final String base64_code_ava;
-                        base64_code_ava = Base64.encodeToString(bytes, 0);
 
-                        //Показ миниатюры для отправки
-                        ImageView iv = new ImageView(getApplicationContext());
-                        iv.setPadding((int) (density * 5), (int) (density * 5), 0, (int) (density * 5));
-                        Picasso.with(getApplicationContext())
-                                .load(imageUri)
-                                .resize(0, (int) (density * 100))
-                                .into(iv);
-                        ll.addView(iv);
-
-                        this.photos = base64_code_ava;
-
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
                     }
                 }
                 break;
@@ -185,4 +142,76 @@ public class AddBoardActivity extends SuperMainActivity {
                 break;
         }
     }
+
+    public void sendImageFromGallery(){
+        try {
+            final InputStream imageStream = getContentResolver().openInputStream(this.sendingImageUri);
+            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            int position = 0;
+            if(faAdapter != null){
+                Attachment defoltAttachment = new Attachment();
+                defoltAttachment.previewAttachmentUri = this.sendingImageUri;
+                position = faAdapter.addAttachment(defoltAttachment);
+            } else {
+
+                Attachment defoltAttachment = new Attachment();
+                defoltAttachment.previewAttachmentUri = this.sendingImageUri;
+                ArrayList<Attachment> defoltListAttachment = new ArrayList<>();
+                defoltListAttachment.add(defoltAttachment);
+
+                faAdapter = new FilesAdapter(
+                        AddBoardActivity.this,
+                        defoltListAttachment,
+                        R.layout.content_add_board
+                );
+                this.filesLine.setAdapter(faAdapter);
+                filesLine.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                        Attachment attachment = maAdapter.getItem(position);
+//                        messages.deleteAttachment(position, attachment.id);
+//                        maAdapter.deleteAttachment(position);
+                    }
+                });
+            }
+
+            filesLine.getLayoutParams().width =
+                    filesLine.getLayoutParams().width +
+                            Help.getPxFromDp(130, this);
+
+            //Преобразование для отправки на серв
+            final String file_base64 = Help.getBase64FromImage(
+                    selectedImage,
+                    Bitmap.CompressFormat.JPEG,
+                    Help.getFileSize(sendingImageUri, getApplicationContext()),
+                    0
+            );
+            files.uploadFile(
+                    "photo",
+                    "jpg",
+                    file_base64,
+                    "content",
+                    "board",
+                    position,
+                    new Files.UploadFileCallback() {
+                        @Override
+                        public void onSuccess(int id, int position) {
+                            faAdapter.setLoadedFile(position, id);
+                        }
+                    }, new Help.ErrorCallback() {
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+
+                        }
+
+                        @Override
+                        public void onInternetError() {
+
+                        }
+                    });
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
 }

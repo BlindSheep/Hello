@@ -80,8 +80,10 @@
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center"
                     app:srcCompat="@mipmap/ic_action_photo"
-                    android:backgroundTint="@color/main_darkest_grey_color_hello"
-                    android:padding="5dip" />
+                    android:padding="5dip"
+                    android:background="@color/main_white_color_hello"
+                    android:tint="@color/main_dark_grey_color_hello"
+            />
 
             <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                     android:id="@+id/messageContent"
@@ -113,7 +115,8 @@
                     android:layout_height="40dp"
                     app:srcCompat="@mipmap/ic_action_send"
                     android:layout_marginLeft="10dp"
-                    android:backgroundTint="@color/main_darkest_grey_color_hello"
+                    android:background="@color/main_white_color_hello"
+                    android:tint="@color/main_dark_grey_color_hello"
                     android:padding="5dip" />
 
         </LinearLayout>

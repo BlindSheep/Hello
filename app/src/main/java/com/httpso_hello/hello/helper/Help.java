@@ -144,25 +144,32 @@ public class Help {
     }
     // Получение изображения в формате base64 с автоматическим сжатием до указанного размера. В случаее если указанный
     // размер равен нулю берется дефолтное значение
-    public static String getBase64FromImage(Bitmap image, Bitmap.CompressFormat compressFormat, Activity activity, long size, long need_size){
+    public static String getBase64FromImage(Bitmap image, Bitmap.CompressFormat compressFormat, long size, long need_size){
         if(need_size == 0){
             need_size = DEFAULT_NEED_SIZE;
         }
         int quality = 100;
         if(size>need_size){
             // Если разрешение превышет максимально доступное
-
-            if(image.getWidth()>2551){
-                image = Bitmap.createScaledBitmap(image, 2551, 1795, false);
-                size = (compressImage(image, compressFormat, 100)).toByteArray().length;
+            if(image.getHeight()>image.getWidth()){
+                if(image.getHeight()>1795){
+                    image = Bitmap.createScaledBitmap(image, 1795,2551, false);
+                    size = (compressImage(image, compressFormat, 100)).toByteArray().length;
+                }
+            } else {
+                if(image.getWidth()>2551){
+                    image = Bitmap.createScaledBitmap(image, 2551, 1795, false);
+                    size = (compressImage(image, compressFormat, 100)).toByteArray().length;
+                }
             }
+
 //            File file = createImageFile(activity);
 //            image.sa
             float fQuality = (float)((float)need_size/(float)size) * 100;
             quality = Math.round(fQuality);
         }
 
-       return getBase64FromImage(image, compressFormat, quality);
+        return getBase64FromImage(image, compressFormat, quality);
     }
 
     // Создание файла для изображения
@@ -203,5 +210,15 @@ public class Help {
                 cursor.close();
             }
         }
+    }
+
+    public static long getFileSize(Uri pathFile, Context context){
+        File file = new File(Help.getFileByUri(pathFile, context));
+        long size = 0;
+
+        if(file.exists()){
+            size = file.length();
+        }
+        return size;
     }
 }

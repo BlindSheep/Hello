@@ -3,8 +3,10 @@ package com.httpso_hello.hello.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -43,68 +45,48 @@ public class LikeActivity extends SuperMainActivity{
     private String target_controller;
     private String subject;
     private LikesAdapter likesAdapter;
-    private ProgressBar progressBarLike;
     private View header;
     private ListView LV;
-    private LinearLayout llBottomSheet;
-    private BottomSheetBehavior bottomSheetBehavior;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         extras = getIntent().getExtras();
         setContentView(R.layout.activity_like);
+        setHeader();
 
-        progressBarLike = (ProgressBar) findViewById(R.id.progressBarLike);
         header = getLayoutInflater().inflate(R.layout.header, null);
         LV = (ListView) findViewById(R.id.listLikes);
-        llBottomSheet = (LinearLayout) findViewById(R.id.bottom_sheet_more_info);
-        bottomSheetBehavior = BottomSheetBehavior.from(llBottomSheet);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        //Во все активности перенести, заполнение шапки в меню
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerLayout = navigationView.getHeaderView(0);
-        headerLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LikeActivity.this, ProfileActivity.class);
-                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
-                startActivity(intent);
-                finish();
-            }
-        });
-        ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
-        TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
-        TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
-        Picasso
-                .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
-                .resize(300, 300)
-                .centerCrop()
-                .transform(new CircularTransformation(0))
-                .into(headerImageView);
-        if(stgs.getSettingStr("user_age") != null) {
-            user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
-        } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
-        user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.main_blue_color_hello,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         target_id = extras.getInt("target_id");
         subject = extras.getString("subject");
         target_controller = extras.getString("target_controller");
 
+//Заполнение контентом
+        swipeRefreshLayout.setRefreshing(true);
         LV.addHeaderView(header);
         LV.addFooterView(header);
+        getLikes();
 
+// Свайп для обновления
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(true);
+                getLikes();
+            }
+        });
+    }
+
+    //Получение юзеров, поставивших лайк
+    private void getLikes() {
         Like.getInstance(getApplicationContext()).getInfo(this, target_id, subject, target_controller,
                 new Like.GetInfoCallback() {
                     @Override
@@ -118,27 +100,35 @@ public class LikeActivity extends SuperMainActivity{
                         ((ListView) findViewById(R.id.listLikes)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                // Обработчик клика по юзеру
+// Обработчик клика по юзеру
                                 Vote vote = votes[position - 1];
-                                // Открытие профиля
+// Открытие профиля
                                 Intent intent = new Intent(LikeActivity.this, ProfileActivity.class);
                                 intent.putExtra("profile_id", vote.user_id);
                                 intent.putExtra("profile_nickname", " " + vote.user_nickname);
                                 startActivity(intent);
                             }
                         });
-
-                        progressBarLike.setVisibility(View.GONE);
+                        swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
                     public void onError(int error_code, String error_msg) {
-
+                        new
+                                Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                getLikes();
+                            }
+                        }, 5000);
                     }
 
                     @Override
                     public void onInternetError() {
-
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                getLikes();
+                            }
+                        }, 5000);
                     }
                 }
         );

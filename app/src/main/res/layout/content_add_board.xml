@@ -36,7 +36,7 @@
             android:layout_marginBottom="20dp"
             android:textColor="@color/main_blue_color_hello"
             android:textSize="15sp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:text="Добавить фотографии"/>
 
         <HorizontalScrollView
@@ -52,7 +52,19 @@
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:orientation="horizontal">
-
+                <GridView
+                        android:id="@+id/addBoardPhotos"
+                        android:numColumns="20"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:columnWidth="120dp"
+                        android:gravity="center"
+                        android:horizontalSpacing="4dp"
+                        android:scrollbarAlwaysDrawHorizontalTrack="true"
+                        android:scrollbarAlwaysDrawVerticalTrack="true"
+                        android:scrollbars="horizontal"
+                        android:stretchMode="none" />
             </LinearLayout>
 
         </HorizontalScrollView>

@@ -12,6 +12,7 @@ import com.httpso_hello.hello.Structures.Board;
 import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Resp;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -77,20 +78,19 @@ public class HBoard extends Help{
 
     public void addBoard(
             final String content,
+            final ArrayList<Integer> uploadedFiles,
             final AddBoardCallback addBoardCallback,
-            final Help.ErrorCallback errorCallback){
-        Log.d("board", "Enter");
+            final Help.ErrorCallback errorCallback
+    ){
         if (Constant.api_key !="") {
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
                     Constant.board_add_item_uri,
                     new Response.Listener<String>() {
                         public void onResponse(String response){
-
-
-
+                            Log.d("add_board", response);
                             if (response != null) {
-                                                                    addBoardCallback.onSuccess();
+                                addBoardCallback.onSuccess();
 //                                Board board = gson.fromJson(response, Board.class);
 //                                Log.d("add_item", board.content_error);
 //                                if (board.error==null){
@@ -120,6 +120,9 @@ public class HBoard extends Help{
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("content", content);
                     params.put("ctype_name", "board");
+                    if(uploadedFiles.size()!=0){
+                        params.put("uploaded_files", gson.toJson(uploadedFiles.toArray()));
+                    }
                     return params;
                 };
             };

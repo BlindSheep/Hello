@@ -4,31 +4,23 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 
-import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Contact;
 import com.httpso_hello.hello.adapters.MessagesContactsAdapter;
-import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Messages;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,39 +38,39 @@ public class MessagesActivity extends SuperMainActivity{
     private MessagesContactsAdapter mcAdapter;
     private static Handler Tread1_Handler = new Handler();
     private Timer timer;
-    private ProgressBar progressBarMessages;
-    private ProgressBar progressBarMessagesConnect;
     private PopupWindow popUpWindow;
     private View popupView;
     private Uri imageUri;
     private String dateLastUpdate;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_messages);
+        setHeader();
 
-        progressBarMessages = (ProgressBar) findViewById(R.id.progressBarMessages);
-        progressBarMessagesConnect = (ProgressBar) findViewById(R.id.progressBarMessagesConnect);
         header = getLayoutInflater().inflate(R.layout.header, null);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_msg, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.main_blue_color_hello,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
         lv = (ListView) findViewById(R.id.listContacts);
         lv.addHeaderView(header);
         lv.addFooterView(header);
+        swipeRefreshLayout.setRefreshing(true);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        ////////////////////////////////////////////////////////////////////////////
-        // Если хотят отправить фото из другого приложения                        //
-        // через наше приложение, получаем фото                                   //
-        Intent intent = getIntent();                                              //
-        String action = intent.getAction();                                       //
-        String type = intent.getType();                                           //
-        if (Intent.ACTION_SEND.equals(action) && (type.startsWith("image/"))) {   //
-            imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);      //
+// Если хотят отправить фото из другого приложения через наше приложение, получаем фото
+        Intent intent = getIntent();
+        String action = intent.getAction();
+        String type = intent.getType();
+        if (Intent.ACTION_SEND.equals(action) && (type.startsWith("image/"))) {
+            imageUri = (Uri) intent.getParcelableExtra(Intent.EXTRA_STREAM);
         }
         if (imageUri != null) {
             getSupportActionBar().setTitle("Выберите получателя");
@@ -86,68 +78,27 @@ public class MessagesActivity extends SuperMainActivity{
         else {
             getSupportActionBar().setTitle("Сообщения");
         }
-        ////////////////////////////////////////////////////////////////////////////
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        //Во все активности перенести, заполнение шапки в меню
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerLayout = navigationView.getHeaderView(0);
-        headerLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MessagesActivity.this, ProfileActivity.class);
-                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
-                startActivity(intent);
-                finish();
-            }
-        });
-        ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
-        TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
-        TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
-        Picasso
-                .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
-                .resize(300, 300)
-                .centerCrop()
-                .transform(new CircularTransformation(0))
-                .into(headerImageView);
-        if(stgs.getSettingStr("user_age") != null) {
-            user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
-        } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
-        user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
     }
 
-    @Override
-    public void onResume(){
-        progressBarMessages.setVisibility(View.VISIBLE);
-        progressBarMessagesConnect.setVisibility(View.GONE);
-        // Получение списка контактов
+    // Получение списка контактов
+    public void getContacts() {
         messages = new Messages(getApplicationContext(), this);
         messages.getContacts(new Messages.GetContactsCallback() {
             @Override
             public void onSuccess(final Contact[] contacts, MessagesActivity activity, String dateLU) {
+                swipeRefreshLayout.setRefreshing(false);
                 dateLastUpdate = dateLU;
-                // Если успех при получении контактов
                 ArrayList<Contact> defolt = new ArrayList<Contact>();
                 Collections.addAll(defolt, contacts);
                 activity.mcAdapter = new MessagesContactsAdapter(activity, defolt);
-
                 lv.setAdapter(mcAdapter);
-
-                progressBarMessages.setVisibility(View.GONE);
 
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // Обработчик клика по контакту
+// Обработчик клика по контакту
                         Contact contact = contacts[position - 1];
-                        // Открытие чата
+// Открытие чата
                         Intent intent = new Intent(MessagesActivity.this, ChatActivity.class);
                         intent.putExtra("contact_id", contact.contact_id);
                         intent.putExtra("nickname", contact.nickname);
@@ -164,7 +115,7 @@ public class MessagesActivity extends SuperMainActivity{
                     }
                 });
 
-                // длинный клик по контакту
+// длинный клик по контакту
                 lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
@@ -176,7 +127,7 @@ public class MessagesActivity extends SuperMainActivity{
                         popUpWindow.setAnimationStyle(Animation_Dialog);
                         popUpWindow.showAtLocation(lv, Gravity.CENTER, 0, 0);
 
-                        // отмена удаления
+// отмена удаления
                         popUpWindow.getContentView().findViewById(R.id.popup_msg).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -184,7 +135,7 @@ public class MessagesActivity extends SuperMainActivity{
                             }
                         });
 
-                        // подтверждение удаления
+// подтверждение удаления
                         popUpWindow.getContentView().findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -216,17 +167,26 @@ public class MessagesActivity extends SuperMainActivity{
 
             @Override
             public void onError(int error_code, String error_msg) {
-                progressBarMessages.setVisibility(View.GONE);
-                Toast.makeText(MessagesActivity.this, error_msg, Toast.LENGTH_LONG).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        getContacts();
+                    }
+                }, 5000);
             }
 
             @Override
             public void onInternetError(String error_msg) {
-                Toast.makeText(MessagesActivity.this, error_msg, Toast.LENGTH_LONG).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        getContacts();
+                    }
+                }, 5000);
             }
         });
+    }
 
-        //автообновление
+    public void getNewContacts() {
+//автообновление
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -236,6 +196,7 @@ public class MessagesActivity extends SuperMainActivity{
                     messages.refreshContacts(dateLastUpdate, new Messages.RefreshContactsCallback() {
                         @Override
                         public void onSuccess(Contact[] contact, String dateLU) {
+                            swipeRefreshLayout.setRefreshing(false);
                             dateLastUpdate = dateLU;
                             if(contact.length!=0){
                                 ArrayList<Contact> defolt = new ArrayList<Contact>();
@@ -246,18 +207,27 @@ public class MessagesActivity extends SuperMainActivity{
                     }, new Help.ErrorCallback() {
                         @Override
                         public void onError(int error_code, String error_msg) {
-
+                            swipeRefreshLayout.setRefreshing(true);
                         }
 
                         @Override
                         public void onInternetError() {
-
+                            swipeRefreshLayout.setRefreshing(true);
                         }
                     });
 
                 }});
             }
-        }, 500, 5000);
+        }, 500, 3000);
+    }
+
+    @Override
+    public void onResume(){
+//получаем контент
+        getContacts();
+
+//запускаем автообновление
+        getNewContacts();
 
         super.onResume();
     }

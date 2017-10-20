@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.ParcelFileDescriptor;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,7 +36,6 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Attachment;
-import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.Message;
 import com.httpso_hello.hello.adapters.MessagesAttachmentsAdapter;
 import com.httpso_hello.hello.adapters.MessagesMessagesAdapter;
@@ -49,7 +47,6 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileDescriptor;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -625,20 +622,11 @@ public class ChatActivity extends SuperMainActivity{
                     attachmentsListView.getLayoutParams().width +
                             Help.getPxFromDp(130, this);
 
-//            ParcelFileDescriptor parcelFileDescriptor = getContentResolver().openFileDescriptor(this.sendingImageUri, "r");
-//            FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-            File defolt_file = new File(Help.getFileByUri(this.sendingImageUri, this));
-            long size = 0;
-
-            if(defolt_file.exists()){
-                size = defolt_file.length();
-            }
             //Преобразование для отправки на серв
             final String file_base64 = Help.getBase64FromImage(
                     selectedImage,
                     Bitmap.CompressFormat.JPEG,
-                    this,
-                    size,
+                    Help.getFileSize(sendingImageUri, getApplicationContext()),
                     0
             );
             messages.addFileToMessage(

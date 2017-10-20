@@ -58,6 +58,8 @@ public class Constant {
     public static String flirtiki_get_info_uri = start_api_uri + "flirtiki.get_flirtiki";
     public static String flirtiki_send_flirtik_uri = start_api_uri + "flirtiki.send_flirtik";
 
+    public static String temp_files_save_file = start_api_uri + "temp_files.save_file";
+
     //Заглушка для аватарки
     public static String default_avatar = upload + "default/avatar.jpg";
 }

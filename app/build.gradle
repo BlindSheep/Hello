@@ -16,8 +16,8 @@ android {
         applicationId "com.httpso_hello.hello"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 68
-        versionName "1.68"
+        versionCode 76
+        versionName "1.76"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         signingConfig signingConfigs.config
@@ -56,6 +56,8 @@ dependencies {
     compile 'com.github.hani-momanii:SuperNova-Emoji:1.1'
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services-ads:11.0.4'
+    compile 'com.yandex.android:mobileads:2.61'
+    compile 'com.yandex.android:mobmetricalib:2.77'
 }
 
 apply plugin: 'com.google.gms.google-services'

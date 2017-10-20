@@ -13,7 +13,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.httpso_hello.hello.Structures.AddFileToMessage;
+import com.httpso_hello.hello.Structures.AddFile;
 //import com.httpso_hello.hello.Structures.Board;
 //import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Contact;
@@ -412,13 +412,13 @@ public class Messages extends Help {
                         public void onResponse(String response){
                             Log.d("add_file_to_message", response);
                             if (response != null) {
-                                AddFileToMessage addFileToMessage = gson.fromJson(response, AddFileToMessage.class);
-                                if(addFileToMessage.error == null){
-                                    attachemts.add(addFileToMessage.id);
-                                    addFileToMessageCallback.onSuccess(addFileToMessage.response, addFileToMessage.id, position);
+                                AddFile addFile = gson.fromJson(response, AddFile.class);
+                                if(addFile.error == null){
+                                    attachemts.add(addFile.id);
+                                    addFileToMessageCallback.onSuccess(addFile.response, addFile.id, position);
                                     return;
                                 }
-                                errorCallback.onError(addFileToMessage.error.error_code, addFileToMessage.error.error_msg);
+                                errorCallback.onError(addFile.error.error_code, addFile.error.error_msg);
                                 return;
                             }
                             errorCallback.onInternetError();

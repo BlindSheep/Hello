@@ -5,29 +5,73 @@ import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.helper.Auth;
+import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Settings;
-
-
-/**
- * Created by mixir on 24.08.2017.
- */
+import com.squareup.picasso.Picasso;
 
 public class SuperMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     protected Auth auth;
     protected Settings stgs;
+    protected Toolbar toolbar;
+    protected DrawerLayout drawer;
+    protected ActionBarDrawerToggle toggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         stgs = new Settings(getApplicationContext());
+
+    }
+
+    public void setHeader() {
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        View headerLayout = navigationView.getHeaderView(0);
+        headerLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                startActivity(intent);
+                finish();
+            }
+        });
+        ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
+        TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
+        TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
+        Picasso
+                .with(getApplicationContext())
+                .load(stgs.getSettingStr("user_avatar.micro"))
+                .resize(300, 300)
+                .centerCrop()
+                .transform(new CircularTransformation(0))
+                .into(headerImageView);
+        if(stgs.getSettingStr("user_age") != null) {
+            user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
+        } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
+        user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
     }
 
     @Override
@@ -40,7 +84,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+//"StatementWithEmptyBody"
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -68,7 +112,8 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.nav_frinds:
+            case
+                    R.id.nav_frinds:
                 intent = new Intent(getApplicationContext(), FriendsActivity.class);
                 intent.putExtra("profile_id", 0);
                 startActivity(intent);
@@ -120,7 +165,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                     @Override
                     public void onError() {
                         Toast.makeText(getApplicationContext(),
-                                // TODO: 24.07.2017 Сделать локализацию
+// TODO: 24.07.2017 Сделать локализацию
                                 "Что то пошло не так", Toast.LENGTH_LONG)
                                 .show();
                     }
