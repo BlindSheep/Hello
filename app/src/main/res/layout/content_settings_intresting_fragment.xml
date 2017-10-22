@@ -1,195 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:scrollbars="none"
-    android:scrollbarSize="0dp"
-    android:scrollbarAlwaysDrawVerticalTrack="false"
-    android:background="@color/zalivon"
-    tools:context="com.httpso_hello.hello.activity.SettingsActivity"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+            xmlns:tools="http://schemas.android.com/tools"
+            android:scrollbars="none"
+            android:scrollbarSize="0dp"
+            android:scrollbarAlwaysDrawVerticalTrack="false"
+            android:background="@color/zalivon"
+            tools:context="com.httpso_hello.hello.activity.SettingsActivity"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginTop="111dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:textSize="15sp"
-                android:textColor="@color/main_blue_color_hello"
-                android:text="Любимая музыка" />
-
-            <EditText
-                android:id="@+id/userEditFavoriteMusic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Любимая музыка"
-                android:inputType="textMultiLine"/>
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Любимая музыка" />
+
+            <EditText
+                    android:id="@+id/userEditFavoriteMusic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Любимая музыка"
+                    android:inputType="textMultiLine"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:textSize="15sp"
-                android:textColor="@color/main_blue_color_hello"
-                android:text="Любимые фильмы" />
-
-            <EditText
-                android:id="@+id/userFavoriteFilms"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Любимые фильмы"
-                android:inputType="textMultiLine"/>
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Любимые фильмы" />
+
+            <EditText
+                    android:id="@+id/userFavoriteFilms"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Любимые фильмы"
+                    android:inputType="textMultiLine"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:textSize="15sp"
-                android:textColor="@color/main_blue_color_hello"
-                android:text="Любимые книги" />
-
-            <EditText
-                android:id="@+id/userFavoriteBooks"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Любимые книги"
-                android:inputType="textMultiLine"/>
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Любимые книги" />
+
+            <EditText
+                    android:id="@+id/userFavoriteBooks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Любимые книги"
+                    android:inputType="textMultiLine"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:textSize="15sp"
-                android:textColor="@color/main_blue_color_hello"
-                android:text="Любимые игры" />
-
-            <EditText
-                android:id="@+id/userFavoriteGames"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Любимые игры"
-                android:inputType="textMultiLine"/>
+                android:background="@drawable/board"
+                android:layout_marginBottom="6dp"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Любимые игры" />
+
+            <EditText
+                    android:id="@+id/userFavoriteGames"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Любимые игры"
+                    android:inputType="textMultiLine"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:elevation="1.5dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:textSize="15sp"
-                android:textColor="@color/main_blue_color_hello"
-                android:text="Другие интересы" />
-
-            <EditText
-                android:id="@+id/userAnotherIntresting"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="15sp"
-                android:hint="Другие интересы"
-                android:inputType="textMultiLine"/>
+                android:background="@drawable/board"
+                android:layout_marginLeft="6dp"
+                android:layout_marginRight="6dp"
+                android:elevation="1.5dp"
+                android:orientation="vertical">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:textSize="15sp"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Другие интересы" />
+
+            <EditText
+                    android:id="@+id/userAnotherIntresting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginBottom="10dp"
+                    android:textSize="15sp"
+                    android:hint="Другие интересы"
+                    android:inputType="textMultiLine"/>
 
         </LinearLayout>
 
         <TextView
-            android:id="@+id/saveButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:textSize="20sp"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"
-            android:textColor="@color/main_red_color_hello"
-            android:text="Сохранить"/>
+                android:id="@+id/saveButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:textSize="20sp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/main_red_color_hello"
+                android:text="Сохранить"/>
 
     </LinearLayout>
 

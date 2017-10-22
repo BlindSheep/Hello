@@ -411,7 +411,14 @@ public class ProfileActivity extends SuperMainActivity{
                                 photoId.add(j, user.photos[j].id);
                                 photoIsVoted.add(j, Boolean.toString(user.photos[j].is_voted));
                             }
-                            Intent intent = new Intent(ProfileActivity.this, FullscreenPhotoActivity.class);
+                            Intent intent;
+
+                            if(isUserProfile){
+                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivityUser.class);
+                            } else {
+                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivity.class);
+                            }
+
                             intent.putStringArrayListExtra("photoOrig", photoOrig);
                             intent.putIntegerArrayListExtra("photoLike", photoLike);
                             intent.putIntegerArrayListExtra("photoId", photoId);

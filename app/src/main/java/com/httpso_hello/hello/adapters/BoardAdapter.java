@@ -233,6 +233,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     holder.anotherPhotoBoard.setVisibility(View.GONE);
                 }
             } else {
+                holder.anotherPhotoBoard.setVisibility(View.GONE);
                 holder.firstPhoto.setVisibility(View.GONE);
             }
 

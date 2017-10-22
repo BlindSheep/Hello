@@ -1,44 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.httpso_hello.hello.activity.SimpationActivity">
+                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                 xmlns:tools="http://schemas.android.com/tools"
+                                                 android:layout_width="match_parent"
+                                                 android:layout_height="match_parent"
+                                                 tools:context="com.httpso_hello.hello.activity.SimpationActivity">
 
     <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@drawable/main_linear_background"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-        <android.support.design.widget.TabLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/tablayoutSimpation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicatorColor="@color/main_white_color_hello"
-            app:tabIndicatorHeight="3dp"
-            app:tabGravity="fill"
-            app:tabMode="fixed"/>
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/main_linear_background"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpagerSimpation"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    <include layout="@layout/content_simpation_pager"/>
 
     <ProgressBar
-        android:id="@+id/progressBarSimpation"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
+            android:id="@+id/progressBarSimpation"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"/>
 
 </android.support.design.widget.CoordinatorLayout>

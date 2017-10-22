@@ -164,6 +164,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
+                    android:tint="@color/main_dark_grey_color_hello"
                     app:srcCompat="@drawable/ic_home_black_24dp"/>
 
                 <TextView
@@ -189,6 +190,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
+                    android:tint="@color/main_dark_grey_color_hello"
                     app:srcCompat="@drawable/ic_action_otnosheniya"/>
 
                 <TextView
@@ -214,6 +216,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
+                    android:tint="@color/main_dark_grey_color_hello"
                     app:srcCompat="@mipmap/ic_action_call"/>
 
                 <TextView
@@ -240,6 +243,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
+                    android:tint="@color/main_dark_grey_color_hello"
                     app:srcCompat="@drawable/ic_action_skype"/>
 
                 <TextView
@@ -266,6 +270,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
+                    android:tint="@color/main_dark_grey_color_hello"
                     app:srcCompat="@drawable/ic_action_dohod" />
 
                 <TextView
@@ -291,6 +296,7 @@
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
+                    android:tint="@color/main_dark_grey_color_hello"
                     app:srcCompat="@drawable/ic_action_auto" />
 
                 <TextView

@@ -297,7 +297,7 @@ public class ChatActivity extends SuperMainActivity{
                 );
                 if(contact_id == 3008) chatList.addHeaderView(headerForSupport);
                 else chatList.addHeaderView(header);
-                chatList.addHeaderView(header);
+//                chatList.addHeaderView(header);
                 chatList.addFooterView(header);
                 chatList.setAdapter(mmAdapter);
                 contactOnline(contactIsOnline);

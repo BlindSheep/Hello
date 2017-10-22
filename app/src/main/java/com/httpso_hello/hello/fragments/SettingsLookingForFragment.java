@@ -106,17 +106,17 @@ public class SettingsLookingForFragment extends Fragment {
         if (user.reg_cel != null) {
             char[] cel = user.reg_cel.toCharArray();
             if (cel.length >= 1) if (cel[0] == '1') checkBoxLookinFor0.setChecked(true);
-            if (cel.length >= 1) if (cel[1] == '1') checkBoxLookinFor1.setChecked(true);
-            if (cel.length >= 1) if (cel[2] == '1') checkBoxLookinFor2.setChecked(true);
-            if (cel.length >= 1) if (cel[3] == '1') checkBoxLookinFor3.setChecked(true);
-            if (cel.length >= 1) if (cel[4] == '1') checkBoxLookinFor4.setChecked(true);
-            if (cel.length >= 1) if (cel[5] == '1') checkBoxLookinFor5.setChecked(true);
-            if (cel.length >= 1) if (cel[6] == '1') checkBoxLookinFor6.setChecked(true);
-            if (cel.length >= 1) if (cel[7] == '1') checkBoxLookinFor7.setChecked(true);
-            if (cel.length >= 1) if (cel[8] == '1') checkBoxLookinFor8.setChecked(true);
-            if (cel.length >= 1) if (cel[9] == '1') checkBoxLookinFor9.setChecked(true);
-            if (cel.length >= 1) if (cel[10] == '1') checkBoxLookinFor10.setChecked(true);
-            if (cel.length >= 1) if (cel[11] == '1') checkBoxLookinFor11.setChecked(true);
+            if (cel.length >= 2) if (cel[1] == '1') checkBoxLookinFor1.setChecked(true);
+            if (cel.length >= 3) if (cel[2] == '1') checkBoxLookinFor2.setChecked(true);
+            if (cel.length >= 4) if (cel[3] == '1') checkBoxLookinFor3.setChecked(true);
+            if (cel.length >= 5) if (cel[4] == '1') checkBoxLookinFor4.setChecked(true);
+            if (cel.length >= 6) if (cel[5] == '1') checkBoxLookinFor5.setChecked(true);
+            if (cel.length >= 7) if (cel[6] == '1') checkBoxLookinFor6.setChecked(true);
+            if (cel.length >= 8) if (cel[7] == '1') checkBoxLookinFor7.setChecked(true);
+            if (cel.length >= 9) if (cel[8] == '1') checkBoxLookinFor8.setChecked(true);
+            if (cel.length >= 10) if (cel[9] == '1') checkBoxLookinFor9.setChecked(true);
+            if (cel.length >= 11) if (cel[10] == '1') checkBoxLookinFor10.setChecked(true);
+            if (cel.length >= 12) if (cel[11] == '1') checkBoxLookinFor11.setChecked(true);
         }
 
         saveButton.setOnClickListener(new View.OnClickListener() {
