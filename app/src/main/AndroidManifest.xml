@@ -126,6 +126,10 @@
                 android:name=".activity.AddBoardActivity"
                 android:label="@string/title_activity_add_board"
                 android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".activity.BoardContentActivity"
+            android:label="@string/title_activity_board_content"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

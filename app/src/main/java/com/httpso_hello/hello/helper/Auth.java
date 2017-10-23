@@ -6,11 +6,8 @@ package com.httpso_hello.hello.helper;
 // Наши библиотеки
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.httpso_hello.hello.Structures.Registration;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.Structures.Resp;
@@ -21,11 +18,12 @@ public class Auth {
 
     private Settings stgs;
     private Api api;
+    Context context;
 
     public Auth(Context context){
 
         stgs = new Settings(context);
-
+        this.context = context;
         api = new Api(context);
     }
 

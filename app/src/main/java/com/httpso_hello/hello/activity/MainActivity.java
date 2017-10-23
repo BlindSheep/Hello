@@ -17,6 +17,10 @@ import com.httpso_hello.hello.R;
 
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.helper.Auth;
+import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.ConverterDate;
+import com.httpso_hello.hello.helper.Profile;
+import com.httpso_hello.hello.helper.Settings;
 
 public class MainActivity extends Activity{
 
@@ -26,17 +30,43 @@ public class MainActivity extends Activity{
     private EditText inputPassword;
     private Auth auth;
     private ProgressBar progressBarLogin;
+    private Settings stgs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         auth = new Auth(getApplicationContext());
+        stgs = new Settings(getApplicationContext());
         //Проверяем авторизовано ли приложения
         if (auth.autoLogion()){
             //Если авторизовано переходит на страницу сообщений
             Intent intent = new Intent(MainActivity.this, BoardActivity.class);
             startActivity(intent);
             finish();
+
+            Profile profile = new Profile(getApplicationContext());
+            profile.getProfile(stgs.getSettingInt("user_id"), this, new Profile.GetProfileCallback() {
+                @Override
+                public void onSuccess(User user, Activity activity) {
+                    stgs.setSetting("user_nickname", user.nickname);
+                    if(user.birth_date != null){
+                        stgs.setSetting("user_age", ConverterDate.convertDateToAge(user.birth_date));
+                    }
+                    if(user.avatar !=null) {
+                        stgs.setSetting("user_avatar.micro", Constant.upload + user.avatar.micro);
+                    }
+                }
+
+                @Override
+                public void onError(int error_code, String error_msg) {
+
+                }
+
+                @Override
+                public void onInternetError() {
+
+                }
+            });
         }
 
         setContentView(R.layout.activity_main);
