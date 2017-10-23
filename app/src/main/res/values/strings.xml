@@ -82,6 +82,7 @@
     <string name="title_activity_profile"> </string>
     <string name="title_activity_search">Поиск</string>
     <string name="title_activity_add_board">Новое объявление</string>
+    <string name="title_activity_board_content">Комментарии</string>
 
     <string-array name="ageFrom">
         <item> </item>
@@ -200,4 +201,5 @@
         <item>Стабильный средний доход</item>
         <item>Высокий доход</item>
     </string-array>
+
 </resources>

@@ -109,19 +109,7 @@ public class ChatActivity extends SuperMainActivity{
         ll = (LinearLayout) findViewById(R.id.forImage);
         density = getApplicationContext().getResources().getDisplayMetrics().density;
         textOnline = (TextView) findViewById(R.id.textOnline);
-
         emojIcon.ShowEmojIcon();
-        emojIcon.setKeyboardListener(new EmojIconActions.KeyboardListener() {
-            @Override
-            public void onKeyboardOpen() {
-                Log.e("Keyboard","open");
-            }
-
-            @Override
-            public void onKeyboardClose() {
-                Log.e("Keyboard","close");
-            }
-        });
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.chatNickname);
         setSupportActionBar(toolbar);

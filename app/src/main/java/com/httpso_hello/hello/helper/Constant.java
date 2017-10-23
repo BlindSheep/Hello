@@ -56,6 +56,10 @@ public class Constant {
     public static String rating_get_info_uri = start_api_uri + "rating.get_info";
     public static String rating_send_like_uri = start_api_uri + "rating.vote";
 
+    public static String comments_get_comments_uri = start_api_uri + "comments.get_comments";
+    public static String comments_send_comments_uri = start_api_uri + "comments.add_comment";
+    public static String comments_get_counts_comments_uri = start_api_uri + "comments.get_count_comments";
+
     public static String flirtiki_get_info_uri = start_api_uri + "flirtiki.get_flirtiki";
     public static String flirtiki_send_flirtik_uri = start_api_uri + "flirtiki.send_flirtik";
 

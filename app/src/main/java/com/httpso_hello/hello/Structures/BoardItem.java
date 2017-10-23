@@ -18,6 +18,7 @@ public class BoardItem {
     public String content;
     public int count_readed;
     public String city_cache;
+    public int comments;
 
     public BoardItem(){
 

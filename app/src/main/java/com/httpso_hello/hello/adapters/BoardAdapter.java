@@ -27,6 +27,7 @@ import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.Photo;
 import com.httpso_hello.hello.activity.BoardActivity;
+import com.httpso_hello.hello.activity.BoardContentActivity;
 import com.httpso_hello.hello.activity.ChatActivity;
 import com.httpso_hello.hello.activity.FullscreenPhotoActivity;
 import com.httpso_hello.hello.activity.LikeActivity;
@@ -79,14 +80,16 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         public TextView datePubBoard;
         public TextView writeButton;
         public TextView boardText;
-        public TextView cityCache;
         public ImageView firstPhoto;
         public GridView anotherPhotoBoard;
-        public ImageButton likeButtonBoard;
+        public ImageView likeButtonBoard;
         public TextView likeTextBoard;
         public LinearLayout linearLayoutForPhoto;
         public TextView countReaded;
         public LinearLayout content;
+        public TextView comments;
+        public LinearLayout commentsBlock;
+        public LinearLayout likeBlock;
 
         public NativeContentAdView nativeContentAdView;
         public NativeAppInstallAdView nativeAppInstallAdView;
@@ -110,14 +113,16 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             holder.datePubBoard = (TextView) rowView.findViewById(R.id.datePubBoard);
             holder.writeButton = (TextView) rowView.findViewById(R.id.writeButton);
             holder.boardText = (TextView) rowView.findViewById(R.id.boardText);
-            holder.cityCache = (TextView) rowView.findViewById(R.id.cityCache);
             holder.firstPhoto = (ImageView) rowView.findViewById(R.id.firstPhotoBoard);
             holder.anotherPhotoBoard = (GridView) rowView.findViewById(R.id.anotherPhotoBoard);
-            holder.likeButtonBoard = (ImageButton) rowView.findViewById(R.id.likeButtonBoard);
+            holder.likeButtonBoard = (ImageView) rowView.findViewById(R.id.likeButtonBoard);
             holder.likeTextBoard = (TextView) rowView.findViewById(R.id.likeTextBoard);
             holder.linearLayoutForPhoto = (LinearLayout) rowView.findViewById(R.id.linearLayoutForPhoto);
             holder.countReaded = (TextView) rowView.findViewById(R.id.countReaded);
             holder.content = (LinearLayout) rowView.findViewById(R.id.content);
+            holder.comments = (TextView) rowView.findViewById(R.id.comments);
+            holder.commentsBlock = (LinearLayout) rowView.findViewById(R.id.commentsBlock);
+            holder.likeBlock = (LinearLayout) rowView.findViewById(R.id.likeBlock);
 // Виевы для рекламы
             holder.nativeContentAdView = (NativeContentAdView) rowView.findViewById(R.id.nat);
             holder.nativeAppInstallAdView = (NativeAppInstallAdView) rowView.findViewById(R.id.natApp);
@@ -165,18 +170,19 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                         .into(holder.userAvatarBoard);
             }
 
+            //кол-во комментов
+            holder.comments.setText(Integer.toString(boardItem.comments));
 //Имя отправителя
             holder.userNameBoard.setText(boardItem.user_nickname);
 //Дата объявления
             holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.date_pub));
 //Текст объявления
             holder.boardText.setText(Html.fromHtml(boardItem.content));
-            if (boardItem.city_cache != null) holder.cityCache.setText(boardItem.city_cache);
 //Кол-во просмотров
-            holder.countReaded.setText(Integer.toString(boardItem.count_readed) + " просмотров");
+            holder.countReaded.setText(Integer.toString(boardItem.count_readed));
 // Первая фотография
             DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
-            int width = displaymetrics.widthPixels;
+            int width = (int) (displaymetrics.widthPixels - (12 * displaymetrics.density));
             holder.firstPhoto.setMinimumWidth(width);
             holder.firstPhoto.setMinimumHeight(width);
             if (boardItem.photos != null) {
@@ -184,8 +190,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 Picasso
                         .with(getContext())
                         .load(Uri.parse(ConverterDate.convertUrlAvatar(boardItem.photos[0].normal)))
-                        .centerCrop()
                         .resize(width, width)
+                        .centerCrop()
                         .into(holder.firstPhoto);
                 ArrayList<Photo> defolt = new ArrayList<Photo>();
 
@@ -239,19 +245,17 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
 
 //Цвет кнопки лайка
-            if (!boardItem.is_voted)
+            if (!boardItem.is_voted) {
                 holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
-            else
+                holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
+            }
+            else {
                 holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
+            }
 
 //Рейтинг
-            if (boardItem.rating != 0) {
-                holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
-                holder.likeTextBoard.setText(ConverterDate.likeStr(boardItem.rating));
-            } else {
-                holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_grey_color_hello));
-                holder.likeTextBoard.setText("Нет оценок");
-            }
+                holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
 
 // обработка клика по аватарке
             holder.userAvatarBoard.setOnClickListener(new View.OnClickListener() {
@@ -299,15 +303,15 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 }
             });
 //обработка клика по кнопке лайк
-            holder.likeButtonBoard.setOnClickListener(new View.OnClickListener() {
+            holder.likeBlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!boardItem.is_voted) {
-                        holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                         boardItem.is_voted = true;
                         boardItem.rating += 1;
+                        holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                         holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
-                        holder.likeTextBoard.setText(ConverterDate.likeStr(boardItem.rating));
+                        holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
                         Like.getInstance(getContext()).sendLike(boardItem.id, "up", "board", "content", new Like.SendLikeCallback() {
                             @Override
                             public void onSuccess() {
@@ -315,45 +319,30 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                             @Override
                             public void onError(int error_code, String error_msg) {
-                                holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                                 boardItem.is_voted = false;
                                 boardItem.rating -= 1;
-                                if (boardItem.rating != 0) {
-                                    holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
-                                    holder.likeTextBoard.setText(ConverterDate.likeStr(boardItem.rating));
-                                } else {
-                                    holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_grey_color_hello));
-                                    holder.likeTextBoard.setText("Нет оценок");
-                                }
+                                holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                                holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
+                                holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
                                 Toast.makeText(getContext().getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void onInternetError() {
-                                holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                                 boardItem.is_voted = false;
                                 boardItem.rating -= 1;
-                                if (boardItem.rating != 0) {
-                                    holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
-                                    holder.likeTextBoard.setText(ConverterDate.likeStr(boardItem.rating));
-                                } else {
-                                    holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_grey_color_hello));
-                                    holder.likeTextBoard.setText("Нет оценок");
-                                }
+                                holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                                holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
+                                holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
                                 Toast.makeText(getContext().getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                             }
                         });
                     } else {
-                        holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                         boardItem.is_voted = false;
                         boardItem.rating -= 1;
-                        if (boardItem.rating != 0) {
-                            holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
-                            holder.likeTextBoard.setText(ConverterDate.likeStr(boardItem.rating));
-                        } else {
-                            holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_grey_color_hello));
-                            holder.likeTextBoard.setText("Нет оценок");
-                        }
+                        holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                        holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
+                        holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
                         Like.getInstance(getContext()).sendLike(boardItem.id, "down", "board", "content", new Like.SendLikeCallback() {
                             @Override
                             public void onSuccess() {
@@ -361,49 +350,41 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                             @Override
                             public void onError(int error_code, String error_msg) {
-                                holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                                 boardItem.is_voted = true;
                                 boardItem.rating += 1;
-                                if (boardItem.rating != 0) {
-                                    holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
-                                    holder.likeTextBoard.setText(ConverterDate.likeStr(boardItem.rating));
-                                } else {
-                                    holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_grey_color_hello));
-                                    holder.likeTextBoard.setText("Нет оценок");
-                                }
+                                holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                                holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
+                                holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
                                 Toast.makeText(getContext().getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void onInternetError() {
-                                holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                                 boardItem.is_voted = true;
                                 boardItem.rating += 1;
-                                if (boardItem.rating != 0) {
-                                    holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
-                                    holder.likeTextBoard.setText(ConverterDate.likeStr(boardItem.rating));
-                                } else {
-                                    holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_grey_color_hello));
-                                    holder.likeTextBoard.setText("Нет оценок");
-                                }
+                                holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                                holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
+                                holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
                                 Toast.makeText(getContext().getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
                 }
             });
-//обработка клика по кол-ву лайков
-            holder.likeTextBoard.setOnClickListener(new View.OnClickListener() {
+
+            //Обработка клика по комментам
+            holder.commentsBlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (boardItem.rating != 0) {
-                        Intent intent = new Intent(getContext(), LikeActivity.class);
-                        intent.putExtra("target_id", boardItem.id);
-                        intent.putExtra("subject", "board");
-                        intent.putExtra("target_controller", "content");
-                        boardActivity.startActivity(intent);
-                    } else
-                        Toast.makeText(getContext().getApplicationContext(), "Нет оценок", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getContext(), BoardContentActivity.class);
+                    intent.putExtra("id", boardItem.id);
+                    if (boardItem.avatar != null) intent.putExtra("avatar", boardItem.avatar.micro);
+                    intent.putExtra("likes", boardItem.rating);
+                    intent.putExtra("content", boardItem.content);
+                    intent.putExtra("user_nickname", boardItem.user_nickname);
+                    intent.putExtra("date_pub", ConverterDate.convertDateForGuest(boardItem.date_pub));
+                    intent.putExtra("user_id", boardItem.user_id);
+                    boardActivity.startActivity(intent);
                 }
             });
 

@@ -2,6 +2,7 @@ package com.httpso_hello.hello.fragments;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -27,10 +29,14 @@ import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.activity.SettingsActivity;
 import com.httpso_hello.hello.adapters.FlirtikiFragmentAdapter;
+import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.CountryRegionCity;
 import com.httpso_hello.hello.helper.Profile;
+import com.httpso_hello.hello.helper.Settings;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -62,6 +68,8 @@ public class SettingsProfileFragment extends Fragment {
     private Spinner matPol;
     private Spinner region;
     private Spinner sity;
+    private ImageView newAvatar;
+    private Settings stgs;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +100,8 @@ public class SettingsProfileFragment extends Fragment {
         matPol = (Spinner) rootView.findViewById(R.id.mat_pol);
         region = (Spinner) rootView.findViewById(R.id.region);
         sity = (Spinner) rootView.findViewById(R.id.sity);
+        newAvatar = (ImageView) rootView.findViewById(R.id.newAvatar);
+        stgs = new Settings(getContext());
         setInitialDateTime();
 
 
@@ -117,6 +127,34 @@ public class SettingsProfileFragment extends Fragment {
 
 //Профиль
         userEditName.setText(user.nickname);
+
+        if(stgs.getSettingStr("user_avatar.micro") != null) {
+            Picasso
+                    .with(getContext())
+                    .load(stgs.getSettingStr("user_avatar.micro"))
+                    .transform(new CircularTransformation(0))
+                    .into(newAvatar, new Callback() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onError() {
+                            Picasso
+                                    .with(getContext())
+                                    .load(Uri.parse(Constant.default_avatar))
+                                    .transform(new CircularTransformation(0))
+                                    .into(newAvatar);
+                        }
+                    });
+        } else {
+            Picasso
+                    .with(getContext())
+                    .load(Uri.parse(Constant.default_avatar))
+                    .transform(new CircularTransformation(0))
+                    .into(newAvatar);
+        }
 
         if (user.gender == 0) {
             userEditGenderMan.setChecked(false);
