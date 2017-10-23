@@ -167,6 +167,7 @@ public class ProfileActivity extends SuperMainActivity{
     private Bitmap selectedImage;
     private PopupWindow popUpWindow4;
     private View popupView4;
+    private ImageView iconForAva;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -281,6 +282,7 @@ public class ProfileActivity extends SuperMainActivity{
         popUpWindow4.setWidth(displaymetrics.widthPixels);
         popUpWindow4.setHeight(displaymetrics.heightPixels);
         popUpWindow4.setAnimationStyle(Animation_Dialog);
+        iconForAva = (ImageView) findViewById(R.id.iconForAva);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -351,6 +353,10 @@ public class ProfileActivity extends SuperMainActivity{
                     onlineToolbar.setText(convertDateForEnter(user.date_log, user.gender));
                     onlineToolbar.setTextColor(getResources().getColor(R.color.main_white_color_hello));
                 }
+
+                //Значек загрузки аватарки
+                if (isUserProfile) iconForAva.setVisibility(View.VISIBLE);
+                else iconForAva.setVisibility(View.GONE);
 
 //Устанавливаем аватар
                 DisplayMetrics displaymetrics = getResources().getDisplayMetrics();

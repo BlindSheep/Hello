@@ -35,6 +35,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="70dp"/>
 
+            <ImageView
+                android:id="@+id/iconForAva"
+                android:background="@mipmap/ic_action_photo"
+                app:layout_anchor="@+id/avatar"
+                android:layout_gravity="bottom"
+                android:layout_marginLeft="18dp"
+                android:layout_marginBottom="13dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
