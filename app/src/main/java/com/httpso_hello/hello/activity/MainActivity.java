@@ -44,29 +44,33 @@ public class MainActivity extends Activity{
             startActivity(intent);
             finish();
 
-            Profile profile = new Profile(getApplicationContext());
-            profile.getProfile(stgs.getSettingInt("user_id"), this, new Profile.GetProfileCallback() {
-                @Override
-                public void onSuccess(User user, Activity activity) {
-                    stgs.setSetting("user_nickname", user.nickname);
-                    if(user.birth_date != null){
-                        stgs.setSetting("user_age", ConverterDate.convertDateToAge(user.birth_date));
+            try {
+                Profile profile = new Profile(getApplicationContext());
+                profile.getProfile(stgs.getSettingInt("user_id"), this, new Profile.GetProfileCallback() {
+                    @Override
+                    public void onSuccess(User user, Activity activity) {
+                        stgs.setSetting("user_nickname", user.nickname);
+                        if (user.birth_date != null) {
+                            stgs.setSetting("user_age", ConverterDate.convertDateToAge(user.birth_date));
+                        }
+                        if (user.avatar != null) {
+                            stgs.setSetting("user_avatar.micro", Constant.upload + user.avatar.micro);
+                        }
                     }
-                    if(user.avatar !=null) {
-                        stgs.setSetting("user_avatar.micro", Constant.upload + user.avatar.micro);
+
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+
                     }
-                }
 
-                @Override
-                public void onError(int error_code, String error_msg) {
+                    @Override
+                    public void onInternetError() {
 
-                }
+                    }
+                });
+            } catch (Exception e) {
 
-                @Override
-                public void onInternetError() {
-
-                }
-            });
+            }
         }
 
         setContentView(R.layout.activity_main);

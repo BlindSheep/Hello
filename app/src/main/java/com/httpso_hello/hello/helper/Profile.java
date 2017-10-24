@@ -51,14 +51,18 @@ public class Profile extends Help{
                     new Response.Listener<String>() {
                         public void onResponse(String response){
                             if (response != null) {
-                                Log.d("User", response);
-                                Resp resp = gson.fromJson(response, Resp.class);
-                                if (resp.error == null) {
-                                    getProfileCallback.onSuccess(resp.user_info, activity);
+                                try {
+                                    Log.d("User", response);
+                                    Resp resp = gson.fromJson(response, Resp.class);
+                                    if (resp.error == null) {
+                                        getProfileCallback.onSuccess(resp.user_info, activity);
+                                        return;
+                                    }
+                                    getProfileCallback.onError(resp.error.error_code, resp.error.error_msg);
                                     return;
+                                } catch (Exception e) {
+
                                 }
-                                getProfileCallback.onError(resp.error.error_code, resp.error.error_msg);
-                                return;
                             }
                             getProfileCallback.onInternetError();
                             return;

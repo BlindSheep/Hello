@@ -19,6 +19,7 @@ public class BoardItem {
     public int count_readed;
     public String city_cache;
     public int comments;
+    public String is_anonim;
 
     public BoardItem(){
 

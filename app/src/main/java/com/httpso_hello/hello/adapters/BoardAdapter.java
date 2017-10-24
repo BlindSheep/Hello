@@ -132,6 +132,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             holder = (BoardAdapter.ViewHolder) rowView.getTag();
         }
 
+
         if ((position % 10 != 0) || (position == 0)) {
             holder.content.setVisibility(View.VISIBLE);
             holder.nativeContentAdView.setVisibility(View.GONE);
@@ -140,47 +141,116 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             final BoardItem boardItem;
             if (position < 10) boardItem = this.boardItems.get(position);
             else boardItem = this.boardItems.get(position - position / 10);
+            final boolean anonim;
+            if (boardItem.is_anonim.equals("0")) anonim = false;
+            else anonim = true;
 
-//Аватар отправителя
-            if (boardItem.avatar != null) {
-                Picasso
-                        .with(getContext())
-                        .load(Uri.parse(Constant.upload + boardItem.avatar.micro))
-                        .transform(new CircularTransformation(0))
-                        .into(holder.userAvatarBoard, new Callback() {
-                            @Override
-                            public void onSuccess() {
+            //Начало аватар
+            if (!anonim) {
+                if (boardItem.avatar != null) {
+                    Picasso
+                            .with(getContext())
+                            .load(Uri.parse(Constant.upload + boardItem.avatar.micro))
+                            .transform(new CircularTransformation(0))
+                            .into(holder.userAvatarBoard, new Callback() {
+                                @Override
+                                public void onSuccess() {
 
-                            }
+                                }
 
-                            @Override
-                            public void onError() {
-                                Picasso
-                                        .with(getContext())
-                                        .load(Uri.parse(Constant.default_avatar))
-                                        .transform(new CircularTransformation(0))
-                                        .into(holder.userAvatarBoard);
-                            }
-                        });
+                                @Override
+                                public void onError() {
+                                    Picasso
+                                            .with(getContext())
+                                            .load(Uri.parse(Constant.default_avatar))
+                                            .transform(new CircularTransformation(0))
+                                            .into(holder.userAvatarBoard);
+                                }
+                            });
+                } else {
+                    Picasso
+                            .with(getContext())
+                            .load(Uri.parse(Constant.default_avatar))
+                            .transform(new CircularTransformation(0))
+                            .into(holder.userAvatarBoard);
+                }
+                holder.userAvatarBoard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), ProfileActivity.class);
+                        intent.putExtra("profile_id", boardItem.user_id);
+                        intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
+                        boardActivity.startActivity(intent);
+                    }
+                });
             } else {
                 Picasso
                         .with(getContext())
-                        .load(Uri.parse(Constant.default_avatar))
+                        .load(R.drawable.ic_action_anonimnost)
                         .transform(new CircularTransformation(0))
                         .into(holder.userAvatarBoard);
+                holder.userAvatarBoard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
             }
+            //Конец аватар
 
-            //кол-во комментов
+            //Начало комменты
             holder.comments.setText(Integer.toString(boardItem.comments));
-//Имя отправителя
-            holder.userNameBoard.setText(boardItem.user_nickname);
-//Дата объявления
+            holder.commentsBlock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), BoardContentActivity.class);
+                    intent.putExtra("id", boardItem.id);
+                    if (boardItem.avatar != null) intent.putExtra("avatar", boardItem.avatar.micro);
+                    intent.putExtra("likes", boardItem.rating);
+                    intent.putExtra("content", boardItem.content);
+                    intent.putExtra("user_nickname", boardItem.user_nickname);
+                    intent.putExtra("date_pub", ConverterDate.convertDateForGuest(boardItem.date_pub));
+                    intent.putExtra("user_id", boardItem.user_id);
+                    intent.putExtra("anonim", anonim);
+                    boardActivity.startActivity(intent);
+                }
+            });
+            //Конец комменты
+
+            //Начало имя отправителя
+            if (!anonim) {
+                holder.userNameBoard.setText(boardItem.user_nickname);
+                holder.userNameBoard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), ProfileActivity.class);
+                        intent.putExtra("profile_id", boardItem.user_id);
+                        intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
+                        boardActivity.startActivity(intent);
+                    }
+                });
+            } else {
+                holder.userNameBoard.setText("Анонимно");
+                holder.userNameBoard.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+            }
+            //Конец имя отправителя
+
+            //Начало дата объявления
             holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.date_pub));
-//Текст объявления
+            //Конец дата объявления
+
+            //Начало текст объявления
             holder.boardText.setText(Html.fromHtml(boardItem.content));
-//Кол-во просмотров
+            //Конец текст объявления
+
+            //Начало кол-во просмотров
             holder.countReaded.setText(Integer.toString(boardItem.count_readed));
-// Первая фотография
+            //Конец кол-во просмотров
+
+            //Начало фотки
             DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
             int width = (int) (displaymetrics.widthPixels - (12 * displaymetrics.density));
             holder.firstPhoto.setMinimumWidth(width);
@@ -219,8 +289,6 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     holder.linearLayoutForPhoto.requestLayout();
                     holder.anotherPhotoBoard.setAdapter(puAdapter);
                     holder.anotherPhotoBoard.setVisibility(View.VISIBLE);
-
-//Клик по фотке в ленте
                     holder.anotherPhotoBoard.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
@@ -242,9 +310,51 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 holder.anotherPhotoBoard.setVisibility(View.GONE);
                 holder.firstPhoto.setVisibility(View.GONE);
             }
+            holder.firstPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ArrayList<String> photoOrig = new ArrayList<String>();
+                    for (int j = 0; j < boardItem.photos.length; j++) {
+                        photoOrig.add(j, ConverterDate.convertUrlAvatar(boardItem.photos[j].original));
+                    }
+                    Intent intent = new Intent(getContext(), FullscreenPhotoActivity.class);
+                    intent.putStringArrayListExtra("photoOrig", photoOrig);
+                    intent.putExtra("likeble", false);
+                    intent.putExtra("position", 0);
+                    boardActivity.startActivity(intent);
+                }
+            });
+            //Конец фотки
 
+            //Начало кнопка Ответить
+            if (!anonim) {
+                holder.writeButton.setVisibility(View.VISIBLE);
+                holder.writeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getContext(), ChatActivity.class);
+                        intent.putExtra("contact_id", boardItem.user_id);
+                        intent.putExtra("nickname", " " + boardItem.user_nickname);
+                        if (boardItem.avatar == null) {
+                            intent.putExtra("avatar", Constant.default_avatar);
+                        } else {
+                            intent.putExtra("avatar", boardItem.avatar.micro);
+                        }
+                        boardActivity.startActivity(intent);
+                    }
+                });
+            } else {
+                holder.writeButton.setVisibility(View.GONE);
+                holder.writeButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                    }
+                });
+            }
+            //Конец кнопка ответить
 
-//Цвет кнопки лайка
+            //Начало лайки
+            holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
             if (!boardItem.is_voted) {
                 holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                 holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
@@ -253,56 +363,6 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                 holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
             }
-
-//Рейтинг
-                holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
-
-// обработка клика по аватарке
-            holder.userAvatarBoard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra("profile_id", boardItem.user_id);
-                    intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
-                    boardActivity.startActivity(intent);
-                }
-            });
-// обработка клика по имени
-            holder.userNameBoard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra("profile_id", boardItem.user_id);
-                    intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
-                    boardActivity.startActivity(intent);
-                }
-            });
-// обработка клика по дате
-            holder.datePubBoard.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra("profile_id", boardItem.user_id);
-                    intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
-                    boardActivity.startActivity(intent);
-                }
-            });
-//обработка клика по кнопке "Написать сообщение"
-            holder.writeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), ChatActivity.class);
-                    intent.putExtra("contact_id", boardItem.user_id);
-                    intent.putExtra("nickname", " " + boardItem.user_nickname);
-                    if (boardItem.avatar == null) {
-                        intent.putExtra("avatar", Constant.default_avatar);
-                    } else {
-                        intent.putExtra("avatar", boardItem.avatar.micro);
-                    }
-                    boardActivity.startActivity(intent);
-                }
-            });
-//обработка клика по кнопке лайк
             holder.likeBlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -371,41 +431,10 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     }
                 }
             });
-
-            //Обработка клика по комментам
-            holder.commentsBlock.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getContext(), BoardContentActivity.class);
-                    intent.putExtra("id", boardItem.id);
-                    if (boardItem.avatar != null) intent.putExtra("avatar", boardItem.avatar.micro);
-                    intent.putExtra("likes", boardItem.rating);
-                    intent.putExtra("content", boardItem.content);
-                    intent.putExtra("user_nickname", boardItem.user_nickname);
-                    intent.putExtra("date_pub", ConverterDate.convertDateForGuest(boardItem.date_pub));
-                    intent.putExtra("user_id", boardItem.user_id);
-                    boardActivity.startActivity(intent);
-                }
-            });
-
-//Клик по большой фотке
-            holder.firstPhoto.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ArrayList<String> photoOrig = new ArrayList<String>();
-                    for (int j = 0; j < boardItem.photos.length; j++) {
-                        photoOrig.add(j, ConverterDate.convertUrlAvatar(boardItem.photos[j].original));
-                    }
-                    Intent intent = new Intent(getContext(), FullscreenPhotoActivity.class);
-                    intent.putStringArrayListExtra("photoOrig", photoOrig);
-                    intent.putExtra("likeble", false);
-                    intent.putExtra("position", 0);
-                    boardActivity.startActivity(intent);
-                }
-            });
+            //Конец лайки
 
         } else {
-//Реклама
+        //Реклама
             holder.content.setVisibility(View.GONE);
             final NativeAdLoaderConfiguration adLoaderConfiguration = new NativeAdLoaderConfiguration
                     .Builder("R-M-250514-2", true)

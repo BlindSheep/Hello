@@ -30,7 +30,7 @@ public class Auth {
     //Функция проверки авторизованности приложения
     public boolean autoLogion(){
         // Если Есть ключ то приложение считаент что оно авторизовано
-        if(stgs.getSettingStr("auth_token")!= null){
+        if((stgs.getSettingStr("auth_token")!= null) && (stgs.getSettingInt("user_id") != 0)){
             return true;
         }
         return false;

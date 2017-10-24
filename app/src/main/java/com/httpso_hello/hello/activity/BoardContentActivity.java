@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -97,7 +98,7 @@ public class BoardContentActivity extends SuperMainActivity {
         getComments();
         LV.addHeaderView(header);
         LV.addFooterView(footer);
-        getBoardItem(extras.getString("avatar"), extras.getString("user_nickname"), extras.getString("date_pub"), extras.getString("content"), extras.getInt("likes"), extras.getInt("id"));
+        getBoardItem(extras.getString("avatar"), extras.getString("user_nickname"), extras.getString("date_pub"), extras.getString("content"), extras.getInt("likes"), extras.getInt("id"), extras.getBoolean("anonim"));
 
         // Свайп для обновления
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -109,14 +110,22 @@ public class BoardContentActivity extends SuperMainActivity {
         });
 
         //Клик по шапке
-        header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
-                intent.putExtra("profile_id", extras.getInt("user_id"));
-                startActivity(intent);
-            }
-        });
+        if (!extras.getBoolean("anonim")) {
+            header.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
+                    intent.putExtra("profile_id", extras.getInt("user_id"));
+                    startActivity(intent);
+                }
+            });
+        } else {
+            header.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                }
+            });
+        }
 
         //Отправка комментария
         messageSend.setOnClickListener(getOnClick());
@@ -224,49 +233,72 @@ public class BoardContentActivity extends SuperMainActivity {
     }
 
     //Заполнение карточку объявления
-    private void getBoardItem(String avatar, String name, String date_pub, String content, int likes, final int id) {
-        if (avatar != null) {
-            Picasso
-                    .with(getApplicationContext())
-                    .load(Uri.parse(Constant.upload + avatar))
-                    .transform(new CircularTransformation(0))
-                    .into(userAvatarBoardItem, new Callback() {
-                        @Override
-                        public void onSuccess() {
+    private void getBoardItem(String avatar, String name, String date_pub, String content, int likes, final int id, boolean anonim) {
+        if (!anonim) {
+            if (avatar != null) {
+                Picasso
+                        .with(getApplicationContext())
+                        .load(Uri.parse(Constant.upload + avatar))
+                        .transform(new CircularTransformation(0))
+                        .into(userAvatarBoardItem, new Callback() {
+                            @Override
+                            public void onSuccess() {
 
-                        }
+                            }
 
-                        @Override
-                        public void onError() {
-                            Picasso
-                                    .with(getApplicationContext())
-                                    .load(Uri.parse(Constant.default_avatar))
-                                    .transform(new CircularTransformation(0))
-                                    .into(userAvatarBoardItem);
-                        }
-                    });
+                            @Override
+                            public void onError() {
+                                Picasso
+                                        .with(getApplicationContext())
+                                        .load(Uri.parse(Constant.default_avatar))
+                                        .transform(new CircularTransformation(0))
+                                        .into(userAvatarBoardItem);
+                            }
+                        });
+            } else {
+                Picasso
+                        .with(getApplicationContext())
+                        .load(Uri.parse(Constant.default_avatar))
+                        .transform(new CircularTransformation(0))
+                        .into(userAvatarBoardItem);
+            }
+            userNameBoardItem.setText(name);
+            datePubBoardItem.setText(date_pub);
+            boardTextItem.setText(Html.fromHtml(content));
+            boardLikeItem.setText(ConverterDate.likeStr(likes));
+            boardLikeItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(BoardContentActivity.this, LikeActivity.class);
+                    intent.putExtra("target_id", id);
+                    intent.putExtra("subject", "board");
+                    intent.putExtra("target_controller", "content");
+                    startActivity(intent);
+                }
+            });
         } else {
             Picasso
                     .with(getApplicationContext())
-                    .load(Uri.parse(Constant.default_avatar))
+                    .load(R.drawable.ic_action_anonimnost)
                     .transform(new CircularTransformation(0))
                     .into(userAvatarBoardItem);
+            userNameBoardItem.setText("Анонимно");
+            datePubBoardItem.setText(date_pub);
+            boardTextItem.setText(Html.fromHtml(content));
+            boardLikeItem.setText(ConverterDate.likeStr(likes));
+            boardLikeItem.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(BoardContentActivity.this, LikeActivity.class);
+                    intent.putExtra("target_id", id);
+                    intent.putExtra("subject", "board");
+                    intent.putExtra("target_controller", "content");
+                    startActivity(intent);
+                }
+            });
         }
-        userNameBoardItem.setText(name);
-        datePubBoardItem.setText(date_pub);
-        boardTextItem.setText(content);
-        boardLikeItem.setText(ConverterDate.likeStr(likes));
-        boardLikeItem.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BoardContentActivity.this, LikeActivity.class);
-                intent.putExtra("target_id", id);
-                intent.putExtra("subject", "board");
-                intent.putExtra("target_controller", "content");
-                startActivity(intent);
-            }
-        });
     }
+
 
     //Проверка новых комментов
     private void getCountsComments() {

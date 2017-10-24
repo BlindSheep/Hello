@@ -27,6 +27,14 @@
             android:hint="Текст объявления"
             android:inputType="textCapSentences|textMultiLine"/>
 
+        <CheckBox
+            android:id="@+id/anonim"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Опубликовать анонимно" />
+
         <TextView
             android:id="@+id/boardPhotos"
             android:layout_width="match_parent"

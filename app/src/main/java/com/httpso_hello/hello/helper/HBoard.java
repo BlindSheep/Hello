@@ -78,6 +78,7 @@ public class HBoard extends Help{
 
     public void addBoard(
             final String content,
+            final boolean is_anonim,
             final ArrayList<Integer> uploadedFiles,
             final AddBoardCallback addBoardCallback,
             final Help.ErrorCallback errorCallback
@@ -120,6 +121,8 @@ public class HBoard extends Help{
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("content", content);
                     params.put("ctype_name", "board");
+                    if (is_anonim) params.put("is_anonim", "1");
+                    else params.put("is_anonim", "0");
                     if(uploadedFiles.size()!=0){
                         params.put("uploaded_files", gson.toJson(uploadedFiles.toArray()));
                     }

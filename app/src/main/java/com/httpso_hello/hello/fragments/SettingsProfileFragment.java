@@ -68,7 +68,6 @@ public class SettingsProfileFragment extends Fragment {
     private Spinner matPol;
     private Spinner region;
     private Spinner sity;
-    private ImageView newAvatar;
     private Settings stgs;
 
     @Override
@@ -100,7 +99,6 @@ public class SettingsProfileFragment extends Fragment {
         matPol = (Spinner) rootView.findViewById(R.id.mat_pol);
         region = (Spinner) rootView.findViewById(R.id.region);
         sity = (Spinner) rootView.findViewById(R.id.sity);
-        newAvatar = (ImageView) rootView.findViewById(R.id.newAvatar);
         stgs = new Settings(getContext());
         setInitialDateTime();
 
@@ -127,34 +125,6 @@ public class SettingsProfileFragment extends Fragment {
 
 //Профиль
         userEditName.setText(user.nickname);
-
-        if(stgs.getSettingStr("user_avatar.micro") != null) {
-            Picasso
-                    .with(getContext())
-                    .load(stgs.getSettingStr("user_avatar.micro"))
-                    .transform(new CircularTransformation(0))
-                    .into(newAvatar, new Callback() {
-                        @Override
-                        public void onSuccess() {
-
-                        }
-
-                        @Override
-                        public void onError() {
-                            Picasso
-                                    .with(getContext())
-                                    .load(Uri.parse(Constant.default_avatar))
-                                    .transform(new CircularTransformation(0))
-                                    .into(newAvatar);
-                        }
-                    });
-        } else {
-            Picasso
-                    .with(getContext())
-                    .load(Uri.parse(Constant.default_avatar))
-                    .transform(new CircularTransformation(0))
-                    .into(newAvatar);
-        }
 
         if (user.gender == 0) {
             userEditGenderMan.setChecked(false);

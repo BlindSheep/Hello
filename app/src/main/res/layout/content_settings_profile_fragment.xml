@@ -25,34 +25,9 @@
                 android:elevation="1.5dp"
                 android:orientation="horizontal">
 
-            <RelativeLayout
-                android:layout_marginLeft="20dp"
-                android:layout_gravity="center_vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:id="@+id/newAvatar"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    app:srcCompat="@mipmap/avatar"/>
-
-                <ImageView
-                    android:layout_marginLeft="20dp"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@color/white"
-                    android:tint="@color/main_blue_color_hello"
-                    app:srcCompat="@mipmap/ic_action_photo"/>
-
-            </RelativeLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
                 android:orientation="vertical">
 
                 <TextView

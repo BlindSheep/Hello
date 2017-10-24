@@ -37,6 +37,7 @@ public class AddBoardActivity extends SuperMainActivity {
     private FilesAdapter faAdapter;
     private GridView filesLine;
     private Files files;
+    private CheckBox anonim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +50,7 @@ public class AddBoardActivity extends SuperMainActivity {
         boardSave = (TextView) findViewById(R.id.boardSave);
         boardText = (EditText) findViewById(R.id.boardText);
         boardPhotos = (TextView) findViewById(R.id.boardPhotos);
+        anonim = (CheckBox) findViewById(R.id.anonim);
 
         filesLine = (GridView) findViewById(R.id.addBoardPhotos);
 
@@ -81,6 +83,7 @@ public class AddBoardActivity extends SuperMainActivity {
                     HBoard hBoard = new HBoard(getApplicationContext());
                     hBoard.addBoard(
                             boardTextString,
+                            anonim.isChecked(),
                             files.getUploadedFiles(),
                             new HBoard.AddBoardCallback() {
                                 @Override
