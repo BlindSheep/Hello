@@ -52,7 +52,7 @@
             android:layout_marginBottom="10dp"
             android:text="Город"
             android:maxLines="1"
-            android:layout_alignTop="@+id/guest_profile_nickname"
+            android:layout_alignTop="@+id/search_profile_nickname"
             android:textColor="@color/main_blue_color_hello" />
 
     </RelativeLayout>

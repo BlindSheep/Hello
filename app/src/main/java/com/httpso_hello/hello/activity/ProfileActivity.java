@@ -15,14 +15,9 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -48,7 +43,6 @@ import com.httpso_hello.hello.helper.Photo;
 import com.httpso_hello.hello.helper.Simpation;
 import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -168,14 +162,16 @@ public class ProfileActivity extends SuperMainActivity{
     private PopupWindow popUpWindow4;
     private View popupView4;
     private ImageView iconForAva;
+    private Bundle extras;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        extras = getIntent().getExtras();
 
         setContentView(R.layout.activity_profile);
-
-        Bundle extras = getIntent().getExtras();
+        setHeader();
 
         profile_id = extras.getInt("profile_id");
         profile_nickname = extras.getString("profile_nickname");
@@ -283,58 +279,15 @@ public class ProfileActivity extends SuperMainActivity{
         popUpWindow4.setHeight(displaymetrics.heightPixels);
         popUpWindow4.setAnimationStyle(Animation_Dialog);
         iconForAva = (ImageView) findViewById(R.id.iconForAva);
-
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-
-        CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setScrimAnimationDuration(1000);
-        nameToolbar.setText(extras.getString("profile_nickname"));
+    }
 
-        toggle.syncState();
-
-//Заполнение шапки в меню
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerLayout = navigationView.getHeaderView(0);
-        headerLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ProfileActivity.this, ProfileActivity.class);
-                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
-                startActivity(intent);
-                finish();
-            }
-        });
-        ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
-        TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
-        TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
-        Picasso
-                .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
-                .resize(300, 300)
-                .centerCrop()
-                .transform(new CircularTransformation(0))
-                .into(headerImageView);
-        if(stgs.getSettingStr("user_age") != null) {
-            user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
-        } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
-        String id = Integer.toString(stgs.getSettingInt("user_id"));
-        user_id_header.setText("Ваш ID " + id);
-
-//Парсинг юзера
+    private void setContent() {
         Profile profile = new Profile(getApplicationContext());
         profile.getProfile(extras.getInt("profile_id"), this, new Profile.GetProfileCallback() {
             @Override
             public void onSuccess(final User user, Activity activity) {
-///////////////////////////////////////////
-///Отображение информации о пользователе///
-///////////////////////////////////////////
 
 // Является ли открытая анкета, анкетой залогинившегося юзера
                 isUserProfile = (stgs.getSettingInt("user_id") == user.id);
@@ -1139,7 +1092,6 @@ public class ProfileActivity extends SuperMainActivity{
                 finish();
             }
         });
-
     }
 
     //Обрабатываем результат выбора фоток из галереи или с камеры
@@ -1450,6 +1402,9 @@ openAvatarUpdateWindow(updateAvatarClick);
         }
     }
 
-// Создание файла для камеры
-
+    @Override
+    public void onResume(){
+        setContent();
+        super.onResume();
+    }
 }

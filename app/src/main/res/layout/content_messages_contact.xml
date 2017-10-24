@@ -8,6 +8,12 @@
     android:background="@drawable/board"
     android:elevation="1.5dp">
 
+    <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <FrameLayout
         android:layout_width="84dp"
         android:layout_height="84dp">
@@ -18,7 +24,6 @@
             android:layout_height="70dp"
             android:layout_margin="7dp"
             app:srcCompat="@mipmap/ic_menu_profile" />
-
 
         <ImageView
             android:id="@+id/isOnline"
@@ -109,5 +114,7 @@
     </LinearLayout>
 
         </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

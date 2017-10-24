@@ -3,6 +3,7 @@ package com.httpso_hello.hello.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -46,7 +47,6 @@ public class GuestsActivity extends SuperMainActivity{
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        swipeRefreshLayout.setRefreshing(true);
 
         getGuests();
 
@@ -54,7 +54,6 @@ public class GuestsActivity extends SuperMainActivity{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
                 getGuests();
             }
         });
@@ -62,6 +61,7 @@ public class GuestsActivity extends SuperMainActivity{
 
 
     private void getGuests() {
+        swipeRefreshLayout.setRefreshing(true);
         profile = new Profile(getApplicationContext());
         profile.getGuests(1, this, new Profile.GetGuestsCallback() {
             @Override
@@ -93,12 +93,20 @@ public class GuestsActivity extends SuperMainActivity{
 
             @Override
             public void onError(int error_code, String error_msg) {
-
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        getGuests();
+                    }
+                }, 5000);
             }
 
             @Override
             public void onInternetError() {
-
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        getGuests();
+                    }
+                }, 5000);
             }
         });
     }

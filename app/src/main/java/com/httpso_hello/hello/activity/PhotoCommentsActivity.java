@@ -8,8 +8,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
@@ -27,6 +29,7 @@ import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 public class PhotoCommentsActivity extends SuperMainActivity {
@@ -45,6 +48,9 @@ public class PhotoCommentsActivity extends SuperMainActivity {
     private Timer timer = new Timer();
     private ImageView photo;
     private TextView like;
+    private EmojIconActions emojIcon;
+    private ImageButton emojiKeyboard;
+    private RelativeLayout content_photo_comments_block;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +72,11 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         messageSend = (ImageView) findViewById(R.id.messageSend);
+        content_photo_comments_block = (RelativeLayout) findViewById(R.id.content_photo_comments_block);
         messageContent = (EmojiconEditText) findViewById(R.id.messageContent);
+        emojiKeyboard = (ImageButton) findViewById(R.id.emojiKeyboard);
+        emojIcon = new EmojIconActions(this, content_photo_comments_block, messageContent, emojiKeyboard);
+        emojIcon.ShowEmojIcon();
 
         //Заполняем комментами
         getComments();

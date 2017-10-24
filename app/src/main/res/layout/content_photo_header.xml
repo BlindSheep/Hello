@@ -25,6 +25,7 @@
             android:background="@drawable/board"/>
 
         <TextView
+            android:background="?android:attr/selectableItemBackground"
             android:id="@+id/photoLikeItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

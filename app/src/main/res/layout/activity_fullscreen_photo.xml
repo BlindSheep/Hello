@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="30dp"
                 android:paddingRight="30dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -67,6 +68,7 @@
                 android:layout_alignParentRight="true"
                 android:paddingLeft="30dp"
                 android:paddingRight="35dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal">
 
                 <ImageView

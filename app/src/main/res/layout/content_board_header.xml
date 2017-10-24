@@ -67,6 +67,7 @@
             android:background="@drawable/board"/>
 
         <TextView
+            android:background="?android:attr/selectableItemBackground"
             android:id="@+id/boardLikeItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

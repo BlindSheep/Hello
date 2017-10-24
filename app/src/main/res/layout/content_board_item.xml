@@ -386,6 +386,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_weight="1"
                 android:padding="15dp"
+                android:background="?android:attr/selectableItemBackground"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -413,6 +414,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_weight="1"
                 android:orientation="horizontal"
+                android:background="?android:attr/selectableItemBackground"
                 android:padding="15dp">
 
                 <ImageView
