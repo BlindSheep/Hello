@@ -39,7 +39,8 @@ public class Notice extends Help {
 
     public void getNotice(
             final Activity activity,
-            final Notice.GetNoticeCallback getNoticeCallback
+            final Notice.GetNoticeCallback getNoticeCallback,
+            final Help.ErrorCallback errorCallback
     ){
         if (Constant.api_key !="") {
             StringRequest SReq = new StringRequest(
@@ -54,17 +55,17 @@ public class Notice extends Help {
                                     getNoticeCallback.onSuccess(notises.notices, activity);
                                     return;
                                 }
-                                getNoticeCallback.onError(notises.error.error_code, notises.error.error_msg);
+                                errorCallback.onError(notises.error.error_code, notises.error.error_msg);
                                 return;
                             }
-                            getNoticeCallback.onInternetError();
+                            errorCallback.onInternetError();
                             return;
                         }
                     },
                     new Response.ErrorListener(){
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            getNoticeCallback.onInternetError();
+                            errorCallback.onInternetError();
                         }
                     }
             )
@@ -77,14 +78,12 @@ public class Notice extends Help {
                     return params;
                 };
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getNotises");
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getNotices");
         }
     }
 
 public interface GetNoticeCallback {
-    public void onSuccess(NoticeItem[] noticeItem, Activity activity);
-    public void onError(int error_code, String error_msg);
-    void onInternetError();
+    void onSuccess(NoticeItem[] noticeItem, Activity activity);
 }
 
 }

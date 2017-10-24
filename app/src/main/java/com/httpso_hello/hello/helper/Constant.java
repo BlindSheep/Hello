@@ -67,5 +67,7 @@ public class Constant {
 
     //Заглушка для аватарки
     public static String default_avatar = upload + "default/avatar.jpg";
+
+    public static String metrika_api_key = "71dba453-2cd4-4256-b676-77d249383d44";
 }
 

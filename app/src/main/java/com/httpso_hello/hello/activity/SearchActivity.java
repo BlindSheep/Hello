@@ -259,7 +259,7 @@ public class SearchActivity extends SuperMainActivity{
                     pageNumber = 1;
                     thatsAll = false;
 
-                    ((SearchActivity)view.getContext()).refreshProfiles();
+                    refreshProfiles();
                     SearchActivity.this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 } else {
                     Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
