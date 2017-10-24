@@ -94,7 +94,6 @@ public class BoardContentActivity extends SuperMainActivity {
         messageSend = (ImageView) findViewById(R.id.messageSend);
 
         //Заполняем комментами
-        swipeRefreshLayout.setRefreshing(true);
         getComments();
         LV.addHeaderView(header);
         LV.addFooterView(footer);
@@ -104,7 +103,6 @@ public class BoardContentActivity extends SuperMainActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                swipeRefreshLayout.setRefreshing(true);
                 getComments();
             }
         });
@@ -186,6 +184,7 @@ public class BoardContentActivity extends SuperMainActivity {
     //Получение комментов
     private void getComments(){
         launching = true;
+        swipeRefreshLayout.setRefreshing(true);
         new Comments(getApplicationContext())
                 .getComments(
                         "content",
@@ -316,7 +315,6 @@ public class BoardContentActivity extends SuperMainActivity {
                                             @Override
                                             public void onSuccess(int count_comments) {
                                                 if (counts != count_comments) {
-                                                    swipeRefreshLayout.setRefreshing(true);
                                                     getComments();
                                                 }
                                             }

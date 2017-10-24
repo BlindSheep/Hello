@@ -2,27 +2,14 @@ package com.httpso_hello.hello.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
-import android.hardware.camera2.params.ColorSpaceTransform;
-import android.net.Uri;
-import android.provider.CalendarContract;
-import android.support.annotation.ColorInt;
-import android.support.annotation.ColorRes;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,14 +17,11 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.adapters.FragmentPhotoAdapter;
-import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.HackyViewPager;
 import com.httpso_hello.hello.helper.Like;
 import com.httpso_hello.hello.helper.ZoomOutPageTransformer;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -49,19 +33,20 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
     private ArrayList<Integer> photoLike;
     private ArrayList<Integer> photoId;
     private ArrayList<String> photoIsVoted;
+    private ArrayList<Integer> photoComments;
     private boolean likeble;
     private int posit;
     private static final String ISLOCKED_ARG = "isLocked";
     private ActionBar toolbar;
     private TextView like_string;
-    private ImageButton like_button;
+    private LinearLayout likeBlock;
+    private ImageView like_button;
+    private LinearLayout commentsBlock;
+    private TextView comments_string;
 
     private static final int UI_ANIMATION_DELAY = 300;
     private final Handler mHideHandler = new Handler();
     private ViewPager mViewPager;
-    private ImageView mContentView;
-    private TextView likeString;
-    private ImageView likeButton;
     private final Runnable mHidePart2Runnable = new Runnable() {
         @SuppressLint("InlinedApi")
         @Override
@@ -110,7 +95,10 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         toolbar = getSupportActionBar();
         like_string = (TextView) findViewById(R.id.like_string);
-        like_button = (ImageButton) findViewById(R.id.like_button);
+        likeBlock = (LinearLayout) findViewById(R.id.likeBlock);
+        like_button = (ImageView) findViewById(R.id.like_button);
+        commentsBlock = (LinearLayout) findViewById(R.id.commentsBlock);
+        comments_string = (TextView) findViewById(R.id.comments_string);
 
         //Обязательные параметры для передачи (оригиналы фоток и можно ли их лайкать) (кол-во лайков и ID фоток - опционально)
         likeble = extras.getBoolean("likeble"); //Обязательно передать, можно лайкать фотки или нельзя!
@@ -120,11 +108,8 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
             photoLike = extras.getIntegerArrayList("photoLike");
             photoId = extras.getIntegerArrayList("photoId");
             photoIsVoted = extras.getStringArrayList("photoIsVoted");
+            photoComments = extras.getIntegerArrayList("photoComments");
         }
-
-        //Скрываем нижнюю панель если нельзя лайкать
-        if (likeble) mControlsView.setVisibility(View.VISIBLE);
-        else mControlsView.setVisibility(View.GONE);
 
         //Заполняем тулбар
         toolbar.setDisplayShowHomeEnabled(true);
@@ -133,13 +118,6 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
         toolbar.setDisplayHomeAsUpEnabled(true);
         toolbar.setTitle("Фотография");
         toolbar.setSubtitle(posit+1 + " из " + photoOrig.size());
-
-        //Заполняем лайки
-        if (likeble) {
-            if (photoLike.get(posit) != 0) {
-                like_string.setText(ConverterDate.likeStr(photoLike.get(posit)));
-            } else like_string.setText("Нет оценок");
-        }
 
         // Запихиваем в адаптер нужные значения
         FragmentPhotoAdapter mTextPagerAdapter = new FragmentPhotoAdapter(getSupportFragmentManager(), photoOrig);
@@ -150,40 +128,31 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
         mViewPager.setAdapter(mTextPagerAdapter);
         mViewPager.setCurrentItem(posit);
 
-        //Прослушивание и Открытие активности с лайками
         if (likeble) {
-            like_string.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View view) {
-                    if (photoLike.get(posit) != 0) {
-                        Intent intent = new Intent(FullscreenPhotoActivity.this, LikeActivity.class);
-                        intent.putExtra("target_id", photoId.get(posit));
-                        intent.putExtra("subject", "photo");
-                        intent.putExtra("target_controller", "photos");
-                        startActivity(intent);
-                    } else
-                        Toast.makeText(getApplicationContext(), "Нет оценок", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-
-        //Цвет кнопки лайка
-        if (likeble) {
-            if (!(photoIsVoted.get(posit).equals("true")))
+            //Нижняя панель
+            mControlsView.setVisibility(View.VISIBLE);
+            //Заполняем лайки
+            like_string.setText(Integer.toString(photoLike.get(posit)));
+            //Заполняем комменты
+            comments_string.setText(Integer.toString(photoComments.get(posit)));
+            //Цвет кнопки лайка
+            if (!(photoIsVoted.get(posit).equals("true"))) {
                 like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
-            else
+                like_string.setTextColor(getResources().getColor(R.color.main_white_color_hello));
+            } else {
                 like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
-        }
-
-        //Нажатие кнопки лайк
-        if (likeble) {
-            like_button.setOnClickListener(new View.OnClickListener() {
+                like_string.setTextColor(getResources().getColor(R.color.main_blue_color_hello));
+            }
+            //Нажатие кнопки лайк
+            likeBlock.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!(photoIsVoted.get(posit).equals("true"))) {
                         like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                        like_string.setTextColor(getResources().getColor(R.color.main_blue_color_hello));
                         photoIsVoted.set(posit, "true");
                         photoLike.set(posit, (photoLike.get(posit) + 1));
-                        like_string.setText(ConverterDate.likeStr(photoLike.get(posit)));
+                        like_string.setText(Integer.toString(photoLike.get(posit)));
                         Like.getInstance(getApplicationContext()).sendLike(photoId.get(posit),"up", "photo", "photos", new Like.SendLikeCallback() {
                             @Override
                             public void onSuccess() {
@@ -192,26 +161,29 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
                             @Override
                             public void onError(int error_code, String error_msg) {
                                 like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                                like_string.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                                 photoIsVoted.set(posit, "false");
                                 photoLike.set(posit, (photoLike.get(posit) - 1));
-                                like_string.setText(ConverterDate.likeStr(photoLike.get(posit)));
+                                like_string.setText(Integer.toString(photoLike.get(posit)));
                                 Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void onInternetError() {
                                 like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                                like_string.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                                 photoIsVoted.set(posit, "false");
                                 photoLike.set(posit, (photoLike.get(posit) - 1));
-                                like_string.setText(ConverterDate.likeStr(photoLike.get(posit)));
+                                like_string.setText(Integer.toString(photoLike.get(posit)));
                                 Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                             }
                         });
                     } else {
                         like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                        like_string.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                         photoIsVoted.set(posit, "false");
                         photoLike.set(posit, (photoLike.get(posit) - 1));
-                        like_string.setText(ConverterDate.likeStr(photoLike.get(posit)));
+                        like_string.setText(Integer.toString(photoLike.get(posit)));
                         Like.getInstance(getApplicationContext()).sendLike(photoId.get(posit), "down", "photo", "photos", new Like.SendLikeCallback() {
                             @Override
                             public void onSuccess() {
@@ -220,24 +192,39 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
                             @Override
                             public void onError(int error_code, String error_msg) {
                                 like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                                like_string.setTextColor(getResources().getColor(R.color.main_blue_color_hello));
                                 photoIsVoted.set(posit, "true");
                                 photoLike.set(posit, (photoLike.get(posit) + 1));
-                                like_string.setText(ConverterDate.likeStr(photoLike.get(posit)));
+                                like_string.setText(Integer.toString(photoLike.get(posit)));
                                 Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                             }
 
                             @Override
                             public void onInternetError() {
                                 like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                                like_string.setTextColor(getResources().getColor(R.color.main_blue_color_hello));
                                 photoIsVoted.set(posit, "true");
                                 photoLike.set(posit, (photoLike.get(posit) + 1));
-                                like_string.setText(ConverterDate.likeStr(photoLike.get(posit)));
+                                like_string.setText(Integer.toString(photoLike.get(posit)));
                                 Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                             }
                         });
                     }
                 }
             });
+            //Нажатие кнопки комменты
+            commentsBlock.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getApplicationContext(), PhotoCommentsActivity.class);
+                    intent.putExtra("id", photoId.get(posit));
+                    intent.putExtra("photo", photoOrig.get(posit));
+                    intent.putExtra("likes", photoLike.get(posit));
+                    startActivity(intent);
+                }
+            });
+        } else {
+            mControlsView.setVisibility(View.GONE);
         }
 
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -249,29 +236,29 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
                 toolbar.setSubtitle(position+1 + " из " + photoOrig.size());
 
                 if (likeble) {
-                    if (photoLike.get(position) != 0) {
-                        like_string.setText(ConverterDate.likeStr(photoLike.get(position)));
-                    } else like_string.setText("Нет оценок");
-                }
-
-                //Цвет кнопки лайка
-                if (likeble) {
-                    if (!(photoIsVoted.get(position).equals("true")))
+                    //Кол-во лайков
+                    like_string.setText(Integer.toString(photoLike.get(position)));
+                    //Кол-во комментов
+                    comments_string.setText(Integer.toString(photoComments.get(position)));
+                    //Цвет кнопки лайка
+                    if (!(photoIsVoted.get(position).equals("true"))) {
                         like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
-                    else
+                        like_string.setTextColor(getResources().getColor(R.color.main_white_color_hello));
+                    }
+                    else {
                         like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
-                }
-
-                //Нажатие кнопки лайк
-                if (likeble) {
-                    like_button.setOnClickListener(new View.OnClickListener() {
+                        like_string.setTextColor(getResources().getColor(R.color.main_blue_color_hello));
+                    }
+                    //Нажатие кнопки лайк
+                    likeBlock.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (!(photoIsVoted.get(position).equals("true"))) {
                                 like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                                like_string.setTextColor(getResources().getColor(R.color.main_blue_color_hello));
                                 photoIsVoted.set(position, "true");
                                 photoLike.set(position, (photoLike.get(position) + 1));
-                                like_string.setText(ConverterDate.likeStr(photoLike.get(position)));
+                                like_string.setText(Integer.toString(photoLike.get(position)));
                                 Like.getInstance(getApplicationContext()).sendLike(photoId.get(position), "up", "photo", "photos", new Like.SendLikeCallback() {
                                     @Override
                                     public void onSuccess() {
@@ -280,26 +267,29 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
                                     @Override
                                     public void onError(int error_code, String error_msg) {
                                         like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                                        like_string.setTextColor(getResources().getColor(R.color.main_white_color_hello));
                                         photoIsVoted.set(position, "false");
                                         photoLike.set(position, (photoLike.get(position) - 1));
-                                        like_string.setText(ConverterDate.likeStr(photoLike.get(position)));
+                                        like_string.setText(Integer.toString(photoLike.get(position)));
                                         Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                                     }
 
                                     @Override
                                     public void onInternetError() {
                                         like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                                        like_string.setTextColor(getResources().getColor(R.color.main_white_color_hello));
                                         photoIsVoted.set(position, "false");
                                         photoLike.set(position, (photoLike.get(position) - 1));
-                                        like_string.setText(ConverterDate.likeStr(photoLike.get(position)));
+                                        like_string.setText(Integer.toString(photoLike.get(position)));
                                         Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                                     }
                                 });
                             } else {
                                 like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
+                                like_string.setTextColor(getResources().getColor(R.color.main_white_color_hello));
                                 photoIsVoted.set(position, "false");
                                 photoLike.set(position, (photoLike.get(position) - 1));
-                                like_string.setText(ConverterDate.likeStr(photoLike.get(position)));
+                                like_string.setText(Integer.toString(photoLike.get(position)));
                                 Like.getInstance(getApplicationContext()).sendLike(photoId.get(position), "down", "photo", "photos", new Like.SendLikeCallback() {
                                     @Override
                                     public void onSuccess() {
@@ -308,38 +298,35 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
                                     @Override
                                     public void onError(int error_code, String error_msg) {
                                         like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                                        like_string.setTextColor(getResources().getColor(R.color.main_blue_color_hello));
                                         photoIsVoted.set(position, "true");
                                         photoLike.set(position, (photoLike.get(position) + 1));
-                                        like_string.setText(ConverterDate.likeStr(photoLike.get(position)));
+                                        like_string.setText(Integer.toString(photoLike.get(position)));
                                         Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                                     }
 
                                     @Override
                                     public void onInternetError() {
                                         like_button.getBackground().setColorFilter(getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
+                                        like_string.setTextColor(getResources().getColor(R.color.main_blue_color_hello));
                                         photoIsVoted.set(position, "true");
                                         photoLike.set(position, (photoLike.get(position) + 1));
-                                        like_string.setText(ConverterDate.likeStr(photoLike.get(position)));
+                                        like_string.setText(Integer.toString(photoLike.get(position)));
                                         Toast.makeText(getApplicationContext(), "Ошибка", Toast.LENGTH_LONG).show();
                                     }
                                 });
                             }
                         }
                     });
-                }
-
-                //Открытие активности с теми кто лайкнул
-                if (likeble) {
-                    like_string.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View view) {
-                            if (photoLike.get(position) != 0) {
-                                Intent intent = new Intent(FullscreenPhotoActivity.this, LikeActivity.class);
-                                intent.putExtra("target_id", photoId.get(position));
-                                intent.putExtra("subject", "photo");
-                                intent.putExtra("target_controller", "photos");
-                                startActivity(intent);
-                            } else
-                                Toast.makeText(getApplicationContext(), "Нет оценок", Toast.LENGTH_LONG).show();
+                    //Нажатие кнопки комменты
+                    commentsBlock.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(getApplicationContext(), PhotoCommentsActivity.class);
+                            intent.putExtra("id", photoId.get(position));
+                            intent.putExtra("photo", photoOrig.get(position));
+                            intent.putExtra("likes", photoLike.get(position));
+                            startActivity(intent);
                         }
                     });
                 }

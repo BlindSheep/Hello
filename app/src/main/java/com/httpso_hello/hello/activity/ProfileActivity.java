@@ -411,11 +411,13 @@ public class ProfileActivity extends SuperMainActivity{
                             ArrayList<Integer> photoLike = new ArrayList<Integer>();
                             ArrayList<Integer> photoId = new ArrayList<Integer>();
                             ArrayList<String> photoIsVoted = new ArrayList<String>();
+                            ArrayList<Integer> photoComments = new ArrayList<Integer>();
                             for (int j = 0; j < user.photos.length; j++){
                                 photoOrig.add(j, Constant.upload + user.photos[j].image.original);
                                 photoLike.add(j, user.photos[j].rating);
                                 photoId.add(j, user.photos[j].id);
                                 photoIsVoted.add(j, Boolean.toString(user.photos[j].is_voted));
+                                photoComments.add(j, user.photos[j].comments);
                             }
                             Intent intent;
 
@@ -429,6 +431,7 @@ public class ProfileActivity extends SuperMainActivity{
                             intent.putIntegerArrayListExtra("photoLike", photoLike);
                             intent.putIntegerArrayListExtra("photoId", photoId);
                             intent.putStringArrayListExtra("photoIsVoted", photoIsVoted);
+                            intent.putIntegerArrayListExtra("photoComments", photoComments);
                             intent.putExtra("likeble", true);
                             intent.putExtra("position", position);
                             startActivity(intent);

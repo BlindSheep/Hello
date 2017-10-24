@@ -49,6 +49,7 @@ public class PhotosUserAdapter extends ArrayAdapter<Photo>{
     static class ViewHolder{
         public ImageView profile_photos_item;
         public TextView profile_photos_like;
+        public ImageView profile_photos_icon;
     }
 
     @Override
@@ -63,6 +64,7 @@ public class PhotosUserAdapter extends ArrayAdapter<Photo>{
             holder = new PhotosUserAdapter.ViewHolder();
             holder.profile_photos_item = (ImageView) rowView.findViewById(R.id.profile_photos_item);
             holder.profile_photos_like = (TextView) rowView.findViewById(R.id.profile_photos_like);
+            holder.profile_photos_icon = (ImageView) rowView.findViewById(R.id.profile_photos_icon);
             rowView.setTag(holder);
         } else {
             holder = (PhotosUserAdapter.ViewHolder) rowView.getTag();
@@ -110,7 +112,14 @@ public class PhotosUserAdapter extends ArrayAdapter<Photo>{
                     .load(Constant.default_avatar)
                     .into(holder.profile_photos_item);
         }
-        holder.profile_photos_like.setText(Integer.toString(photo.rating));
+        if (photo.rating != 0) {
+            holder.profile_photos_like.setText(Integer.toString(photo.rating));
+            holder.profile_photos_like.setVisibility(View.VISIBLE);
+            holder.profile_photos_icon.setVisibility(View.VISIBLE);
+        } else {
+            holder.profile_photos_like.setVisibility(View.GONE);
+            holder.profile_photos_icon.setVisibility(View.GONE);
+        }
 
         return rowView;
     }
