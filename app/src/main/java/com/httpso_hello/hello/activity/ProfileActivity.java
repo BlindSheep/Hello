@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -1088,8 +1089,11 @@ public class ProfileActivity extends SuperMainActivity{
 
             @Override
             public void onInternetError() {
-                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                finish();
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        setContent();
+                    }
+                }, 5000);
             }
         });
     }
