@@ -51,7 +51,7 @@ public class MessagesActivity extends SuperMainActivity{
         setContentView(R.layout.activity_messages);
         setHeader();
 
-        header = getLayoutInflater().inflate(R.layout.header, null);
+        header = getLayoutInflater().inflate(R.layout.footer6dp, null);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_msg, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
