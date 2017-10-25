@@ -1,13 +1,16 @@
 package com.httpso_hello.hello.activity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,6 +33,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     protected DrawerLayout drawer;
     protected ActionBarDrawerToggle toggle;
     protected ImageView headerImageView;
+    protected TextView nav_messages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +70,20 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
         TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
         TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
-        refreshMenuAvatar();
         if(stgs.getSettingStr("user_age") != null) {
             user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
         } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
         user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
+
+        nav_messages = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_messages));
+        getCountIntoDrawer();
+    }
+
+    private void getCountIntoDrawer() {
+        nav_messages.setGravity(Gravity.CENTER_VERTICAL);
+        nav_messages.setTypeface(null,Typeface.BOLD);
+        nav_messages.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
+        nav_messages.setText("7");
     }
 
     @Override
@@ -191,6 +204,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         super.onResume();
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onResumeSession();
     }
+
     public void refreshMenuAvatar(){
         Picasso
                 .with(getApplicationContext())
