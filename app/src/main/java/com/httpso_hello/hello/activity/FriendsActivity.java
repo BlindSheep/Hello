@@ -34,6 +34,7 @@ public class FriendsActivity extends SuperMainActivity{
         Bundle extras = getIntent().getExtras();
         setContentView(R.layout.activity_friends);
         setHeader();
+        if (extras.getInt("profile_id") == 0) setMenuItem("FriendsActivity");
 
         progressBarFriends = (ProgressBar) findViewById(R.id.progressBarFriends);
 

@@ -35,6 +35,7 @@ public class BoardActivity extends SuperMainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
         setHeader();
+        setMenuItem("BoardActivity");
 
         LV = (ListView) findViewById(R.id.boardList);
         header = getLayoutInflater().inflate(R.layout.header_for_board, null);

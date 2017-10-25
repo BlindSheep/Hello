@@ -307,8 +307,11 @@ public class ProfileActivity extends SuperMainActivity{
                     onlineToolbar.setTextColor(getResources().getColor(R.color.main_white_color_hello));
                 }
 
-                //Значек загрузки аватарки
-                if (isUserProfile) iconForAva.setVisibility(View.VISIBLE);
+                //Значек загрузки аватарки и подсветка пункта меню
+                if (isUserProfile) {
+                    iconForAva.setVisibility(View.VISIBLE);
+                    setMenuItem("MyProfile");
+                }
                 else iconForAva.setVisibility(View.GONE);
 
 //Устанавливаем аватар

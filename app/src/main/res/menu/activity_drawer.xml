@@ -34,6 +34,7 @@
 
     <item android:title="@string/nav_datting">
         <menu>
+            <group android:checkableBehavior="single">
             <item
                 android:id="@+id/nav_search"
                 android:icon="@mipmap/ic_menu_datting"
@@ -46,11 +47,13 @@
                 android:id="@+id/nav_servises"
                 android:icon="@mipmap/ic_action_share"
                 android:title="@string/nav_servises" />
+            </group>
         </menu>
     </item>
 
     <item android:title="@string/nav_edit">
         <menu>
+            <group android:checkableBehavior="single">
             <item
                 android:id="@+id/nav_edit"
                 android:icon="@mipmap/ic_menu_settings"
@@ -63,6 +66,7 @@
                 android:id="@+id/nav_exit"
                 android:icon="@mipmap/ic_menu_exit"
                 android:title="@string/nav_exit" />
+            </group>
         </menu>
     </item>
 

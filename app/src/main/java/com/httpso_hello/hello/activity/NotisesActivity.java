@@ -30,6 +30,7 @@ public class NotisesActivity extends SuperMainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notises);
         setHeader();
+        setMenuItem("NotisesActivity");
 
         notices_list = ((ListView) findViewById(R.id.notices_list));
         header = getLayoutInflater().inflate(R.layout.footer6dp, null);

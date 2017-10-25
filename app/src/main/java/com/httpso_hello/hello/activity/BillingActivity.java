@@ -58,6 +58,7 @@ public class BillingActivity extends SuperMainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_billing);
         setHeader();
+        setMenuItem("ServisesActivity");
 
         Intent serviceIntent =
                 new Intent("com.android.vending.billing.InAppBillingService.BIND");

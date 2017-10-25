@@ -48,14 +48,13 @@ import static android.R.style.Animation_Dialog;
 public class SettingsActivity extends SuperMainActivity{
 
     private ProgressBar progressBarSettings;
-//    private Uri imageUri;
-//    private SettingsProfileFragment settingsProfileFragment;
-//    private Bundle settingsProfileFragmentArg;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         setHeader();
+        setMenuItem("SettingsActivity");
 
         progressBarSettings = (ProgressBar) findViewById(R.id.progressBarSettings);
         auth = new Auth(getApplicationContext());
@@ -78,15 +77,15 @@ public class SettingsActivity extends SuperMainActivity{
                 SettingsProfileFragment settingsProfileFragment  = new SettingsProfileFragment();
                 SettingsLookingForFragment settingsLookingForFragment = new SettingsLookingForFragment();
 
-                //формируем аргументы для фрагмента "Вы понравились"
+                //фрагмент интересы
                 settingsIntrestingFragmentArg.putParcelable("User", user);
                 settingsIntrestingFragment.setArguments(settingsIntrestingFragmentArg);
 
-                //формируем аргументы для фрагмента "Вам понравились"
+                //фрагмент редактировать профиль
                 settingsProfileFragmentArg.putParcelable("User", user);
                 settingsProfileFragment.setArguments(settingsProfileFragmentArg);
 
-                //формируем аргументы для фрагмента "Взаимные симпатии"
+                //фрагмент кого ищу
                 settingsLookingForFragmentArg.putParcelable("User", user);
                 settingsLookingForFragment.setArguments(settingsLookingForFragmentArg);
 

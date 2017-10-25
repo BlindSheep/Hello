@@ -36,6 +36,7 @@ public class UpAnketActivity extends SuperMainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_up_anket);
         setHeader();
+        setMenuItem("ServisesActivity");
 
         position = (TextView) findViewById(R.id.position);
         priceUpAnket = (TextView) findViewById(R.id.priceUpAnket);

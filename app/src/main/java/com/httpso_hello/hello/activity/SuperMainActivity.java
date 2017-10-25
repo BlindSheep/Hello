@@ -12,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +47,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     protected TextView nav_messages, nav_guests, nav_notises;
     private static Handler countsHandler = new Handler();
     private Timer countsTimer;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,6 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     }
 
     public void setHeader() {
-
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -67,7 +68,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
         nav_messages = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_messages));
@@ -98,6 +99,19 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
     }
 
+    public void setMenuItem(String activityName) {
+        if (activityName.equals("BoardActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_board)).setChecked(true);
+        else if (activityName.equals("MessagesActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_messages)).setChecked(true);
+        else if (activityName.equals("ServisesActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_servises)).setChecked(true);
+        else if (activityName.equals("FriendsActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_frinds)).setChecked(true);
+        else if (activityName.equals("GuestsActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_guests)).setChecked(true);
+        else if (activityName.equals("NotisesActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_notises)).setChecked(true);
+        else if (activityName.equals("MyProfile")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_profile)).setChecked(true);
+        else if (activityName.equals("SearchActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_search)).setChecked(true);
+        else if (activityName.equals("SearchActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_edit)).setChecked(true);
+        else if (activityName.equals("SimpationActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_simpatii)).setChecked(true);
+    }
+
     private void getCountIntoDrawer() {
         countsTimer = new Timer();
         countsTimer.schedule(new TimerTask() {
@@ -112,19 +126,19 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                             if (allCounts.new_messages != 0) {
                                 nav_messages.setGravity(Gravity.CENTER_VERTICAL);
                                 nav_messages.setTypeface(null, Typeface.BOLD);
-                                nav_messages.setTextColor(getResources().getColor(R.color.main_black_color_hello));
+                                nav_messages.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                                 nav_messages.setText(Integer.toString(allCounts.new_messages));
                             }
                             if (allCounts.new_guests != 0) {
                                 nav_guests.setGravity(Gravity.CENTER_VERTICAL);
                                 nav_guests.setTypeface(null, Typeface.BOLD);
-                                nav_guests.setTextColor(getResources().getColor(R.color.main_black_color_hello));
+                                nav_guests.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                                 nav_guests.setText(Integer.toString(allCounts.new_guests));
                             }
                             if (allCounts.new_notices != 0) {
                                 nav_notises.setGravity(Gravity.CENTER_VERTICAL);
                                 nav_notises.setTypeface(null, Typeface.BOLD);
-                                nav_notises.setTextColor(getResources().getColor(R.color.main_black_color_hello));
+                                nav_notises.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                                 nav_notises.setText(Integer.toString(allCounts.new_notices));
                             }
                         }
@@ -182,8 +196,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
                 finish();
                 break;
-            case
-                    R.id.nav_frinds:
+            case R.id.nav_frinds:
                 intent = new Intent(getApplicationContext(), FriendsActivity.class);
                 intent.putExtra("profile_id", 0);
                 startActivity(intent);

@@ -348,7 +348,7 @@ public class SettingsProfileFragment extends Fragment {
             dateAndTime.set(Calendar.MONTH, ConverterDate.getMonth(user.birth_date));
             dateAndTime.set(Calendar.DAY_OF_MONTH, ConverterDate.getDay(user.birth_date));
         } else {
-            dateAndTime.set(Calendar.YEAR, 1900);
+            dateAndTime.set(Calendar.YEAR, 1990);
             dateAndTime.set(Calendar.MONTH, 0);
             dateAndTime.set(Calendar.DAY_OF_MONTH, 1);
         }

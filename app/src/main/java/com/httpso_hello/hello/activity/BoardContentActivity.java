@@ -70,6 +70,7 @@ public class BoardContentActivity extends SuperMainActivity {
         extras = getIntent().getExtras();
         setContentView(R.layout.activity_board_content);
         setHeader();
+        setMenuItem("BoardActivity");
 
         LV = (ListView) findViewById(R.id.commentsList);
         header = getLayoutInflater().inflate(R.layout.content_board_header, null);

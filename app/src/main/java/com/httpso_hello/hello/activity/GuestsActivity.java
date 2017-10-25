@@ -39,6 +39,7 @@ public class GuestsActivity extends SuperMainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guests);
         setHeader();
+        setMenuItem("GuestsActivity");
 
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(

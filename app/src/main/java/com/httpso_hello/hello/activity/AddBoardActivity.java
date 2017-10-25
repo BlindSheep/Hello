@@ -44,6 +44,7 @@ public class AddBoardActivity extends SuperMainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_board);
         setHeader();
+        setMenuItem("BoardActivity");
 
         boardCancel = (TextView) findViewById(R.id.boardCancel);
         boardSave = (TextView) findViewById(R.id.boardSave);

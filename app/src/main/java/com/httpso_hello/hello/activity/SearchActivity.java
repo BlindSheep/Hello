@@ -66,6 +66,7 @@ public class SearchActivity extends SuperMainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         setHeader();
+        setMenuItem("SearchActivity");
 
         context = this.getApplicationContext();
         this.profile = new Profile(this);

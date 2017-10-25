@@ -90,9 +90,10 @@ public class ChatActivity extends SuperMainActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
+        final Bundle extras = getIntent().getExtras();
         setContentView(R.layout.activity_chat);
         setHeader();
+        setMenuItem("MessagesActivity");
 
         user_id = stgs.getSettingInt("user_id");
         RelativeLayout rootView = (RelativeLayout) findViewById(R.id.rootView);
@@ -165,6 +166,15 @@ public class ChatActivity extends SuperMainActivity{
                     .into((ImageView) findViewById(R.id.imageAvatar));
             this.pathContactAvatar = Constant.default_avatar;
         }
+
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, ProfileActivity.class);
+                intent.putExtra("profile_id", extras.getInt("contact_id"));
+                startActivity(intent);
+            }
+        });
 
         chatList = (ListView) findViewById(R.id.chatList);
 

@@ -33,6 +33,7 @@ public class ServisesActivity extends SuperMainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_servises);
         setHeader();
+        setMenuItem("ServisesActivity");
 
         billing = (LinearLayout) findViewById(R.id.billing);
         priceUpAnket = (TextView) findViewById(R.id.priceUpAnket);

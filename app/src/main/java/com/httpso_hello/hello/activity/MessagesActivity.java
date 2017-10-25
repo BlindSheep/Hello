@@ -49,6 +49,7 @@ public class MessagesActivity extends SuperMainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messages);
         setHeader();
+        setMenuItem("MessagesActivity");
 
         header = getLayoutInflater().inflate(R.layout.footer6dp, null);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_msg, null);

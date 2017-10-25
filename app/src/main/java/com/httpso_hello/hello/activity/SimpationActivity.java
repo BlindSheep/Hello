@@ -39,6 +39,7 @@ public class SimpationActivity extends SuperMainActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_simpation);
         setHeader();
+        setMenuItem("SimpationActivity");
 
         progressBarSimpation = (ProgressBar) findViewById(R.id.progressBarSimpation);
 
