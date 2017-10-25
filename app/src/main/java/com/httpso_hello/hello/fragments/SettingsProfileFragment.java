@@ -129,6 +129,7 @@ public class SettingsProfileFragment extends Fragment {
                 .with(getContext())
                 .load(stgs.getSettingStr("user_avatar.micro"))
                 .resize(100, 100)
+                .transform(new CircularTransformation(0))
                 .into(settingsNewAvatar);
         setInitialDateTime();
 
@@ -452,8 +453,9 @@ public class SettingsProfileFragment extends Fragment {
                                     .with(getContext())
                                     .load(Constant.upload + avatar.micro)
                                     .resize(100, 100)
+                                    .transform(new CircularTransformation(0))
                                     .into(settingsNewAvatar);
-                            ((SettingsActivity) activity).refreshMenuAvatar();
+
                         }
                     }, new Help.ErrorCallback() {
                         @Override

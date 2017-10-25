@@ -1,10 +1,12 @@
 package com.httpso_hello.hello.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.httpso_hello.hello.R;
@@ -63,8 +65,19 @@ public class NotisesActivity extends SuperMainActivity{
                         ArrayList<NoticeItem> defolt = new ArrayList<NoticeItem>();
                         Collections.addAll(defolt, noticeItem);
 
-                        NoticesAdapter likesAdapter = new NoticesAdapter(activity, defolt);
+                        final NoticesAdapter likesAdapter = new NoticesAdapter(activity, defolt);
                         notices_list.setAdapter(likesAdapter);
+                        notices_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                NoticeItem noticeItem = likesAdapter.getItem(position-1);
+                                Intent intent = new Intent(NotisesActivity.this, ProfileActivity.class);
+                                intent.putExtra("profile_id", noticeItem.profile_id);
+                                intent.putExtra("profile_nickname", noticeItem.sender_user.nickname);
+                                intent.putExtra("avatar", "");
+                                startActivity(intent);
+                            }
+                        });
 
                         swipeRefreshLayout.setRefreshing(false);
                     }
