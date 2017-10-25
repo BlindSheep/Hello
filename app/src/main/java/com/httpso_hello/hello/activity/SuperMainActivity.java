@@ -2,7 +2,9 @@ package com.httpso_hello.hello.activity;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -18,12 +20,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.AllCounts;
+import com.httpso_hello.hello.Structures.Message;
 import com.httpso_hello.hello.helper.Auth;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.Help;
+import com.httpso_hello.hello.helper.Messages;
+import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Picasso;
 import com.yandex.metrica.YandexMetrica;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SuperMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -33,7 +43,9 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     protected DrawerLayout drawer;
     protected ActionBarDrawerToggle toggle;
     protected ImageView headerImageView;
-    protected TextView nav_messages;
+    protected TextView nav_messages, nav_guests, nav_notises;
+    private static Handler countsHandler = new Handler();
+    private Timer countsTimer = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +70,9 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
+        nav_messages = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_messages));
+        nav_guests = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_guests));
+        nav_notises = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notises));
         headerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,15 +97,52 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
         user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
 
-        nav_messages = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_messages));
         getCountIntoDrawer();
     }
 
     private void getCountIntoDrawer() {
-        nav_messages.setGravity(Gravity.CENTER_VERTICAL);
-        nav_messages.setTypeface(null,Typeface.BOLD);
-        nav_messages.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-        nav_messages.setText("7");
+        countsTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                countsHandler.post(new Runnable() {public void run() {
+                    Profile.getInstance(getApplicationContext())
+                            .getCount(new Profile.GetCountCallback() {
+                        @Override
+                        public void onSuccess(AllCounts allCounts) {
+                            //Новые сообщения
+                            if (allCounts.new_messages != 0) {
+                                nav_messages.setGravity(Gravity.CENTER_VERTICAL);
+                                nav_messages.setTypeface(null, Typeface.BOLD);
+                                nav_messages.setTextColor(getResources().getColor(R.color.main_black_color_hello));
+                                nav_messages.setText(Integer.toString(allCounts.new_messages));
+                            }
+                            if (allCounts.new_guests != 0) {
+                                nav_guests.setGravity(Gravity.CENTER_VERTICAL);
+                                nav_guests.setTypeface(null, Typeface.BOLD);
+                                nav_guests.setTextColor(getResources().getColor(R.color.main_black_color_hello));
+                                nav_guests.setText(Integer.toString(allCounts.new_guests));
+                            }
+                            if (allCounts.new_notices != 0) {
+                                nav_notises.setGravity(Gravity.CENTER_VERTICAL);
+                                nav_notises.setTypeface(null, Typeface.BOLD);
+                                nav_notises.setTextColor(getResources().getColor(R.color.main_black_color_hello));
+                                nav_notises.setText(Integer.toString(allCounts.new_notices));
+                            }
+                        }
+
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+
+                        }
+
+                        @Override
+                        public void onInternetError() {
+
+                        }
+                    });
+                }});
+            }
+        }, 2000, 15000);
     }
 
     @Override

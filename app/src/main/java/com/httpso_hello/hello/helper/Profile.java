@@ -10,6 +10,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.AllCounts;
 import com.httpso_hello.hello.Structures.BalanceReq;
 import com.httpso_hello.hello.Structures.Guest;
 import com.httpso_hello.hello.Structures.Guests;
@@ -268,34 +269,33 @@ public class Profile extends Help{
         }
     }
 
-    public void getOnline(
-            final GetOnlineCallback getOnlineCallback
+    public void getCount(
+            final GetCountCallback getCountCallback
     ) {
         if (Constant.api_key != "") {
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
-                    Constant.users_get_online_uri,
+                    Constant.users_get_counts_uri,
                     new Response.Listener<String>() {
                         public void onResponse(String response) {
-                            Log.d("online", response);
-                            BalanceReq balanceReq = gson.fromJson(response, BalanceReq.class);
+                            Log.d("users_get_counts", response);
+                            AllCounts allCounts = gson.fromJson(response, AllCounts.class);
                             if (response != null) {
-
-                                if (balanceReq.error == null) {
-                                    getOnlineCallback.onSuccess();
+                                if (allCounts.error == null) {
+                                    getCountCallback.onSuccess(allCounts);
                                     return;
                                 }
-                                getOnlineCallback.onError(balanceReq.error.error_code, balanceReq.error.error_msg);
+                                getCountCallback.onError(allCounts.error.error_code, allCounts.error.error_msg);
                                 return;
                             }
-                            getOnlineCallback.onInternetError();
+                            getCountCallback.onInternetError();
                             return;
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            getOnlineCallback.onInternetError();
+                            getCountCallback.onInternetError();
                         }
                     }
             ) {
@@ -309,7 +309,7 @@ public class Profile extends Help{
 
                 ;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "profile.getOnline");
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users_get_counts");
         }
     }
 
@@ -399,8 +399,8 @@ public class Profile extends Help{
         public void onError(int error_code, String error_msg);
         void onInternetError();
     }
-    public interface GetOnlineCallback {
-        public void onSuccess();
+    public interface GetCountCallback {
+        public void onSuccess(AllCounts allCounts);
         public void onError(int error_code, String error_msg);
         void onInternetError();
     }

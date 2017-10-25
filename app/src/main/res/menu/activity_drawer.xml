@@ -14,6 +14,7 @@
             android:title="@string/nav_messages" />
         <item
             android:id="@+id/nav_guests"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@mipmap/ic_menu_guests"
             android:title="@string/nav_guests" />
         <item
@@ -26,6 +27,7 @@
             android:title="@string/nav_frinds" />
         <item
             android:id="@+id/nav_notises"
+            app:actionViewClass="android.widget.TextView"
             android:icon="@mipmap/ic_menu_notify"
             android:title="@string/nav_notises" />
     </group>
