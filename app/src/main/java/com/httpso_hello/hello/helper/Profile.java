@@ -4,10 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
+import android.widget.ImageView;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BalanceReq;
 import com.httpso_hello.hello.Structures.Guest;
 import com.httpso_hello.hello.Structures.Guests;
@@ -16,6 +18,7 @@ import com.httpso_hello.hello.Structures.ReqUpdateAvatar;
 import com.httpso_hello.hello.Structures.Resp;
 import com.httpso_hello.hello.Structures.SearchProfiles;
 import com.httpso_hello.hello.Structures.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -328,6 +331,12 @@ public class Profile extends Help{
                                 ReqUpdateAvatar reqUpdateAvatar = gson.fromJson(response, ReqUpdateAvatar.class);
                                 if(reqUpdateAvatar.error==null) {
                                     stgs.setSetting("user_avatar.micro", Constant.upload + reqUpdateAvatar.avatar.micro);
+                                    Picasso
+                                            .with(_context)
+                                            .load(Constant.upload + reqUpdateAvatar.avatar.micro)
+                                            .resize(100, 100)
+                                            .transform(new CircularTransformation(0))
+                                            .into((ImageView) ((Activity) _context).findViewById(R.id.user_avatar_header));
                                     updateAvatarCallback.onSuccess(reqUpdateAvatar.avatar);
                                     return;
                                 }

@@ -195,4 +195,7 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
         holder.targetNoticePreview.setVisibility(View.GONE);
     }
 
+    public NoticeItem getItem(int position) {
+        return this.noticeItem.get(position);
+    }
 }
