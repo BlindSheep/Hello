@@ -108,7 +108,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         else if (activityName.equals("NotisesActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_notises)).setChecked(true);
         else if (activityName.equals("MyProfile")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_profile)).setChecked(true);
         else if (activityName.equals("SearchActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_search)).setChecked(true);
-        else if (activityName.equals("SearchActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_edit)).setChecked(true);
+        else if (activityName.equals("SettingsActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_edit)).setChecked(true);
         else if (activityName.equals("SimpationActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_simpatii)).setChecked(true);
     }
 
@@ -124,23 +124,23 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                         public void onSuccess(AllCounts allCounts) {
                             //Новые сообщения
                             if (allCounts.new_messages != 0) {
+                                nav_messages.setVisibility(View.VISIBLE);
                                 nav_messages.setGravity(Gravity.CENTER_VERTICAL);
                                 nav_messages.setTypeface(null, Typeface.BOLD);
-                                nav_messages.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                                 nav_messages.setText(Integer.toString(allCounts.new_messages));
-                            }
+                            } else nav_messages.setVisibility(View.GONE);
                             if (allCounts.new_guests != 0) {
+                                nav_guests.setVisibility(View.VISIBLE);
                                 nav_guests.setGravity(Gravity.CENTER_VERTICAL);
                                 nav_guests.setTypeface(null, Typeface.BOLD);
-                                nav_guests.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                                 nav_guests.setText(Integer.toString(allCounts.new_guests));
-                            }
+                            } else nav_guests.setVisibility(View.GONE);
                             if (allCounts.new_notices != 0) {
+                                nav_notises.setVisibility(View.VISIBLE);
                                 nav_notises.setGravity(Gravity.CENTER_VERTICAL);
                                 nav_notises.setTypeface(null, Typeface.BOLD);
-                                nav_notises.setTextColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                                 nav_notises.setText(Integer.toString(allCounts.new_notices));
-                            }
+                            } else nav_notises.setVisibility(View.GONE);
                         }
 
                         @Override
