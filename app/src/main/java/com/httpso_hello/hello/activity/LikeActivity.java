@@ -52,7 +52,6 @@ public class LikeActivity extends SuperMainActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         extras = getIntent().getExtras();
         setContentView(R.layout.activity_like);
         setHeader();

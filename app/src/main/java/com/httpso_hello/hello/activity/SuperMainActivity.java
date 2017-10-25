@@ -45,7 +45,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     protected ImageView headerImageView;
     protected TextView nav_messages, nav_guests, nav_notises;
     private static Handler countsHandler = new Handler();
-    private Timer countsTimer = new Timer();
+    private Timer countsTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,11 +96,10 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
             user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
         } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
         user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
-
-        getCountIntoDrawer();
     }
 
     private void getCountIntoDrawer() {
+        countsTimer = new Timer();
         countsTimer.schedule(new TimerTask() {
             @Override
             public void run() {
@@ -142,7 +141,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                     });
                 }});
             }
-        }, 2000, 15000);
+        }, 1000, 15000);
     }
 
     @Override
@@ -255,11 +254,13 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     }
     @Override
     protected void onPause(){
+        countsTimer.cancel();
         super.onPause();
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onPauseSession();
     }
     @Override
     protected void onResume(){
+        getCountIntoDrawer();
         super.onResume();
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onResumeSession();
     }

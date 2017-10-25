@@ -68,7 +68,6 @@ public class BoardContentActivity extends SuperMainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         extras = getIntent().getExtras();
-
         setContentView(R.layout.activity_board_content);
         setHeader();
 

@@ -33,8 +33,6 @@ public class BoardActivity extends SuperMainActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_board);
         setHeader();
 

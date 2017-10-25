@@ -65,6 +65,7 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
         Picasso
                 .with(getContext())
                 .load(Constant.upload + noticeItem.sender_user.avatar.micro)
+                .transform(new CircularTransformation(0))
                 .resize(100, 100)
                 .into(holder.noticeSenderAvatar, new Callback() {
                     @Override
@@ -77,6 +78,7 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                         Picasso
                                 .with(getContext())
                                 .load(R.mipmap.avatar)
+                                .transform(new CircularTransformation(0))
                                 .resize(100, 100)
                                 .into(holder.noticeSenderAvatar);
                     }

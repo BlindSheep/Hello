@@ -28,7 +28,6 @@ public class NotisesActivity extends SuperMainActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_notises);
         setHeader();
 

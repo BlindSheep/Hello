@@ -331,12 +331,12 @@ public class Profile extends Help{
                                 ReqUpdateAvatar reqUpdateAvatar = gson.fromJson(response, ReqUpdateAvatar.class);
                                 if(reqUpdateAvatar.error==null) {
                                     stgs.setSetting("user_avatar.micro", Constant.upload + reqUpdateAvatar.avatar.micro);
-                                    Picasso
-                                            .with(_context)
-                                            .load(Constant.upload + reqUpdateAvatar.avatar.micro)
-                                            .resize(100, 100)
-                                            .transform(new CircularTransformation(0))
-                                            .into((ImageView) ((Activity) _context).findViewById(R.id.user_avatar_header));
+                                    //Picasso
+                                    //        .with(_context)
+                                    //        .load(Constant.upload + reqUpdateAvatar.avatar.micro)
+                                    //        .resize(100, 100)
+                                    //        .transform(new CircularTransformation(0))
+                                    //        .into((ImageView) ((Activity) _context).findViewById(R.id.user_avatar_header));
                                     updateAvatarCallback.onSuccess(reqUpdateAvatar.avatar);
                                     return;
                                 }

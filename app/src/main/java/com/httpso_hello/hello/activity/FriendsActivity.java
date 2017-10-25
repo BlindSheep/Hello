@@ -30,48 +30,13 @@ public class FriendsActivity extends SuperMainActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Bundle extras = getIntent().getExtras();
         super.onCreate(savedInstanceState);
+        Bundle extras = getIntent().getExtras();
         setContentView(R.layout.activity_friends);
+        setHeader();
 
         progressBarFriends = (ProgressBar) findViewById(R.id.progressBarFriends);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        //Во все активности перенести, заполнение шапки в меню
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerLayout = navigationView.getHeaderView(0);
-        headerLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(FriendsActivity.this, ProfileActivity.class);
-                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
-                startActivity(intent);
-                finish();
-            }
-        });
-        ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
-        TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
-        TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
-        Picasso
-                .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
-                .resize(300, 300)
-                .centerCrop()
-                .transform(new CircularTransformation(0))
-                .into(headerImageView);
-        if(stgs.getSettingStr("user_age") != null) {
-            user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
-        } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
-        user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
 
         Friend.getInstance(getApplicationContext()).getFriends(extras.getInt("profile_id"), this,
                 new Friend.GetFriendsCallback() {

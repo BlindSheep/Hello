@@ -32,6 +32,7 @@ public class ServisesActivity extends SuperMainActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_servises);
+        setHeader();
 
         billing = (LinearLayout) findViewById(R.id.billing);
         priceUpAnket = (TextView) findViewById(R.id.priceUpAnket);
@@ -39,43 +40,6 @@ public class ServisesActivity extends SuperMainActivity{
         recomendationUpAnket = (TextView) findViewById(R.id.recomendationUpAnket);
         raiseTheProfile = (LinearLayout) findViewById(R.id.raiseTheProfile);
         progressBarServises = (ProgressBar) findViewById(R.id.progressBarServises);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        //Во все активности перенести, заполнение шапки в меню
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        View headerLayout = navigationView.getHeaderView(0);
-        headerLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ServisesActivity.this, ProfileActivity.class);
-                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
-                startActivity(intent);
-                finish();
-            }
-        });
-        ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
-        TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
-        TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
-        Picasso
-                .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
-                .resize(300, 300)
-                .centerCrop()
-                .transform(new CircularTransformation(0))
-                .into(headerImageView);
-        if(stgs.getSettingStr("user_age") != null) {
-            user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
-        } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
-        user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
 
         billing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,7 +65,7 @@ public class ServisesActivity extends SuperMainActivity{
                 .getBalance(new Profile.GetBalanceCallback() {
                     @Override
                     public void onSuccess(BalanceReq balanceReq) {
-                        toolbar.setSubtitle("На счету " + Integer.toString(balanceReq.balance) + " баллов");
+                        getSupportActionBar().setSubtitle("На счету " + Integer.toString(balanceReq.balance) + " баллов");
                         priceUpAnket.setText("Цена: " + Integer.toString(balanceReq.paid_raising) + " баллов");
                         if (!balanceReq.good_position) {
                             position.setTextColor(getResources().getColor(R.color.main_red_color_hello));

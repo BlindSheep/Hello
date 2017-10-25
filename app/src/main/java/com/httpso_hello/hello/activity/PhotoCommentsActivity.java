@@ -56,7 +56,6 @@ public class PhotoCommentsActivity extends SuperMainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         extras = getIntent().getExtras();
-
         setContentView(R.layout.activity_photo_comments);
         setHeader();
 

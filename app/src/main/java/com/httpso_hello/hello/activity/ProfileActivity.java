@@ -170,7 +170,6 @@ public class ProfileActivity extends SuperMainActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         extras = getIntent().getExtras();
-
         setContentView(R.layout.activity_profile);
         setHeader();
 
