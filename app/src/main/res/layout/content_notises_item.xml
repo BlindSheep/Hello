@@ -12,13 +12,12 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/noticeAvatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"
-            app:srcCompat="@mipmap/avatar" />
+    <ImageView
+        android:id="@+id/notice_sender_avatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        app:srcCompat="@mipmap/avatar" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,12 +43,12 @@
 
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/photoNotices"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"
-            app:srcCompat="@mipmap/avatar" />
+    <ImageView
+        android:id="@+id/notice_target_preview"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        app:srcCompat="@mipmap/avatar" />
 
     </LinearLayout>
 

@@ -327,6 +327,7 @@ public class Profile extends Help{
                             if(response!=null){
                                 ReqUpdateAvatar reqUpdateAvatar = gson.fromJson(response, ReqUpdateAvatar.class);
                                 if(reqUpdateAvatar.error==null) {
+                                    stgs.setSetting("user_avatar.micro", Constant.upload + reqUpdateAvatar.avatar.micro);
                                     updateAvatarCallback.onSuccess(reqUpdateAvatar.avatar);
                                     return;
                                 }

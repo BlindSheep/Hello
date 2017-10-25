@@ -48,9 +48,9 @@ import static android.R.style.Animation_Dialog;
 public class SettingsActivity extends SuperMainActivity{
 
     private ProgressBar progressBarSettings;
-    private Uri imageUri;
-    private SettingsProfileFragment settingsProfileFragment;
-    private Bundle settingsProfileFragmentArg;
+//    private Uri imageUri;
+//    private SettingsProfileFragment settingsProfileFragment;
+//    private Bundle settingsProfileFragmentArg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,30 +109,33 @@ public class SettingsActivity extends SuperMainActivity{
             public void onSuccess(final User user, Activity activity) {
                 //содаем фрагменты и аргументы
                 Bundle settingsIntrestingFragmentArg = new Bundle();
-                settingsProfileFragmentArg = new Bundle();
+                Bundle settingsProfileFragmentArg = new Bundle();
                 Bundle settingsLookingForFragmentArg = new Bundle();
                 SettingsIntrestingFragment settingsIntrestingFragment = new SettingsIntrestingFragment();
-                settingsProfileFragment  = new SettingsProfileFragment();
+                SettingsProfileFragment settingsProfileFragment  = new SettingsProfileFragment();
                 SettingsLookingForFragment settingsLookingForFragment = new SettingsLookingForFragment();
 
                 //формируем аргументы для фрагмента "Вы понравились"
-                settingsIntrestingFragmentArg.putSerializable("User", user);
+                settingsIntrestingFragmentArg.putParcelable("User", user);
                 settingsIntrestingFragment.setArguments(settingsIntrestingFragmentArg);
 
                 //формируем аргументы для фрагмента "Вам понравились"
-                settingsProfileFragmentArg.putSerializable("User", user);
+                settingsProfileFragmentArg.putParcelable("User", user);
                 settingsProfileFragment.setArguments(settingsProfileFragmentArg);
 
                 //формируем аргументы для фрагмента "Взаимные симпатии"
-                settingsLookingForFragmentArg.putSerializable("User", user);
+                settingsLookingForFragmentArg.putParcelable("User", user);
                 settingsLookingForFragment.setArguments(settingsLookingForFragmentArg);
 
                 // Добавляем фраменты на страницу
                 SettingsAdapter adapter = new SettingsAdapter(getSupportFragmentManager());
                 ViewPager viewPager = (ViewPager) findViewById(R.id.viewpagerSettings);
-                adapter.addFragment(settingsProfileFragment, "Профиль");
-                adapter.addFragment(settingsIntrestingFragment, "Интересы");
-                adapter.addFragment(settingsLookingForFragment, "Ищу");
+                if(!settingsProfileFragment.isAdded())
+                    adapter.addFragment(settingsProfileFragment, "Профиль");
+                if(!settingsIntrestingFragment.isAdded())
+                    adapter.addFragment(settingsIntrestingFragment, "Интересы");
+                if(!settingsLookingForFragment.isAdded())
+                    adapter.addFragment(settingsLookingForFragment, "Ищу");
                 viewPager.setAdapter(adapter);
                 TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayoutSettings);
                 tabLayout.setupWithViewPager(viewPager);
@@ -175,15 +178,14 @@ public class SettingsActivity extends SuperMainActivity{
     @Override
     public void onPause() {
         super.onPause();
-        finish();
+//        finish();
     }
-    /*@Override
-    public  void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-//        Fragment fragment = getSupportFragmentManager().getFragment(settingsProfileFragmentArg, "asd");
-//        fragment.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-//        settingsProfileFragment.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-    }*/
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        finish();
+    }
 }
 
 

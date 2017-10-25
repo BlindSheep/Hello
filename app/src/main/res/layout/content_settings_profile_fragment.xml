@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content">
 
                 <ImageView
-                    android:id="@+id/newAvatar"
+                    android:id="@+id/settings_profile_new_avatar"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     app:srcCompat="@mipmap/avatar"/>

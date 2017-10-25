@@ -29,6 +29,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     protected Toolbar toolbar;
     protected DrawerLayout drawer;
     protected ActionBarDrawerToggle toggle;
+    protected ImageView headerImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +66,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         ImageView headerImageView = (ImageView) headerLayout.findViewById(R.id.user_avatar_header);
         TextView user_name_and_age_header = (TextView) headerLayout.findViewById(R.id.user_name_and_age_header);
         TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
-        Picasso
-                .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
-                .resize(300, 300)
-                .centerCrop()
-                .transform(new CircularTransformation(0))
-                .into(headerImageView);
+        refreshAvatar();
         if(stgs.getSettingStr("user_age") != null) {
             user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
         } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
@@ -195,5 +190,14 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     protected void onResume(){
         super.onResume();
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onResumeSession();
+    }
+    public void refreshMenuAvatar(){
+        Picasso
+                .with(getApplicationContext())
+                .load(stgs.getSettingStr("user_avatar.micro"))
+                .resize(300, 300)
+                .centerCrop()
+                .transform(new CircularTransformation(0))
+                .into(headerImageView);
     }
 }

@@ -1171,20 +1171,6 @@ openAvatarUpdateWindow(sendPhotoClick);
                 if (resultCode == RESULT_OK) {
                     imageUri = Uri.fromFile(photoFile);
                     openAvatarUpdateWindow(updateAvatarClick);
-/*if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-if(Help.runTaskAfterPermission(
-ProfileActivity.this,
-new String[]{
-Manifest.permission.READ_EXTERNAL_STORAGE
-},
-Help.REQUEST_READ_EXTERNAL_STORAGE
-)){
-openAvatarUpdateWindow(updateAvatarClick);
-}
-} else{
-openAvatarUpdateWindow(updateAvatarClick);
-}
-*/
                 }
                 break;
             default:

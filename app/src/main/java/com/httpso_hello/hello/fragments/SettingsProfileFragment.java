@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+
 import android.support.v4.content.FileProvider;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -80,13 +81,16 @@ public class SettingsProfileFragment extends Fragment {
     private File photoFile;
     private Activity activity;
     private PopupWindow popupPreviewAvatar;
+    private ImageView settingsNewAvatar;
+    private PopupWindow delayPopup;
+    private View delayPopupView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        User user = (User) args.getSerializable("User");
+        User user = (User) args.getParcelable("User");
 
         this.user = user;
 
@@ -113,6 +117,19 @@ public class SettingsProfileFragment extends Fragment {
         region = (Spinner) rootView.findViewById(R.id.region);
         sity = (Spinner) rootView.findViewById(R.id.sity);
         stgs = new Settings(getContext());
+        settingsNewAvatar = (ImageView) rootView.findViewById(R.id.settings_profile_new_avatar);
+        delayPopupView = activity.getLayoutInflater().inflate(R.layout.popup_for_wait, null);
+        delayPopup = new PopupWindow(delayPopupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ((TextView) delayPopupView.findViewById(R.id.textForWaiting)).setText("Загружаем фото...");
+        DisplayMetrics displaymetrics = activity.getApplicationContext().getResources().getDisplayMetrics();
+        delayPopup.setWidth(displaymetrics.widthPixels);
+        delayPopup.setHeight(displaymetrics.heightPixels);
+        delayPopup.setAnimationStyle(Animation_Dialog);
+        Picasso
+                .with(getContext())
+                .load(stgs.getSettingStr("user_avatar.micro"))
+                .resize(100, 100)
+                .into(settingsNewAvatar);
         setInitialDateTime();
 
 
@@ -249,7 +266,7 @@ public class SettingsProfileFragment extends Fragment {
                 });
             }
         });
-        ((ImageView) rootView.findViewById(R.id.newAvatar)).setOnClickListener(new View.OnClickListener() {
+        ((ImageView) rootView.findViewById(R.id.settings_profile_new_avatar)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                  popupViewForUpdateAvatar = getLayoutInflater(new Bundle()).inflate(R.layout.popup_for_new_photo, null);
@@ -336,10 +353,40 @@ public class SettingsProfileFragment extends Fragment {
         }
     }
 
-    @Override
+//    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-        Log.d("onResult", "res");
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case 3:
+                if (resultCode == activity.RESULT_OK) {
+                    imageUri = data.getData();
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        if(Help.runTaskAfterPermission(
+                                activity,
+                                new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE
+                                },
+                                Help.REQUEST_ADD_PHOTO_GALLERY
+                        )){
+                            openAvatarUpdateWindow(updateAvatarClick);
+                        }
+                    } else{
+                        openAvatarUpdateWindow(updateAvatarClick);
+                    }
+
+                }
+                break;
+//загрузка новой аватарки с камеры
+            case 4:
+                if (resultCode == activity.RESULT_OK) {
+                    imageUri = Uri.fromFile(photoFile);
+                    openAvatarUpdateWindow(updateAvatarClick);
+                }
+                break;
+            default:
+                System.out.println("Какая-то ошибка");
+                break;
+        }
     }
 
     public void openAvatarUpdateWindow(
@@ -359,7 +406,7 @@ public class SettingsProfileFragment extends Fragment {
             popupPreviewAvatar.setWidth(displaymetrics.widthPixels);
             popupPreviewAvatar.setHeight(displaymetrics.heightPixels);
             popupPreviewAvatar.setAnimationStyle(Animation_Dialog);
-            popupPreviewAvatar.showAtLocation(activity.findViewById(R.id.newAvatar), Gravity.CENTER, 0, 0);
+            popupPreviewAvatar.showAtLocation(activity.findViewById(R.id.settings_new_avatar_container), Gravity.CENTER, 0, 0);
 
             Picasso.with(activity.getApplicationContext())
                     .load(imageUri)
@@ -385,7 +432,7 @@ public class SettingsProfileFragment extends Fragment {
         @Override
         public void onClick(View v) {
             popupPreviewAvatar.dismiss();
-            popupPreviewAvatar.showAtLocation(getActivity().findViewById(R.id.newAvatar), Gravity.CENTER, 0, 0);
+            delayPopup.showAtLocation(getActivity().findViewById(R.id.settings_new_avatar_container), Gravity.CENTER, 0, 0);
 
 
             final String base64_code_ava = Help.getBase64FromImage(
@@ -400,17 +447,23 @@ public class SettingsProfileFragment extends Fragment {
                     new Profile.UpdateAvatarCallback() {
                         @Override
                         public void onSuccess(Image avatar) {
-                            popupPreviewAvatar.dismiss();
+                            delayPopup.dismiss();
+                            Picasso
+                                    .with(getContext())
+                                    .load(Constant.upload + avatar.micro)
+                                    .resize(100, 100)
+                                    .into(settingsNewAvatar);
+                            ((SettingsActivity) activity).refreshMenuAvatar();
                         }
                     }, new Help.ErrorCallback() {
                         @Override
                         public void onError(int error_code, String error_msg) {
-                            popupPreviewAvatar.dismiss();
+                            delayPopup.dismiss();
                         }
 
                         @Override
                         public void onInternetError() {
-                            popupPreviewAvatar.dismiss();
+                            delayPopup.dismiss();
                         }
                     }
             );
@@ -439,5 +492,15 @@ public class SettingsProfileFragment extends Fragment {
 
 
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

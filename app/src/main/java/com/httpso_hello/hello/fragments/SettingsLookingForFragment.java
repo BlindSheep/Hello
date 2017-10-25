@@ -54,7 +54,7 @@ public class SettingsLookingForFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        User user = (User) args.getSerializable("User");
+        User user = (User) args.getParcelable("User");
 
         this.user = user;
     }
