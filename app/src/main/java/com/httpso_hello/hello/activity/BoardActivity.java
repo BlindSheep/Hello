@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.adapters.BoardAdapter;
+import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.HBoard;
 import com.yandex.metrica.YandexMetrica;
 
@@ -33,6 +34,7 @@ public class BoardActivity extends SuperMainActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
         setContentView(R.layout.activity_board);
         setHeader();
 
@@ -53,7 +55,6 @@ public class BoardActivity extends SuperMainActivity{
         LV.addHeaderView(header);
         LV.addFooterView(footerLoading);
         getBoard();
-        YandexMetrica.activate(getApplicationContext(), "71dba453-2cd4-4256-b676-77d249383d44");
 
 //Кнопка "Добавить объявление"
         header.setOnClickListener(new View.OnClickListener() {
@@ -111,7 +112,9 @@ public class BoardActivity extends SuperMainActivity{
 
     //Автоподгрузка объявлений
     public void getNew(){
+
         if (!loading) {
+            YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
             loading = true;
             HBoard hBoard = new HBoard(getApplicationContext());
             hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
@@ -146,5 +149,11 @@ public class BoardActivity extends SuperMainActivity{
                 }
             });
         }
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+
     }
 }

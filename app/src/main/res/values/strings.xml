@@ -85,6 +85,7 @@
     <string name="title_activity_board_content">Комментарии</string>
     <string name="title_activity_photo_comments">Комментарии</string>
 
+
     <string-array name="ageFrom">
         <item> </item>
         <item>1</item>

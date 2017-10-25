@@ -1,48 +1,52 @@
 package com.httpso_hello.hello.fragments;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.text.format.DateUtils;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.FlirtikItem;
+import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.Region;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.activity.SettingsActivity;
 import com.httpso_hello.hello.adapters.FlirtikiFragmentAdapter;
-import com.httpso_hello.hello.helper.CircularTransformation;
-import com.httpso_hello.hello.helper.Constant;
-import com.httpso_hello.hello.helper.ConverterDate;
-import com.httpso_hello.hello.helper.CountryRegionCity;
-import com.httpso_hello.hello.helper.Profile;
-import com.httpso_hello.hello.helper.Settings;
+import com.httpso_hello.hello.helper.*;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.R.style.Animation_Dialog;
+import static android.view.ViewGroup.*;
 
 /**
  * Created by mixir on 02.09.2017.
@@ -69,6 +73,13 @@ public class SettingsProfileFragment extends Fragment {
     private Spinner region;
     private Spinner sity;
     private Settings stgs;
+    private PopupWindow popUpForUpdateAvatar;
+    private View popupViewForUpdateAvatar;
+    private Bitmap selectedImage;
+    private Uri imageUri;
+    private File photoFile;
+    private Activity activity;
+    private PopupWindow popupPreviewAvatar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -78,13 +89,15 @@ public class SettingsProfileFragment extends Fragment {
         User user = (User) args.getSerializable("User");
 
         this.user = user;
+
+        this.activity = getActivity();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.content_settings_profile_fragment, container, false);
+        final View rootView = inflater.inflate(R.layout.content_settings_profile_fragment, container, false);
         userEditAuto = (EditText) rootView.findViewById(R.id.userEditAuto);
         saveButton = (TextView) rootView.findViewById(R.id.saveButton);
         userEditName = (EditText) rootView.findViewById(R.id.userEditName);
@@ -236,7 +249,54 @@ public class SettingsProfileFragment extends Fragment {
                 });
             }
         });
+        ((ImageView) rootView.findViewById(R.id.newAvatar)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                 popupViewForUpdateAvatar = getLayoutInflater(new Bundle()).inflate(R.layout.popup_for_new_photo, null);
+                popUpForUpdateAvatar = new PopupWindow(popupViewForUpdateAvatar, ViewGroup.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
+                popUpForUpdateAvatar.setWidth(displaymetrics.widthPixels);
+                popUpForUpdateAvatar.setHeight(displaymetrics.heightPixels);
+                popUpForUpdateAvatar.setAnimationStyle(Animation_Dialog);
+                popUpForUpdateAvatar.showAtLocation(rootView.findViewById(R.id.settings_new_avatar_container), Gravity.CENTER, 0, 0);
+                popupViewForUpdateAvatar.findViewById(R.id.popup_for_new_photo).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popUpForUpdateAvatar.dismiss();
+                    }
+                });
 
+// Загрузка новых фоток из галереи
+                popupViewForUpdateAvatar.findViewById(R.id.newPhotoFromGalery).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popUpForUpdateAvatar.dismiss();
+                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                        photoPickerIntent.setType("image/*");
+                        startActivityForResult(photoPickerIntent, 3);
+                    }
+                });
+
+// Загрузка новых фоток с камеры
+                popupViewForUpdateAvatar.findViewById(R.id.newPhotoFromCamera).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(Help.runTaskAfterPermission(
+                                getActivity(),
+                                new String[] {
+                                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                        Manifest.permission.CAMERA
+                                },
+                                Help.REQUEST_ADD_PHOTO_CAMERA
+
+                        )) {
+                            openCameraWindow(4);
+                        }
+                    }
+                });
+            }
+        });
 
         return rootView;
     }
@@ -276,4 +336,108 @@ public class SettingsProfileFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("onResult", "res");
+    }
+
+    public void openAvatarUpdateWindow(
+            View.OnClickListener saveButtonClick
+    ){
+        try{
+            Activity activity = getActivity();
+
+            final InputStream imageStream = activity.getContentResolver().openInputStream(imageUri);
+            selectedImage = BitmapFactory.decodeStream(imageStream);
+
+            DisplayMetrics displaymetrics = activity.getApplicationContext().getResources().getDisplayMetrics();
+
+            View popupViewPreviewAvatar = activity.getLayoutInflater().inflate(R.layout.popup_accept_new_photo, null);
+            popupPreviewAvatar = new PopupWindow(popupViewPreviewAvatar, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+            popupPreviewAvatar.setWidth(displaymetrics.widthPixels);
+            popupPreviewAvatar.setHeight(displaymetrics.heightPixels);
+            popupPreviewAvatar.setAnimationStyle(Animation_Dialog);
+            popupPreviewAvatar.showAtLocation(activity.findViewById(R.id.newAvatar), Gravity.CENTER, 0, 0);
+
+            Picasso.with(activity.getApplicationContext())
+                    .load(imageUri)
+                    .resize(displaymetrics.widthPixels, displaymetrics.widthPixels)
+                    .centerCrop()
+                    .into(((ImageView) popupViewPreviewAvatar.findViewById(R.id.newPhoto)));
+            ((TextView) popupViewPreviewAvatar.findViewById(R.id.savePhoto)).setText("Сохранить");
+            ((LinearLayout) popupViewPreviewAvatar.findViewById(R.id.popup_accept_new_photo)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popupPreviewAvatar.dismiss();
+                }
+            });
+
+            ((TextView) popupPreviewAvatar.getContentView().findViewById(R.id.savePhoto)).setOnClickListener(saveButtonClick);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private View.OnClickListener updateAvatarClick = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            popupPreviewAvatar.dismiss();
+            popupPreviewAvatar.showAtLocation(getActivity().findViewById(R.id.newAvatar), Gravity.CENTER, 0, 0);
+
+
+            final String base64_code_ava = Help.getBase64FromImage(
+                    selectedImage,
+                    Bitmap.CompressFormat.JPEG,
+                    Help.getFileSize(imageUri, getActivity().getApplicationContext()),
+                    0
+            );
+            Profile.getInstance(getActivity().getApplicationContext()).updateAvatar(
+                    base64_code_ava,
+                    "jpg",
+                    new Profile.UpdateAvatarCallback() {
+                        @Override
+                        public void onSuccess(Image avatar) {
+                            popupPreviewAvatar.dismiss();
+                        }
+                    }, new Help.ErrorCallback() {
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            popupPreviewAvatar.dismiss();
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            popupPreviewAvatar.dismiss();
+                        }
+                    }
+            );
+        }
+    };
+    public void openCameraWindow(int request_code){
+        Intent photoCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (photoCameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            photoFile = null;
+            try{
+                photoFile = Help.createImageFile(getActivity());
+            } catch (IOException ex){
+                ex.printStackTrace();
+            }
+            if(photoFile!=null){
+                Uri photoUri = FileProvider.getUriForFile(
+                        getActivity(),
+                        "com.httpso_hello.hello.fileprovider",
+                        photoFile
+                );
+                photoCameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                startActivityForResult(photoCameraIntent, 100);
+
+
+            }
+
+
+        }
+    }
 }

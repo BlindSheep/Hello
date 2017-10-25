@@ -20,6 +20,7 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.NoticeItem;
 import com.httpso_hello.hello.adapters.NoticesAdapter;
 import com.httpso_hello.hello.helper.CircularTransformation;
+import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Notice;
 import com.squareup.picasso.Picasso;
 
@@ -82,27 +83,29 @@ public class NotisesActivity extends SuperMainActivity{
         notices_list.addFooterView(header);
 
         Notice notice = new Notice(getApplicationContext());
-        notice.getNotice(this, new Notice.GetNoticeCallback() {
-            @Override
-            public void onSuccess(NoticeItem[] noticeItem, Activity activity) {
-                ArrayList<NoticeItem> defolt = new ArrayList<NoticeItem>();
-                Collections.addAll(defolt, noticeItem);
+        notice.getNotice(this,
+                new Notice.GetNoticeCallback() {
+                    @Override
+                    public void onSuccess(NoticeItem[] noticeItem, Activity activity) {
+                        ArrayList<NoticeItem> defolt = new ArrayList<NoticeItem>();
+                        Collections.addAll(defolt, noticeItem);
 
-                NoticesAdapter likesAdapter = new NoticesAdapter(activity, defolt);
-                notices_list.setAdapter(likesAdapter);
+                        NoticesAdapter likesAdapter = new NoticesAdapter(activity, defolt);
+                        notices_list.setAdapter(likesAdapter);
 
-                progressBarNotices.setVisibility(View.GONE);
-            }
+                        progressBarNotices.setVisibility(View.GONE);
+                    }
+                },
+                new Help.ErrorCallback() {
+                    @Override
+                    public void onError(int error_code, String error_msg) {
 
-            @Override
-            public void onError(int error_code, String error_msg) {
+                    }
 
-            }
+                    @Override
+                    public void onInternetError() {
 
-            @Override
-            public void onInternetError() {
-
-            }
-        });
+                    }
+                });
     }
 }

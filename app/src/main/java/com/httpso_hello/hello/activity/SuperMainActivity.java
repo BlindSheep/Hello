@@ -17,8 +17,10 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.helper.Auth;
 import com.httpso_hello.hello.helper.CircularTransformation;
+import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Picasso;
+import com.yandex.metrica.YandexMetrica;
 
 public class SuperMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -32,6 +34,8 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         stgs = new Settings(getApplicationContext());
+        YandexMetrica.activate(getApplicationContext(), Constant.metrika_api_key);
+        YandexMetrica.enableActivityAutoTracking(getApplication());
 
     }
 
@@ -181,5 +185,15 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onPauseSession();
+    }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onResumeSession();
     }
 }
