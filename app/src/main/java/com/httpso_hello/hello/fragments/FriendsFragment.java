@@ -48,7 +48,7 @@ public class FriendsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.content_friends, container, false);
         final ListView LV = (ListView) rootView.findViewById(R.id.listFriends);
-        header = getActivity().getLayoutInflater().inflate(R.layout.header, null);
+        header = getActivity().getLayoutInflater().inflate(R.layout.footer6dp, null);
 
         ArrayList<FriendItem> friendsAllArray = new ArrayList<FriendItem>();
         Collections.addAll(friendsAllArray, this.friendItemFragment);

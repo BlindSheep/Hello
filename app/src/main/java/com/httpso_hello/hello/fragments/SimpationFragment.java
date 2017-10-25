@@ -48,7 +48,7 @@ public class SimpationFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.content_simpation, container, false);
         final ListView LV = (ListView) rootView.findViewById(R.id.listSimpatii);
-        header = getActivity().getLayoutInflater().inflate(R.layout.header, null);
+        header = getActivity().getLayoutInflater().inflate(R.layout.footer6dp, null);
 
         ArrayList<FlirtikItem> flirtiki = new ArrayList<FlirtikItem>();
         Collections.addAll(flirtiki, this.flirtikItemFragment);

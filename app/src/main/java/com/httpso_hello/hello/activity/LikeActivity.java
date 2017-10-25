@@ -57,7 +57,7 @@ public class LikeActivity extends SuperMainActivity{
         setContentView(R.layout.activity_like);
         setHeader();
 
-        header = getLayoutInflater().inflate(R.layout.header, null);
+        header = getLayoutInflater().inflate(R.layout.footer6dp, null);
         LV = (ListView) findViewById(R.id.listLikes);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(

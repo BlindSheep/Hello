@@ -21,8 +21,7 @@
                 android:divider="@color/zalivon"
                 android:paddingLeft="6dp"
                 android:paddingRight="2dp"
-                android:scrollbarStyle="outsideInset"
-                android:dividerHeight="6dp"/>
+                android:scrollbarStyle="outsideInset"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
