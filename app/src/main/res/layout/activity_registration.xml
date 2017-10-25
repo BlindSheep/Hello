@@ -1,13 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="30dp"
     android:focusable="true"
     android:focusableInTouchMode="true"
+    android:scrollIndicators="none"
+    android:scrollbarAlwaysDrawVerticalTrack="false"
+    android:scrollbars="none"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.httpso_hello.hello.activity.RegistrationActivity">
+
+    <RelativeLayout
+        android:layout_margin="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -117,19 +124,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="20dp"
-        android:layout_marginTop="30dp"
+        android:padding="15dp"
         android:textColor="@color/main_red_color_hello"
         android:gravity="end"
         android:text="ЗАРЕГИСТРИРОВАТЬСЯ"/>
 
     <TextView
         android:id="@+id/btnLinkToEnter"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
+        android:padding="15dp"
+        android:layout_gravity="center"
         android:textColor="@color/main_blue_color_hello"
-        android:text="Есть аккаунт? Войдите"/>
+        android:text="ВХОД"/>
 
     </LinearLayout>
 
@@ -140,4 +147,6 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true" />
 
-</RelativeLayout>
+    </RelativeLayout>
+
+</ScrollView>
