@@ -35,6 +35,7 @@ public class ConverterDate {
     public static String convertUriSubHost(String path){
         return path.substring(20);
     }
+
     // метод для обработки даты в чате
     public static String convertDateForChat(String oldDate) {
         String nameOfMonth;
@@ -62,6 +63,12 @@ public class ConverterDate {
         int dayCurrentInt = Integer.parseInt(dayCurrent);
         int dayInt = Integer.parseInt(day);
 
+        int monthCurrentInt = Integer.parseInt(monthCurrent);
+        int monthInt = Integer.parseInt(month);
+
+        int yearCurrentInt = Integer.parseInt(yearCurrent);
+        int yearInt = Integer.parseInt(year);
+
         //присваеваем имена месяцам
         if (Integer.parseInt(month) == 1) nameOfMonth = "янв";
         else if (Integer.parseInt(month) == 2) nameOfMonth = "фев";
@@ -78,13 +85,11 @@ public class ConverterDate {
         else nameOfMonth = "";
 
         //Если сегодня то выводим только время, если вчера то выводим "вчера" и время
-        if (dayInt == dayCurrentInt) {
+        if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
             return "сегод" + "\n" + hour + ":" + minute;
-        }
-        else if (dayCurrentInt - dayInt == 1) {
+        } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
             return "вчера" + "\n" + hour + ":" + minute;
-        }
-        else {
+        } else {
             return day + nameOfMonth + "\n" + hour + ":" + minute;
         }
     }
@@ -120,6 +125,12 @@ public class ConverterDate {
         int dayCurrentInt = Integer.parseInt(dayCurrent);
         int dayInt = Integer.parseInt(day);
 
+        int monthCurrentInt = Integer.parseInt(monthCurrent);
+        int monthInt = Integer.parseInt(month);
+
+        int yearCurrentInt = Integer.parseInt(yearCurrent);
+        int yearInt = Integer.parseInt(year);
+
         //присваеваем имена месяцам
         if (Integer.parseInt(month) == 1) nameOfMonth = "янв";
         else if (Integer.parseInt(month) == 2) nameOfMonth = "фев";
@@ -136,13 +147,11 @@ public class ConverterDate {
         else nameOfMonth = "";
 
         //Если сегодня то выводим только время, если вчера то выводим "вчера"
-        if (dayInt == dayCurrentInt) {
+        if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
             return hour + ":" + minute;
-        }
-        else if (dayCurrentInt - dayInt == 1) {
+        } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
             return "вчера";
-        }
-        else {
+        } else {
             return day + nameOfMonth;
         }
     }
@@ -175,6 +184,10 @@ public class ConverterDate {
         String hourCurrent = Character.toString(chCurrentDate[9]) + Character.toString(chCurrentDate[10]);
         String minuteCurrent = Character.toString(chCurrentDate[11]) + Character.toString(chCurrentDate[12]);
 
+        int monthCurrentInt = Integer.parseInt(monthCurrent);
+        int monthInt = Integer.parseInt(month);
+        int yearCurrentInt = Integer.parseInt(yearCurrent);
+        int yearInt = Integer.parseInt(year);
         int dayCurrentInt = Integer.parseInt(dayCurrent);
         int dayInt = Integer.parseInt(day);
         int hourCurrentInt = Integer.parseInt(hourCurrent);
@@ -201,27 +214,27 @@ public class ConverterDate {
 
         //Если сегодня то выводим только время, если вчера то выводим "вчера"
         if (gender == 2) {
-            if (dayInt == dayCurrentInt) {
+            if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
                 if (hourCurrentInt == hourInt){
                     if (minuteCurrentInt == minuteInt) return "Была в сети только что";
                     else return "Была в сети " + Integer.toString(minuteCurrentInt-minuteInt) + " минут назад";
                 }
                 else if ((hourCurrentInt - hourInt == 1) && (minuteInt > minuteCurrentInt)) return "Была в сети " + Integer.toString(60 - minuteInt + minuteCurrentInt) + " минут назад";
                 else return "Была в сети сегодня в " + hour + ":" + minute;
-            } else if (dayCurrentInt - dayInt == 1) {
+            } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
                 return "Была в сети вчера в " + hour + ":" + minute;
             } else {
                 return "Была в сети " + day + " " +  nameOfMonth + " в " + hour + ":" + minute;
             }
         } else {
-            if (dayInt == dayCurrentInt) {
+            if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
                 if (hourCurrentInt == hourInt){
                     if (minuteCurrentInt == minuteInt) return "Был в сети только что";
                     else return "Был в сети " + Integer.toString(minuteCurrentInt-minuteInt) + " минут назад";
                 }
                 else if ((hourCurrentInt - hourInt == 1) && (minuteInt > minuteCurrentInt)) return "Был в сети " + Integer.toString(60 - minuteInt + minuteCurrentInt) + " минут назад";
                 else return "Был в сети сегодня в " + hour + ":" + minute;
-            } else if (dayCurrentInt - dayInt == 1) {
+            } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
                 return "Был в сети вчера в " + hour + ":" + minute;
             } else {
                 return "Был в сети " + day + " " + nameOfMonth + " в " + hour + ":" + minute;
@@ -257,6 +270,10 @@ public class ConverterDate {
         String hourCurrent = Character.toString(chCurrentDate[9]) + Character.toString(chCurrentDate[10]);
         String minuteCurrent = Character.toString(chCurrentDate[11]) + Character.toString(chCurrentDate[12]);
 
+        int monthCurrentInt = Integer.parseInt(monthCurrent);
+        int monthInt = Integer.parseInt(month);
+        int yearCurrentInt = Integer.parseInt(yearCurrent);
+        int yearInt = Integer.parseInt(year);
         int dayCurrentInt = Integer.parseInt(dayCurrent);
         int dayInt = Integer.parseInt(day);
         int hourCurrentInt = Integer.parseInt(hourCurrent);
@@ -282,18 +299,18 @@ public class ConverterDate {
         if (Integer.parseInt(day) < 10) day = Integer.toString(Integer.parseInt(day) % 10);
 
         //Если сегодня то выводим только время, если вчера то выводим "вчера"
-            if (dayInt == dayCurrentInt) {
-                if (hourCurrentInt == hourInt){
-                    if (minuteCurrentInt == minuteInt) return "Только что";
-                    else return Integer.toString(minuteCurrentInt-minuteInt) + " минут назад";
-                }
-                else if ((hourCurrentInt - hourInt == 1) && (minuteInt > minuteCurrentInt)) return Integer.toString(60 - minuteInt + minuteCurrentInt) + " минут назад";
-                else return "Сегодня в " + hour + ":" + minute;
-            } else if (dayCurrentInt - dayInt == 1) {
-                return "Вчера в " + hour + ":" + minute;
-            } else {
-                return day + " " + nameOfMonth + " в " + hour + ":" + minute;
-            }
+        if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
+            if (hourCurrentInt == hourInt) {
+                if (minuteCurrentInt == minuteInt) return "Только что";
+                else return Integer.toString(minuteCurrentInt - minuteInt) + " минут назад";
+            } else if ((hourCurrentInt - hourInt == 1) && (minuteInt > minuteCurrentInt))
+                return Integer.toString(60 - minuteInt + minuteCurrentInt) + " минут назад";
+            else return "Сегодня в " + hour + ":" + minute;
+        } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
+            return "Вчера в " + hour + ":" + minute;
+        } else {
+            return day + " " + nameOfMonth;
+        }
     }
 
 

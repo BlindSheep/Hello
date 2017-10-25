@@ -54,6 +54,7 @@ public class BoardActivity extends SuperMainActivity{
         LV.addFooterView(footerLoading);
         getBoard();
         YandexMetrica.activate(getApplicationContext(), "71dba453-2cd4-4256-b676-77d249383d44");
+
 //Кнопка "Добавить объявление"
         header.setOnClickListener(new View.OnClickListener() {
             @Override
