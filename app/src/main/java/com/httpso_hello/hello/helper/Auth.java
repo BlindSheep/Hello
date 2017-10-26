@@ -6,15 +6,25 @@ package com.httpso_hello.hello.helper;
 // Наши библиотеки
 
 import android.content.Context;
+import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.httpso_hello.hello.Structures.Contact;
 import com.httpso_hello.hello.Structures.Registration;
+import com.httpso_hello.hello.Structures.ReqUpdateAvatar;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.Structures.Resp;
+
+import java.util.HashMap;
+import java.util.Map;
 //Сторонние библиотеки
 
 
-public class Auth {
+public class Auth extends Help {
 
     private Settings stgs;
     private Api api;
@@ -130,6 +140,52 @@ public class Auth {
         });
     }
 
+    //Загрузка аватарки
+    public void authRestore(
+            final String email,
+            final Context context,
+            final AuthRestoreCallBack authRestoreCallBack
+    ){
+        if (Constant.api_key !="") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.auth_restore_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            Log.d("update_avatar", response);
+                            if(response!=null){
+                                ReqUpdateAvatar reqUpdateAvatar = gson.fromJson(response, ReqUpdateAvatar.class);
+                                if(reqUpdateAvatar.error==null) {
+                                    authRestoreCallBack.onSuccess();
+                                    return;
+                                }
+                                authRestoreCallBack.onError(reqUpdateAvatar.error.error_code, reqUpdateAvatar.error.error_msg);
+                                return;
+                            }
+                            authRestoreCallBack.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            authRestoreCallBack.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("api_key", Constant.api_key);
+                    params.put("email", email);
+                    return params;
+                };
+            };
+            RequestQ.getInstance(context).addToRequestQueue(SReq, "auth_restore");
+        }
+    }
+
     // Интерфейс для кэллбэка завершения авторизации
     public interface AuthFinishingCallback{
         void onSuccess(User user);
@@ -145,5 +201,11 @@ public class Auth {
     public interface RegistrationFinishCallBack{
         void onSuccess(int user_id);
         void onError(int error_code, String error_msg);
+    }
+
+    public interface AuthRestoreCallBack{
+        void onSuccess();
+        void onError(int error_code, String error_msg);
+        void onInternetError();
     }
 }

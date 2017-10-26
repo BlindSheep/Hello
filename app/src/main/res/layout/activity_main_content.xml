@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/mainContent"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -61,33 +61,51 @@
 
 </LinearLayout>
 
-<TextView
-    android:id="@+id/btnLogin"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textSize="20dp"
-    android:padding="15dp"
-    android:textColor="@color/main_red_color_hello"
-    android:layout_gravity="end"
-    android:text="ВОЙТИ"/>
+            <TextView
+                android:id="@+id/btnLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:padding="20dp"
+                android:textColor="@color/main_red_color_hello"
+                android:layout_gravity="end"
+                android:text="ВОЙТИ"/>
 
-<TextView
-    android:id="@+id/btnLinkToRegisterScreen"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="15dp"
-    android:layout_gravity="center"
-    android:textColor="@color/main_blue_color_hello"
-    android:text="РЕГИСТРАЦИЯ"/>
+<RelativeLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/rememberPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:padding="15dp"
+        android:maxLines="1"
+        android:textColor="@color/main_blue_color_hello"
+        android:text="Восстановить пароль"/>
+
+    <TextView
+        android:id="@+id/btnLinkToRegisterScreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textSize="14sp"
+        android:maxLines="1"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/main_blue_color_hello"
+        android:text="Регистрация"/>
+
+</RelativeLayout>
 
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBarLogin"
-        style="@android:style/Widget.ProgressBar.Inverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>
 

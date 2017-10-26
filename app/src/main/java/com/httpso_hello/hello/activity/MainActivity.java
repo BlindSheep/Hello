@@ -4,10 +4,7 @@ package com.httpso_hello.hello.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,6 +28,8 @@ public class MainActivity extends Activity{
     private Auth auth;
     private ProgressBar progressBarLogin;
     private Settings stgs;
+    private TextView rememberPassword;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +79,7 @@ public class MainActivity extends Activity{
         btnLogin = (TextView) findViewById(R.id.btnLogin);
         btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
         progressBarLogin = (ProgressBar) findViewById(R.id.progressBarLogin);
+        rememberPassword = (TextView) findViewById(R.id.rememberPassword);
 
         //Переход на страницу регистрации
         btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +87,14 @@ public class MainActivity extends Activity{
                 Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        //Восстановить пароль
+        rememberPassword.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, RememmberPassword.class);
+                startActivity(intent);
             }
         });
 

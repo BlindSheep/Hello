@@ -19,6 +19,7 @@ public class Constant {
     public static String auth_uri = start_api_uri + "auth.login";
     public static String logout_uri = start_api_uri + "auth.logout";
     public static String set_token_uri = start_api_uri + "auth.set_token";
+    public static String auth_restore_uri = start_api_uri + "auth.restore";
 
     public static String messages_get_contacts_uri = start_api_uri + "messages.get_contacts";
     public static String messages_get_messages_uri = start_api_uri + "messages.get_messages";
