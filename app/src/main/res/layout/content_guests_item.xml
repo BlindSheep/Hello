@@ -1,83 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/listGuestsItem"
-    android:orientation="vertical"
-    android:elevation="1.5dp"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:orientation="horizontal"
+android:background="@drawable/board"
+android:elevation="1.5dp"
+android:layout_width="match_parent"
+android:layout_height="wrap_content">
+
+<LinearLayout
+    android:background="?android:attr/selectableItemBackground"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:background="@drawable/board"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <RelativeLayout
+    <ImageView
+        android:id="@+id/guest_profile_avatar"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_margin="10dp"
+        app:srcCompat="@mipmap/avatar" />
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/guest_profile_avatar"
+        <TextView
+            android:id="@+id/guest_profile_nickname"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="4dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:maxLines="1"
+            android:textColor="@color/main_blue_color_hello"/>
 
-        <ImageView
-            android:id="@+id/guestIsOnline"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginRight="7dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/rounded_button"/>
+        <TextView
+            android:id="@+id/guest_profile_city"
+            android:maxLines="1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-    <TextView
-        android:id="@+id/guest_profile_nickname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
-        android:text="Имя"
-        android:maxLines="1"
-        android:textColor="@color/main_blue_color_hello" />
-
-    <TextView
-        android:id="@+id/guest_profile_city"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:text="Город"
-        android:maxLines="1"
-        android:layout_alignTop="@+id/guest_profile_nickname"
-        android:textColor="@color/main_blue_color_hello" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/guest_time_enter"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="10dp"
-        android:layout_alignTop="@+id/guest_profile_city"
-        android:text="..."/>
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"/>
 
-    <TextView
-        android:id="@+id/is_new_guest"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="NEW"
-        android:textSize="9dp"
-        android:rotation="25"
-        android:textColor="@color/main_white_color_hello"
-        android:gravity="center"
-        android:backgroundTint="@color/main_blue_color_hello"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:background="@mipmap/ic_action_star"/>
-
-    </RelativeLayout>
+</LinearLayout>
 
 </LinearLayout>

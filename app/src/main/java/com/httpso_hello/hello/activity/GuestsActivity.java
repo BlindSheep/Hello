@@ -6,32 +6,31 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Guest;
+import com.httpso_hello.hello.Structures.NoticeItem;
 import com.httpso_hello.hello.adapters.GuestsListAdapter;
-import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Profile;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static com.httpso_hello.hello.R.id.listGuests;
 
 public class GuestsActivity extends SuperMainActivity{
 
+    private ListView listGuestsNew;
+    private ListView listGuestsOld;
+    private TextView guests_text_new;
+    private TextView guests_text_old;
+    private View header;
     private Profile profile;
-    private GuestsListAdapter glAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -41,6 +40,11 @@ public class GuestsActivity extends SuperMainActivity{
         setHeader();
         setMenuItem("GuestsActivity");
 
+        listGuestsNew = ((ListView) findViewById(R.id.listGuestsNew));
+        listGuestsOld = ((ListView) findViewById(R.id.listGuestsOld));
+        guests_text_new = ((TextView) findViewById(R.id.guests_text_new));
+        guests_text_old = ((TextView) findViewById(R.id.guests_text_old));
+        header = getLayoutInflater().inflate(R.layout.footer6dp, null);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.main_blue_color_hello,
@@ -48,6 +52,8 @@ public class GuestsActivity extends SuperMainActivity{
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+        listGuestsNew.addFooterView(header);
+        listGuestsOld.addFooterView(header);
         getGuests();
 
         // Свайп для обновления
@@ -66,28 +72,55 @@ public class GuestsActivity extends SuperMainActivity{
         profile.getGuests(1, this, new Profile.GetGuestsCallback() {
             @Override
             public void onSuccess(final Guest[] guests, Activity activity) {
+                final ArrayList<Guest> newItem = new ArrayList<Guest>();
+                final ArrayList<Guest> oldItem = new ArrayList<Guest>();
 
-                ArrayList<Guest> defolt = new ArrayList<Guest>();
-                Collections.addAll(defolt, guests);
+                for (int i = 0; i < guests.length; i++){
+                    if (guests[i].status != 0) oldItem.add(guests[i]);
+                    else newItem.add(guests[i]);
+                }
 
-                glAdapter = new GuestsListAdapter(
-                        activity,
-                        defolt
-                );
-                ((GridView) findViewById(listGuests)).setAdapter(glAdapter);
+                GuestsListAdapter glAdapterNew = new GuestsListAdapter(activity, newItem);
+                GuestsListAdapter glAdapterOld = new GuestsListAdapter(activity, oldItem);
 
-                ((GridView) findViewById(listGuests)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        // Обработчик клика по юзеру
-                        Guest guest = ((GuestsListAdapter) parent.getAdapter()).getItem(position);
-                        // Открытие профиля
-                        Intent intent = new Intent(GuestsActivity.this, ProfileActivity.class);
-                        intent.putExtra("profile_id", guest.guest_id);
-                        intent.putExtra("profile_nickname", " " + guest.user_info.nickname);
-                        startActivity(intent);
-                    }
-                });
+                if (newItem.size() != 0) {
+                    guests_text_new.setVisibility(View.VISIBLE);
+                    listGuestsNew.setVisibility(View.VISIBLE);
+                    listGuestsNew.setAdapter(glAdapterNew);
+                    listGuestsNew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(GuestsActivity.this, ProfileActivity.class);
+                            intent.putExtra("profile_id", newItem.get(position).guest_id);
+                            intent.putExtra("profile_nickname", " " + newItem.get(position).user_info.nickname);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    guests_text_new.setVisibility(View.GONE);
+                    listGuestsNew.setVisibility(View.GONE);
+                }
+
+                if (oldItem.size() != 0) {
+                    guests_text_old.setVisibility(View.VISIBLE);
+                    listGuestsOld.setVisibility(View.VISIBLE);
+                    listGuestsOld.setAdapter(glAdapterOld);
+                    listGuestsOld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Intent intent = new Intent(GuestsActivity.this, ProfileActivity.class);
+                            intent.putExtra("profile_id", oldItem.get(position).guest_id);
+                            intent.putExtra("profile_nickname", " " + oldItem.get(position).user_info.nickname);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    guests_text_old.setVisibility(View.GONE);
+                    listGuestsOld.setVisibility(View.GONE);
+                }
+
+                setDynamicHeight(listGuestsNew);
+                setDynamicHeight(listGuestsOld);
                 swipeRefreshLayout.setRefreshing(false);
             }
 
@@ -109,5 +142,23 @@ public class GuestsActivity extends SuperMainActivity{
                 }, 5000);
             }
         });
+    }
+
+    public static void setDynamicHeight(ListView mListView) {
+        ListAdapter mListAdapter = mListView.getAdapter();
+        if (mListAdapter == null) {
+            return;
+        }
+        int height = 0;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(mListView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        for (int i = 0; i < mListAdapter.getCount(); i++) {
+            View listItem = mListAdapter.getView(i, null, mListView);
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            height += listItem.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = mListView.getLayoutParams();
+        params.height = height + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
+        mListView.setLayoutParams(params);
+        mListView.requestLayout();
     }
 }
