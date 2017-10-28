@@ -22,7 +22,6 @@
             android:paddingTop="5dp"
             android:paddingRight="15dp"
             android:paddingLeft="15dp"
-            android:background="@drawable/for_date"
             android:textColor="@color/main_black_color_hello"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -72,7 +71,7 @@
             android:id="@+id/msgCon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="61dp"
+            android:layout_marginLeft="60.5dp"
             android:layout_toLeftOf="@+id/cloud_meassage_sender">
 
             <LinearLayout
@@ -231,7 +230,7 @@
             android:layout_toRightOf="@+id/cloud_meassage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="49dp">
+            android:layout_marginRight="48.5dp">
 
             <LinearLayout
                 android:id="@+id/LLchat"
