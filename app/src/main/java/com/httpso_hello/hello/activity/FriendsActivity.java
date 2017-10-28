@@ -27,18 +27,21 @@ import com.squareup.picasso.Picasso;
 public class FriendsActivity extends SuperMainActivity{
 
     private ProgressBar progressBarFriends;
+    private Bundle extras;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle extras = getIntent().getExtras();
+        extras = getIntent().getExtras();
         setContentView(R.layout.activity_friends);
         setHeader();
+
         if (extras.getInt("profile_id") == 0) setMenuItem("FriendsActivity");
-
         progressBarFriends = (ProgressBar) findViewById(R.id.progressBarFriends);
+        getFriends();
+    }
 
-
+    public void getFriends() {
         Friend.getInstance(getApplicationContext()).getFriends(extras.getInt("profile_id"), this,
                 new Friend.GetFriendsCallback() {
                     @Override

@@ -9,13 +9,13 @@
                 tools:context="com.httpso_hello.hello.activity.FriendsActivity"
                 tools:showIn="@layout/content_friends_pager">
 
-    <ListView
-            android:id="@+id/listFriends"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@color/zalivon"
-            android:paddingLeft="6dp"
-            android:paddingRight="2dp"
-            android:scrollbarStyle="outsideInset"/>
+        <ListView
+                android:id="@+id/listFriends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/zalivon"
+                android:paddingLeft="6dp"
+                android:paddingRight="2dp"
+                android:scrollbarStyle="outsideInset"/>
 
 </RelativeLayout>

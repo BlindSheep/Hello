@@ -1,7 +1,10 @@
 package com.httpso_hello.hello.activity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +34,7 @@ import com.httpso_hello.hello.helper.Messages;
 import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import com.yandex.metrica.YandexMetrica;
 
 import java.util.Timer;
