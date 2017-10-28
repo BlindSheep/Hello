@@ -224,8 +224,14 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                         holder.chat_message_imgae1_sender.setMinimumWidth(width);
                         holder.chat_message_imgae1_sender.setMinimumHeight(width);
                         holder.progressPhoto1_sender.setVisibility(View.VISIBLE);
+                        String downloadPath = "";
+                        if(thisMessage.attachments[0].previewAttachmentUri!=null){
+                            downloadPath = thisMessage.attachments[0].previewAttachmentUri.toString();
+                        }else{
+                            downloadPath = Constant.upload + thisMessage.attachments[0].image.small;
+                        }
                         Picasso.with(getContext())
-                                .load(Constant.upload + thisMessage.attachments[0].image.small)
+                                .load(downloadPath)
                                 .resize(width, width)
                                 .centerCrop()
                                 .into(holder.chat_message_imgae1_sender, new Callback() {

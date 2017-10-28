@@ -70,6 +70,7 @@ public class ChatActivity extends SuperMainActivity{
     private static Handler Tread1_Handler = new Handler(), sendedMessagesHandler = new Handler(), onlineHandler = new Handler();
     private boolean firstItemScrolled = false;
     private Timer timer = new Timer(), sendedMessagesTimer = new Timer(), onlineTimer = new Timer();
+    private boolean isStartedSendedMessagesTimer;
     private ProgressBar progressBarChat;
     private ImageButton emojiKeyboard;
     private View headerForSupport;
@@ -274,11 +275,20 @@ public class ChatActivity extends SuperMainActivity{
                     Message message = new Message();
                     message.from_id = stgs.getSettingInt("user_id");
                     message.contact_id = ChatActivity.this.contact_id;
-                    message.content = messageContentString;
-                    message.attachments = new Attachment[]{};
+                    if(messageContentString.length()!=0)
+                        message.content = messageContentString;
+                    if(maAdapter!=null) {
+                        message.attachments = maAdapter.getAttachments();
+                    } else{
+                        message.attachments = new Attachment[]{};
+                    }
+
                     chatList.setTranscriptMode(2);
                     int message_number = ChatActivity.this.mmAdapter.addMessage(message);
-
+                    if(maAdapter!=null){
+                        maAdapter.deleteAllAttachments();
+//                        maAdapter = null;
+                    }
                     messages.sendMessage(
                             ChatActivity.this.contact_id,
                             messageContentString,
@@ -289,10 +299,6 @@ public class ChatActivity extends SuperMainActivity{
                                     dateLastUpdate = dateLU;
                                     mmAdapter.setMessage(message, message_number);
                                     sendedMessages.add(message);
-                                    ll.removeAllViews();
-                                    if(maAdapter!=null){
-                                        maAdapter.deleteAllAttachments();
-                                    }
                                 }
 
                             }, new Help.ErrorCallback() {
@@ -410,48 +416,51 @@ public class ChatActivity extends SuperMainActivity{
                 }});
             }
         }, 5000, 5000);
+//        if(!isStartedSendedMessagesTimer) {
+        isStartedSendedMessagesTimer = true;
+        sendedMessagesTimer = new Timer();
         sendedMessagesTimer.schedule(new TimerTask() {
             @Override
             public void run() {
-                sendedMessagesHandler.post(new Runnable() {public void run() {
-//                    if(sendedMessages == null){
-//                        sendedMessages = new ArrayList<Message>();
-//                    }
-                    if(sendedMessages.size() != 0) {
-                        messages.getStateMessages(sendedMessages, new Messages.GetStateMessagesCallback() {
-                            @Override
-                            public void onSuccess(Message[] messagesIDs) {
-                                int i = 0;
-                                for (Message sendedMessage : sendedMessages){
-                                    boolean isDeleted = true;
-                                    for(Message unreadedMessage : messagesIDs){
-                                        if(sendedMessage.id == unreadedMessage.id){
-                                            isDeleted = false;
-                                            break;
+                sendedMessagesHandler.post(new Runnable() {
+                    public void run() {
+                        if (sendedMessages.size() != 0) {
+                            messages.getStateMessages(sendedMessages, new Messages.GetStateMessagesCallback() {
+                                @Override
+                                public void onSuccess(Message[] messagesIDs) {
+                                    int i = 0;
+                                    for (Message sendedMessage : sendedMessages) {
+                                        boolean isDeleted = true;
+                                        for (Message unreadedMessage : messagesIDs) {
+                                            if (sendedMessage.id == unreadedMessage.id) {
+                                                isDeleted = false;
+                                                break;
+                                            }
                                         }
-                                    }
-                                    if(isDeleted){
-                                        mmAdapter.setReadedMessage(sendedMessage.id);
+                                        if (isDeleted) {
+                                            mmAdapter.setReadedMessage(sendedMessage.id);
 //                                        sendedMessages.remove(sendedMessage);
+                                        }
+                                        i++;
                                     }
-                                    i++;
                                 }
-                            }
-                        }, new Help.ErrorCallback() {
-                            @Override
-                            public void onError(int error_code, String error_msg) {
+                            }, new Help.ErrorCallback() {
+                                @Override
+                                public void onError(int error_code, String error_msg) {
 
-                            }
+                                }
 
-                            @Override
-                            public void onInternetError() {
+                                @Override
+                                public void onInternetError() {
 
-                            }
-                        });
+                                }
+                            });
+                        }
                     }
-                }});
+                });
             }
         }, 5000, 5000);
+//        }
 
         super.onResume();
     }
@@ -459,6 +468,10 @@ public class ChatActivity extends SuperMainActivity{
     @Override
     public void onPause() {
         timer.cancel();
+        if(isStartedSendedMessagesTimer) {
+            sendedMessagesTimer.cancel();
+            isStartedSendedMessagesTimer = false;
+        }
         onlineTimer.cancel();
         super.onPause();
     }
@@ -466,6 +479,10 @@ public class ChatActivity extends SuperMainActivity{
     @Override
     public void onDestroy() {
         timer.cancel();
+        if(isStartedSendedMessagesTimer) {
+            sendedMessagesTimer.cancel();
+            isStartedSendedMessagesTimer = false;
+        }
         onlineTimer.cancel();
         super.onDestroy();
     }

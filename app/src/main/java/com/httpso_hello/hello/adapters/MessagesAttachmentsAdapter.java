@@ -1,6 +1,8 @@
 package com.httpso_hello.hello.adapters;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,7 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
 
     private final Activity activity;
     private ArrayList<Attachment> attachments;
+    private ArrayList<Bitmap> previewBitmaps;
     private Messages parentClass;
 
     public MessagesAttachmentsAdapter(Activity activity, ArrayList<Attachment> attachments, Messages parentClass){
@@ -68,6 +71,10 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
                         @Override
                         public void onSuccess() {
 //                            attachment.widthPreviewAttachment = holder.imagePreview.getWidth();
+//                            if(previewBitmaps==null){
+//                                previewBitmaps = new ArrayList<>();
+//                            }
+//                            previewBitmaps.add(((BitmapDrawable)holder.imagePreview.getDrawable()).getBitmap());
                         }
 
                         @Override
@@ -122,8 +129,14 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
         this.attachments.clear();
     }
 
-//    public int getWidthPreview(int position){
-//        return this.attachments.get(position).widthPreviewAttachment;
-//    }
+    public Attachment[] getAttachments(){
+        Attachment[] defoltAttachment = new Attachment[this.attachments.size()];
+        int i = 0;
+        for (Attachment attachment : this.attachments) {
+            defoltAttachment[i] = attachment;
+            i++;
+        };
+        return defoltAttachment;
+    }
 
 }
