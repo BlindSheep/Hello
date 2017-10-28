@@ -285,7 +285,11 @@ public class ChatActivity extends SuperMainActivity{
 
                     chatList.setTranscriptMode(2);
                     int message_number = ChatActivity.this.mmAdapter.addMessage(message);
-
+                    if(maAdapter!=null){
+                        maAdapter.deleteAllAttachments();
+                        attachmentsListView.getLayoutParams().width = Help.getPxFromDp(130, getApplicationContext());
+//                        maAdapter = null;
+                    }
                     messages.sendMessage(
                             ChatActivity.this.contact_id,
                             messageContentString,
@@ -293,10 +297,7 @@ public class ChatActivity extends SuperMainActivity{
                             new Messages.MessagesSendMessage() {
                                 @Override
                                 public void onSuccess(Message message, String dateLU, int message_number) {
-                                    if(maAdapter!=null){
-                                        maAdapter.deleteAllAttachments();
-//                        maAdapter = null;
-                                    }
+
                                     dateLastUpdate = dateLU;
                                     mmAdapter.setMessage(message, message_number);
                                     sendedMessages.add(message);
