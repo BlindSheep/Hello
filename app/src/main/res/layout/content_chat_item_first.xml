@@ -100,7 +100,7 @@
                     android:layout_height="1dp"
                     android:layout_marginBottom="10dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/view_for_msg" />
+                    android:background="@drawable/message" />
 
                 <LinearLayout
                     android:id="@+id/forPhoto_sender"
@@ -257,7 +257,7 @@
                     android:layout_height="1dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/view_for_msg"/>
+                    android:background="@drawable/message2"/>
 
                 <LinearLayout
                     android:id="@+id/forPhoto"
