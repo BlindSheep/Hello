@@ -127,6 +127,7 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
     }
     public void deleteAllAttachments(){
         this.attachments.clear();
+        this.notifyDataSetChanged();
     }
 
     public Attachment[] getAttachments(){
