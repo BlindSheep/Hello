@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import android.widget.ImageView;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -366,6 +367,7 @@ public class Profile extends Help{
                     return params;
                 };
             };
+            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.update_avatar");
         }
     }
