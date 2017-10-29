@@ -28,11 +28,13 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.activity.ChatActivity;
 import com.httpso_hello.hello.activity.MainActivity;
 import com.httpso_hello.hello.activity.MessagesActivity;
+import com.httpso_hello.hello.activity.NotisesActivity;
 import com.httpso_hello.hello.helper.Messages;
 import com.squareup.picasso.Picasso;
 import android.graphics.Rect;
 import java.util.Map;
 
+import static android.R.attr.breadCrumbShortTitle;
 import static android.R.attr.radius;
 
 /**
@@ -94,9 +96,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 messageData.get("body").toString(),
                 messageData.get("title").toString(),
                 messageData.get("avatar_string").toString(),
+                null,
                 Integer.parseInt(messageData.get("profile_id").toString()),
                 messageData.get("profile_nickname").toString(),
-                messageData.get("avatar").toString()
+                messageData.get("avatar").toString(),
+                messageData.get("type").toString()
         );
 
         // Also if you intend on generating your own notifications as a result of a received FCM
@@ -130,25 +134,57 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
      *
      * @param messageBody FCM message body received.
      */
-    private void sendNotification(String messageBody, String title, String base64_necode_ava, int profile_id,  String nickname, String avatar) {
+    private void sendNotification(
+            // Прямая информация для пуш уведомления
+            String messageBody,
+            String title,
+            String base64_smallImage,
+            String base64_bigImage,
+            // Сведенья об отправителе
+            int profile_id,
+            String nickname,
+            String avatar,
+            // Сведенья о типе пуш уведомлении
+            String type) {
+        Intent intent;
+        PendingIntent pIntent;
+        switch (type){
+            case "message":
+                intent = new Intent(this, ChatActivity.class);
+                intent.putExtra("avatar", avatar);
+                intent.putExtra("nickname", nickname);
+                intent.putExtra("contact_id", profile_id);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.putExtra("avatar", avatar);
-        intent.putExtra("nickname", nickname);
-        intent.putExtra("contact_id", profile_id);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            case "rating":
+                intent = new Intent(this, NotisesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            case "comment":
+                intent = new Intent(this, NotisesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            default:
+                intent = new Intent(this, NotisesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+        }
 
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 // Вставка аватарки
         Bitmap bitmap;
-        if(base64_necode_ava!=null && base64_necode_ava.length()!=0) {
-            byte[] bytes = Base64.decode(base64_necode_ava.getBytes(), Base64.DEFAULT);
+        if(base64_smallImage!=null && base64_smallImage.length()!=0) {
+            byte[] bytes = Base64.decode(base64_smallImage.getBytes(), Base64.DEFAULT);
 
-             bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         } else {
             bitmap = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.mipmap.avatar);
         }
@@ -179,13 +215,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)
                 .setVibrate(new long[]{1500, 500, 1500})
-//                .addAction(R.mipmap.ic_menu_messages, "Открыть чат", pIntent)
                 .setContentIntent(pIntent);
-
-//        notificationBuilder.setDefaults(Notification.DEFAULT_VIBRATE);
-//        RemoteMessage.Notification notification = new Notification.BigTextStyle(notificationBuilder).bigText(messageBody).build();
-
-
 
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
