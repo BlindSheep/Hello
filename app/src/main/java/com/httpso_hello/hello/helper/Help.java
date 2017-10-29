@@ -204,7 +204,8 @@ public class Help {
             cursor = context.getContentResolver().query(file,  proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
-            return cursor.getString(column_index);
+            String path = cursor.getString(column_index);
+            return file.getPath();
         } finally {
             if (cursor != null) {
                 cursor.close();
