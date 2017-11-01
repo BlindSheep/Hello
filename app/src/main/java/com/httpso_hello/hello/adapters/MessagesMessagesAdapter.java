@@ -268,6 +268,11 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                             holder.otherPhotos_sender.setVisibility(View.GONE);
                         }
                     }
+                } else {
+                    holder.forPhoto_sender.setVisibility(View.GONE);
+                    holder.customView_sender.setVisibility(View.GONE);
+                    holder.otherPhotos_sender.setVisibility(View.GONE);
+                    holder.chatMessage_sender.setVisibility(View.VISIBLE);
                 }
 
                 //Дата по центру

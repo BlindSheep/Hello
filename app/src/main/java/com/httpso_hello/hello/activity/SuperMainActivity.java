@@ -48,7 +48,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     protected DrawerLayout drawer;
     protected ActionBarDrawerToggle toggle;
     protected ImageView headerImageView;
-    protected TextView nav_messages, nav_guests, nav_notises;
+    protected TextView nav_messages, nav_guests, nav_notises, nav_frinds;
     private static Handler countsHandler = new Handler();
     private Timer countsTimer;
     private NavigationView navigationView;
@@ -78,6 +78,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         nav_messages = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_messages));
         nav_guests = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_guests));
         nav_notises = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notises));
+        nav_frinds = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_frinds));
         headerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,6 +146,12 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                                 nav_notises.setTypeface(null, Typeface.BOLD);
                                 nav_notises.setText(Integer.toString(allCounts.new_notices));
                             } else nav_notises.setVisibility(View.GONE);
+                            if (allCounts.requests_in_friends != 0) {
+                                nav_frinds.setVisibility(View.VISIBLE);
+                                nav_frinds.setGravity(Gravity.CENTER_VERTICAL);
+                                nav_frinds.setTypeface(null, Typeface.BOLD);
+                                nav_frinds.setText(Integer.toString(allCounts.requests_in_friends));
+                            } else nav_frinds.setVisibility(View.GONE);
                         }
 
                         @Override
@@ -159,7 +166,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                     });
                 }});
             }
-        }, 1000, 15000);
+        }, 1000, 30000);
     }
 
     @Override

@@ -3,9 +3,7 @@ package com.httpso_hello.hello.adapters;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.PorterDuff;
-import android.location.Location;
 import android.net.Uri;
-import android.net.http.HttpResponseCache;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.util.DisplayMetrics;
@@ -16,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -30,7 +27,6 @@ import com.httpso_hello.hello.activity.BoardActivity;
 import com.httpso_hello.hello.activity.BoardContentActivity;
 import com.httpso_hello.hello.activity.ChatActivity;
 import com.httpso_hello.hello.activity.FullscreenPhotoActivity;
-import com.httpso_hello.hello.activity.LikeActivity;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
@@ -48,13 +44,8 @@ import com.yandex.mobile.ads.nativeads.NativeAppInstallAd;
 import com.yandex.mobile.ads.nativeads.NativeAppInstallAdView;
 import com.yandex.mobile.ads.nativeads.NativeContentAd;
 import com.yandex.mobile.ads.nativeads.NativeContentAdView;
-import com.yandex.mobile.ads.nativeads.template.NativeBannerView;
 
 import java.util.ArrayList;
-
-import static com.yandex.mobile.ads.nativeads.NativeAdLoaderConfiguration.NATIVE_IMAGE_SIZE_LARGE;
-import static com.yandex.mobile.ads.nativeads.NativeAdLoaderConfiguration.NATIVE_IMAGE_SIZE_MEDIUM;
-import static com.yandex.mobile.ads.nativeads.NativeAdLoaderConfiguration.NATIVE_IMAGE_SIZE_SMALL;
 
 /**
  * Created by mixir on 02.08.2017.
@@ -78,7 +69,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         public ImageView userAvatarBoard;
         public TextView userNameBoard;
         public TextView datePubBoard;
-        public TextView writeButton;
+        public ImageView writeButton;
         public TextView boardText;
         public ImageView firstPhoto;
         public GridView anotherPhotoBoard;
@@ -111,7 +102,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             holder.userAvatarBoard = (ImageView) rowView.findViewById(R.id.userAvatarBoard);
             holder.userNameBoard = (TextView) rowView.findViewById(R.id.userNameBoard);
             holder.datePubBoard = (TextView) rowView.findViewById(R.id.datePubBoard);
-            holder.writeButton = (TextView) rowView.findViewById(R.id.writeButton);
+            holder.writeButton = (ImageView) rowView.findViewById(R.id.writeButton);
             holder.boardText = (TextView) rowView.findViewById(R.id.boardText);
             holder.firstPhoto = (ImageView) rowView.findViewById(R.id.firstPhotoBoard);
             holder.anotherPhotoBoard = (GridView) rowView.findViewById(R.id.anotherPhotoBoard);
@@ -327,29 +318,31 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             //Конец фотки
 
             //Начало кнопка Ответить
-            if (!anonim) {
+            if (boardItem.user_id == stgs.getSettingInt("user_id")) {
                 holder.writeButton.setVisibility(View.VISIBLE);
                 holder.writeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(getContext(), ChatActivity.class);
-                        intent.putExtra("contact_id", boardItem.user_id);
-                        intent.putExtra("nickname", " " + boardItem.user_nickname);
-                        if (boardItem.avatar == null) {
-                            intent.putExtra("avatar", Constant.default_avatar);
-                        } else {
-                            intent.putExtra("avatar", boardItem.avatar.micro);
-                        }
-                        boardActivity.startActivity(intent);
+                        boardActivity.showPopup(true, boardItem.user_id, boardItem.user_nickname, boardItem.avatar);
                     }
                 });
             } else {
-                holder.writeButton.setVisibility(View.GONE);
-                holder.writeButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                    }
-                });
+                if (!anonim) {
+                    holder.writeButton.setVisibility(View.VISIBLE);
+                    holder.writeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            boardActivity.showPopup(false, boardItem.user_id, boardItem.user_nickname, boardItem.avatar);
+                        }
+                    });
+                } else {
+                    holder.writeButton.setVisibility(View.GONE);
+                    holder.writeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        }
+                    });
+                }
             }
             //Конец кнопка ответить
 

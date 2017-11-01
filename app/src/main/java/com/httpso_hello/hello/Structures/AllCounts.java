@@ -9,6 +9,7 @@ public class AllCounts {
     public int new_messages;
     public int new_notices;
     public int new_guests;
+    public int requests_in_friends;
     public Error error;
 
     AllCounts(){
