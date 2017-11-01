@@ -198,20 +198,8 @@ public class Help {
     }
 
     public static String getFileByUri(Uri file, Context context){
-        Cursor cursor = null;
-        try {
-// String[] proj = { MediaStore.Images.Media.DATA };
-// cursor = context.getContentResolver().query(file, proj, null, null, null);
-// int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-// cursor.moveToFirst();
-// String path = cursor.getString(column_index);
-            return file.getPath();
-        } finally {
-// if (cursor != null) {
-// cursor.close();
-// }
-        }
-    }
+        return file.getPath();
+   }
 
     public static long getFileSize(Uri pathFile, Context context){
         File file = new File(Help.getFileByUri(pathFile, context));
