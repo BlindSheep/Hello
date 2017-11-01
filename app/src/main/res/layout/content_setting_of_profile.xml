@@ -116,22 +116,36 @@
                 android:layout_height="wrap_content">
 
                 <RadioButton
-                    android:id="@+id/radioButton"
+                    android:id="@+id/radioButtonProfile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Объявления" />
+                    android:layout_marginLeft="18dp"
+                    android:padding="20dp"
+                    android:text="Мой профиль" />
 
                 <RadioButton
-                    android:id="@+id/radioButton2"
+                    android:id="@+id/radioButtonMsg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:padding="20dp"
                     android:text="Сообщения" />
 
                 <RadioButton
-                    android:id="@+id/radioButton3"
+                    android:id="@+id/radioButtonSearch"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Мой профиль" />
+                    android:layout_marginLeft="18dp"
+                    android:padding="20dp"
+                    android:text="Поиск" />
+
+                <RadioButton
+                    android:id="@+id/radioButtonBoard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="18dp"
+                    android:padding="20dp"
+                    android:text="Объявления" />
 
             </RadioGroup>
 

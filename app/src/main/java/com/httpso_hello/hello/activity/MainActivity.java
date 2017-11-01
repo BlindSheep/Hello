@@ -39,7 +39,17 @@ public class MainActivity extends Activity{
         //Проверяем авторизовано ли приложения
         if (auth.autoLogion()){
             //Если авторизовано переходит на страницу сообщений
-            Intent intent = new Intent(MainActivity.this, BoardActivity.class);
+            Intent intent;
+            if (stgs.getSettingInt("startPage") == 3) {
+                intent = new Intent(MainActivity.this, ProfileActivity.class);
+                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+            } else if (stgs.getSettingInt("startPage") == 2) {
+                intent = new Intent(MainActivity.this, MessagesActivity.class);
+            } else if (stgs.getSettingInt("startPage") == 1) {
+                intent = new Intent(MainActivity.this, SearchActivity.class);
+            } else {
+                intent = new Intent(MainActivity.this, BoardActivity.class);
+            }
             startActivity(intent);
             finish();
 

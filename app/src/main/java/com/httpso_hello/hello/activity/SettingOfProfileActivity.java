@@ -2,6 +2,8 @@ package com.httpso_hello.hello.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 import android.widget.Switch;
 
 import com.httpso_hello.hello.R;
@@ -12,6 +14,10 @@ public class SettingOfProfileActivity extends SuperMainActivity {
     private Switch switchComm;
     private Switch switchLikes;
     private Switch switchGifts;
+    private RadioButton radioButtonProfile;
+    private RadioButton radioButtonMsg;
+    private RadioButton radioButtonSearch;
+    private RadioButton radioButtonBoard;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,8 +30,13 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         switchComm = (Switch) findViewById(R.id.switchComm);
         switchLikes = (Switch) findViewById(R.id.switchLikes);
         switchGifts = (Switch) findViewById(R.id.switchGifts);
+        radioButtonProfile = (RadioButton) findViewById(R.id.radioButtonProfile);
+        radioButtonMsg = (RadioButton) findViewById(R.id.radioButtonMsg);
+        radioButtonSearch = (RadioButton) findViewById(R.id.radioButtonSearch);
+        radioButtonBoard = (RadioButton) findViewById(R.id.radioButtonBoard);
 
         pushSettings();
+        startPageSettings();
     }
 
     //Настройки пушей
@@ -93,6 +104,59 @@ public class SettingOfProfileActivity extends SuperMainActivity {
                     switchGifts.setChecked(true);
                     stgs.setSettingInt("pushGifts", 0);
                 }
+            }
+        });
+    }
+
+    //Стартовая страница
+    private void startPageSettings() {
+        if (stgs.getSettingInt("startPage") == 3) {
+            radioButtonProfile.setChecked(true);
+            radioButtonMsg.setChecked(false);
+            radioButtonSearch.setChecked(false);
+            radioButtonBoard.setChecked(false);
+        }
+        if (stgs.getSettingInt("startPage") == 2) {
+            radioButtonProfile.setChecked(false);
+            radioButtonMsg.setChecked(true);
+            radioButtonSearch.setChecked(false);
+            radioButtonBoard.setChecked(false);
+        }
+        if (stgs.getSettingInt("startPage") == 1) {
+            radioButtonProfile.setChecked(false);
+            radioButtonMsg.setChecked(false);
+            radioButtonSearch.setChecked(true);
+            radioButtonBoard.setChecked(false);
+        }
+        if (stgs.getSettingInt("startPage") == 0) {
+            radioButtonProfile.setChecked(false);
+            radioButtonMsg.setChecked(false);
+            radioButtonSearch.setChecked(false);
+            radioButtonBoard.setChecked(true);
+        }
+
+        radioButtonProfile.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) stgs.setSettingInt("startPage", 3);
+            }
+        });
+        radioButtonMsg.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) stgs.setSettingInt("startPage", 2);
+            }
+        });
+        radioButtonSearch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) stgs.setSettingInt("startPage", 1);
+            }
+        });
+        radioButtonBoard.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) stgs.setSettingInt("startPage", 0);
             }
         });
     }
