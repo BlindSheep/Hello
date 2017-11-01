@@ -323,7 +323,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 holder.writeButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        boardActivity.showPopup(true, boardItem.user_id, boardItem.user_nickname, boardItem.avatar);
+                        boardActivity.showPopup(true, boardItem.user_id, boardItem.user_nickname, boardItem.avatar, boardItem.id);
                     }
                 });
             } else {
@@ -332,7 +332,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     holder.writeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            boardActivity.showPopup(false, boardItem.user_id, boardItem.user_nickname, boardItem.avatar);
+                            boardActivity.showPopup(false, boardItem.user_id, boardItem.user_nickname, boardItem.avatar, boardItem.id);
                         }
                     });
                 } else {

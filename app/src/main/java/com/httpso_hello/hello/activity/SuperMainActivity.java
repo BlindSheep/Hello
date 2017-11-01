@@ -115,6 +115,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         else if (activityName.equals("SearchActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_search)).setChecked(true);
         else if (activityName.equals("SettingsActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_edit)).setChecked(true);
         else if (activityName.equals("SimpationActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_simpatii)).setChecked(true);
+        else if (activityName.equals("SettingOfProfileActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_edit_profile)).setChecked(true);
     }
 
     private void getCountIntoDrawer() {
@@ -235,6 +236,11 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 break;
             case R.id.nav_edit:
                 intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.nav_edit_profile:
+                intent = new Intent(getApplicationContext(), SettingOfProfileActivity.class);
                 startActivity(intent);
                 finish();
                 break;

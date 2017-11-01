@@ -34,7 +34,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <service android:name=".helper.push_services.MyFirebaseMessagingService">
@@ -146,7 +146,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.RememmberPassword"
-            android:label="Восстановить пароль"/>
+            android:label="Восстановить пароль" />
+        <activity
+            android:name=".activity.SettingOfProfileActivity"
+            android:label="@string/title_activity_setting_of_profile"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

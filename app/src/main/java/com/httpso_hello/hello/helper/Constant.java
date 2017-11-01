@@ -46,6 +46,8 @@ public class Constant {
     public static String users_get_online_uri = start_api_uri + "users.get_online";
     public static String users_get_counts_uri = start_api_uri + "users.get_counts";
 
+    public static String content_delete_item_uri = start_api_uri + "content.delete_item";
+
     public static String photos_add_photo = start_api_uri + "photos.add_photo";
     public static String photos_delete_photo = start_api_uri + "photos.delete_photo";
 

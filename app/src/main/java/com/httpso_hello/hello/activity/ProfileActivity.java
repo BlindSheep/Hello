@@ -850,15 +850,7 @@ public class ProfileActivity extends SuperMainActivity{
                         popUpWindow.setAnimationStyle(Animation_Dialog);
                         popUpWindow.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
 
-// отмена поп-ап-а
-                        popUpWindow.getContentView().findViewById(R.id.popup_for_avatar).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                popUpWindow.dismiss();
-                            }
-                        });
-
-// Загрузить аву из галереи
+// Открыть аву
                         popUpWindow.getContentView().findViewById(R.id.avaOpen).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -917,14 +909,6 @@ public class ProfileActivity extends SuperMainActivity{
                         popUpWindow2.setAnimationStyle(Animation_Dialog);
                         popUpWindow2.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
 
-// отмена поп-ап-а
-                        popUpWindow2.getContentView().findViewById(R.id.popup_for_new_photo).setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                popUpWindow2.dismiss();
-                            }
-                        });
-
 // Загрузка новых фоток из галереи
                         popUpWindow2.getContentView().findViewById(R.id.newPhotoFromGalery).setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -972,8 +956,8 @@ public class ProfileActivity extends SuperMainActivity{
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(ProfileActivity.this, ChatActivity.class);
-                        intent.putExtra("contact_id", ProfileActivity.this.profile_id);
-                        intent.putExtra("nickname", ProfileActivity.this.profile_nickname);
+                        intent.putExtra("contact_id", user.id);
+                        intent.putExtra("nickname", user.nickname);
                         if(user.avatar != null){
                             intent.putExtra("avatar", user.avatar.micro);
                         } else {
@@ -1197,11 +1181,10 @@ openAvatarUpdateWindow(sendPhotoClick);
 
             Picasso.with(getApplicationContext())
                     .load(imageUri)
-                    .resize(displaymetrics.widthPixels, displaymetrics.widthPixels)
+                    .resize((int) (displaymetrics.widthPixels - displaymetrics.density*30), (int) (displaymetrics.widthPixels - displaymetrics.density*30))
                     .centerCrop()
                     .into(((ImageView) popUpWindow3.getContentView().findViewById(R.id.newPhoto)));
-            ((TextView) popUpWindow3.getContentView().findViewById(R.id.savePhoto)).setText("Сохранить");
-            ((LinearLayout) popUpWindow3.getContentView().findViewById(R.id.popup_accept_new_photo)).setOnClickListener(new View.OnClickListener() {
+            ((TextView) popUpWindow3.getContentView().findViewById(R.id.cancelPhoto)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     popUpWindow3.dismiss();

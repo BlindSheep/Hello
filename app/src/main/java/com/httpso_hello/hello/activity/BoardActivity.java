@@ -20,6 +20,7 @@ import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.adapters.BoardAdapter;
 import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.Content;
 import com.httpso_hello.hello.helper.HBoard;
 import com.yandex.metrica.YandexMetrica;
 
@@ -169,7 +170,7 @@ public class BoardActivity extends SuperMainActivity{
     }
 
     //Попапы
-    public void showPopup(boolean isUserContent, final int userId, final String nickname, final Image avatar) {
+    public void showPopup(boolean isUserContent, final int userId, final String nickname, final Image avatar, final int boardId) {
         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
         if (isUserContent) {
             popUpWindowUser.setWidth(displaymetrics.widthPixels);
@@ -193,7 +194,28 @@ public class BoardActivity extends SuperMainActivity{
             (popupViewUser.findViewById(R.id.delete)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //УДАЛЕНИЕ ОБЪЯВЛЕНИЯ
+                    swipeRefreshLayout.setRefreshing(true);
+                    Content.getInstance(getApplicationContext())
+                            .deleteContent(boardId, "board", new Content.DeleteContentCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    page = 1;
+                                    getBoard();
+                                    Toast.makeText(getApplicationContext(), "Объявление удалено", Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onError(int error_code, String error_msg) {
+                                    swipeRefreshLayout.setRefreshing(false);
+                                    Toast.makeText(getApplicationContext(), "Произошла какая-то ошибка, попробуйте позже.", Toast.LENGTH_LONG).show();
+                                }
+
+                                @Override
+                                public void onInternetError() {
+                                    swipeRefreshLayout.setRefreshing(false);
+                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                }
+                            });
                     popUpWindowUser.dismiss();
                 }
             });
