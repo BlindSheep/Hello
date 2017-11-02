@@ -444,6 +444,7 @@ public class Messages extends Help {
                     return params;
                 };
             };
+//            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.addFileToMessage_" + Integer.toString(position));
         }
     }

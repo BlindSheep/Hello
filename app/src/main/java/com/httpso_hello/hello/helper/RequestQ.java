@@ -3,6 +3,7 @@ package com.httpso_hello.hello.helper;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -38,6 +39,7 @@ public class RequestQ {
     }
 
     public <T> void addToRequestQueue(Request<T> req, String tag) {
+        req.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         req.setTag(TextUtils.isEmpty(tag) ? TAG : tag);
         getRequestQueue().add(req);
 //        return(getRequestQueue().add(req));
