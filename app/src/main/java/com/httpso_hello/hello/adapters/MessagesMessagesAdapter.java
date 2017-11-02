@@ -149,7 +149,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         thisMessage = this.messages.get(position);
         if (position!=0) {
             lastMessage = this.messages.get(position - 1);
-            if (thisMessage.date_pub != null) {
+            if ((thisMessage.date_pub != null) && (lastMessage.date_pub != null)) {
                 if (!ConverterDate.convertDayForChat(thisMessage.date_pub).equals(ConverterDate.convertDayForChat(lastMessage.date_pub)))
                     isNewDate = true;
                 else isNewDate = false;

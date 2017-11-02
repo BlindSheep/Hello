@@ -24,7 +24,7 @@
 
             <ImageView
                 android:id="@+id/imageAvatar"
-                android:layout_marginLeft="75dp"
+                android:layout_marginLeft="70dp"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_centerVertical="true"
@@ -35,6 +35,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_marginLeft="15dp"
+                android:layout_marginRight="40dp"
                 android:layout_toRightOf="@+id/imageAvatar"
                 android:layout_centerVertical="true">
 
@@ -44,6 +45,9 @@
                     android:layout_height="wrap_content"
                     android:textColor="@color/main_white_color_hello"
                     android:textSize="20dp"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="" />
 
                 <TextView

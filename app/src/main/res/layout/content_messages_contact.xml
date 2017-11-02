@@ -51,6 +51,10 @@
             android:layout_width="match_parent"
             android:layout_height="42dp"
             android:paddingTop="20dp"
+            android:layout_marginRight="50dp"
+            android:lines="1"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="contactNickname"
             android:textColor="@color/main_blue_color_hello" />
 

@@ -32,6 +32,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:textColor="@color/main_blue_color_hello"
                 android:text="TextView" />
 
