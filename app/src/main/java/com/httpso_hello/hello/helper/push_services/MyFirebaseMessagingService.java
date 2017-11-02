@@ -30,6 +30,7 @@ import com.httpso_hello.hello.activity.MainActivity;
 import com.httpso_hello.hello.activity.MessagesActivity;
 import com.httpso_hello.hello.activity.NotisesActivity;
 import com.httpso_hello.hello.helper.Messages;
+import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Picasso;
 import android.graphics.Rect;
 import java.util.Map;
@@ -146,6 +147,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String avatar,
             // Сведенья о типе пуш уведомлении
             String type) {
+        Settings stgs = new Settings(getApplicationContext());
+        if(stgs.getSettingInt(type)!=0){
+            return;
+        }
         Intent intent;
         PendingIntent pIntent;
         switch (type){
@@ -169,10 +174,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
             default:
-                intent = new Intent(this, NotisesActivity.class);
+                /*intent = new Intent(this, NotisesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                break;
+                pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);*/
+                return;
+//                break;
         }
 
 

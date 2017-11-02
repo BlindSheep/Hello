@@ -42,28 +42,28 @@ public class SettingOfProfileActivity extends SuperMainActivity {
     //Настройки пушей
     private void pushSettings() {
         //Если 0 значит пуши включены
-        if (stgs.getSettingInt("pushMsg") == 0) {
+        if (stgs.getSettingInt("message") == 0) {
             switchMsg.setChecked(true);
         }
-        if (stgs.getSettingInt("pushComm") == 0) {
+        if (stgs.getSettingInt("comment") == 0) {
             switchComm.setChecked(true);
         }
-        if (stgs.getSettingInt("pushLikes") == 0) {
+        if (stgs.getSettingInt("rating") == 0) {
             switchLikes.setChecked(true);
         }
-        if (stgs.getSettingInt("pushGifts") == 0) {
+        if (stgs.getSettingInt("gift") == 0) {
             switchGifts.setChecked(true);
         }
 
         switchMsg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stgs.getSettingInt("pushMsg") == 0) {
+                if (stgs.getSettingInt("message") == 0) {
                     switchMsg.setChecked(false);
-                    stgs.setSettingInt("pushMsg", 1);
+                    stgs.setSettingInt("message", 1);
                 } else {
                     switchMsg.setChecked(true);
-                    stgs.setSettingInt("pushMsg", 0);
+                    stgs.setSettingInt("message", 0);
                 }
             }
         });
@@ -71,12 +71,12 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         switchComm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stgs.getSettingInt("pushComm") == 0) {
+                if (stgs.getSettingInt("comment") == 0) {
                     switchComm.setChecked(false);
-                    stgs.setSettingInt("pushComm", 1);
+                    stgs.setSettingInt("comment", 1);
                 } else {
                     switchComm.setChecked(true);
-                    stgs.setSettingInt("pushComm", 0);
+                    stgs.setSettingInt("comment", 0);
                 }
             }
         });
@@ -84,12 +84,12 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         switchLikes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stgs.getSettingInt("pushLikes") == 0) {
+                if (stgs.getSettingInt("rating") == 0) {
                     switchLikes.setChecked(false);
-                    stgs.setSettingInt("pushLikes", 1);
+                    stgs.setSettingInt("rating", 1);
                 } else {
                     switchLikes.setChecked(true);
-                    stgs.setSettingInt("pushLikes", 0);
+                    stgs.setSettingInt("rating", 0);
                 }
             }
         });
@@ -97,12 +97,12 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         switchGifts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stgs.getSettingInt("pushGifts") == 0) {
+                if (stgs.getSettingInt("gift") == 0) {
                     switchGifts.setChecked(false);
-                    stgs.setSettingInt("pushGifts", 1);
+                    stgs.setSettingInt("gift", 1);
                 } else {
                     switchGifts.setChecked(true);
-                    stgs.setSettingInt("pushGifts", 0);
+                    stgs.setSettingInt("gift", 0);
                 }
             }
         });

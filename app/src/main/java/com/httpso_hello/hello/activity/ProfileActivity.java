@@ -1294,7 +1294,7 @@ openAvatarUpdateWindow(sendPhotoClick);
         }
     };
 
-// Обработка запроса получения доступа
+    // Обработка запроса получения доступа
     @Override
     public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
