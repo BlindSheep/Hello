@@ -83,7 +83,9 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                                 .into(holder.noticeSenderAvatar);
                     }
                 });
-        holder.noticeDate.setText(ConverterDate.convertDateForGuest(noticeItem.date_pub));
+        if(noticeItem.date_pub!=null) {
+            holder.noticeDate.setText(ConverterDate.convertDateForGuest(noticeItem.date_pub));
+        }
         switch(noticeItem.type_notice){
             case 1: // Уведомление о лайке
                 String appricated = "";
