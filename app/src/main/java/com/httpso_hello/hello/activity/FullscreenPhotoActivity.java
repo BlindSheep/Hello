@@ -220,6 +220,7 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
                     intent.putExtra("id", photoId.get(posit));
                     intent.putExtra("photo", photoOrig.get(posit));
                     intent.putExtra("likes", photoLike.get(posit));
+                    intent.putExtra("isMyphoto", false);
                     startActivity(intent);
                 }
             });
@@ -326,6 +327,7 @@ public class FullscreenPhotoActivity extends AppCompatActivity {
                             intent.putExtra("id", photoId.get(position));
                             intent.putExtra("photo", photoOrig.get(position));
                             intent.putExtra("likes", photoLike.get(position));
+                            intent.putExtra("isMyphoto", false);
                             startActivity(intent);
                         }
                     });

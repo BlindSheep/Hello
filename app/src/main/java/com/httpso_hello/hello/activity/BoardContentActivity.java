@@ -7,11 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
+import android.util.DisplayMetrics;
+import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +46,8 @@ import java.util.TimerTask;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
+import static android.R.style.Animation_Dialog;
+
 public class BoardContentActivity extends SuperMainActivity {
 
     private Bundle extras;
@@ -63,6 +70,8 @@ public class BoardContentActivity extends SuperMainActivity {
     private static Handler handler = new Handler();
     private Timer timer = new Timer();
     private boolean launching;
+    private View popupViewDelete;
+    private PopupWindow popUpWindowDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +101,13 @@ public class BoardContentActivity extends SuperMainActivity {
         emojIcon = new EmojIconActions(this, contentBoardContentBlock, messageContent, emojiKeyboard);
         emojIcon.ShowEmojIcon();
         messageSend = (ImageView) findViewById(R.id.messageSend);
+
+        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+        popupViewDelete = getLayoutInflater().inflate(R.layout.popup_for_delete_comment, null);
+        popUpWindowDelete = new PopupWindow(popupViewDelete, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popUpWindowDelete.setWidth(displaymetrics.widthPixels);
+        popUpWindowDelete.setHeight(displaymetrics.heightPixels);
+        popUpWindowDelete.setAnimationStyle(Animation_Dialog);
 
         //Заполняем комментами
         getComments();
@@ -196,7 +212,7 @@ public class BoardContentActivity extends SuperMainActivity {
             public void onSuccess(Coment[] commentsStructure, Activity activity) {
                 final ArrayList<Coment> defolt = new ArrayList<Coment>();
                 Collections.addAll(defolt, commentsStructure);
-                ca = new CommentsAdapter(activity, defolt);
+                ca = new CommentsAdapter(activity, defolt, "board", extras.getInt("id"), false);
                 counts = defolt.size();
                 LV.setAdapter(ca);
                 launching = false;
@@ -323,6 +339,42 @@ public class BoardContentActivity extends SuperMainActivity {
                 }});
             }
         }, 1000, 10000);
+    }
+
+    public void popupComment(final int id, final String target_controller, final String content_type, final int contentId) {
+        popUpWindowDelete.showAtLocation(LV, Gravity.CENTER, 0, 0);
+        ((TextView) popupViewDelete.findViewById(R.id.delete)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Comments(getApplicationContext())
+                    .deleteComments(id, target_controller, content_type, contentId, new Comments.DeleteCommentCallback() {
+                        @Override
+                        public void onSuccess() {
+                            popUpWindowDelete.dismiss();
+                            getComments();
+                            Toast.makeText(getApplicationContext(), "Комментарий удален", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onError(int error_code, String error_message) {
+                            popUpWindowDelete.dismiss();
+                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            popUpWindowDelete.dismiss();
+                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        }
+                    });
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(popUpWindowDelete.isShowing()) popUpWindowDelete.dismiss();
+        else super.onBackPressed();
     }
 
     @Override

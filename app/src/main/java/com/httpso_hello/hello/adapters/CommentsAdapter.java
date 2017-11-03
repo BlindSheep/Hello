@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Coment;
+import com.httpso_hello.hello.activity.BoardActivity;
+import com.httpso_hello.hello.activity.BoardContentActivity;
+import com.httpso_hello.hello.activity.PhotoCommentsActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Comments;
 import com.httpso_hello.hello.helper.Constant;
@@ -31,12 +34,18 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
     private ArrayList<Coment> comments;
     private final Activity context;
     private Settings stgs;
+    private String type;
+    private int contentId;
+    private boolean isMyPhoto;
 
-    public CommentsAdapter(Activity context, ArrayList<Coment> comments){
+    public CommentsAdapter(Activity context, ArrayList<Coment> comments, String type, int contentId, boolean isMyPhoto){
         super(context, R.layout.content_board_content, comments);
         this.comments = comments;
         this.context = context;
         this.stgs = new Settings(getContext());
+        this.type = type;
+        this.contentId = contentId;
+        this.isMyPhoto = isMyPhoto;
     }
 
     private class ViewHolder{
@@ -45,6 +54,7 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
         private TextView contactNickname;
         private TextView datePub;
         private ImageView isOnline;
+        private ImageView popupButton;
     }
 
     @Override
@@ -61,12 +71,13 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
             holder.contactNickname = (TextView) rowView.findViewById(R.id.contactNickname);
             holder.datePub = (TextView) rowView.findViewById(R.id.datePub);
             holder.isOnline = (ImageView) rowView.findViewById(R.id.isOnline);
+            holder.popupButton = (ImageView) rowView.findViewById(R.id.popupButton);
             rowView.setTag(holder);
         } else {
             holder = (ViewHolder) rowView.getTag();
         }
 
-        Coment coment = this.comments.get(position);
+        final Coment coment = this.comments.get(position);
 
         //Аватар
         if (coment.user.avatar != null) {
@@ -115,6 +126,35 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
         //Онлайн
         if(coment.user.is_online) holder.isOnline.setVisibility(View.VISIBLE);
         else holder.isOnline.setVisibility(View.GONE);
+
+        //Удаление коммента
+        if (type.equals("board")){
+            if (stgs.getSettingInt("user_id") == coment.user_id) {
+                holder.popupButton.setVisibility(View.VISIBLE);
+                holder.popupButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final BoardContentActivity bсa = ((BoardContentActivity) getContext());
+                        bсa.popupComment(coment.id, "content", "board", contentId);
+                    }
+                });
+            } else {
+                holder.popupButton.setVisibility(View.GONE);
+            }
+        } else if (type.equals("photo")) {
+            if ((stgs.getSettingInt("user_id") == coment.user_id) || isMyPhoto) {
+                holder.popupButton.setVisibility(View.VISIBLE);
+                holder.popupButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        final PhotoCommentsActivity pсa = ((PhotoCommentsActivity) getContext());
+                        pсa.popupComment(coment.id, "photos", "photo", contentId);
+                    }
+                });
+            } else {
+                holder.popupButton.setVisibility(View.GONE);
+            }
+        }
 
         return rowView;
 

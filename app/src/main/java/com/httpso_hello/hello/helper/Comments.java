@@ -175,6 +175,57 @@ public class Comments extends Help{
         }
     }
 
+    public void deleteComments(
+            final int id,
+            final String target_controller,
+            final String content_type,
+            final int target_id,
+            final DeleteCommentCallback deleteCommentCallback){
+        Log.d("board", "Enter");
+        if (Constant.api_key !="") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.comments_delete_comments_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            Log.d("comments", response);
+                            if (response != null) {
+                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                                if (res.error==null){
+                                    deleteCommentCallback.onSuccess();
+                                    return;
+                                }
+                                deleteCommentCallback.onError(res.error.error_code, res.error.error_msg);
+                                return;
+                            }
+                            deleteCommentCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            deleteCommentCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("api_key", Constant.api_key);
+                    params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    params.put("id", Integer.toString(id));
+                    params.put("target_controller", target_controller);
+                    params.put("content_type", content_type);
+                    params.put("target_id", Integer.toString(target_id));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.deleteComments");
+        }
+    }
+
     public interface GetCommentsCallback{
         void onSuccess(Coment[] comments, Activity activity);
         void onError(int error_code, String error_message);
@@ -189,5 +240,11 @@ public class Comments extends Help{
 
     public interface GetCountsCommentsCallback{
         void onSuccess(int count_comments);
+    }
+
+    public interface DeleteCommentCallback{
+        void onSuccess();
+        void onError(int error_code, String error_message);
+        void onInternetError();
     }
 }
