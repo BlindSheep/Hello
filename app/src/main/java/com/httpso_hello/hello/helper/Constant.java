@@ -48,12 +48,15 @@ public class Constant {
 
     public static String content_delete_item_uri = start_api_uri + "content.delete_item";
 
+    public static String gifts_get_gifts_uri = start_api_uri + "gifts.get_gifts";
+
     public static String photos_add_photo = start_api_uri + "photos.add_photo";
     public static String photos_delete_photo = start_api_uri + "photos.delete_photo";
 
     public static String paid_services_raising_uri = start_api_uri + "paid_services.raising";
     public static String paid_services_paid_raising_uri = start_api_uri + "paid_services.paid_raising";
     public static String paid_services_add_balance_uri = start_api_uri + "paid_services.add_balance";
+    public static String paid_services_paid_gift_uri = start_api_uri + "paid_services.paid_gift";
 
     public static String guests_get_guests_uri = start_api_uri + "guests.get_guests";
 

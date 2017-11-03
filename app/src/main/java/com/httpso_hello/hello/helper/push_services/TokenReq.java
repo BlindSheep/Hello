@@ -9,6 +9,7 @@ import com.httpso_hello.hello.Structures.Error;
 public class TokenReq {
 
     public String token;
+    public String balance;
     public Error error;
 
     public TokenReq(){

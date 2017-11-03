@@ -31,6 +31,7 @@ import com.android.vending.billing.IInAppBillingService;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BalanceReq;
 import com.httpso_hello.hello.helper.*;
+import com.httpso_hello.hello.helper.push_services.TokenReq;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -277,11 +278,11 @@ public class BillingActivity extends SuperMainActivity {
                                                                          "add_balance",
                                                                          new Billing.GetRaisingTokenCallback() {
                                                                              @Override
-                                                                             public void onSuccess(String token) {
+                                                                             public void onSuccess(TokenReq token) {
                                                                                  progressBarBilling.setVisibility(View.GONE);
                                                                                  Bundle buyIntentBundle = null;
                                                                                  try {
-                                                                                     buyIntentBundle = mService.getBuyIntent(3, getPackageName(), product, "inapp", token);
+                                                                                     buyIntentBundle = mService.getBuyIntent(3, getPackageName(), product, "inapp", token.token);
                                                                                  } catch (RemoteException e) {
                                                                                      e.printStackTrace();
                                                                                  }

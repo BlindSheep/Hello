@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -32,12 +33,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.GiftItem;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.adapters.GiftsGetGiftsAdapter;
+import com.httpso_hello.hello.adapters.GiftsInProfileAdapter;
 import com.httpso_hello.hello.adapters.PhotosUserAdapter;
+import com.httpso_hello.hello.adapters.ProfilesListAdapter;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Friend;
+import com.httpso_hello.hello.helper.Gifts;
 import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.Photo;
@@ -135,19 +141,6 @@ public class ProfileActivity extends SuperMainActivity{
     private LinearLayout friendsLayout2;
     private LinearLayout friendsLayout3;
     private TextView giftsCount;
-    private ImageView gift1;
-    private ImageView gift2;
-    private ImageView gift3;
-    private ImageView gift4;
-    private ImageView gift5;
-    private ImageView gift6;
-    private ImageView gift7;
-    private ImageView gift8;
-    private ImageView gift9;
-    private LinearLayout giftsBlock;
-    private LinearLayout giftsLayout1;
-    private LinearLayout giftsLayout2;
-    private LinearLayout giftsLayout3;
     private LinearLayout friendsAndGiftsBlock;
     private PopupWindow popUpWindow;
     private View popupView;
@@ -165,6 +158,10 @@ public class ProfileActivity extends SuperMainActivity{
     private ImageView iconForAva;
     private Bundle extras;
     private CollapsingToolbarLayout collapsingToolbarLayout;
+    private DisplayMetrics displaymetrics;
+    private PopupWindow popUpWindowSendGift;
+    private View popupViewSendGift;
+    private GridView giftsGrid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -250,20 +247,6 @@ public class ProfileActivity extends SuperMainActivity{
         friendsLayout2 = (LinearLayout) findViewById(R.id.friendsLayout2);
         friendsLayout3 = (LinearLayout) findViewById(R.id.friendsLayout3);
         giftsCount = (TextView) findViewById(R.id.giftsCount);
-        gift1 = (ImageView) findViewById(R.id.gift1);
-        gift2 = (ImageView) findViewById(R.id.gift2);
-        gift3 = (ImageView) findViewById(R.id.gift3);
-        gift4 = (ImageView) findViewById(R.id.gift4);
-        gift5 = (ImageView) findViewById(R.id.gift5);
-        gift6 = (ImageView) findViewById(R.id.gift6);
-        gift7 = (ImageView) findViewById(R.id.gift7);
-        gift8 = (ImageView) findViewById(R.id.gift8);
-        gift9 = (ImageView) findViewById(R.id.gift9);
-        giftsBlock = (LinearLayout) findViewById(R.id.giftsBlock);
-        giftsLayout1 = (LinearLayout)
-                findViewById(R.id.giftsLayout1);
-        giftsLayout2 = (LinearLayout) findViewById(R.id.giftsLayout2);
-        giftsLayout3 = (LinearLayout) findViewById(R.id.giftsLayout3);
         friendsAndGiftsBlock = (LinearLayout) findViewById(R.id.friendsAndGiftsBlock);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_avatar, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -274,13 +257,19 @@ public class ProfileActivity extends SuperMainActivity{
         popupView4 = getLayoutInflater().inflate(R.layout.popup_for_wait, null);
         popUpWindow4 = new PopupWindow(popupView4, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ((TextView) popupView4.findViewById(R.id.textForWaiting)).setText("Загружаем фото...");
-        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+        displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
         popUpWindow4.setWidth(displaymetrics.widthPixels);
         popUpWindow4.setHeight(displaymetrics.heightPixels);
         popUpWindow4.setAnimationStyle(Animation_Dialog);
         iconForAva = (ImageView) findViewById(R.id.iconForAva);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.toolbar_layout);
         collapsingToolbarLayout.setScrimAnimationDuration(1000);
+        popupViewSendGift = getLayoutInflater().inflate(R.layout.popup_for_send_gift, null);
+        popUpWindowSendGift = new PopupWindow(popupViewSendGift, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popUpWindowSendGift.setWidth(displaymetrics.widthPixels);
+        popUpWindowSendGift.setHeight(displaymetrics.heightPixels);
+        popUpWindowSendGift.setAnimationStyle(Animation_Dialog);
+        giftsGrid = ((GridView) findViewById(R.id.giftsGrid));
     }
 
     private void setContent() {
@@ -458,8 +447,8 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 }
 
-//скрываем блок с друзьями и подарками если их нет
-                if ((user.friends_count != 0) || (user.gifts.length != 0)) friendsAndGiftsBlock.setVisibility(View.VISIBLE);
+//скрываем блок с друзьями
+                if (user.friends_count != 0) friendsAndGiftsBlock.setVisibility(View.VISIBLE);
                 else friendsAndGiftsBlock.setVisibility(View.GONE);
 
 //Кол-во друзей
@@ -567,74 +556,79 @@ public class ProfileActivity extends SuperMainActivity{
                 } else {
                     giftsCount.setText("Нет подарков");
                 }
-                if (user.gifts.length > 0) {
-                    giftsBlock.setVisibility(View.VISIBLE);
-                    gift1.setVisibility(View.VISIBLE);
-                    giftsLayout1.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[0])
-                            .error(R.mipmap.avatar)
-                            .into(gift1);
-                } else giftsBlock.setVisibility(View.GONE);
-                if (user.gifts.length > 1) {
-                    gift2.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[1])
-                            .error(R.mipmap.avatar)
-                            .into(gift2);
-                }
-                if (user.gifts.length > 2) {
-                    gift3.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[2])
-                            .error(R.mipmap.avatar)
-                            .into(gift3);
-                }
-                if (user.gifts.length > 3) {
-                    gift4.setVisibility(View.VISIBLE);
-                    giftsLayout2.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[3])
-                            .error(R.mipmap.avatar)
-                            .into(gift4);
-                }
-                if (user.gifts.length > 4) {
-                    gift5.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[4])
-                            .error(R.mipmap.avatar)
-                            .into(gift5);
-                }
-                if (user.gifts.length > 5) {
-                    gift6.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[5])
-                            .error(R.mipmap.avatar)
-                            .into(gift6);
-                }
-                if
-                        (user.gifts.length > 6) {
-                    gift7.setVisibility(View.VISIBLE);
-                    giftsLayout3.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[6])
-                            .error(R.mipmap.avatar)
-                            .into(gift7);
-                }
-                if (user.gifts.length > 7) {
-                    gift8.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[7])
-                            .error(R.mipmap.avatar)
-                            .into(gift8);
-                }
-                if (user.gifts.length > 8) {
-                    gift9.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.gifts[8])
-                            .error(R.mipmap.avatar)
-                            .into(gift9);
-                }
+
+                ArrayList<String> defoltNew = new ArrayList<>();
+                Collections.addAll(defoltNew, user.gifts);
+                GiftsInProfileAdapter giftsInProfileAdapter = new GiftsInProfileAdapter(ProfileActivity.this, defoltNew);
+                float llColumnWidth = (defoltNew.size() + 1) * 60 * displaymetrics.density;
+                float llHorizontalSpacing = (defoltNew.size()) * 4 * displaymetrics.density;
+                float paddingLeftAndRight = 20 * displaymetrics.density;
+                ((LinearLayout) findViewById(R.id.giftsLL)).getLayoutParams().width = (int) (llColumnWidth + llHorizontalSpacing + paddingLeftAndRight);
+                ((LinearLayout) findViewById(R.id.giftsLL)).requestLayout();
+                giftsGrid.setNumColumns(defoltNew.size() + 1);
+                giftsGrid.setAdapter(giftsInProfileAdapter);
+                giftsGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (position != 0) {
+                            Gifts.getInstance(getApplicationContext())
+                                    .getUserGifts(new Gifts.GetUserGiftsCallback() {
+                                        @Override
+                                        public void onSuccess() {
+
+                                        }
+
+                                        @Override
+                                        public void onError(int error_code, String error_msg) {
+
+                                        }
+
+                                        @Override
+                                        public void onInternetError() {
+
+                                        }
+                                    });
+                        } else {
+                            popUpWindowSendGift.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
+                            Gifts.getInstance(getApplicationContext())
+                                    .getGifts(new Gifts.GetGiftsCallback() {
+                                        @Override
+                                        public void onSuccess(GiftItem[] gi) {
+                                            ((LinearLayout) popupViewSendGift).findViewById(R.id.waiting).setVisibility(View.GONE);
+                                            ListView lvPopup = (ListView) popupViewSendGift.findViewById(R.id.list_gifts_in_popup);
+                                            final ArrayList<GiftItem> list = new ArrayList<>();
+                                            Collections.addAll(list, gi);
+                                            GiftsGetGiftsAdapter ggga = new GiftsGetGiftsAdapter(ProfileActivity.this, list);
+                                            lvPopup.setAdapter(ggga);
+                                            lvPopup.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                @Override
+                                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                    popUpWindowSendGift.dismiss();
+                                                    Intent intent = new Intent(ProfileActivity.this, SendGiftActivity.class);
+                                                    intent.putExtra("id", list.get(position).id);
+                                                    intent.putExtra("photo", list.get(position).photo.small);
+                                                    intent.putExtra("price", list.get(position).price);
+                                                    intent.putExtra("user_id", user.id);
+                                                    startActivity(intent);
+                                                }
+                                            });
+                                        }
+
+                                        @Override
+                                        public void onError(int error_code, String error_msg) {
+                                            popUpWindowSendGift.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                        }
+
+                                        @Override
+                                        public void onInternetError() {
+                                            popUpWindowSendGift.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
+                        }
+                    }
+                });
 
 //Скрыть блок "Ищу", если нет никакой инфы
                 if ((user.looking_for == 0) && (user.looking_for_age == 0) && (user.age_do == 0) && (user.reg_cel == null)) lookinForBar.setVisibility(View.GONE);
@@ -1351,6 +1345,7 @@ openAvatarUpdateWindow(sendPhotoClick);
         if (popUpWindow.isShowing()) popUpWindow.dismiss();
         else if (popUpWindow2.isShowing()) popUpWindow2.dismiss();
         else if (popUpWindow3.isShowing()) popUpWindow3.dismiss();
+        else if (popUpWindowSendGift.isShowing()) popUpWindowSendGift.dismiss();
         else super.onBackPressed();
     }
 

@@ -147,7 +147,7 @@ public class Billing extends Help {
                             if (response != null) {
                                 TokenReq tokenReq = gson.fromJson(response, TokenReq.class);
                                 if (tokenReq.error == null) {
-                                    getRaisingTokenCallback.onSuccess(tokenReq.token);
+                                    getRaisingTokenCallback.onSuccess(tokenReq);
                                     return;
                                 }
                                 getRaisingTokenCallback.onError(tokenReq.error.error_code, tokenReq.error.error_msg);
@@ -289,7 +289,7 @@ public class Billing extends Help {
         void onInternetError();
     }
     public interface GetRaisingTokenCallback{
-        void onSuccess(String token);
+        void onSuccess(TokenReq token);
         void onError(int error_code, String error_msg);
         void onInternetError();
     }

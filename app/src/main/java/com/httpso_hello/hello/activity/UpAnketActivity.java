@@ -18,6 +18,7 @@ import com.httpso_hello.hello.Structures.BalanceReq;
 import com.httpso_hello.hello.helper.Billing;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Profile;
+import com.httpso_hello.hello.helper.push_services.TokenReq;
 import com.squareup.picasso.Picasso;
 
 public class UpAnketActivity extends SuperMainActivity{
@@ -47,8 +48,8 @@ public class UpAnketActivity extends SuperMainActivity{
 
         billing.getInstance(getApplicationContext()).getRaisingToken(null, new Billing.GetRaisingTokenCallback() {
             @Override
-            public void onSuccess(String token) {
-                raisingToken = token;
+            public void onSuccess(TokenReq token) {
+                raisingToken = token.token;
             }
 
             @Override
@@ -112,8 +113,8 @@ public class UpAnketActivity extends SuperMainActivity{
                                             Log.d("paid_raising", "error");
                                             billing.getInstance(getApplicationContext()).getRaisingToken(null, new Billing.GetRaisingTokenCallback() {
                                                 @Override
-                                                public void onSuccess(String token) {
-                                                    billing.getInstance(getApplicationContext()).paidRaising(token, new Billing.PaidRaisingCallback() {
+                                                public void onSuccess(TokenReq token) {
+                                                    billing.getInstance(getApplicationContext()).paidRaising(token.token, new Billing.PaidRaisingCallback() {
                                                         @Override
                                                         public void onSuccess(Boolean response) {
                                                             Toast.makeText(getApplicationContext(), "Анкета успешно поднята", Toast.LENGTH_LONG).show();
