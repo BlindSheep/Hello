@@ -61,28 +61,28 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
         }
 
         NoticeItem noticeItem = this.noticeItem.get(position);
+        if(noticeItem.sender_user!=null)
+            Picasso
+                    .with(getContext())
+                    .load(Constant.upload + noticeItem.sender_user.avatar.micro)
+                    .transform(new CircularTransformation(0))
+                    .resize(100, 100)
+                    .into(holder.noticeSenderAvatar, new Callback() {
+                        @Override
+                        public void onSuccess() {
 
-        Picasso
-                .with(getContext())
-                .load(Constant.upload + noticeItem.sender_user.avatar.micro)
-                .transform(new CircularTransformation(0))
-                .resize(100, 100)
-                .into(holder.noticeSenderAvatar, new Callback() {
-                    @Override
-                    public void onSuccess() {
+                        }
 
-                    }
-
-                    @Override
-                    public void onError() {
-                        Picasso
-                                .with(getContext())
-                                .load(R.mipmap.avatar)
-                                .transform(new CircularTransformation(0))
-                                .resize(100, 100)
-                                .into(holder.noticeSenderAvatar);
-                    }
-                });
+                        @Override
+                        public void onError() {
+                            Picasso
+                                    .with(getContext())
+                                    .load(R.mipmap.avatar)
+                                    .transform(new CircularTransformation(0))
+                                    .resize(100, 100)
+                                    .into(holder.noticeSenderAvatar);
+                        }
+                    });
         holder.noticeDate.setText(ConverterDate.convertDateForGuest(noticeItem.date_pub));
         switch(noticeItem.type_notice){
             case 1: // Уведомление о лайке
@@ -161,6 +161,18 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                         }
 
                         break;
+                }
+                break;
+            case 3:
+                uploadNoticePreview(
+                        noticeItem.target_preview,
+                        holder
+                );
+                if(noticeItem.sender_user==null){
+                    // Анонимный подарок
+                    holder.noticeText.setText("Вам отправили подарок");
+                } else {
+                    holder.noticeText.setText(noticeItem.sender_user.nickname +"отправил Вам подарок");
                 }
                 break;
         }
