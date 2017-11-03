@@ -1,6 +1,7 @@
 package com.httpso_hello.hello.adapters;
 
 import android.app.Activity;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,14 +60,18 @@ public class GiftsInProfileAdapter extends ArrayAdapter<String> {
             holder = (GiftsInProfileAdapter.ViewHolder) rowView.getTag();
         }
 
+        DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
+
         if(position == 0) {
             Picasso.with(getContext())
                     .load(R.drawable.ic_action_send_gift_2)
+                    .resize((int) (displaymetrics.density * 30), (int) (displaymetrics.density * 30))
                     .into(holder.imageView);
         } else {
             final String gift = this.gifts.get(position - 1);
             Picasso.with(getContext())
                     .load(Constant.upload + gift)
+                    .resize((int) (displaymetrics.density * 60), (int) (displaymetrics.density * 60))
                     .into(holder.imageView);
         }
         return rowView;

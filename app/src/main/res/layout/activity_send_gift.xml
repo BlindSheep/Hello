@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,24 +8,62 @@
     android:background="@color/zalivon"
     tools:context="com.httpso_hello.hello.activity.SendGiftActivity">
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
+        android:background="@color/zalivon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <LinearLayout
         android:elevation="1.5dp"
-        android:layout_margin="6dp"
-        android:background="@drawable/board"
+        android:background="@color/zalivon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/main_blue_color_hello">
+
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_centerVertical="true"
+                android:tint="@color/white"
+                app:srcCompat="@mipmap/ic_action_back"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textSize="20sp"
+                android:textColor="@color/white"
+                android:text="Отправить подарок"/>
+
+            <ImageView
+                android:id="@+id/accept"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:tint="@color/white"
+                app:srcCompat="@mipmap/ic_action_accept"/>
+
+        </RelativeLayout>
 
         <LinearLayout
+            android:background="@drawable/board"
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/photo"
-                android:layout_margin="10dp"
+                android:layout_margin="20dp"
                 android:layout_width="80dp"
                 android:layout_height="80dp" />
 
@@ -48,35 +87,57 @@
                     android:layout_height="wrap_content"
                     android:text="Ваш баланс"/>
 
+                <TextView
+                    android:id="@+id/dontHavePoints"
+                    android:visibility="gone"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_red_color_hello"
+                    android:text="Нехватает баллов"/>
+
             </LinearLayout>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:background="@drawable/board"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
         <EditText
             android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_margin="20dp"
             android:hint="Комментарий к подарку"/>
 
         <CheckBox
             android:id="@+id/isAnon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:layout_marginLeft="10dp"
+            android:paddingLeft="20dp"
+            android:layout_marginLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_marginBottom="20dp"
             android:text="Анонимно (ваше имя и комментарий увидит только получатель подарка)"/>
 
         <TextView
             android:id="@+id/send"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:padding="20dp"
             android:textSize="18sp"
             android:textColor="@color/main_red_color_hello"
-            android:text="ОТПРАВИТЬ"/>
+            android:text="ПОПОЛНИТЬ БАЛАНС"/>
+
+        </LinearLayout>
 
     </LinearLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

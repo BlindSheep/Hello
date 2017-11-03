@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/imageGift"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_margin="10dp"
         app:srcCompat="@mipmap/avatar" />
 

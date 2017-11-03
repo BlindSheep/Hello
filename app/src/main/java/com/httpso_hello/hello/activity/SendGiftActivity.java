@@ -1,5 +1,7 @@
 package com.httpso_hello.hello.activity;
 
+import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -29,6 +31,10 @@ public class SendGiftActivity extends AppCompatActivity {
     private TextView send;
     private CheckBox isAnon;
     private EditText comment;
+    private TextView dontHavePoints;
+    private ImageView back;
+    private ImageView accept;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +52,15 @@ public class SendGiftActivity extends AppCompatActivity {
         send = (TextView) findViewById(R.id.send);
         isAnon = (CheckBox) findViewById(R.id.isAnon);
         comment = (EditText) findViewById(R.id.comment);
-
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_action_back);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        dontHavePoints = (TextView) findViewById(R.id.dontHavePoints);
+        back = (ImageView) findViewById(R.id.back);
+        accept = (ImageView) findViewById(R.id.accept);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.main_blue_color_hello,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
         Picasso.with(getApplicationContext())
                 .load(Constant.upload + photo)
@@ -58,36 +68,80 @@ public class SendGiftActivity extends AppCompatActivity {
 
         priceGift.setText("Цена: " + Integer.toString(price) + " баллов");
 
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        setAll();
+
+        // Свайп для обновления
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                setAll();
+            }
+        });
+    }
+
+    private void setAll() {
+        swipeRefreshLayout.setRefreshing(true);
         Billing.getInstance(getApplicationContext())
                 .getRaisingToken("paid_gift", new Billing.GetRaisingTokenCallback() {
                     @Override
                     public void onSuccess(final TokenReq token) {
-                        balanceUser.setText("На счету " + token.balance + " баллов");
-                        send.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Gifts.getInstance(getApplicationContext())
-                                        .sendGifts(id, userId, comment.getText().toString(), isAnon.isChecked(), token.token, new Gifts.SendGiftsCallback() {
-                                            @Override
-                                            public void onSuccess() {
-                                                Toast.makeText(getApplicationContext(), "Подарок успешно отправлен", Toast.LENGTH_LONG).show();
-                                                finish();
-                                            }
+                        balanceUser.setText("На счету: " + token.balance + " баллов");
+                        swipeRefreshLayout.setRefreshing(false);
+                        //Если хватает денег
+                        if (Integer.parseInt(token.balance) >= price) {
+                            send.setVisibility(View.GONE);
+                            dontHavePoints.setVisibility(View.GONE);
+                            accept.setVisibility(View.VISIBLE);
+                            accept.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    swipeRefreshLayout.setRefreshing(true);
+                                    Gifts.getInstance(getApplicationContext())
+                                            .sendGifts(id, userId, comment.getText().toString(), isAnon.isChecked(), token.token, new Gifts.SendGiftsCallback() {
+                                                @Override
+                                                public void onSuccess() {
+                                                    Toast.makeText(getApplicationContext(), "Подарок успешно отправлен", Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                    swipeRefreshLayout.setRefreshing(false);
+                                                }
 
-                                            @Override
-                                            public void onError(int error_code, String error_msg) {
-                                                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                                                finish();
-                                            }
+                                                @Override
+                                                public void onError(int error_code, String error_msg) {
+                                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                    swipeRefreshLayout.setRefreshing(false);
+                                                }
 
-                                            @Override
-                                            public void onInternetError() {
-                                                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                                                finish();
-                                            }
-                                        });
-                            }
-                        });
+                                                @Override
+                                                public void onInternetError() {
+                                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                                    finish();
+                                                    swipeRefreshLayout.setRefreshing(false);
+                                                }
+                                            });
+                                }
+                            });
+                        } else {
+                            //Если не хватает денег
+                            accept.setVisibility(View.GONE);
+                            send.setVisibility(View.VISIBLE);
+                            dontHavePoints.setVisibility(View.VISIBLE);
+                            send.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(SendGiftActivity.this, BillingActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+
                     }
 
                     @Override
@@ -103,13 +157,8 @@ public class SendGiftActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:return super.onOptionsItemSelected(item);
-        }
+    public void onResume () {
+        setAll();
+        super.onResume();
     }
 }
