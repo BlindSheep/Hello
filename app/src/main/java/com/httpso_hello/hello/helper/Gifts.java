@@ -38,6 +38,7 @@ public class Gifts extends Help {
 
     //Получения списка подарков
     public void getGifts(
+            final int user_id,
             final Gifts.GetGiftsCallback getGiftsCallback
     ) {
         if (Constant.api_key != "") {
@@ -72,56 +73,13 @@ public class Gifts extends Help {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    if (user_id != 0) params.put("user_id", Integer.toString(user_id));
                     return params;
                 }
 
                 ;
             };
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "gifts.get_gifts");
-        }
-    }
-
-    public void getUserGifts(
-            final Gifts.GetUserGiftsCallback getUserGiftsCallback
-    ) {
-        if (Constant.api_key != "") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.content_delete_item_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response) {
-                            Log.d("gifts", response);
-                            if (response != null) {
-                                com.httpso_hello.hello.Structures.Gifts gifts = gson.fromJson(response, com.httpso_hello.hello.Structures.Gifts.class);
-                                if (gifts.error == null) {
-                                    getUserGiftsCallback.onSuccess();
-                                    return;
-                                }
-                                getUserGiftsCallback.onError(gifts.error.error_code, gifts.error.error_msg);
-                                return;
-                            }
-                            getUserGiftsCallback.onInternetError();
-                            return;
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getUserGiftsCallback.onInternetError();
-                        }
-                    }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    return params;
-                }
-
-                ;
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "gifts.get_user_gifts");
         }
     }
 

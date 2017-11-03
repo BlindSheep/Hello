@@ -417,7 +417,7 @@ public class ChatActivity extends SuperMainActivity{
                     });
                 }});
             }
-        }, 5000, 5000);
+        }, 3000, 3000);
 //        if(!isStartedSendedMessagesTimer) {
         isStartedSendedMessagesTimer = true;
         sendedMessagesTimer = new Timer();
@@ -461,7 +461,7 @@ public class ChatActivity extends SuperMainActivity{
                     }
                 });
             }
-        }, 5000, 5000);
+        }, 3000, 3000);
 //        }
 
         super.onResume();

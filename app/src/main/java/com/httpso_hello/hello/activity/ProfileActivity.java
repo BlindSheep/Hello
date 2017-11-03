@@ -571,27 +571,14 @@ public class ProfileActivity extends SuperMainActivity{
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (position != 0) {
-                            Gifts.getInstance(getApplicationContext())
-                                    .getUserGifts(new Gifts.GetUserGiftsCallback() {
-                                        @Override
-                                        public void onSuccess() {
-
-                                        }
-
-                                        @Override
-                                        public void onError(int error_code, String error_msg) {
-
-                                        }
-
-                                        @Override
-                                        public void onInternetError() {
-
-                                        }
-                                    });
+                            Intent intent = new Intent(ProfileActivity.this, GiftsUserActivity.class);
+                            intent.putExtra("user_id", user.id);
+                            intent.putExtra("isUserProfile", isUserProfile);
+                            startActivity(intent);
                         } else {
                             popUpWindowSendGift.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
                             Gifts.getInstance(getApplicationContext())
-                                    .getGifts(new Gifts.GetGiftsCallback() {
+                                    .getGifts(0, new Gifts.GetGiftsCallback() {
                                         @Override
                                         public void onSuccess(GiftItem[] gi) {
                                             ((LinearLayout) popupViewSendGift).findViewById(R.id.waiting).setVisibility(View.GONE);

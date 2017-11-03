@@ -4,36 +4,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Vote;
 import com.httpso_hello.hello.adapters.LikesAdapter;
-import com.httpso_hello.hello.helper.CircularTransformation;
-import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
-import com.httpso_hello.hello.helper.Friend;
 import com.httpso_hello.hello.helper.Like;
-import com.httpso_hello.hello.helper.Simpation;
-import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;

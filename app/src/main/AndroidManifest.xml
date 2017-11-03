@@ -152,9 +152,12 @@
             android:label="@string/title_activity_setting_of_profile"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:theme="@style/AppTheme.NoActionBar"
             android:name=".activity.SendGiftActivity"
-            android:label="Отправить подарок"/>
+            android:label="Отправить подарок"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.GiftsUserActivity"
+            android:label="Подарки"/>
     </application>
 
 </manifest>
