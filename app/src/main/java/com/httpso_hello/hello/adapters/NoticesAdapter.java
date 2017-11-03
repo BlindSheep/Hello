@@ -180,6 +180,7 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                         break;
 
                 }
+                holder.noticeText.setText(noticeItem.sender_user.nickname + appricated + "подарок");
                 break;
         }
 
@@ -193,8 +194,8 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
         if(image!=null) {
             Picasso
                     .with(getContext())
-                    .load(Constant.upload + image.micro)
-                    .resize(100, 100)
+                    .load(Constant.upload + image.small)
+                    .resize(Help.getPxFromDp(100, getContext()), Help.getPxFromDp(100, getContext()))
                     .into(holder.targetNoticePreview, new Callback() {
                         @Override
                         public void onSuccess() {

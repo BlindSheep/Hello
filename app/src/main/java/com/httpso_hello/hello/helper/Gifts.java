@@ -89,6 +89,7 @@ public class Gifts extends Help {
             final String text,
             final boolean isPrivate,
             final String paid_token,
+            final int price,
             final Gifts.SendGiftsCallback sendGiftsCallback
     ) {
         if (Constant.api_key != "") {
@@ -128,6 +129,7 @@ public class Gifts extends Help {
                     params.put("text", text);
                     params.put("private", Boolean.toString(isPrivate));
                     params.put("paid_token", paid_token);
+                    params.put("price", Integer.toString(price));
                     return params;
                 }
 

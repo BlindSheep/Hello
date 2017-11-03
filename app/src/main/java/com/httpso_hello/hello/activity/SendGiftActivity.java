@@ -104,7 +104,7 @@ public class SendGiftActivity extends AppCompatActivity {
                                 public void onClick(View v) {
                                     swipeRefreshLayout.setRefreshing(true);
                                     Gifts.getInstance(getApplicationContext())
-                                            .sendGifts(id, userId, comment.getText().toString(), isAnon.isChecked(), token.token, new Gifts.SendGiftsCallback() {
+                                            .sendGifts(id, userId, comment.getText().toString(), isAnon.isChecked(), token.token, price, new Gifts.SendGiftsCallback() {
                                                 @Override
                                                 public void onSuccess() {
                                                     Toast.makeText(getApplicationContext(), "Подарок успешно отправлен", Toast.LENGTH_LONG).show();
