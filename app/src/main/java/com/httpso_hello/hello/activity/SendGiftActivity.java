@@ -75,7 +75,7 @@ public class SendGiftActivity extends AppCompatActivity {
             }
         });
 
-        setAll();
+//        setAll();
 
         // Свайп для обновления
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
