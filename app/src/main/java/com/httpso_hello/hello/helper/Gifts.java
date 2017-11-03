@@ -87,7 +87,7 @@ public class Gifts extends Help {
             final int gift_id,
             final int to_id,
             final String text,
-            final boolean isPrivate,
+            final int isPrivate,
             final String paid_token,
             final int price,
             final Gifts.SendGiftsCallback sendGiftsCallback
@@ -127,7 +127,7 @@ public class Gifts extends Help {
                     params.put("gift_id", Integer.toString(gift_id));
                     params.put("to_id", Integer.toString(to_id));
                     params.put("text", text);
-                    params.put("private", Boolean.toString(isPrivate));
+                    params.put("private", Integer.toString(isPrivate));
                     params.put("paid_token", paid_token);
                     params.put("price", Integer.toString(price));
                     return params;
