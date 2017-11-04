@@ -182,7 +182,7 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                         break;
 
                 }
-                holder.noticeText.setText(noticeItem.sender_user.nickname + appricated + "подарок");
+                holder.noticeText.setText(noticeItem.sender_user.nickname + appricated + "Вам подарок");
                 break;
         }
 
