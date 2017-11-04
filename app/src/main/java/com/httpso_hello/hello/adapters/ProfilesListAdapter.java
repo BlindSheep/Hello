@@ -169,7 +169,7 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
                     .load(Uri.parse(Constant.upload + userSecond.avatar.normal))
                     .centerCrop()
                     .resize(width, width)
-                    .error(getContext().getResources().getDrawable(R.mipmap.avatar))
+                    .error(R.mipmap.avatar)
                     .into(holder.search_profile_avatar_second, new Callback() {
                         @Override
                         public void onSuccess() {
