@@ -13,9 +13,12 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.FileProvider;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -69,7 +72,6 @@ public class ProfileActivity extends SuperMainActivity{
     private String profile_avatar;
     private PhotosUserAdapter plAdapter;
     private LinearLayout friendsCountButton;
-    private ProgressBar progressBarProfile;
     private ProgressBar progressBarFlirtik;
     private boolean isUserProfile;
     private FloatingActionButton fab;
@@ -77,7 +79,7 @@ public class ProfileActivity extends SuperMainActivity{
     private TextView nameToolbar;
     private TextView onlineToolbar;
     private LinearLayout profile_content;
-    private AppBarLayout profile_content2;
+    private CoordinatorLayout profile_content2;
     private TextView phoneNumProfile;
     private LinearLayout phoneNumProfileConteiner;
     private TextView celZnakomstvaProfile0;
@@ -162,6 +164,7 @@ public class ProfileActivity extends SuperMainActivity{
     private PopupWindow popUpWindowSendGift;
     private View popupViewSendGift;
     private GridView giftsGrid;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,13 +177,12 @@ public class ProfileActivity extends SuperMainActivity{
         profile_nickname = extras.getString("profile_nickname");
         profile_avatar = extras.getString("avatar");
         avatar = (ImageView) findViewById(R.id.avatar);
-        progressBarProfile = (ProgressBar) findViewById(R.id.progressBarProfile);
         progressBarFlirtik = (ProgressBar) findViewById(R.id.progressBarFlirtik);
         newPhotoButton = ((LinearLayout) findViewById(R.id.new_photo_button));
         nameToolbar = (TextView) findViewById(R.id.nameToolbar);
         onlineToolbar = (TextView) findViewById(R.id.onlineToolbar);
         profile_content = (LinearLayout) findViewById(R.id.profile_content);
-        profile_content2 = (AppBarLayout) findViewById(R.id.profile_content2);
+        profile_content2 = (CoordinatorLayout) findViewById(R.id.coord);
         phoneNumProfile = (TextView) findViewById(R.id.phoneNumProfile);
         phoneNumProfileConteiner = (LinearLayout) findViewById(R.id.phoneNumProfileConteiner);
         celZnakomstvaProfile0 = (TextView) findViewById(R.id.celZnakomstvaProfile0);
@@ -270,6 +272,14 @@ public class ProfileActivity extends SuperMainActivity{
         popUpWindowSendGift.setHeight(displaymetrics.heightPixels);
         popUpWindowSendGift.setAnimationStyle(Animation_Dialog);
         giftsGrid = ((GridView) findViewById(R.id.giftsGrid));
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.main_blue_color_hello,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light
+        );
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     private void setContent() {
@@ -712,11 +722,6 @@ public class ProfileActivity extends SuperMainActivity{
                     intrestingProfileContener.setVisibility(View.VISIBLE);
                 } else intrestingProfileContener.setVisibility(View.GONE);
 
-//Скрытия индикатора загрузки и открытие профиля
-                progressBarProfile.setVisibility(View.INVISIBLE);
-                profile_content.setVisibility(View.VISIBLE);
-                profile_content2.setVisibility(View.VISIBLE);
-
 //Скрыть кнопок "Написать сообщение" и "Добавить в друзья" если профиль юзера
                 if (isUserProfile) msgAndFrndBtn.setVisibility(View.GONE);
                 else msgAndFrndBtn.setVisibility(View.VISIBLE);
@@ -1046,6 +1051,12 @@ public class ProfileActivity extends SuperMainActivity{
                     toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                     toFriends.setHint("Заявка отправлена");
                 }
+
+                //Скрытия индикатора загрузки и открытие профиля
+                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setEnabled(false);
+                profile_content.setVisibility(View.VISIBLE);
+                profile_content2.setVisibility(View.VISIBLE);
             }
 
             @Override

@@ -2,6 +2,8 @@
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coord"
+    android:visibility="gone"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.httpso_hello.hello.activity.ProfileActivity">
@@ -9,7 +11,6 @@
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/profile_content2"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.design.widget.CollapsingToolbarLayout
@@ -103,12 +104,5 @@
         app:backgroundTint="@color/main_blue_color_hello"
         app:layout_anchor="@+id/include"
         app:layout_anchorGravity="bottom|right"/>
-
-    <ProgressBar
-        android:id="@+id/progressBarProfile"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
 
 </android.support.design.widget.CoordinatorLayout>
