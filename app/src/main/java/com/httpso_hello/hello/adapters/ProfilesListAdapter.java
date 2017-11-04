@@ -157,12 +157,6 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
                 Intent intent = new Intent(getContext(), ProfileActivity.class);
                 intent.putExtra("profile_id", userFirst.id);
                 intent.putExtra("profile_nickname", " " + userFirst.nickname);
-                // TODO: 01.08.2017 Добавить проверку размеров
-                if (userFirst.avatar == null) {
-                    intent.putExtra("avatar", Constant.default_avatar);
-                } else {
-                    intent.putExtra("avatar", userFirst.avatar.micro);
-                }
                 SA.startActivity(intent);
             }
         });
@@ -215,12 +209,6 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
                 Intent intent = new Intent(getContext(), ProfileActivity.class);
                 intent.putExtra("profile_id", userSecond.id);
                 intent.putExtra("profile_nickname", " " + userSecond.nickname);
-                // TODO: 01.08.2017 Добавить проверку размеров
-                if (userFirst.avatar == null) {
-                    intent.putExtra("avatar", Constant.default_avatar);
-                } else {
-                    intent.putExtra("avatar", userSecond.avatar.micro);
-                }
                 SA.startActivity(intent);
             }
         });
