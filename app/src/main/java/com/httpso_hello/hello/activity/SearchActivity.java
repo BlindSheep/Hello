@@ -3,8 +3,10 @@ package com.httpso_hello.hello.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -18,6 +20,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -39,7 +42,7 @@ import java.util.Collections;
 public class SearchActivity extends SuperMainActivity{
 
     private ProfilesListAdapter plAdapter;
-    private GridView profilesList;
+    private ListView profilesList;
     private Spinner birth_date_from;
     private Spinner birth_date_to;
     private RadioGroup gender;
@@ -53,13 +56,12 @@ public class SearchActivity extends SuperMainActivity{
     private Profile profile;
     private LinearLayout llBottomSheet;
     private BottomSheetBehavior bottomSheetBehavior;
-    private Integer filterState;
     private EditText inputID;
-    private ProgressBar progressBarSearch;
-    private ProgressBar progressBarSearchRefresh;
     private static int pageNumber;
-    private boolean launching = false;
     private boolean thatsAll = false;
+    private View header;
+    private View footerLoading;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,12 +72,19 @@ public class SearchActivity extends SuperMainActivity{
 
         context = this.getApplicationContext();
         this.profile = new Profile(this);
-        progressBarSearch = (ProgressBar) findViewById(R.id.progressBarSearch);
-        progressBarSearchRefresh = (ProgressBar) findViewById(R.id.progressBarSearchRefresh);
+        header = getLayoutInflater().inflate(R.layout.footer6dp, null);
+        footerLoading = getLayoutInflater().inflate(R.layout.footer_loading, null);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.main_blue_color_hello,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light
+        );
 
         ImageView search_profile_avatar = (ImageView) findViewById(R.id.search_profile_avatar);
 
-        this.profilesList = (GridView) findViewById(R.id.listUsers);
+        this.profilesList = (ListView) findViewById(R.id.listUsers);
 
         //Фильтр
         birth_date_from = (Spinner) findViewById(R.id.birth_date_from);
@@ -88,7 +97,14 @@ public class SearchActivity extends SuperMainActivity{
         inputID = (EditText) findViewById(R.id.enterID);
         pageNumber = 1;
 
-        progressBarSearch.setVisibility(View.VISIBLE);
+        // Свайп для обновления
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pageNumber = 1;
+                setProfiles();
+            }
+        });
 
         //Если юзер не разу не фильтровал, произвести валидацию
         if (stgs.getSettingInt("ageFrom") == 0) {
@@ -101,6 +117,8 @@ public class SearchActivity extends SuperMainActivity{
             stgs.setSettingInt("gender", 0);
         }
 
+        profilesList.addHeaderView(header);
+        profilesList.addFooterView(footerLoading);
 
         //Подстановка значения в РадиоБаттон пола
         if (stgs.getSettingInt("gender") == 0) {
@@ -183,11 +201,10 @@ public class SearchActivity extends SuperMainActivity{
                 if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
                     if (SearchActivity.this.filterIsChanged) {
 
-                        progressBarSearch.setVisibility(View.VISIBLE);
                         pageNumber = 1;
                         thatsAll = false;
 
-                        SearchActivity.this.refreshProfiles();
+                        setProfiles();
                         filterIsChanged = false;
                     }
                 }
@@ -221,12 +238,10 @@ public class SearchActivity extends SuperMainActivity{
                 if (inputID.getText().toString().equals("")) searchID = 0;
                 else searchID = Integer.parseInt(searchIDSrt);
                 if (searchID == 0){
-
-                    progressBarSearch.setVisibility(View.VISIBLE);
                     pageNumber = 1;
                     thatsAll = false;
 
-                    refreshProfiles();
+                    setProfiles();
                     SearchActivity.this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 } else {
                     Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
@@ -248,84 +263,45 @@ public class SearchActivity extends SuperMainActivity{
     }
 
     private void setProfiles() {
+        if (profilesList.getFooterViewsCount() == 0) profilesList.addFooterView(footerLoading);
+        thatsAll = false;
+        swipeRefreshLayout.setRefreshing(true);
         this.profile.searchProfiles(this.ageFrom, this.ageTo + 1, this.gender_str, this.pageNumber,
                 new Profile.SearchProfilesCallback() {
                     @Override
                     public void onSuccess(User[] users) {
-
                         ArrayList<User> defolt = new ArrayList<>();
                         Collections.addAll(defolt, users);
                         plAdapter = new ProfilesListAdapter(SearchActivity.this, defolt);
-
                         profilesList.setAdapter(plAdapter);
+                        pageNumber = pageNumber + 1;
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
 
-                        profilesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                // Обработчик клика по юзеру
-                                User user = ((ProfilesListAdapter) parent.getAdapter()).getItem(position);
-                                // Открытие профиля
-                                Intent intent = new Intent(SearchActivity.this, ProfileActivity.class);
-                                intent.putExtra("profile_id", user.id);
-                                intent.putExtra("profile_nickname", " " + user.nickname);
-                                // TODO: 01.08.2017 Добавить проверку размеров
-                                if (user.avatar == null) {
-                                    intent.putExtra("avatar", Constant.default_avatar);
-                                } else {
-                                    intent.putExtra("avatar", user.avatar.micro);
-                                }
-                                startActivity(intent);
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                setProfiles();
                             }
-                        });
-                        pageNumber = pageNumber + 1;
-                        progressBarSearch.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
+                        }, 5000);
                     }
 
                     @Override
                     public void onInternetError() {
-                        Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                setProfiles();
+                            }
+                        }, 5000);
                     }
                 }
         );
-    }
-
-    public void refreshProfiles(){
-        this.profile.searchProfiles(this.ageFrom, this.ageTo + 1, this.gender_str, this.pageNumber,
-                new Profile.SearchProfilesCallback() {
-                    @Override
-                    public void onSuccess(User[] users) {
-                        ArrayList<User> defolt  = new ArrayList<>();
-                        Collections.addAll(defolt, users);
-                        plAdapter = new ProfilesListAdapter(SearchActivity.this, defolt);
-                        profilesList.setAdapter(plAdapter);
-
-                        pageNumber = pageNumber + 1;
-                        progressBarSearch.setVisibility(View.INVISIBLE);
-                    }
-
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onInternetError() {
-                        Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                    }
-                }
-        );
-
     }
 
     //Подгружаем новых юзеров, метод вызывается из адаптера
     public void getNew(){
         if (!thatsAll) {
-            progressBarSearchRefresh.setVisibility(View.VISIBLE);
             this.profile.searchProfiles(this.ageFrom, this.ageTo + 1, this.gender_str, this.pageNumber,
                     new Profile.SearchProfilesCallback() {
                         @Override
@@ -337,22 +313,27 @@ public class SearchActivity extends SuperMainActivity{
                             plAdapter.notifyDataSetChanged();
 
                             pageNumber = pageNumber + 1;
-                            progressBarSearchRefresh.setVisibility(View.GONE);
                         }
 
                         @Override
                         public void onError(int error_code, String error_msg) {
-                            Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
-                            progressBarSearchRefresh.setVisibility(View.GONE);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override public void run() {
+                                    getNew();
+                                }
+                            }, 5000);
                         }
 
                         @Override
                         public void onInternetError() {
-                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                            progressBarSearchRefresh.setVisibility(View.GONE);
+                            new Handler().postDelayed(new Runnable() {
+                                @Override public void run() {
+                                    getNew();
+                                }
+                            }, 5000);
                         }
                     }
             );
-        }
+        } else profilesList.removeFooterView(footerLoading);
     }
 }

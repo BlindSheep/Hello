@@ -25,11 +25,4 @@
 
     <include layout="@layout/bottom_sheet_search" />
 
-    <ProgressBar
-        android:id="@+id/progressBarSearch"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
-
 </android.support.design.widget.CoordinatorLayout>

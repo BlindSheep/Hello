@@ -1,6 +1,7 @@
 package com.httpso_hello.hello.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.DisplayMetrics;
@@ -12,14 +13,18 @@ import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Message;
 import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.activity.SearchActivity;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Settings;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,11 +56,20 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
         public ImageView isOnline;
         public TextView search_profile_nickname;
         public TextView search_profile_city;
+        public ProgressBar search_profile_load;
+        public LinearLayout click;
+
+        public ImageView search_profile_avatar_second;
+        public ImageView isOnline_second;
+        public TextView search_profile_nickname_second;
+        public TextView search_profile_city_second;
+        public ProgressBar search_profile_load_second;
+        public LinearLayout click_second;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-        ProfilesListAdapter.ViewHolder holder;
+        final ProfilesListAdapter.ViewHolder holder;
         View rowView = convertView;
         if (rowView == null) {
             LayoutInflater inflater = context.getLayoutInflater();
@@ -65,51 +79,162 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
             holder.isOnline = (ImageView) rowView.findViewById(R.id.isOnline);
             holder.search_profile_nickname = (TextView) rowView.findViewById(R.id.search_profile_nickname);
             holder.search_profile_city = (TextView) rowView.findViewById(R.id.search_profile_city);
+            holder.search_profile_load = (ProgressBar) rowView.findViewById(R.id.search_profile_load);
+            holder.click = (LinearLayout) rowView.findViewById(R.id.click);
+            holder.search_profile_avatar_second = (ImageView) rowView.findViewById(R.id.search_profile_avatar_second);
+            holder.isOnline_second = (ImageView) rowView.findViewById(R.id.isOnline_second);
+            holder.search_profile_nickname_second = (TextView) rowView.findViewById(R.id.search_profile_nickname_second);
+            holder.search_profile_city_second = (TextView) rowView.findViewById(R.id.search_profile_city_second);
+            holder.search_profile_load_second = (ProgressBar) rowView.findViewById(R.id.search_profile_load_second);
+            holder.click_second = (LinearLayout) rowView.findViewById(R.id.click_second);
             rowView.setTag(holder);
         } else {
             holder = (ProfilesListAdapter.ViewHolder) rowView.getTag();
         }
 
+        final User userFirst;
+        final User userSecond;
+        if (position == 0) {
+            userFirst = users.get(position);
+            userSecond = users.get(position + 1);
+        } else {
+            userFirst = users.get(position * 2);
+            userSecond = users.get(position * 2 + 1);
+        }
 
-        User user = this.users.get(position);
+        holder.search_profile_load.setVisibility(View.VISIBLE);
+        holder.search_profile_load_second.setVisibility(View.VISIBLE);
 
-
+        final SearchActivity SA = ((SearchActivity) context);
         DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
         int width = displaymetrics.widthPixels / 2 - 50;
+
+        //Первый юзер
         holder.search_profile_avatar.setMinimumHeight(width);
         holder.search_profile_avatar.setMinimumWidth(width);
-        if(user.avatar!=null)
+        if(userFirst.avatar!=null)
              Picasso.with(this.context)
-                    .load(Uri.parse(Constant.upload + user.avatar.normal))
+                    .load(Uri.parse(Constant.upload + userFirst.avatar.normal))
                     .centerCrop()
                     .resize(width, width)
                     .error(getContext().getResources().getDrawable(R.mipmap.avatar))
-                    .into(holder.search_profile_avatar);
+                    .into(holder.search_profile_avatar, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.search_profile_load.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            holder.search_profile_load.setVisibility(View.GONE);
+                        }
+                    });
          else
              Picasso.with(this.context)
                     .load(Uri.parse(Constant.default_avatar))
                     .centerCrop()
                     .resize(width, width)
-                    .into(holder.search_profile_avatar);
+                    .into(holder.search_profile_avatar, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.search_profile_load.setVisibility(View.GONE);
+                        }
 
-        if (user.is_online){
+                        @Override
+                        public void onError() {
+                            holder.search_profile_load.setVisibility(View.GONE);
+                        }
+                    });
+
+        if (userFirst.is_online){
             holder.isOnline.setVisibility(View.VISIBLE);
         } else holder.isOnline.setVisibility(View.INVISIBLE);
-        holder.search_profile_city.setText(convertDateToAge(user.birth_date) + ", " + user.city_cache);
-        holder.search_profile_nickname.setText(user.nickname);
+        holder.search_profile_city.setText(convertDateToAge(userFirst.birth_date) + ", " + userFirst.city_cache);
+        holder.search_profile_nickname.setText(userFirst.nickname);
+        holder.click.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                intent.putExtra("profile_id", userFirst.id);
+                intent.putExtra("profile_nickname", " " + userFirst.nickname);
+                // TODO: 01.08.2017 Добавить проверку размеров
+                if (userFirst.avatar == null) {
+                    intent.putExtra("avatar", Constant.default_avatar);
+                } else {
+                    intent.putExtra("avatar", userFirst.avatar.micro);
+                }
+                SA.startActivity(intent);
+            }
+        });
 
-        Log.d("sP", Integer.toString(position));
+        //Второй юзер
+        holder.search_profile_avatar_second.setMinimumHeight(width);
+        holder.search_profile_avatar_second.setMinimumWidth(width);
+        if(userSecond.avatar!=null)
+            Picasso.with(this.context)
+                    .load(Uri.parse(Constant.upload + userSecond.avatar.normal))
+                    .centerCrop()
+                    .resize(width, width)
+                    .error(getContext().getResources().getDrawable(R.mipmap.avatar))
+                    .into(holder.search_profile_avatar_second, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.search_profile_load_second.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            holder.search_profile_load_second.setVisibility(View.GONE);
+                        }
+                    });
+        else
+            Picasso.with(this.context)
+                    .load(Uri.parse(Constant.default_avatar))
+                    .centerCrop()
+                    .resize(width, width)
+                    .into(holder.search_profile_avatar_second, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                            holder.search_profile_load_second.setVisibility(View.GONE);
+                        }
+
+                        @Override
+                        public void onError() {
+                            holder.search_profile_load_second.setVisibility(View.GONE);
+                        }
+                    });
+
+        if (userSecond.is_online){
+            holder.isOnline_second.setVisibility(View.VISIBLE);
+        } else holder.isOnline_second.setVisibility(View.INVISIBLE);
+        holder.search_profile_city_second.setText(convertDateToAge(userSecond.birth_date) + ", " + userSecond.city_cache);
+        holder.search_profile_nickname_second.setText(userSecond.nickname);
+        holder.click_second.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                intent.putExtra("profile_id", userSecond.id);
+                intent.putExtra("profile_nickname", " " + userSecond.nickname);
+                // TODO: 01.08.2017 Добавить проверку размеров
+                if (userFirst.avatar == null) {
+                    intent.putExtra("avatar", Constant.default_avatar);
+                } else {
+                    intent.putExtra("avatar", userSecond.avatar.micro);
+                }
+                SA.startActivity(intent);
+            }
+        });
 
         //Подгружаем новых Юзеров
         SearchActivity sa = ((SearchActivity) getContext());
-        if(position == (this.users.size() - 29)) sa.getNew();
+        if(position == (this.users.size()) / 2 - 1) sa.getNew();
 
         return rowView;
     }
 
     @Override
     public int getCount() {
-        return this.users.size();
+        return this.users.size() / 2;
     }
 
     public void add(ArrayList<User> users) {
