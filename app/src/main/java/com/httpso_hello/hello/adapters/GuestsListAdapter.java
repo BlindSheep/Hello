@@ -16,6 +16,7 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Guest;
 import com.httpso_hello.hello.Structures.Message;
 import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.activity.GuestsActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
@@ -49,8 +50,8 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
         public ImageView isOnline;
         public TextView guest_profile_nickname;
         public TextView guest_profile_city;
-        public TextView blockHeader;
-        public TextView guest_is_new;
+        public TextView old_guests;
+        public TextView new_guests;
         public TextView guest_time_enter;
     }
 
@@ -66,6 +67,8 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
             holder.guest_profile_nickname= (TextView) rowView.findViewById(R.id.guest_profile_nickname);
             holder.guest_profile_city = (TextView) rowView.findViewById(R.id.guest_profile_city);
             holder.guest_time_enter = (TextView) rowView.findViewById(R.id.guest_time_enter);
+            holder.new_guests = (TextView) rowView.findViewById(R.id.new_guests);
+            holder.old_guests = (TextView) rowView.findViewById(R.id.old_guests);
             rowView.setTag(holder);
         } else {
             holder = (GuestsListAdapter.ViewHolder) rowView.getTag();
@@ -73,17 +76,27 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
 
 
 
-        Guest guest = this.guests.get(position);
+        Guest thisGuest = this.guests.get(position);
+        Guest lastGuest = null;
+        if (position != 0) lastGuest = this.guests.get(position - 1);
 
-        DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
-        int width = displaymetrics.widthPixels / 2 - 50;
-        holder.guest_profile_avatar.setMinimumHeight(width);
-        holder.guest_profile_avatar.setMinimumWidth(width);
+        if ((position == 0) && thisGuest.status == 0) {
+            holder.new_guests.setVisibility(View.VISIBLE);
+            holder.old_guests.setVisibility(View.GONE);
+        }
+        else if ((position == 0) && thisGuest.status == 1){
+            holder.new_guests.setVisibility(View.GONE);
+            holder.old_guests.setVisibility(View.VISIBLE);
+        } else {
+            holder.new_guests.setVisibility(View.GONE);
+            if ((lastGuest != null) && (thisGuest.status != lastGuest.status)) holder.old_guests.setVisibility(View.VISIBLE);
+            else holder.old_guests.setVisibility(View.GONE);
+        }
 
-        if(guest.user_info.avatar != null) {
+        if(thisGuest.user_info.avatar != null) {
             Picasso
                     .with(getContext())
-                    .load(Uri.parse(Constant.upload + guest.user_info.avatar.micro))
+                    .load(Uri.parse(Constant.upload + thisGuest.user_info.avatar.micro))
                     .transform(new CircularTransformation(0))
                     .into(holder.guest_profile_avatar, new Callback() {
                         @Override
@@ -108,15 +121,21 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
                     .into(holder.guest_profile_avatar);
         }
 
-        if(guest.user_info.birth_date != null) {
-            holder.guest_profile_city.setText(convertDateToAge(guest.user_info.birth_date) + ", " + guest.user_info.city_cache);
+        if(thisGuest.user_info.birth_date != null) {
+            holder.guest_profile_city.setText(convertDateToAge(thisGuest.user_info.birth_date) + ", " + thisGuest.user_info.city_cache);
         } else {
-            holder.guest_profile_city.setText(guest.user_info.city_cache);
+            holder.guest_profile_city.setText(thisGuest.user_info.city_cache);
         }
-        holder.guest_profile_nickname.setText(guest.user_info.nickname);
+        holder.guest_profile_nickname.setText(thisGuest.user_info.nickname);
 
-        holder.guest_time_enter.setText(ConverterDate.convertDateForGuest(guest.date));
+        holder.guest_time_enter.setText(ConverterDate.convertDateForGuest(thisGuest.date));
 
+
+
+        GuestsActivity ba = ((GuestsActivity) getContext());
+        if(position == (this.guests.size() - 10)) {
+            ba.getNewGuests();
+        }
 
         return rowView;
     }

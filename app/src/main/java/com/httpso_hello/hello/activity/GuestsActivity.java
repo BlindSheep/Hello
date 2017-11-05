@@ -26,12 +26,12 @@ import java.util.Collections;
 public class GuestsActivity extends SuperMainActivity{
 
     private ListView listGuestsNew;
-    private ListView listGuestsOld;
-    private TextView guests_text_new;
-    private TextView guests_text_old;
-    private View header;
     private Profile profile;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean thatsAll = false;
+    private GuestsListAdapter glAdapterNew;
+    public int pageNumber = 1;
+    private View footerLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,25 +41,23 @@ public class GuestsActivity extends SuperMainActivity{
         setMenuItem("GuestsActivity");
 
         listGuestsNew = ((ListView) findViewById(R.id.listGuestsNew));
-        listGuestsOld = ((ListView) findViewById(R.id.listGuestsOld));
-        guests_text_new = ((TextView) findViewById(R.id.guests_text_new));
-        guests_text_old = ((TextView) findViewById(R.id.guests_text_old));
-        header = getLayoutInflater().inflate(R.layout.footer6dp, null);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.main_blue_color_hello,
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-        listGuestsNew.addFooterView(header);
-        listGuestsOld.addFooterView(header);
+        footerLoading = getLayoutInflater().inflate(R.layout.footer_loading, null);
+        listGuestsNew.addFooterView(footerLoading);
         getGuests();
 
         // Свайп для обновления
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                if (listGuestsNew.getFooterViewsCount() == 0) listGuestsNew.addFooterView(footerLoading);
+                thatsAll = false;
+                pageNumber = 1;
                 getGuests();
             }
         });
@@ -69,58 +67,24 @@ public class GuestsActivity extends SuperMainActivity{
     private void getGuests() {
         swipeRefreshLayout.setRefreshing(true);
         profile = new Profile(getApplicationContext());
-        profile.getGuests(1, this, new Profile.GetGuestsCallback() {
+        profile.getGuests(pageNumber, this, new Profile.GetGuestsCallback() {
             @Override
             public void onSuccess(final Guest[] guests, Activity activity) {
                 final ArrayList<Guest> newItem = new ArrayList<Guest>();
-                final ArrayList<Guest> oldItem = new ArrayList<Guest>();
+                Collections.addAll(newItem, guests);
+                glAdapterNew = new GuestsListAdapter(activity, newItem);
+                listGuestsNew.setAdapter(glAdapterNew);
+                listGuestsNew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                                         @Override
+                                                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                                             Intent intent = new Intent(GuestsActivity.this, ProfileActivity.class);
+                                                             intent.putExtra("profile_id", newItem.get(position).guest_id);
+                                                             intent.putExtra("profile_nickname", " " + newItem.get(position).user_info.nickname);
+                                                             startActivity(intent);
+                                                         }
+                                                     });
 
-                for (int i = 0; i < guests.length; i++){
-                    if (guests[i].status != 0) oldItem.add(guests[i]);
-                    else newItem.add(guests[i]);
-                }
-
-                GuestsListAdapter glAdapterNew = new GuestsListAdapter(activity, newItem);
-                GuestsListAdapter glAdapterOld = new GuestsListAdapter(activity, oldItem);
-
-                if (newItem.size() != 0) {
-                    guests_text_new.setVisibility(View.VISIBLE);
-                    listGuestsNew.setVisibility(View.VISIBLE);
-                    listGuestsNew.setAdapter(glAdapterNew);
-                    listGuestsNew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(GuestsActivity.this, ProfileActivity.class);
-                            intent.putExtra("profile_id", newItem.get(position).guest_id);
-                            intent.putExtra("profile_nickname", " " + newItem.get(position).user_info.nickname);
-                            startActivity(intent);
-                        }
-                    });
-                } else {
-                    guests_text_new.setVisibility(View.GONE);
-                    listGuestsNew.setVisibility(View.GONE);
-                }
-
-                if (oldItem.size() != 0) {
-                    guests_text_old.setVisibility(View.VISIBLE);
-                    listGuestsOld.setVisibility(View.VISIBLE);
-                    listGuestsOld.setAdapter(glAdapterOld);
-                    listGuestsOld.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Intent intent = new Intent(GuestsActivity.this, ProfileActivity.class);
-                            intent.putExtra("profile_id", oldItem.get(position).guest_id);
-                            intent.putExtra("profile_nickname", " " + oldItem.get(position).user_info.nickname);
-                            startActivity(intent);
-                        }
-                    });
-                } else {
-                    guests_text_old.setVisibility(View.GONE);
-                    listGuestsOld.setVisibility(View.GONE);
-                }
-
-                setDynamicHeight(listGuestsNew);
-                setDynamicHeight(listGuestsOld);
+                pageNumber += 1;
                 swipeRefreshLayout.setRefreshing(false);
             }
 
@@ -144,21 +108,40 @@ public class GuestsActivity extends SuperMainActivity{
         });
     }
 
-    public static void setDynamicHeight(ListView mListView) {
-        ListAdapter mListAdapter = mListView.getAdapter();
-        if (mListAdapter == null) {
-            return;
-        }
-        int height = 0;
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(mListView.getWidth(), View.MeasureSpec.UNSPECIFIED);
-        for (int i = 0; i < mListAdapter.getCount(); i++) {
-            View listItem = mListAdapter.getView(i, null, mListView);
-            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            height += listItem.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = mListView.getLayoutParams();
-        params.height = height + (mListView.getDividerHeight() * (mListAdapter.getCount() - 1));
-        mListView.setLayoutParams(params);
-        mListView.requestLayout();
+    public void getNewGuests() {
+        if (!thatsAll) {
+            profile = new Profile(getApplicationContext());
+            profile.getGuests(pageNumber, this, new Profile.GetGuestsCallback() {
+                        @Override
+                        public void onSuccess(final Guest[] guests, Activity activity) {
+                            if (guests.length == 0) thatsAll = true;
+                            ArrayList<Guest> defolt = new ArrayList<>();
+                            Collections.addAll(defolt, guests);
+                            glAdapterNew.addAll(defolt);
+                            glAdapterNew.notifyDataSetChanged();
+
+                            pageNumber = pageNumber + 1;
+                        }
+
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override public void run() {
+                                    getNewGuests();
+                                }
+                            }, 5000);
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override public void run() {
+                                    getNewGuests();
+                                }
+                            }, 5000);
+                        }
+                    }
+            );
+        } else listGuestsNew.removeFooterView(footerLoading);
     }
 }

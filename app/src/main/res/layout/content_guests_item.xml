@@ -1,17 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
-android:orientation="horizontal"
-android:background="@drawable/board"
+android:orientation="vertical"
+android:background="@color/zalivon"
 android:elevation="1.5dp"
 android:layout_width="match_parent"
 android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/new_guests"
+        android:background="@drawable/board"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:textSize="18sp"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/main_blue_color_hello"
+        android:text="Новые" />
+
+    <TextView
+        android:id="@+id/old_guests"
+        android:background="@drawable/board"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:textSize="18sp"
+        android:layout_marginTop="6dp"
+        android:textColor="@color/main_blue_color_hello"
+        android:text="Просмотренные" />
+
 <LinearLayout
-    android:background="?android:attr/selectableItemBackground"
+    android:background="@drawable/board"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/guest_profile_avatar"
@@ -51,6 +79,8 @@ android:layout_height="wrap_content">
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp"/>
+
+        </LinearLayout>
 
 </LinearLayout>
 
