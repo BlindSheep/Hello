@@ -219,9 +219,11 @@ public class BoardContentActivity extends SuperMainActivity {
                 LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
-                        intent.putExtra("profile_id", defolt.get(position - 1).user_id);
-                        startActivity(intent);
+                        if (position != 0) {
+                            Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
+                            intent.putExtra("profile_id", defolt.get(position - 1).user_id);
+                            startActivity(intent);
+                        }
                     }
                 });
                 swipeRefreshLayout.setRefreshing(false);

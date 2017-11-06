@@ -61,11 +61,11 @@ public class FriendsFragment extends Fragment {
         LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(), ProfileActivity.class);
-                intent.putExtra("profile_id", friendItemFragment[position-1].id);
-                intent.putExtra("profile_nickname", friendItemFragment[position-1].nickname);
-                intent.putExtra("avatar", Constant.default_avatar);
-                startActivity(intent);
+                if(position != 0) {
+                    Intent intent = new Intent(getContext(), ProfileActivity.class);
+                    intent.putExtra("profile_id", friendItemFragment[position - 1].id);
+                    startActivity(intent);
+                }
             }
         });
 
