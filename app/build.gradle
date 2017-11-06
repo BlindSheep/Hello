@@ -16,8 +16,8 @@ android {
         applicationId "com.httpso_hello.hello"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 102
-        versionName "1.102"
+        versionCode 105
+        versionName "1.105"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         signingConfig signingConfigs.config

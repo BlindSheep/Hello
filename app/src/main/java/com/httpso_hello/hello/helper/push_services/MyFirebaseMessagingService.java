@@ -93,16 +93,55 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         Map messageData = remoteMessage.getData();
 
-        sendNotification(
-                messageData.get("body").toString(),
-                messageData.get("title").toString(),
-                messageData.get("avatar_string").toString(),
-                null,
-                Integer.parseInt(messageData.get("profile_id").toString()),
-                messageData.get("profile_nickname").toString(),
-                messageData.get("avatar").toString(),
-                messageData.get("type").toString()
-        );
+        if ((messageData.get("avatar_string") != null) && (messageData.get("avatar") != null)) {
+            if (messageData.get("title") != null) {
+                sendNotification(
+                        messageData.get("body").toString(),
+                        messageData.get("title").toString(),
+                        messageData.get("avatar_string").toString(),
+                        null,
+                        Integer.parseInt(messageData.get("profile_id").toString()),
+                        messageData.get("profile_nickname").toString(),
+                        messageData.get("avatar").toString(),
+                        messageData.get("type").toString()
+                );
+            } else {
+                sendNotification(
+                        messageData.get("body").toString(),
+                        null,
+                        messageData.get("avatar_string").toString(),
+                        null,
+                        Integer.parseInt(messageData.get("profile_id").toString()),
+                        messageData.get("profile_nickname").toString(),
+                        messageData.get("avatar").toString(),
+                        messageData.get("type").toString()
+                );
+            }
+        } else {
+            if (messageData.get("title") != null) {
+                sendNotification(
+                        messageData.get("body").toString(),
+                        messageData.get("title").toString(),
+                        null,
+                        null,
+                        Integer.parseInt(messageData.get("profile_id").toString()),
+                        messageData.get("profile_nickname").toString(),
+                        null,
+                        messageData.get("type").toString()
+                );
+            } else {
+                sendNotification(
+                        messageData.get("body").toString(),
+                        null,
+                        null,
+                        null,
+                        Integer.parseInt(messageData.get("profile_id").toString()),
+                        messageData.get("profile_nickname").toString(),
+                        null,
+                        messageData.get("type").toString()
+                );
+            }
+        }
 
         // Also if you intend on generating your own notifications as a result of a received FCM
         // message, here is where that should be initiated. See sendNotification method below.

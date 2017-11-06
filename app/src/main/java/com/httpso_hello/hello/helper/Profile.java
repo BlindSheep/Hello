@@ -136,7 +136,13 @@ public class Profile extends Help{
         }
     }
 
-    public void searchProfiles(final int ageFrom, final int ageTo, final int gender, final int page, final SearchProfilesCallback searchProfilesCallback){
+    public void searchProfiles(
+            final int ageFrom,
+            final int ageTo,
+            final int gender,
+            final int page,
+            final int reg_cel,
+            final SearchProfilesCallback searchProfilesCallback){
         if (Constant.api_key !="") {
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
@@ -172,6 +178,7 @@ public class Profile extends Help{
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("birth_date[from]", Integer.toString(ageFrom));
                     params.put("birth_date[to]", Integer.toString(ageTo));
+                    params.put("reg_cel[]", Integer.toString(reg_cel));
                     //Если выбраны и парни и девушки
                     if (gender != 0) params.put("gender", Integer.toString(gender));
                     //

@@ -205,4 +205,20 @@
         <item>Высокий доход</item>
     </string-array>
 
+    <string-array name="cel">
+        <item>Все</item>
+        <item>Дружба и общение</item>
+        <item>Новые знакомства</item>
+        <item>Переписка</item>
+        <item>Серьезные отношения</item>
+        <item>Брак</item>
+        <item>Секс</item>
+        <item>Занятия спортом</item>
+        <item>Бизнес</item>
+        <item>Путешествия</item>
+        <item>Свидания и встречи</item>
+        <item>Походы в кино</item>
+        <item>Другое</item>
+    </string-array>
+
 </resources>

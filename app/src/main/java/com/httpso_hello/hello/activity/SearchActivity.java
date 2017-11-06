@@ -62,6 +62,8 @@ public class SearchActivity extends SuperMainActivity{
     private View header;
     private View footerLoading;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Spinner cel;
+    private boolean isLaunch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +95,7 @@ public class SearchActivity extends SuperMainActivity{
         RadioButton radioButtonAll = (RadioButton) findViewById(R.id.radioButtonAll);
         RadioButton radioButtonMan = (RadioButton) findViewById(R.id.radioButtonMan);
         RadioButton radioButtonWoman = (RadioButton) findViewById(R.id.radioButtonWoman);
+        cel = (Spinner) findViewById(R.id.cel);
         search = (Button) findViewById(R.id.search);
         inputID = (EditText) findViewById(R.id.enterID);
         pageNumber = 1;
@@ -259,23 +262,34 @@ public class SearchActivity extends SuperMainActivity{
 
             this.setProfiles();
             filterIsChanged = false;
-
     }
 
     private void setProfiles() {
         if (profilesList.getFooterViewsCount() == 0) profilesList.addFooterView(footerLoading);
         thatsAll = false;
+        isLaunch = true;
+        pageNumber = 1;
         swipeRefreshLayout.setRefreshing(true);
-        this.profile.searchProfiles(this.ageFrom, this.ageTo + 1, this.gender_str, this.pageNumber,
+        this.profile.searchProfiles(
+                this.ageFrom,
+                this.ageTo + 1,
+                this.gender_str,
+                this.pageNumber,
+                cel.getSelectedItemPosition(),
                 new Profile.SearchProfilesCallback() {
                     @Override
                     public void onSuccess(User[] users) {
+                        pageNumber = pageNumber + 1;
+                        if ((users.length == 0) || ((users.length == 1))) {
+                            thatsAll = true;
+                            profilesList.removeFooterView(footerLoading);
+                        }
                         ArrayList<User> defolt = new ArrayList<>();
                         Collections.addAll(defolt, users);
                         plAdapter = new ProfilesListAdapter(SearchActivity.this, defolt);
                         profilesList.setAdapter(plAdapter);
-                        pageNumber = pageNumber + 1;
                         swipeRefreshLayout.setRefreshing(false);
+                        isLaunch = false;
                     }
 
                     @Override
@@ -301,18 +315,28 @@ public class SearchActivity extends SuperMainActivity{
 
     //Подгружаем новых юзеров, метод вызывается из адаптера
     public void getNew(){
-        if (!thatsAll) {
-            this.profile.searchProfiles(this.ageFrom, this.ageTo + 1, this.gender_str, this.pageNumber,
+        if (!thatsAll && !isLaunch) {
+            isLaunch = true;
+            this.profile.searchProfiles(
+                    this.ageFrom,
+                    this.ageTo + 1,
+                    this.gender_str,
+                    this.pageNumber,
+                    cel.getSelectedItemPosition(),
                     new Profile.SearchProfilesCallback() {
                         @Override
                         public void onSuccess(User[] users) {
-                            if (users.length == 0) thatsAll = true;
-                            ArrayList<User> defolt = new ArrayList<>();
-                            Collections.addAll(defolt, users);
-                            plAdapter.add(defolt);
-                            plAdapter.notifyDataSetChanged();
-
-                            pageNumber = pageNumber + 1;
+                            if ((users.length == 0) || ((users.length == 1))) {
+                                thatsAll = true;
+                                profilesList.removeFooterView(footerLoading);
+                            } else {
+                                pageNumber = pageNumber + 1;
+                                ArrayList<User> defolt = new ArrayList<>();
+                                Collections.addAll(defolt, users);
+                                plAdapter.add(defolt);
+                                plAdapter.notifyDataSetChanged();
+                            }
+                            isLaunch = false;
                         }
 
                         @Override
@@ -334,6 +358,6 @@ public class SearchActivity extends SuperMainActivity{
                         }
                     }
             );
-        } else profilesList.removeFooterView(footerLoading);
+        }
     }
 }
