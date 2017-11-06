@@ -178,7 +178,9 @@ public class Profile extends Help{
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("birth_date[from]", Integer.toString(ageFrom));
                     params.put("birth_date[to]", Integer.toString(ageTo));
-                    params.put("reg_cel[]", Integer.toString(reg_cel));
+                    params.put("birth_date[to]", Integer.toString(ageTo));
+                    //Если выбрана цель знакомства
+                    if (reg_cel != 0) params.put("reg_cel[]", Integer.toString(reg_cel));
                     //Если выбраны и парни и девушки
                     if (gender != 0) params.put("gender", Integer.toString(gender));
                     //

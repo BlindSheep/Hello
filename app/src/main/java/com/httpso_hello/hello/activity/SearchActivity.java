@@ -285,7 +285,9 @@ public class SearchActivity extends SuperMainActivity{
                             profilesList.removeFooterView(footerLoading);
                         }
                         ArrayList<User> defolt = new ArrayList<>();
-                        Collections.addAll(defolt, users);
+                        for (int i = 0; i < users.length; i++) {
+                            if (users[i].avatar != null) defolt.add(users[i]);
+                        }
                         plAdapter = new ProfilesListAdapter(SearchActivity.this, defolt);
                         profilesList.setAdapter(plAdapter);
                         swipeRefreshLayout.setRefreshing(false);
@@ -332,7 +334,9 @@ public class SearchActivity extends SuperMainActivity{
                             } else {
                                 pageNumber = pageNumber + 1;
                                 ArrayList<User> defolt = new ArrayList<>();
-                                Collections.addAll(defolt, users);
+                                for (int i = 0; i < users.length; i++) {
+                                    if (users[i].avatar != null) defolt.add(users[i]);
+                                }
                                 plAdapter.add(defolt);
                                 plAdapter.notifyDataSetChanged();
                             }
