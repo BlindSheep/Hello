@@ -133,7 +133,7 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
 
 
         GuestsActivity ba = ((GuestsActivity) getContext());
-        if(position == (this.guests.size() - 10)) {
+        if(position == (this.guests.size() - 4)) {
             ba.getNewGuests();
         }
 

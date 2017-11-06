@@ -77,10 +77,11 @@ public class GuestsActivity extends SuperMainActivity{
                 listGuestsNew.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                                          @Override
                                                          public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                             Intent intent = new Intent(GuestsActivity.this, ProfileActivity.class);
-                                                             intent.putExtra("profile_id", newItem.get(position).guest_id);
-                                                             intent.putExtra("profile_nickname", " " + newItem.get(position).user_info.nickname);
-                                                             startActivity(intent);
+                                                             if (position != newItem.size()) {
+                                                                 Intent intent = new Intent(GuestsActivity.this, ProfileActivity.class);
+                                                                 intent.putExtra("profile_id", newItem.get(position).guest_id);
+                                                                 startActivity(intent);
+                                                             }
                                                          }
                                                      });
 
