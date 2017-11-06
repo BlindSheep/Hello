@@ -70,6 +70,8 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
             android:text="Text"
+            android:autoLink="web"
+            android:linksClickable="true"
             android:textColor="@color/main_black_color_hello" />
 
         <ImageView

@@ -270,11 +270,11 @@ public class ChatActivity extends SuperMainActivity{
             public void onClick(View v) {
                 String messageContentString = messageContent.getText().toString();
                 if (!messageContentString.isEmpty() || messages.getCountAttachments()!=0) {
-                    ChatActivity.this.messageContent.setText(null);
+                    messageContent.setText(null);
 
                     Message message = new Message();
                     message.from_id = stgs.getSettingInt("user_id");
-                    message.contact_id = ChatActivity.this.contact_id;
+                    message.contact_id = contact_id;
                     if(messageContentString.length()!=0)
                         message.content = messageContentString;
                     if(maAdapter!=null) {
@@ -284,7 +284,7 @@ public class ChatActivity extends SuperMainActivity{
                     }
 
                     chatList.setTranscriptMode(2);
-                    int message_number = ChatActivity.this.mmAdapter.addMessage(message);
+                    int message_number = mmAdapter.addMessage(message);
                     if(maAdapter!=null){
                         maAdapter.deleteAllAttachments();
                         attachmentsListView.getLayoutParams().width = Help.getPxFromDp(130, getApplicationContext());
