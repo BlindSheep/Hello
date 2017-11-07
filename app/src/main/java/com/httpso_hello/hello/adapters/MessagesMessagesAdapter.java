@@ -397,17 +397,19 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
     }
 
     public void setMessage(Message message, int message_number){
-        if(this.messages.get(message_number).deviceMessageId == message.deviceMessageId){
+        /*if(this.messages.get(message_number).deviceMessageId == message.deviceMessageId){
             this.messages.set(message_number, message);
         } else {
-            int i = this.messages.size()-1;
-            while (this.messages.get(i).deviceMessageId!=message.deviceMessageId){
+
+        }*/
+        int i = this.messages.size()-1;
+        while (i>=0){
+            if(this.messages.get(i).deviceMessageId == message.deviceMessageId)
+                break;
+            else
                 i--;
-            }
-            this.messages.set(i, message);
-
         }
-
+        this.messages.set(i, message);
         this.notifyDataSetChanged();
     }
 

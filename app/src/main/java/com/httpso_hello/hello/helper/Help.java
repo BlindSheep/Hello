@@ -138,6 +138,7 @@ public class Help {
     }
     // Поулчение изображения в формате base64 с указанием качества
     public static String getBase64FromImage(Bitmap image, Bitmap.CompressFormat compressFormat, int quality){
+        if(quality>100) quality = 100;
         ByteArrayOutputStream baos = compressImage(image, compressFormat, quality);
         byte[] bytes = baos.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
@@ -165,6 +166,7 @@ public class Help {
             size = (compressImage(image, compressFormat, 100)).toByteArray().length;
             float fQuality = (float)((float)need_size/(float)size) * 100;
             quality = Math.round(fQuality);
+
         }
 
         return getBase64FromImage(image, compressFormat, quality);
