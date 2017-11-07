@@ -97,6 +97,7 @@ public class BoardActivity extends SuperMainActivity{
     //Получаем объявления
     public void getBoard(){
         hBoard = new HBoard(getApplicationContext());
+        YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
         hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
             @Override
             public void onSuccess(final BoardItem[] boardItems, Activity activity) {
