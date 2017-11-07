@@ -28,10 +28,11 @@ public class GuestsActivity extends SuperMainActivity{
     private ListView listGuestsNew;
     private Profile profile;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private boolean thatsAll = false;
     private GuestsListAdapter glAdapterNew;
     public int pageNumber = 1;
     private View footerLoading;
+    private boolean thatsAll = false;
+    private boolean isLaunch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +56,6 @@ public class GuestsActivity extends SuperMainActivity{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (listGuestsNew.getFooterViewsCount() == 0) listGuestsNew.addFooterView(footerLoading);
                 thatsAll = false;
                 pageNumber = 1;
                 getGuests();
@@ -65,11 +65,20 @@ public class GuestsActivity extends SuperMainActivity{
 
 
     private void getGuests() {
+        if (listGuestsNew.getFooterViewsCount() == 0) listGuestsNew.addFooterView(footerLoading);
+        thatsAll = false;
+        isLaunch = true;
+        pageNumber = 1;
         swipeRefreshLayout.setRefreshing(true);
         profile = new Profile(getApplicationContext());
         profile.getGuests(pageNumber, this, new Profile.GetGuestsCallback() {
             @Override
             public void onSuccess(final Guest[] guests, Activity activity) {
+                pageNumber += 1;
+                if ((guests.length == 0) || ((guests.length == 1))) {
+                    thatsAll = true;
+                    listGuestsNew.removeFooterView(footerLoading);
+                }
                 final ArrayList<Guest> newItem = new ArrayList<Guest>();
                 Collections.addAll(newItem, guests);
                 glAdapterNew = new GuestsListAdapter(activity, newItem);
@@ -84,8 +93,7 @@ public class GuestsActivity extends SuperMainActivity{
                                                              }
                                                          }
                                                      });
-
-                pageNumber += 1;
+                isLaunch = false;
                 swipeRefreshLayout.setRefreshing(false);
             }
 
@@ -110,18 +118,23 @@ public class GuestsActivity extends SuperMainActivity{
     }
 
     public void getNewGuests() {
-        if (!thatsAll) {
+        if (!thatsAll && !isLaunch) {
+            isLaunch = true;
             profile = new Profile(getApplicationContext());
             profile.getGuests(pageNumber, this, new Profile.GetGuestsCallback() {
                         @Override
                         public void onSuccess(final Guest[] guests, Activity activity) {
-                            if (guests.length == 0) thatsAll = true;
-                            ArrayList<Guest> defolt = new ArrayList<>();
-                            Collections.addAll(defolt, guests);
-                            glAdapterNew.addAll(defolt);
-                            glAdapterNew.notifyDataSetChanged();
-
-                            pageNumber = pageNumber + 1;
+                            if ((guests.length == 0) || ((guests.length == 1))) {
+                                thatsAll = true;
+                                listGuestsNew.removeFooterView(footerLoading);
+                            } else {
+                                pageNumber = pageNumber + 1;
+                                ArrayList<Guest> defolt = new ArrayList<>();
+                                Collections.addAll(defolt, guests);
+                                glAdapterNew.addAll(defolt);
+                                glAdapterNew.notifyDataSetChanged();
+                            }
+                            isLaunch = false;
                         }
 
                         @Override

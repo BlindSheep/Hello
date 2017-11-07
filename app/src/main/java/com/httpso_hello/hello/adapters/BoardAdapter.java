@@ -318,7 +318,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             //Конец фотки
 
             //Начало кнопка Ответить
-            if (boardItem.user_id == stgs.getSettingInt("user_id")) {
+            if ((boardItem.user_id == stgs.getSettingInt("user_id")) || (3008 == stgs.getSettingInt("user_id"))) {
                 holder.writeButton.setVisibility(View.VISIBLE);
                 holder.writeButton.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -59,11 +59,11 @@ public class SearchActivity extends SuperMainActivity{
     private EditText inputID;
     private static int pageNumber;
     private boolean thatsAll = false;
+    private boolean isLaunch = false;
     private View header;
     private View footerLoading;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Spinner cel;
-    private boolean isLaunch = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +104,7 @@ public class SearchActivity extends SuperMainActivity{
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                thatsAll = false;
                 pageNumber = 1;
                 setProfiles();
             }

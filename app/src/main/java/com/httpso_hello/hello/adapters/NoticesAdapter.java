@@ -40,6 +40,8 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
         public TextView noticeDate;
         public ImageView noticeSenderAvatar;
         public ImageView targetNoticePreview;
+        public TextView new_notise;
+        public TextView old_notise;
     }
 
     @Override
@@ -55,16 +57,33 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
             holder.noticeDate = (TextView) rowView.findViewById(R.id.noticeDate);
             holder.noticeSenderAvatar = (ImageView) rowView.findViewById(R.id.notice_sender_avatar);
             holder.targetNoticePreview = (ImageView) rowView.findViewById(R.id.notice_target_preview);
+            holder.new_notise = (TextView) rowView.findViewById(R.id.new_notise);
+            holder.old_notise = (TextView) rowView.findViewById(R.id.old_notise);
             rowView.setTag(holder);
         } else {
             holder = (ViewHolder) rowView.getTag();
         }
 
-        NoticeItem noticeItem = this.noticeItem.get(position);
-//        if(noticeItem.sender_user!=null)
+        NoticeItem thisNotice = this.noticeItem.get(position);
+        NoticeItem lastNotice = null;
+        if (position != 0) lastNotice = this.noticeItem.get(position - 1);
+
+        if ((position == 0) && thisNotice.is_new == 1) {
+            holder.new_notise.setVisibility(View.VISIBLE);
+            holder.old_notise.setVisibility(View.GONE);
+        }
+        else if ((position == 0) && thisNotice.is_new == 0){
+            holder.new_notise.setVisibility(View.GONE);
+            holder.old_notise.setVisibility(View.VISIBLE);
+        } else {
+            holder.new_notise.setVisibility(View.GONE);
+            if ((lastNotice != null) && (thisNotice.is_new != lastNotice.is_new)) holder.old_notise.setVisibility(View.VISIBLE);
+            else holder.old_notise.setVisibility(View.GONE);
+        }
+
         Picasso
                 .with(getContext())
-                .load(Constant.upload + noticeItem.sender_user.avatar.micro)
+                .load(Constant.upload + thisNotice.sender_user.avatar.micro)
                 .transform(new CircularTransformation(0))
                 .resize(100, 100)
                 .into(holder.noticeSenderAvatar, new Callback() {
@@ -83,14 +102,14 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                                 .into(holder.noticeSenderAvatar);
                     }
                 });
-        if(noticeItem.date_pub!=null) {
-            holder.noticeDate.setText(ConverterDate.convertDateForGuest(noticeItem.date_pub));
+        if(thisNotice.date_pub!=null) {
+            holder.noticeDate.setText(ConverterDate.convertDateForGuest(thisNotice.date_pub));
         }
-        switch(noticeItem.type_notice){
+        switch(thisNotice.type_notice){
             case 1: // Уведомление о лайке
                 String appricated = "";
 
-                switch (noticeItem.sender_user.gender){
+                switch (thisNotice.sender_user.gender){
                     case User.GENDER_MAN:
                         appricated = " оценил ";
                         break;
@@ -103,21 +122,21 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
 
                 }
 
-                switch (noticeItem.target_controller){
+                switch (thisNotice.target_controller){
                     case "photos":
                         uploadNoticePreview(
-                                noticeItem.target_preview,
+                                thisNotice.target_preview,
                                 holder
                         );
-                        holder.noticeText.setText(noticeItem.sender_user.nickname + appricated + "Вашу фотографию");
+                        holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "Вашу фотографию");
 
                         break;
                     case "content":
-                        switch (noticeItem.content_type){
+                        switch (thisNotice.content_type){
                             case "board":
 //                                if(noticeItem.target_content!=null)
 //                                    holder.noticeText.setText("Ваш объявление \" " + noticeItem.target_content.substring(0, 40) +" ...\"" + appricated + noticeItem.sender_user.nickname);
-                                holder.noticeText.setText(noticeItem.sender_user.nickname + appricated + "Ваше объявление");
+                                holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "Ваше объявление");
                                 hideTargetPreview(holder);
                                 break;
                         }
@@ -125,14 +144,14 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
 
                         break;
                     case "comments":
-                        holder.noticeText.setText(noticeItem.sender_user.nickname + appricated + " Ваш комментарий");
+                        holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + " Ваш комментарий");
                         hideTargetPreview(holder);
                         break;
                 }
 
                 break;
             case 2: // Уведомление о коментарии
-                switch (noticeItem.sender_user.gender){
+                switch (thisNotice.sender_user.gender){
                     case User.GENDER_MAN:
                         appricated = " прокомментировал ";
                         break;
@@ -144,20 +163,20 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                         break;
 
                 }
-                switch (noticeItem.target_controller){
+                switch (thisNotice.target_controller){
                     case "photos":
 
                         uploadNoticePreview(
-                                noticeItem.target_preview,
+                                thisNotice.target_preview,
                                 holder
                         );
-                        holder.noticeText.setText(noticeItem.sender_user.nickname + appricated +"вашу фотографию");
+                        holder.noticeText.setText(thisNotice.sender_user.nickname + appricated +"вашу фотографию");
                         break;
                     case "content":
-                        switch(noticeItem.content_type){
+                        switch(thisNotice.content_type){
                             case "board":
                                 hideTargetPreview(holder);
-                                holder.noticeText.setText(noticeItem.sender_user.nickname + appricated + "ваше объявление");
+                                holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "ваше объявление");
 //                                holder.noticeText.setText(noticeItem.sender_user.nickname + " прокоментировал ваше объявление \" " + noticeItem.target_content +" \"");
                                 break;
                         }
@@ -167,10 +186,10 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                 break;
             case 3:
                 uploadNoticePreview(
-                        noticeItem.target_preview,
+                        thisNotice.target_preview,
                         holder
                 );
-                switch (noticeItem.sender_user.gender){
+                switch (thisNotice.sender_user.gender){
                     case User.GENDER_MAN:
                         appricated = " отправил ";
                         break;
@@ -182,7 +201,7 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                         break;
 
                 }
-                holder.noticeText.setText(noticeItem.sender_user.nickname + appricated + "Вам подарок");
+                holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "Вам подарок");
                 break;
         }
 

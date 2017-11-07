@@ -1,82 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/zalivon"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.httpso_hello.hello.activity.NotisesActivity"
-    tools:showIn="@layout/app_bar_notises">
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:background="@color/zalivon"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+app:layout_behavior="@string/appbar_scrolling_view_behavior"
+tools:context="com.httpso_hello.hello.activity.SearchActivity"
+tools:showIn="@layout/app_bar_guests">
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        <ListView
+            android:id="@+id/notices_list_new"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fillViewport="true" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/notices_text_new"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
-                    android:background="@drawable/board"
-                    android:text="НОВЫЕ" />
-
-                <ListView
-                    android:id="@+id/notices_list_new"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@color/zalivon"
-                    android:paddingLeft="6dp"
-                    android:paddingRight="2dp"
-                    android:scrollbarStyle="outsideInset" />
-
-                <TextView
-                    android:id="@+id/notices_text_old"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:layout_marginLeft="6dp"
-                    android:layout_marginRight="6dp"
-                    android:paddingLeft="20dp"
-                    android:paddingTop="20dp"
-                    android:paddingBottom="20dp"
-                    android:background="@drawable/board"
-                    android:gravity="center_vertical"
-                    android:text="ПРОСМОТРЕННЫЕ" />
-
-                <ListView
-                    android:id="@+id/notices_list_old"
-                    android:visibility="gone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@color/zalivon"
-                    android:paddingLeft="6dp"
-                    android:paddingRight="2dp"
-                    android:scrollbarStyle="outsideInset" />
-
-            </LinearLayout>
-
-        </ScrollView>
+            android:divider="@color/zalivon"
+            android:paddingLeft="6dp"
+            android:paddingRight="2dp"
+            android:scrollbarStyle="outsideInset" />
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
