@@ -18,6 +18,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.Attachment;
 import com.httpso_hello.hello.Structures.Message;
 import com.httpso_hello.hello.activity.ChatActivity;
 import com.httpso_hello.hello.activity.FullscreenPhotoActivity;
@@ -162,196 +163,91 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         if (position == 0) lastPosition = true;
         else lastPosition = false;
 
-            //Если отправитель
-            if (user_id == thisMessage.from_id) {
-                holder.senderLayout.setVisibility(View.VISIBLE);
-                holder.getterLayout.setVisibility(View.GONE);
+        //Если отправитель
+        if (user_id == thisMessage.from_id) {
+            holder.senderLayout.setVisibility(View.VISIBLE);
+            holder.getterLayout.setVisibility(View.GONE);
 
-                //Аватарка
-                Picasso
-                        .with(getContext())
-                        .load(userAvatar)
-                        .transform(new CircularTransformation(0))
-                        .into(holder.avatar_sender);
+            //Аватарка
+            Picasso
+                    .with(getContext())
+                    .load(userAvatar)
+                    .transform(new CircularTransformation(0))
+                    .into(holder.avatar_sender);
 
-                //Текст
-                holder.chatMessage_sender.setText(thisMessage.content);
+            //Текст
+            holder.chatMessage_sender.setText(thisMessage.content);
 
-                //Дата
-                if (thisMessage.date_pub != null) {
-                    holder.progress_sender.setVisibility(View.GONE);
-                    holder.chatMessageDate_sender.setText(ConverterDate.convertDateForChat(thisMessage.date_pub));
-                } else {
-                    holder.progress_sender.setVisibility(View.VISIBLE);
-                }
+            //Дата
+            if (thisMessage.date_pub != null) {
+                holder.progress_sender.setVisibility(View.GONE);
+                holder.chatMessageDate_sender.setText(ConverterDate.convertDateForChat(thisMessage.date_pub));
+            } else {
+                holder.progress_sender.setVisibility(View.VISIBLE);
+            }
 
-                //Прочитано ли
-                if (thisMessage.is_new == 1) holder.readornot_sender.setVisibility(View.VISIBLE);
-                else holder.readornot_sender.setVisibility(View.GONE);
+            //Прочитано ли
+            if (thisMessage.is_new == 1) holder.readornot_sender.setVisibility(View.VISIBLE);
+            else holder.readornot_sender.setVisibility(View.GONE);
 
-                // Скрываем аву и облака где надо
-                if (lastMessage != null) {
-                    if ((lastMessage.from_id != thisMessage.from_id) || (isNewDate)) {
-                        holder.avatar_sender.setVisibility(View.VISIBLE);
-                        holder.cloudMessage_sender.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.avatar_sender.setVisibility(View.INVISIBLE);
-                        holder.cloudMessage_sender.setVisibility(View.INVISIBLE);
-                    }
-                } else {
+            // Скрываем аву и облака где надо
+            if (lastMessage != null) {
+                if ((lastMessage.from_id != thisMessage.from_id) || (isNewDate)) {
                     holder.avatar_sender.setVisibility(View.VISIBLE);
                     holder.cloudMessage_sender.setVisibility(View.VISIBLE);
-                }
-
-                //Скрыть атачменты
-                if (thisMessage.attachments != null) {
-                    if (thisMessage.attachments.length == 0) {
-                        holder.forPhoto_sender.setVisibility(View.GONE);
-                        holder.customView_sender.setVisibility(View.GONE);
-                        holder.otherPhotos_sender.setVisibility(View.GONE);
-                        holder.chatMessage_sender.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.forPhoto_sender.setVisibility(View.VISIBLE);
-                        if (thisMessage.content == null) {
-                            holder.customView_sender.setVisibility(View.GONE);
-                            holder.chatMessage_sender.setVisibility(View.GONE);
-                        } else {
-                            holder.customView_sender.setVisibility(View.VISIBLE);
-                            holder.chatMessage_sender.setVisibility(View.VISIBLE);
-                        }
-                        DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
-                        int width = (int) (displaymetrics.widthPixels / 2);
-                        holder.chat_message_imgae1_sender.setMinimumWidth(width);
-                        holder.chat_message_imgae1_sender.setMinimumHeight(width);
-                        holder.progressPhoto1_sender.setVisibility(View.VISIBLE);
-                        String downloadPath = "";
-                        if(thisMessage.attachments[0].previewAttachmentUri!=null){
-                            downloadPath = thisMessage.attachments[0].previewAttachmentUri.toString();
-                        }else{
-                            downloadPath = Constant.upload + thisMessage.attachments[0].image.small;
-                        }
-                        Picasso.with(getContext())
-                                .load(downloadPath)
-                                .resize(width, width)
-                                .centerCrop()
-                                .into(holder.chat_message_imgae1_sender, new Callback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        holder.progressPhoto1_sender.setVisibility(View.GONE);
-                                    }
-
-                                    @Override
-                                    public void onError() {
-                                        holder.progressPhoto1_sender.setVisibility(View.GONE);
-                                    }
-                                });
-
-                        holder.chat_message_imgae1_sender.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                ArrayList<String> photoOrig = new ArrayList<String>();
-                                for (int j = 0; j < thisMessage.attachments.length; j++) {
-                                    photoOrig.add(j, Constant.upload + thisMessage.attachments[j].image.big);
-                                }
-                                Intent intent = new Intent(getContext(), FullscreenPhotoActivity.class);
-                                intent.putStringArrayListExtra("photoOrig", photoOrig);
-                                intent.putExtra("likeble", false);
-                                intent.putExtra("position", 0);
-                                ca.startActivity(intent);
-                            }
-                        });
-
-                        if (thisMessage.attachments.length > 1) {
-                            holder.otherPhotos_sender.setText("+ " + Integer.toString(thisMessage.attachments.length - 1) + " фото");
-                            holder.otherPhotos_sender.setVisibility(View.VISIBLE);
-                        } else {
-                            holder.otherPhotos_sender.setVisibility(View.GONE);
-                        }
-                    }
                 } else {
+                    holder.avatar_sender.setVisibility(View.INVISIBLE);
+                    holder.cloudMessage_sender.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                holder.avatar_sender.setVisibility(View.VISIBLE);
+                holder.cloudMessage_sender.setVisibility(View.VISIBLE);
+            }
+
+            //Скрыть атачменты
+            if (thisMessage.attachments != null) {
+                if (thisMessage.attachments.length == 0) {
                     holder.forPhoto_sender.setVisibility(View.GONE);
                     holder.customView_sender.setVisibility(View.GONE);
                     holder.otherPhotos_sender.setVisibility(View.GONE);
                     holder.chatMessage_sender.setVisibility(View.VISIBLE);
-                }
-
-                //Дата по центру
-                if (isNewDate || lastPosition) {
-                    if ((thisMessage.date_pub != null)) {
-                        holder.isNewDate.setText(ConverterDate.convertDayForChat(thisMessage.date_pub));
-                    } else holder.isNewDate.setText("сегодня");
-                    holder.isNewDate.setVisibility(View.VISIBLE);
-                } else holder.isNewDate.setVisibility(View.GONE);
-
-            //Если получатель
-            } else {
-                holder.senderLayout.setVisibility(View.GONE);
-                holder.getterLayout.setVisibility(View.VISIBLE);
-
-                //Аватарка
-                Picasso
-                        .with(getContext())
-                        .load(contactAvatar)
-                        .transform(new CircularTransformation(0))
-                        .into(holder.avatar);
-
-                //Текст
-                holder.chatMessage.setText(thisMessage.content);
-
-                //Дата
-                holder.chatMessageDate.setText(ConverterDate.convertDateForChat(thisMessage.date_pub));
-
-                // Скрываем аву и облака где надо
-                if (lastMessage != null) {
-                    if ((lastMessage.from_id != thisMessage.from_id) || (isNewDate)) {
-                        holder.avatar.setVisibility(View.VISIBLE);
-                        holder.cloudMessage.setVisibility(View.VISIBLE);
-                    } else {
-                        holder.avatar.setVisibility(View.INVISIBLE);
-                        holder.cloudMessage.setVisibility(View.INVISIBLE);
-                    }
                 } else {
-                    holder.avatar.setVisibility(View.VISIBLE);
-                    holder.cloudMessage.setVisibility(View.VISIBLE);
-                }
-
-                //Скрыть атачменты
-                if (thisMessage.attachments.length == 0) {
-                    holder.forPhoto.setVisibility(View.GONE);
-                    holder.customView.setVisibility(View.GONE);
-                    holder.otherPhotos.setVisibility(View.GONE);
-                    holder.chatMessage.setVisibility(View.VISIBLE);
-                } else {
-                    holder.forPhoto.setVisibility(View.VISIBLE);
+                    holder.forPhoto_sender.setVisibility(View.VISIBLE);
                     if (thisMessage.content == null) {
-                        holder.customView.setVisibility(View.GONE);
-                        holder.chatMessage.setVisibility(View.GONE);
+                        holder.customView_sender.setVisibility(View.GONE);
+                        holder.chatMessage_sender.setVisibility(View.GONE);
                     } else {
-                        holder.customView.setVisibility(View.VISIBLE);
-                        holder.chatMessage.setVisibility(View.VISIBLE);
+                        holder.customView_sender.setVisibility(View.VISIBLE);
+                        holder.chatMessage_sender.setVisibility(View.VISIBLE);
                     }
                     DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
-                    int width = (int) (displaymetrics.widthPixels/2);
-                    holder.chat_message_imgae1.setMinimumWidth(width);
-                    holder.chat_message_imgae1.setMinimumHeight(width);
-                    holder.progressPhoto1.setVisibility(View.VISIBLE);
+                    int width = (int) (displaymetrics.widthPixels / 2);
+                    holder.chat_message_imgae1_sender.setMinimumWidth(width);
+                    holder.chat_message_imgae1_sender.setMinimumHeight(width);
+                    holder.progressPhoto1_sender.setVisibility(View.VISIBLE);
+                    String downloadPath = "";
+                    if(thisMessage.attachments[0].previewAttachmentUri!=null){
+                        downloadPath = thisMessage.attachments[0].previewAttachmentUri.toString();
+                    }else{
+                        downloadPath = Constant.upload + thisMessage.attachments[0].image.small;
+                    }
                     Picasso.with(getContext())
-                            .load(Constant.upload + thisMessage.attachments[0].image.small)
+                            .load(downloadPath)
                             .resize(width, width)
                             .centerCrop()
-                            .into(holder.chat_message_imgae1, new Callback() {
+                            .into(holder.chat_message_imgae1_sender, new Callback() {
                                 @Override
                                 public void onSuccess() {
-                                    holder.progressPhoto1.setVisibility(View.GONE);
+                                    holder.progressPhoto1_sender.setVisibility(View.GONE);
                                 }
 
                                 @Override
                                 public void onError() {
-                                    holder.progressPhoto1.setVisibility(View.GONE);
+                                    holder.progressPhoto1_sender.setVisibility(View.GONE);
                                 }
                             });
 
-                    holder.chat_message_imgae1.setOnClickListener(new View.OnClickListener() {
+                    holder.chat_message_imgae1_sender.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             ArrayList<String> photoOrig = new ArrayList<String>();
@@ -367,19 +263,124 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                     });
 
                     if (thisMessage.attachments.length > 1) {
-                        holder.otherPhotos.setText("+ " + Integer.toString(thisMessage.attachments.length - 1) + " фото");
-                        holder.otherPhotos.setVisibility(View.VISIBLE);
+                        holder.otherPhotos_sender.setText("+ " + Integer.toString(thisMessage.attachments.length - 1) + " фото");
+                        holder.otherPhotos_sender.setVisibility(View.VISIBLE);
                     } else {
-                        holder.otherPhotos.setVisibility(View.GONE);
+                        holder.otherPhotos_sender.setVisibility(View.GONE);
                     }
                 }
-
-                //Дата по центру
-                if (isNewDate || lastPosition) {
-                    holder.isNewDate.setText(ConverterDate.convertDayForChat(thisMessage.date_pub));
-                    holder.isNewDate.setVisibility(View.VISIBLE);
-                } else holder.isNewDate.setVisibility(View.GONE);
+            } else {
+                holder.forPhoto_sender.setVisibility(View.GONE);
+                holder.customView_sender.setVisibility(View.GONE);
+                holder.otherPhotos_sender.setVisibility(View.GONE);
+                holder.chatMessage_sender.setVisibility(View.VISIBLE);
             }
+
+            //Дата по центру
+            if (isNewDate || lastPosition) {
+                if ((thisMessage.date_pub != null)) {
+                    holder.isNewDate.setText(ConverterDate.convertDayForChat(thisMessage.date_pub));
+                } else holder.isNewDate.setText("сегодня");
+                holder.isNewDate.setVisibility(View.VISIBLE);
+            } else holder.isNewDate.setVisibility(View.GONE);
+
+            //Если получатель
+        } else {
+            holder.senderLayout.setVisibility(View.GONE);
+            holder.getterLayout.setVisibility(View.VISIBLE);
+
+            //Аватарка
+            Picasso
+                    .with(getContext())
+                    .load(contactAvatar)
+                    .transform(new CircularTransformation(0))
+                    .into(holder.avatar);
+
+            //Текст
+            holder.chatMessage.setText(thisMessage.content);
+
+            //Дата
+            holder.chatMessageDate.setText(ConverterDate.convertDateForChat(thisMessage.date_pub));
+
+            // Скрываем аву и облака где надо
+            if (lastMessage != null) {
+                if ((lastMessage.from_id != thisMessage.from_id) || (isNewDate)) {
+                    holder.avatar.setVisibility(View.VISIBLE);
+                    holder.cloudMessage.setVisibility(View.VISIBLE);
+                } else {
+                    holder.avatar.setVisibility(View.INVISIBLE);
+                    holder.cloudMessage.setVisibility(View.INVISIBLE);
+                }
+            } else {
+                holder.avatar.setVisibility(View.VISIBLE);
+                holder.cloudMessage.setVisibility(View.VISIBLE);
+            }
+
+            //Скрыть атачменты
+            if (thisMessage.attachments.length == 0) {
+                holder.forPhoto.setVisibility(View.GONE);
+                holder.customView.setVisibility(View.GONE);
+                holder.otherPhotos.setVisibility(View.GONE);
+                holder.chatMessage.setVisibility(View.VISIBLE);
+            } else {
+                holder.forPhoto.setVisibility(View.VISIBLE);
+                if (thisMessage.content == null) {
+                    holder.customView.setVisibility(View.GONE);
+                    holder.chatMessage.setVisibility(View.GONE);
+                } else {
+                    holder.customView.setVisibility(View.VISIBLE);
+                    holder.chatMessage.setVisibility(View.VISIBLE);
+                }
+                DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
+                int width = (int) (displaymetrics.widthPixels/2);
+                holder.chat_message_imgae1.setMinimumWidth(width);
+                holder.chat_message_imgae1.setMinimumHeight(width);
+                holder.progressPhoto1.setVisibility(View.VISIBLE);
+                Picasso.with(getContext())
+                        .load(Constant.upload + thisMessage.attachments[0].image.small)
+                        .resize(width, width)
+                        .centerCrop()
+                        .into(holder.chat_message_imgae1, new Callback() {
+                            @Override
+                            public void onSuccess() {
+                                holder.progressPhoto1.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onError() {
+                                holder.progressPhoto1.setVisibility(View.GONE);
+                            }
+                        });
+
+                holder.chat_message_imgae1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ArrayList<String> photoOrig = new ArrayList<String>();
+                        for (int j = 0; j < thisMessage.attachments.length; j++) {
+                            photoOrig.add(j, Constant.upload + thisMessage.attachments[j].image.big);
+                        }
+                        Intent intent = new Intent(getContext(), FullscreenPhotoActivity.class);
+                        intent.putStringArrayListExtra("photoOrig", photoOrig);
+                        intent.putExtra("likeble", false);
+                        intent.putExtra("position", 0);
+                        ca.startActivity(intent);
+                    }
+                });
+
+                if (thisMessage.attachments.length > 1) {
+                    holder.otherPhotos.setText("+ " + Integer.toString(thisMessage.attachments.length - 1) + " фото");
+                    holder.otherPhotos.setVisibility(View.VISIBLE);
+                } else {
+                    holder.otherPhotos.setVisibility(View.GONE);
+                }
+            }
+
+            //Дата по центру
+            if (isNewDate || lastPosition) {
+                holder.isNewDate.setText(ConverterDate.convertDayForChat(thisMessage.date_pub));
+                holder.isNewDate.setVisibility(View.VISIBLE);
+            } else holder.isNewDate.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
@@ -409,7 +410,15 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
             else
                 i--;
         }
-        message.attachments = this.messages.get(i).attachments;
+        int j = 0;
+        for (Attachment attachment : this.messages.get(i).attachments) {
+            if(message.attachments[j].id == attachment.id) {
+                message.attachments[j].previewAttachmentUri = attachment.previewAttachmentUri;
+            } else {
+                message.attachments[j] = attachment;
+            }
+            j++;
+        }
         this.messages.set(i, message);
         this.notifyDataSetChanged();
     }
