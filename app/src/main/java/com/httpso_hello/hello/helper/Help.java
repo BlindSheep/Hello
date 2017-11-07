@@ -149,22 +149,20 @@ public class Help {
             need_size = DEFAULT_NEED_SIZE;
         }
         int quality = 100;
-        if(size>need_size){
+        if(size>need_size || size == 0){
             // Если разрешение превышет максимально доступное
             if(image.getHeight()>image.getWidth()){
                 if(image.getHeight()>1795){
                     image = Bitmap.createScaledBitmap(image, 1795,2551, false);
-                    size = (compressImage(image, compressFormat, 100)).toByteArray().length;
+//                    size = (compressImage(image, compressFormat, 100)).toByteArray().length;
                 }
             } else {
                 if(image.getWidth()>2551){
                     image = Bitmap.createScaledBitmap(image, 2551, 1795, false);
-                    size = (compressImage(image, compressFormat, 100)).toByteArray().length;
+//                    size = (compressImage(image, compressFormat, 100)).toByteArray().length;
                 }
             }
-
-//            File file = createImageFile(activity);
-//            image.sa
+            size = (compressImage(image, compressFormat, 100)).toByteArray().length;
             float fQuality = (float)((float)need_size/(float)size) * 100;
             quality = Math.round(fQuality);
         }
