@@ -409,6 +409,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
             else
                 i--;
         }
+        message.attachments = this.messages.get(i).attachments;
         this.messages.set(i, message);
         this.notifyDataSetChanged();
     }
