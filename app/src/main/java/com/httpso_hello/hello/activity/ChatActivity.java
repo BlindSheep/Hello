@@ -10,11 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.Settings;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
@@ -46,8 +41,8 @@ import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Messages;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
+import com.wang.avi.AVLoadingIndicatorView;
 
-import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,9 +63,9 @@ public class ChatActivity extends SuperMainActivity{
     private int contact_id;
     private String contact_nickname;
     private EmojiconEditText messageContent;
-    private static Handler Tread1_Handler = new Handler(), sendedMessagesHandler = new Handler(), onlineHandler = new Handler();
+    private static Handler Tread1_Handler = new Handler(), sendedMessagesHandler = new Handler(), writingHandler = new Handler();
     private boolean firstItemScrolled = false;
-    private Timer timer = new Timer(), sendedMessagesTimer = new Timer(), onlineTimer = new Timer();
+    private Timer timer = new Timer(), sendedMessagesTimer = new Timer(), onlineTimer = new Timer(), writingTimer = new Timer();
     private boolean isStartedSendedMessagesTimer;
     private ProgressBar progressBarChat;
     private ImageButton emojiKeyboard;
@@ -88,6 +83,7 @@ public class ChatActivity extends SuperMainActivity{
     private int user_id;
     private MessagesAttachmentsAdapter maAdapter;
     private GridView attachmentsListView;
+    private AVLoadingIndicatorView avi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,6 +107,7 @@ public class ChatActivity extends SuperMainActivity{
         density = getApplicationContext().getResources().getDisplayMetrics().density;
         textOnline = (TextView) findViewById(R.id.textOnline);
         emojIcon.ShowEmojIcon();
+        avi = (AVLoadingIndicatorView) findViewById(R.id.avi);
 
         this.contact_nickname = extras.getString("nickname");
         ((TextView) findViewById(R.id.textName)).setText(this.contact_nickname);
@@ -132,6 +129,8 @@ public class ChatActivity extends SuperMainActivity{
                     .into(iv);
             ll.addView(iv);
         }
+
+        textOnline.setText("не в сети");
 
         if(extras.getString("avatar")!=null) {
             Picasso
@@ -404,9 +403,15 @@ public class ChatActivity extends SuperMainActivity{
             @Override
             public void run() {
                 Tread1_Handler.post(new Runnable() {public void run() {
-                    messages.refreshMessages(dateLastUpdate, contact_id, new Messages.RefreshMessagesCallback() {
+                    boolean writing = false;
+                    if (messageContent.getText().length() != 0) {
+                        writing = true;
+                    } else {
+                        writing = false;
+                    }
+                    messages.refreshMessages(dateLastUpdate, contact_id, writing, new Messages.RefreshMessagesCallback() {
                         @Override
-                        public void onSuccess(Message[] messages, String dateLU, boolean contactIsOnline) {
+                        public void onSuccess(Message[] messages, String dateLU, boolean contactIsOnline, boolean is_writing) {
                             dateLastUpdate = dateLU;
                             if(firstItemScrolled) {
                                 chatList.setTranscriptMode(0);
@@ -422,7 +427,9 @@ public class ChatActivity extends SuperMainActivity{
 
                                 mmAdapter.addMessages(messages);
                             }
-                            contactOnline(contactIsOnline);
+
+                            if (is_writing) contactIsWriting();
+                            else contactOnline(contactIsOnline);
                         }
                     }, new Help.ErrorCallback() {
                         @Override
@@ -482,7 +489,6 @@ public class ChatActivity extends SuperMainActivity{
                 });
             }
         }, 3000, 3000);
-//        }
 
         super.onResume();
     }
@@ -495,6 +501,7 @@ public class ChatActivity extends SuperMainActivity{
             isStartedSendedMessagesTimer = false;
         }
         onlineTimer.cancel();
+        writingTimer.cancel();
         super.onPause();
     }
 
@@ -506,6 +513,7 @@ public class ChatActivity extends SuperMainActivity{
             isStartedSendedMessagesTimer = false;
         }
         onlineTimer.cancel();
+        writingTimer.cancel();
         super.onDestroy();
     }
 
@@ -627,14 +635,18 @@ public class ChatActivity extends SuperMainActivity{
             e.printStackTrace();
         }
     }
+
+    private void contactIsWriting(){
+        avi.setVisibility(View.VISIBLE);
+        textOnline.setText("печатает");
+    }
+
     private void contactOnline(boolean contactIsOnline){
+        avi.setVisibility(View.INVISIBLE);
         if(contactIsOnline){
-            textOnline.setText("в сети");
-            if (textOnline.getText().equals("в сети")) textOnline.setTextColor(getResources().getColor(R.color.main_green_color_hello));
-            else textOnline.setTextColor(getResources().getColor(R.color.main_white_color_hello));
+            textOnline.setText("онлайн");
         } else {
-            textOnline.setTextColor(getResources().getColor(R.color.main_white_color_hello));
-            textOnline.setText("Не в сети");
+            textOnline.setText("не в сети");
         }
     }
 }

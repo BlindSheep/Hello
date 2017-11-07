@@ -48,15 +48,36 @@
                     android:lines="1"
                     android:ellipsize="end"
                     android:singleLine="true"
-                    android:text="" />
+                    android:text="bvz" />
 
-                <TextView
-                    android:id="@+id/textOnline"
+                <LinearLayout
+                    android:orientation="horizontal"
                     android:layout_marginTop="-3dp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/main_white_color_hello"
-                    android:textSize="15dp"/>
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/textOnline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="не в сети"
+                        android:layout_gravity="center"
+                        android:textColor="@color/main_white_color_hello"
+                        android:textSize="15dp"/>
+
+                    <com.wang.avi.AVLoadingIndicatorView
+                        android:id="@+id/avi"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:visibility="invisible"
+                        style="@style/AVLoadingIndicatorView"
+                        app:indicatorName="BallPulseIndicator"
+                        app:indicatorColor="@color/main_white_color_hello" />
+
+                </LinearLayout>
 
             </LinearLayout>
 

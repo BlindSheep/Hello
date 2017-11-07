@@ -14,6 +14,7 @@ public class RequestMessages {
     public Error error;// Обхект ошибки если есть
     public String dateLastUpdate; // Дата последнего обновления
     public boolean contact_is_online; // Онлайн или нет контакт
+    public boolean is_writing; // Печатает или нет
 
     public RequestMessages(){
 

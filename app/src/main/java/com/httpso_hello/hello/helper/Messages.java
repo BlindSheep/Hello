@@ -116,6 +116,7 @@ public class Messages extends Help {
     public void refreshMessages(
             final String dateLastUpdate,
             final int contact_id,
+            final boolean writing,
             final RefreshMessagesCallback refreshMessagesCallback,
             final ErrorCallback errorCallback
     ){
@@ -129,7 +130,7 @@ public class Messages extends Help {
                             if (response != null) {
                                 RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
                                 if(requestMessages.error == null){
-                                    refreshMessagesCallback.onSuccess(requestMessages.messages, requestMessages.dateLastUpdate, requestMessages.contact_is_online);
+                                    refreshMessagesCallback.onSuccess(requestMessages.messages, requestMessages.dateLastUpdate, requestMessages.contact_is_online, requestMessages.is_writing);
                                     return;
                                 }
                                 errorCallback.onError(requestMessages.error.error_code, requestMessages.error.error_msg);
@@ -154,6 +155,7 @@ public class Messages extends Help {
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("dateLastUpdate", dateLastUpdate);
                     params.put("contact_id", Integer.toString(contact_id));
+                    if (writing) params.put("is_writing", Boolean.toString(writing));
                     // Если есть device_id отправляем его для устранения дубляжа сообщений
                     if(device_id != null){
                         params.put("device_id", device_id);
@@ -528,7 +530,7 @@ public class Messages extends Help {
         void onSuccess(Message message, String dateLastUpdate, int message_number);
     }
     public interface RefreshMessagesCallback{
-        void onSuccess(Message[] messages, String dateLastUpdate, boolean contactIsOnline);
+        void onSuccess(Message[] messages, String dateLastUpdate, boolean contactIsOnline, boolean contact_is_writing);
     }
 }
 
