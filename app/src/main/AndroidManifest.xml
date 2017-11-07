@@ -157,7 +157,10 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.GiftsUserActivity"
-            android:label="Подарки"/>
+            android:label="Подарки" />
+        <activity
+            android:name=".activity.IgnorListActivity"
+            android:label="Чёрный список"/>
     </application>
 
 </manifest>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:background="@drawable/board"
+    android:elevation="1.5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/userAvatarIgnore"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_margin="10dp"
+            app:srcCompat="@mipmap/avatar" />
+
+            <TextView
+                android:id="@+id/userNicknameIgnore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_marginRight="50dp"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="TextView" />
+
+            <RelativeLayout
+                android:id="@+id/deleteForIgnore"
+                android:background="?android:attr/selectableItemBackground"
+                android:orientation="horizontal"
+                android:layout_marginLeft="-50dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ProgressBar
+                    android:id="@+id/progress"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:visibility="gone"
+                    android:layout_centerInParent="true"/>
+
+                <ImageView
+                    android:id="@+id/deleteButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerInParent="true"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="15dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    app:srcCompat="@mipmap/ic_menu_exit"
+                    android:tint="@color/main_black_color_hello" />
+
+            </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

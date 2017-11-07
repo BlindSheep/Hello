@@ -15,6 +15,8 @@ import com.httpso_hello.hello.Structures.AllCounts;
 import com.httpso_hello.hello.Structures.BalanceReq;
 import com.httpso_hello.hello.Structures.Guest;
 import com.httpso_hello.hello.Structures.Guests;
+import com.httpso_hello.hello.Structures.IgnoreList;
+import com.httpso_hello.hello.Structures.IgnoreUser;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.ReqUpdateAvatar;
 import com.httpso_hello.hello.Structures.Resp;
@@ -94,7 +96,9 @@ public class Profile extends Help{
         }
     }
 
-    public void editProfile(final String new_user_info, final EditProfileCallback editProfileCallback){
+    public void editProfile(
+            final String new_user_info,
+            final EditProfileCallback editProfileCallback){
         if (Constant.api_key !="") {
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
@@ -133,6 +137,92 @@ public class Profile extends Help{
                 };
             };
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.edutProfile");
+        }
+    }
+
+    public void getIgnoreList (
+            final GetIgnoreListCallback getIgnoreListCallback){
+        if (Constant.api_key !="") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.users_get_ignore_list_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            if (response != null) {
+                                Log.d("User", response);
+                                IgnoreList ignoreList = gson.fromJson(response, IgnoreList.class);
+                                if (ignoreList.error == null) {
+                                    getIgnoreListCallback.onSuccess(ignoreList.ignoreUsers);
+                                    return;
+                                }
+                                getIgnoreListCallback.onError(ignoreList.error.error_code, ignoreList.error.error_msg);
+                                return;
+                            }
+                            getIgnoreListCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            getIgnoreListCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("api_key", Constant.api_key);
+                    params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.getIgnorList");
+        }
+    }
+
+    public void deleteUserFromIgnore (
+            final int contact_id,
+            final DeleteUserIgnoreCallback deleteUserIgnoreCallback){
+        if (Constant.api_key !="") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.users_delete_user_ignore_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            if (response != null) {
+                                Log.d("User", response);
+                                IgnoreList ignoreList = gson.fromJson(response, IgnoreList.class);
+                                if (ignoreList.error == null) {
+                                    deleteUserIgnoreCallback.onSuccess();
+                                    return;
+                                }
+                                deleteUserIgnoreCallback.onError(ignoreList.error.error_code, ignoreList.error.error_msg);
+                                return;
+                            }
+                            deleteUserIgnoreCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            deleteUserIgnoreCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("api_key", Constant.api_key);
+                    params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    params.put("contact_id", Integer.toString(contact_id));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.deleteUserFromIgnore");
         }
     }
 
@@ -391,6 +481,16 @@ public class Profile extends Help{
         void onInternetError();
     }
     public interface EditProfileCallback {
+        void onSuccess();
+        void onError(int error_code, String error_msg);
+        void onInternetError();
+    }
+    public interface GetIgnoreListCallback {
+        void onSuccess(IgnoreUser[] iu);
+        void onError(int error_code, String error_msg);
+        void onInternetError();
+    }
+    public interface DeleteUserIgnoreCallback {
         void onSuccess();
         void onError(int error_code, String error_msg);
         void onInternetError();

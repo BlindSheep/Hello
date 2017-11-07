@@ -1,8 +1,10 @@
 package com.httpso_hello.hello.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
 
@@ -18,6 +20,7 @@ public class SettingOfProfileActivity extends SuperMainActivity {
     private RadioButton radioButtonMsg;
     private RadioButton radioButtonSearch;
     private RadioButton radioButtonBoard;
+    private LinearLayout ignorList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +37,11 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         radioButtonMsg = (RadioButton) findViewById(R.id.radioButtonMsg);
         radioButtonSearch = (RadioButton) findViewById(R.id.radioButtonSearch);
         radioButtonBoard = (RadioButton) findViewById(R.id.radioButtonBoard);
+        ignorList = (LinearLayout) findViewById(R.id.ignorList);
 
         pushSettings();
         startPageSettings();
+        setOnClickOnIgnorList();
     }
 
     //Настройки пушей
@@ -157,6 +162,16 @@ public class SettingOfProfileActivity extends SuperMainActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) stgs.setSettingInt("startPage", 0);
+            }
+        });
+    }
+
+    private void setOnClickOnIgnorList() {
+        ignorList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SettingOfProfileActivity.this, IgnorListActivity.class);
+                startActivity(intent);
             }
         });
     }

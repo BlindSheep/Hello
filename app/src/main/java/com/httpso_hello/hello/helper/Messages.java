@@ -208,32 +208,56 @@ public class Messages extends Help {
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_contacts");
         }
     }
+    public void ignorContact(
+            final int contactId,
+            final Messages.IgnorContactCallback ignorContactCallback
+    ){
+        if (Constant.api_key !="") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.users_ignor_contact_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            Log.d("ignorContact", response);
+                            if (response != null) {
+                                Notices notises = gson.fromJson(response, Notices.class);
+                                if(notises.error == null){
+                                    ignorContactCallback.onSuccess();
+                                    return;
+                                }
+                                ignorContactCallback.onError(notises.error.error_code, notises.error.error_msg);
+                                return;
+                            }
+                            ignorContactCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            ignorContactCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("api_key", Constant.api_key);
+                    params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    params.put("contact_id", Integer.toString(contactId));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.ignor_contact");
+        }
+    }
 
     public void getMessages(
             final int contact_id,
             final Messages.GetMessagesCallback getMessagesCallback,
             final Help.ErrorCallback errorCallback
     ){
-        /*api.getMessages(contact_id, activity, new Api.GetMessagesCallback() {
-            @Override
-            public void onSuccess(RequestMessages messages, Activity activity) {
-                if(messages.error==null){
-                    getMessagesCallback.onSuccess(messages.messages, activity,
-                            stgs.getSettingInt("user_id"),
-                            Constant.host + messages.userAvatar.micro,
-                            messages.sendedUnreadedMessagesIDs,
-                            messages.dateLastUpdate,
-                            messages.contact_is_online
-                    );
-                    return;
-                }
-            }
-
-            @Override
-            public void onInternetError() {
-
-            }
-        });*/
         if(Constant.api_key!=""){
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
@@ -476,6 +500,12 @@ public class Messages extends Help {
     }
 
     public interface DeleteContactsCallback {
+        void onSuccess();
+        void onError(int error_code, String error_msg);
+        void onInternetError();
+    }
+
+    public interface IgnorContactCallback {
         void onSuccess();
         void onError(int error_code, String error_msg);
         void onInternetError();

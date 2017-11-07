@@ -45,6 +45,9 @@ public class Constant {
     public static String users_get_balance_uri = start_api_uri + "users.get_balance";
     public static String users_get_online_uri = start_api_uri + "users.get_online";
     public static String users_get_counts_uri = start_api_uri + "users.get_counts";
+    public static String users_get_ignore_list_uri = start_api_uri + "users.get_ignore_list";
+    public static String users_ignor_contact_uri = start_api_uri + "users.ignore_user";
+    public static String users_delete_user_ignore_uri = start_api_uri + "users.delete_user_ignore";
 
     public static String content_delete_item_uri = start_api_uri + "content.delete_item";
 

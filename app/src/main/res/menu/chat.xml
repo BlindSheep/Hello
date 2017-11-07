@@ -6,4 +6,9 @@
         android:orderInCategory="100"
         android:title="Удалить все сообщения"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_ignor"
+        android:orderInCategory="100"
+        android:title="В черный список"
+        app:showAsAction="never" />
 </menu>
