@@ -21,6 +21,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -1375,4 +1376,5 @@ openAvatarUpdateWindow(sendPhotoClick);
         setContent();
         super.onResume();
     }
+
 }

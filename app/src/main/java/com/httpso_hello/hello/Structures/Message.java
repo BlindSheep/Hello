@@ -20,6 +20,7 @@ public class Message {
     public boolean is_deleted_to;
     public boolean is_deleted_from;
     public int is_new;
+    public long deviceMessageId;
 
     //attachments
     public Attachment[] attachments;

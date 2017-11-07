@@ -312,6 +312,7 @@ public class Messages extends Help {
             final int contact_id,
             final String messageContent,
             final int message_number,
+            final long deviceMessageId,
             final Messages.MessagesSendMessage messagesSendMessage,
             final ErrorCallback errorCallback
     ){
@@ -361,6 +362,7 @@ public class Messages extends Help {
                     if(device_id != null){
                         params.put("device_id", device_id);
                     }
+                    params.put("device_message_id", Long.toString(deviceMessageId));
                     return params;
                 };
             };

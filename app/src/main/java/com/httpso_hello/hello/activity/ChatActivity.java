@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -282,7 +283,7 @@ public class ChatActivity extends SuperMainActivity{
                     } else{
                         message.attachments = new Attachment[]{};
                     }
-
+                    message.deviceMessageId = System.currentTimeMillis();
                     chatList.setTranscriptMode(2);
                     int message_number = mmAdapter.addMessage(message);
                     if(maAdapter!=null){
@@ -294,6 +295,7 @@ public class ChatActivity extends SuperMainActivity{
                             ChatActivity.this.contact_id,
                             messageContentString,
                             message_number-1,
+                            message.deviceMessageId,
                             new Messages.MessagesSendMessage() {
                                 @Override
                                 public void onSuccess(Message message, String dateLU, int message_number) {

@@ -397,7 +397,17 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
     }
 
     public void setMessage(Message message, int message_number){
-        this.messages.set(message_number, message);
+        if(this.messages.get(message_number).deviceMessageId == message.deviceMessageId){
+            this.messages.set(message_number, message);
+        } else {
+            int i = this.messages.size()-1;
+            while (this.messages.get(i).deviceMessageId!=message.deviceMessageId){
+                i--;
+            }
+            this.messages.set(i, message);
+
+        }
+
         this.notifyDataSetChanged();
     }
 
