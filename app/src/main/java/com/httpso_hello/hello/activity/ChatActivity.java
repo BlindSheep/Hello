@@ -299,7 +299,7 @@ public class ChatActivity extends SuperMainActivity{
                                 @Override
                                 public void onSuccess(Message message, String dateLU, int message_number) {
 
-                                    dateLastUpdate = dateLU;
+//                                    dateLastUpdate = dateLU;
                                     mmAdapter.setMessage(message, message_number);
                                     sendedMessages.add(message);
                                 }

@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.httpso_hello.hello.Structures.Board;
 import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Resp;
+import com.yandex.metrica.YandexMetrica;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -91,6 +92,7 @@ public class HBoard extends Help{
                         public void onResponse(String response){
                             Log.d("add_board", response);
                             if (response != null) {
+                                YandexMetrica.getReporter(_context, Constant.metrika_api_key).reportEvent("add_board");
                                 addBoardCallback.onSuccess();
 //                                Board board = gson.fromJson(response, Board.class);
 //                                Log.d("add_item", board.content_error);
