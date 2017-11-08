@@ -47,6 +47,11 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+        <service android:name=".helper.AlwaysOnline">
+            <intent-filter>
+                <action android:name="com.hello.alwaysOnline" />
+            </intent-filter>
+        </service>
 
         <activity android:name=".activity.MainActivity">
             <intent-filter>

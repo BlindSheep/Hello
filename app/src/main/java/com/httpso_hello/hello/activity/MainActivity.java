@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 
 import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.helper.AlwaysOnline;
 import com.httpso_hello.hello.helper.Auth;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
@@ -38,6 +39,7 @@ public class MainActivity extends Activity{
         stgs = new Settings(getApplicationContext());
         //Проверяем авторизовано ли приложения
         if (auth.autoLogion()){
+            startService(new Intent(getApplicationContext(), AlwaysOnline.class));
             //Если авторизовано переходит на страницу сообщений
             Intent intent;
             if (stgs.getSettingInt("startPage") == 3) {

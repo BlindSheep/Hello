@@ -9,6 +9,7 @@ import android.widget.RadioButton;
 import android.widget.Switch;
 
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.helper.AlwaysOnline;
 
 public class SettingOfProfileActivity extends SuperMainActivity {
 
@@ -21,6 +22,7 @@ public class SettingOfProfileActivity extends SuperMainActivity {
     private RadioButton radioButtonSearch;
     private RadioButton radioButtonBoard;
     private LinearLayout ignorList;
+    private Switch switchOnline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +40,12 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         radioButtonSearch = (RadioButton) findViewById(R.id.radioButtonSearch);
         radioButtonBoard = (RadioButton) findViewById(R.id.radioButtonBoard);
         ignorList = (LinearLayout) findViewById(R.id.ignorList);
+        switchOnline = (Switch) findViewById(R.id.switchOnline);
 
         pushSettings();
         startPageSettings();
         setOnClickOnIgnorList();
+        setAlwaysOnline();
     }
 
     //Настройки пушей
@@ -172,6 +176,21 @@ public class SettingOfProfileActivity extends SuperMainActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(SettingOfProfileActivity.this, IgnorListActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    private void setAlwaysOnline() {
+        if (stgs.getSettingInt("always_online") == 0) {
+            switchOnline.setChecked(false);
+        } else switchOnline.setChecked(true);
+        switchOnline.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) stgs.setSettingInt("always_online", 1);
+                else stgs.setSettingInt("always_online", 0);
+
+                startService(new Intent(getApplicationContext(), AlwaysOnline.class));
             }
         });
     }

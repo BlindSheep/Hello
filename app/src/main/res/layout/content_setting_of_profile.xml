@@ -65,6 +65,66 @@
                 android:padding="20dp"
                 android:textSize="18sp"
                 android:textColor="@color/main_blue_color_hello"
+                android:text="Всегда Онлайн *" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:tint="@color/main_dark_grey_color_hello"
+                    app:srcCompat="@mipmap/ic_action_star"/>
+
+                <Switch
+                    android:id="@+id/switchOnline"
+                    android:paddingTop="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Включить" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textColor="@color/main_dark_grey_color_hello"
+                android:text="* Вы всегда будете находиться Онлайн в приложении, и на вас будет обращено больше внимания" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="6dp"
+            android:background="@drawable/board"
+            android:orientation="vertical"
+            android:elevation="1.5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
                 android:text="Push-уведомления *" />
 
             <View
