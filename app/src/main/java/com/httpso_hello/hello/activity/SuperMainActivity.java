@@ -252,26 +252,6 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.nav_exit:
-                auth = new Auth(getApplicationContext());
-                auth.logout(new Auth.LogoutFinishingCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError() {
-                        Toast.makeText(getApplicationContext(),
-// TODO: 24.07.2017 Сделать локализацию
-                                "Что то пошло не так", Toast.LENGTH_LONG)
-                                .show();
-                    }
-                });
-                break;
-
             default:
                 intent = new Intent(getApplicationContext(), NotisesActivity.class);
                 startActivity(intent);

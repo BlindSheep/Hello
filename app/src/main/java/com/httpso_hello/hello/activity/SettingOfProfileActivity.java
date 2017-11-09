@@ -1,15 +1,18 @@
 package com.httpso_hello.hello.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.helper.AlwaysOnline;
+import com.httpso_hello.hello.helper.Auth;
 
 public class SettingOfProfileActivity extends SuperMainActivity {
 
@@ -23,6 +26,9 @@ public class SettingOfProfileActivity extends SuperMainActivity {
     private RadioButton radioButtonBoard;
     private LinearLayout ignorList;
     private Switch switchOnline;
+    private LinearLayout exit;
+    private LinearLayout share;
+    private LinearLayout newVersion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +47,17 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         radioButtonBoard = (RadioButton) findViewById(R.id.radioButtonBoard);
         ignorList = (LinearLayout) findViewById(R.id.ignorList);
         switchOnline = (Switch) findViewById(R.id.switchOnline);
+        exit = (LinearLayout) findViewById(R.id.exit);
+        share = (LinearLayout) findViewById(R.id.share);
+        newVersion = (LinearLayout) findViewById(R.id.newVersion);
 
         pushSettings();
         startPageSettings();
         setOnClickOnIgnorList();
         setAlwaysOnline();
+        setExit();
+        setShare();
+        setNewVersion();
     }
 
     //Настройки пушей
@@ -191,6 +203,55 @@ public class SettingOfProfileActivity extends SuperMainActivity {
                 else stgs.setSettingInt("always_online", 0);
 
                 startService(new Intent(getApplicationContext(), AlwaysOnline.class));
+            }
+        });
+    }
+
+    private void setExit() {
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Auth auth = new Auth(getApplicationContext());
+                auth.logout(new Auth.LogoutFinishingCallback() {
+                    @Override
+                    public void onSuccess() {
+                        stgs.setSettingInt("always_online", 0);
+                        startService(new Intent(getApplicationContext(), AlwaysOnline.class));
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError() {
+                        Toast.makeText(getApplicationContext(),
+                                "Что то пошло не так", Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+            }
+        });
+    }
+
+    private void setShare() {
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.httpso_hello.hello");
+                startActivity(Intent.createChooser(shareIntent, "Поделиться ссылкой на Hello"));
+            }
+        });
+    }
+
+    private void setNewVersion() {
+        newVersion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri address = Uri.parse("https://play.google.com/store/apps/details?id=com.httpso_hello.hello");
+                Intent openlinkIntent = new Intent(Intent.ACTION_VIEW, address);
+                startActivity(openlinkIntent);
             }
         });
     }

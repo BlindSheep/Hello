@@ -47,6 +47,8 @@ public class AlwaysOnline extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (timer != null) timer.cancel();
+
         if (stgs.getSettingInt("always_online") == 1) {
             timer = new Timer();
             Context context = getApplicationContext();
@@ -87,9 +89,7 @@ public class AlwaysOnline extends Service {
                     .getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(666, notification);
         } else {
-            if (timer != null) {
-                timer.cancel();
-            }
+            if (timer != null) timer.cancel();
             Context context = getApplicationContext();
             NotificationManager notificationManager = (NotificationManager) context
                     .getSystemService(Context.NOTIFICATION_SERVICE);
@@ -169,7 +169,7 @@ public class AlwaysOnline extends Service {
                         }
                     });
                 }
-            }, 0, 60000);
+            }, 0, 59000);
         }
 
         return super.onStartCommand(intent, flags, startId);
