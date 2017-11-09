@@ -378,7 +378,7 @@ public class ChatActivity extends SuperMainActivity{
             ms.ignorContact(contact_id, new Messages.IgnorContactCallback() {
                 @Override
                 public void onSuccess() {
-                    Toast.makeText(ChatActivity.this, contact_nickname + " теперь игнорируются", Toast.LENGTH_LONG).show();
+                    Toast.makeText(ChatActivity.this, contact_nickname + " теперь у Вас в черном списке", Toast.LENGTH_LONG).show();
                 }
 
                 @Override
@@ -391,6 +391,7 @@ public class ChatActivity extends SuperMainActivity{
                     Toast.makeText(ChatActivity.this, "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
                 }
             });
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

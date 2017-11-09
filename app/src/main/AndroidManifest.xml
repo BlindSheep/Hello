@@ -83,7 +83,16 @@
         <activity
             android:name=".activity.ProfileActivity"
             android:label="@string/title_activity_profile"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="o-hello.com"
+                    android:pathPrefix="/users/" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.SearchActivity"
             android:label="@string/title_activity_search"

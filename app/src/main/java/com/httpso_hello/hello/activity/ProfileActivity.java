@@ -2,6 +2,9 @@ package com.httpso_hello.hello.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -22,6 +25,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -49,6 +53,7 @@ import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Friend;
 import com.httpso_hello.hello.helper.Gifts;
 import com.httpso_hello.hello.helper.Help;
+import com.httpso_hello.hello.helper.Messages;
 import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.Photo;
 import com.httpso_hello.hello.helper.Simpation;
@@ -60,6 +65,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static android.R.style.Animation_Dialog;
 import static com.httpso_hello.hello.helper.ConverterDate.convertDateForEnter;
@@ -174,7 +180,15 @@ public class ProfileActivity extends SuperMainActivity{
         setContentView(R.layout.activity_profile);
         setHeader();
 
-        profile_id = extras.getInt("profile_id");
+        final Intent intent = getIntent();
+        final String action = intent.getAction();
+        if (Intent.ACTION_VIEW.equals(action)) {
+            final List<String> segments = intent.getData().getPathSegments();
+            if (segments.size() > 1) {
+                profile_id = Integer.parseInt(segments.get(1));
+            }
+        } else profile_id = extras.getInt("profile_id");
+
         profile_nickname = extras.getString("profile_nickname");
         profile_avatar = extras.getString("avatar");
         avatar = (ImageView) findViewById(R.id.avatar);
@@ -285,7 +299,7 @@ public class ProfileActivity extends SuperMainActivity{
 
     private void setContent() {
         Profile profile = new Profile(getApplicationContext());
-        profile.getProfile(extras.getInt("profile_id"), this, new Profile.GetProfileCallback() {
+        profile.getProfile(profile_id, this, new Profile.GetProfileCallback() {
             @Override
             public void onSuccess(final User user, Activity activity) {
 
@@ -1075,6 +1089,47 @@ public class ProfileActivity extends SuperMainActivity{
                 }, 5000);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!(stgs.getSettingInt("user_id") == profile_id)) {
+            getMenuInflater().inflate(R.menu.profile, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_ignor) {
+            Messages ms = new Messages(getApplicationContext(), this);
+            ms.ignorContact(profile_id, new Messages.IgnorContactCallback() {
+                @Override
+                public void onSuccess() {
+                    Toast.makeText(ProfileActivity.this, "Этот пользователь теперь у Вас в черном списке", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(int error_code, String error_msg) {
+                    Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onInternetError() {
+                    Toast.makeText(ProfileActivity.this, "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                }
+            });
+            return true;
+        } else if (id == R.id.action_user_link) {
+            ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText("", "https://o-hello.com/users/" + Integer.toString(profile_id));
+            clipboard.setPrimaryClip(clip);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     //Обрабатываем результат выбора фоток из галереи или с камеры
