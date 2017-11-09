@@ -3,6 +3,7 @@ package com.httpso_hello.hello.activity;
 import android.Manifest;
 import android.app.Activity;
 //import android.app.Fragment;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.*;
 import android.support.design.widget.NavigationView;
@@ -47,7 +49,7 @@ import static android.R.style.Animation_Dialog;
 
 public class SettingsActivity extends SuperMainActivity{
 
-    private ProgressBar progressBarSettings;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,15 +58,25 @@ public class SettingsActivity extends SuperMainActivity{
         setHeader();
         setMenuItem("SettingsActivity");
 
-        progressBarSettings = (ProgressBar) findViewById(R.id.progressBarSettings);
         auth = new Auth(getApplicationContext());
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
+        swipeRefreshLayout.setColorSchemeResources(
+                R.color.main_blue_color_hello,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
+        setFragments();
+    }
+
+    public void setFragments() {
         //Если юзер зашел первый раз
         if (auth.firstLogin()){
             drawer.openDrawer(GravityCompat.START , true);
             stgs.setSettingInt("firstLogin", 1);
         }
 
+        swipeRefreshLayout.setRefreshing(true);
         Profile profiles = new Profile(getApplicationContext());
         profiles.getProfile(stgs.getSettingInt("user_id"), this, new Profile.GetProfileCallback() {
             @Override
@@ -122,17 +134,26 @@ public class SettingsActivity extends SuperMainActivity{
                     public void onPageScrollStateChanged(int state) {
                     }
                 });
-                progressBarSettings.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+                swipeRefreshLayout.setEnabled(false);
             }
 
             @Override
             public void onError(int error_code, String error_msg) {
-                Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        setFragments();
+                    }
+                }, 5000);
             }
 
             @Override
             public void onInternetError() {
-                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        setFragments();
+                    }
+                }, 5000);
             }
         });
     }
@@ -140,13 +161,11 @@ public class SettingsActivity extends SuperMainActivity{
     @Override
     public void onPause() {
         super.onPause();
-//        finish();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        finish();
     }
 }
 

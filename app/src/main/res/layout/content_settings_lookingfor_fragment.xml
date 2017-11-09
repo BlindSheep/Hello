@@ -15,6 +15,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/board"
+            android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
@@ -22,29 +23,30 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Познакомлюсь"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Познакомлюсь" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <RadioGroup
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="13dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp"
                     android:textSize="15sp">
 
                 <RadioButton
                         android:id="@+id/lookingForAll"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:padding="20dp"
                         android:layout_weight="1"
                         android:text="со всеми" />
 
@@ -52,6 +54,8 @@
                         android:id="@+id/lookingForMan"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:padding="20dp"
                         android:layout_weight="1"
                         android:text="с парнем" />
 
@@ -59,6 +63,8 @@
                         android:id="@+id/lookingForWoman"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:padding="20dp"
                         android:layout_weight="1"
                         android:text="с девушкой" />
 
@@ -77,22 +83,22 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Возраст" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Возраст" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:orientation="horizontal">
 
@@ -139,122 +145,114 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Цель знакомства" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Цель знакомства" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <CheckBox
                     android:id="@+id/checkBoxLookinFor0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Дружба и общение" />
+
             <CheckBox
-                    android:id="@+id/checkBoxLookinFor1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:textSize="15sp"
-                    android:text="Новые знакомства" />
+                android:id="@+id/checkBoxLookinFor1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
+                android:text="Новые знакомства"
+                android:textSize="15sp" />
+
             <CheckBox
                     android:id="@+id/checkBoxLookinFor2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Переписка" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Серьезные отношения" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Брак" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor5"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Секс" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor6"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Занятия спортом" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor7"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Бизнес" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor8"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Путешествия" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor9"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Свидания и встречи" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor10"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Походы в кино" />
             <CheckBox
                     android:id="@+id/checkBoxLookinFor11"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
+                android:layout_marginLeft="16dp"
+                android:padding="20dp"
                     android:textSize="15sp"
                     android:text="Другое" />
 

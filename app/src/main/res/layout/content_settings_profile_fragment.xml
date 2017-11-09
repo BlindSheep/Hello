@@ -20,6 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/board"
+            android:layout_marginTop="6dp"
                 android:layout_marginBottom="6dp"
                 android:layout_marginLeft="6dp"
                 android:layout_marginRight="6dp"
@@ -28,14 +29,15 @@
 
             <RelativeLayout
                 android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_gravity="center_vertical"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/settings_profile_new_avatar"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
                     app:srcCompat="@mipmap/avatar"/>
 
                 <ImageView
@@ -54,25 +56,30 @@
                 android:orientation="vertical">
 
                 <TextView
-                        android:textColor="@color/main_blue_color_hello"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
-                        android:textSize="15sp"
-                        android:text="Имя" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="20dp"
+                    android:paddingTop="20dp"
+                    android:paddingRight="20dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Имя" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/view" />
 
                 <EditText
-                        android:id="@+id/userEditName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:textSize="15sp"
-                        android:hint="Имя"
-                        android:inputType="textCapWords"/>
+                    android:id="@+id/userEditName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="15sp"
+                    android:hint="Имя"
+                    android:inputType="textCapWords"/>
 
             </LinearLayout>
 
@@ -89,22 +96,21 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:text="Пол"
-                    android:textColor="@color/main_blue_color_hello"
-                    android:textSize="15sp" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Пол" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <RadioGroup
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="13dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10dp"
                     android:orientation="horizontal"
                     android:textSize="15sp">
 
@@ -113,6 +119,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                    android:layout_marginLeft="16dp"
+                    android:padding="20dp"
                         android:text="Мужской" />
 
                 <RadioButton
@@ -120,6 +128,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                    android:padding="20dp"
                         android:text="Женский" />
 
             </RadioGroup>
@@ -137,25 +146,25 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Дата рождения" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Дата рождения" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <TextView
                     android:id="@+id/currentDateTime"
                     android:textColor="@color/main_black_color_hello"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp"
-                    android:textSize="15sp"
+                android:padding="20dp"
+                android:textSize="15sp"
                     android:hint="1 янваля 1990"/>
 
         </LinearLayout>
@@ -171,18 +180,25 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Место проживания" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Место проживания" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="16dp"
                     android:orientation="horizontal">
 
                 <Spinner
@@ -191,9 +207,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginLeft="14dp"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="10dp"
                         android:textSize="15sp"/>
 
                 <Spinner
@@ -202,9 +215,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:layout_marginTop="10dp"
                         android:textSize="15sp"/>
 
             </LinearLayout>
@@ -222,24 +232,27 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Материальное положение" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Материальное положение" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <Spinner
                     android:id="@+id/mat_pol"
                     android:textColor="@color/main_black_color_hello"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="14dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
-                    android:layout_marginTop="10dp"
+                android:paddingBottom="20dp"
+                android:paddingTop="20dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="16dp"
                     android:entries="@array/mat_pol"
                     android:textSize="15sp"/>
 
@@ -256,23 +269,27 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Телефон" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Телефон" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <EditText
                     android:id="@+id/userEditPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:textSize="15sp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:textSize="15sp"
                     android:hint="Телефон"
                     android:inputType="phone"/>
 
@@ -289,23 +306,27 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Skype" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Skype" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <EditText
                     android:id="@+id/userEditSkype"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:textSize="15sp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:textSize="15sp"
                     android:hint="Skype"
                     android:inputType="textCapSentences"/>
 
@@ -322,23 +343,27 @@
                 android:orientation="vertical">
 
             <TextView
-                    android:textColor="@color/main_blue_color_hello"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:textSize="15sp"
-                    android:text="Автомобиль" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Автомобиль" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
 
             <EditText
                     android:id="@+id/userEditAuto"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginBottom="10dp"
-                    android:textSize="15sp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:textSize="15sp"
                     android:hint="Автомобиль"
                     android:inputType="textCapSentences"/>
 
@@ -359,23 +384,27 @@
                     android:orientation="vertical">
 
                 <TextView
-                        android:textColor="@color/main_blue_color_hello"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
-                        android:textSize="15sp"
-                        android:text="Рост (см)" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Рост (см)" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/view" />
 
                 <EditText
                         android:id="@+id/userRostAuto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:textSize="15sp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="15sp"
                         android:hint="160"
                         android:inputType="number"/>
 
@@ -387,23 +416,27 @@
                     android:orientation="vertical">
 
                 <TextView
-                        android:textColor="@color/main_blue_color_hello"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginTop="20dp"
-                        android:textSize="15sp"
-                        android:text="Вес (кг)" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="20dp"
+                    android:textSize="18sp"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:text="Вес (кг)" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/view" />
 
                 <EditText
                         android:id="@+id/userVesAuto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="10dp"
-                        android:textSize="15sp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="15dp"
+                    android:textSize="15sp"
                         android:hint="50"
                         android:inputType="number"/>
 
