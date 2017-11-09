@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.DisplayMetrics;
@@ -379,6 +380,11 @@ public class BillingActivity extends SuperMainActivity {
                             @Override
                             public void onError(int error_code, String error_msg) {
 //Сделана задержка 5 секунды, чтобы не наебнуть нахуй чёнибудь
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override public void run() {
+                                        SendAddBalance(productId, developerPayload, purchaseToken);
+                                    }
+                                }, 5000);
                                 try {
                                     Thread.sleep(5000);
                                 } catch (InterruptedException e) {
@@ -391,12 +397,11 @@ public class BillingActivity extends SuperMainActivity {
                             @Override
                             public void onInternetError() {
 //Сделана задержка 5 секунды, чтобы не наебнуть нахуй чёнибудь
-                                try {
-                                    Thread.sleep(5000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                                SendAddBalance(productId, developerPayload, purchaseToken);
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override public void run() {
+                                        SendAddBalance(productId, developerPayload, purchaseToken);
+                                    }
+                                }, 5000);
                             }
                         });
     }

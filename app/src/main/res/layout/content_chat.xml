@@ -25,25 +25,23 @@
             android:dividerHeight="5dp"/>
 
     <LinearLayout
-            android:id="@+id/asdasd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/board_white"
-            android:orientation="vertical">
+        android:id="@+id/asdasd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/main_white_color_hello"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
         <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:scrollbars="none"
-                android:background="@drawable/board_white">
+                android:scrollbars="none">
 
             <LinearLayout
                     android:id="@+id/forImage"
                     android:layout_width="1dp"
                     android:layout_height="wrap_content"
                     android:maxHeight="100dp"
-                    android:background="@drawable/board_white"
                     android:orientation="horizontal">
 
 
@@ -66,58 +64,55 @@
         <LinearLayout
                 android:id="@+id/layout_bottom_bar"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@drawable/board_white"
+                android:layout_height="wrap_content"
+            android:background="@color/main_white_color_hello"
                 android:clickable="true"
-                android:orientation="horizontal"
-                android:padding="5dip">
+                android:orientation="horizontal">
 
             <ImageButton
-                    android:id="@+id/docSend"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginRight="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@mipmap/ic_action_photo"
-                    android:padding="5dip"
-                    android:background="@color/main_white_color_hello"
-                    android:tint="@color/main_dark_grey_color_hello"
-            />
+                android:id="@+id/docSend"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="15dp"
+                android:layout_gravity="bottom"
+                app:srcCompat="@mipmap/ic_action_photo"
+                android:background="@color/main_white_color_hello"
+                android:tint="@color/main_dark_grey_color_hello" />
 
             <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
-                    android:id="@+id/messageContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    emojicon:emojiconSize="28sp"
-                    android:background="@color/main_white_color_hello"
-                    android:hint="@string/input_your_message"
-                    android:paddingBottom="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
-                    android:paddingTop="5dp"
-                    android:layout_weight="1"
-                    android:inputType="textCapSentences"/>
+                android:id="@+id/messageContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                emojicon:emojiconSize="28sp"
+                android:background="@color/main_white_color_hello"
+                android:hint="@string/input_your_message"
+                android:layout_weight="1"
+                android:maxLines="4"
+                android:layout_gravity="bottom"
+                android:padding="15dp"
+                android:inputType="textCapSentences|textMultiLine"/>
 
             <ImageButton
-                    android:id="@+id/emojiKeyboard"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:src="@drawable/smiley"
-                    android:layout_marginLeft="10dp"
-                    android:layout_gravity="center"
-                    android:background="@color/main_white_color_hello"
-                    android:padding="5dip" />
+                android:id="@+id/emojiKeyboard"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/smiley"
+                android:layout_marginBottom="11dp"
+                android:layout_gravity="bottom"
+                android:background="@color/main_white_color_hello"/>
 
             <ImageButton
-                    android:id="@+id/messageSend"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    app:srcCompat="@mipmap/ic_action_send"
-                    android:layout_marginLeft="10dp"
-                    android:background="@color/main_white_color_hello"
-                    android:tint="@color/main_dark_grey_color_hello"
-                    android:padding="5dip" />
+                android:id="@+id/messageSend"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="1dp"
+                app:srcCompat="@mipmap/ic_action_send"
+                android:background="@color/main_white_color_hello"
+                android:tint="@color/main_blue_color_hello"/>
 
         </LinearLayout>
 
