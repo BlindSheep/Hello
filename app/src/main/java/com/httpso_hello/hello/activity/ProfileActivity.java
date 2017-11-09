@@ -1126,6 +1126,7 @@ public class ProfileActivity extends SuperMainActivity{
             ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("", "https://o-hello.com/users/" + Integer.toString(profile_id));
             clipboard.setPrimaryClip(clip);
+            Toast.makeText(ProfileActivity.this, "Ссылка скопирована в буфер обмена", Toast.LENGTH_LONG).show();
             return true;
         }
 
