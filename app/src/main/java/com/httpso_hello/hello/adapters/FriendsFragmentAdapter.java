@@ -52,6 +52,7 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
         public TextView userNicknameFriend;
         public TextView userInfoFriend;
         public ImageView acceptRequestInFriend;
+        public ImageView deleteFriend;
     }
 
     @Override
@@ -67,6 +68,7 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
             holder.userNicknameFriend = (TextView) rowView.findViewById(R.id.userNicknameFriend);
             holder.userInfoFriend = (TextView) rowView.findViewById(R.id.userInfoFriend);
             holder.acceptRequestInFriend = (ImageView) rowView.findViewById(R.id.acceptRequestInFriend);
+            holder.deleteFriend = (ImageView) rowView.findViewById(R.id.deleteFriend);
             rowView.setTag(holder);
         } else {
             holder = (FriendsFragmentAdapter.ViewHolder) rowView.getTag();
@@ -93,33 +95,65 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
         else holder.userInfoFriend.setText("");
 
         //Кнопка принять заявку
-        if (isRequests) holder.acceptRequestInFriend.setVisibility(View.VISIBLE);
-        if (isRequests) holder.acceptRequestInFriend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Friend.getInstance(getContext()).acceptFriend(friend.id, new Friend.AcceptFriendCallback() {
-                    @Override
-                    public void onSuccess() {
-                        FriendsActivity FA = ((FriendsActivity) getContext());
-                        Intent intent = new Intent(getContext(), FriendsActivity.class);
-                        intent.putExtra("profile_id", 0);
-                        FA.startActivity(intent);
-                        FA.finish();
-                        Toast.makeText(getContext(), friend.nickname + " теперь Ваш друг", Toast.LENGTH_LONG).show();
-                    }
+        if (isRequests) {
+            holder.deleteFriend.setVisibility(View.GONE);
+            holder.acceptRequestInFriend.setVisibility(View.VISIBLE);
+            holder.acceptRequestInFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Friend.getInstance(getContext()).acceptFriend(friend.id, new Friend.AcceptFriendCallback() {
+                        @Override
+                        public void onSuccess() {
+                            FriendsActivity FA = ((FriendsActivity) getContext());
+                            Intent intent = new Intent(getContext(), FriendsActivity.class);
+                            intent.putExtra("profile_id", 0);
+                            FA.startActivity(intent);
+                            FA.finish();
+                            Toast.makeText(getContext(), friend.nickname + " теперь Ваш друг", Toast.LENGTH_LONG).show();
+                        }
 
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        Toast.makeText(getContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                    }
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            Toast.makeText(getContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                        }
 
-                    @Override
-                    public void onInternetError() {
-                        Toast.makeText(getContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                    }
-                });
-            }
-        });
+                        @Override
+                        public void onInternetError() {
+                            Toast.makeText(getContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+        } else {
+            holder.acceptRequestInFriend.setVisibility(View.GONE);
+            holder.deleteFriend.setVisibility(View.VISIBLE);
+            holder.deleteFriend.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Friend.getInstance(getContext()).deleteFriend(friend.id, new Friend.DeleteFriendsCallback() {
+                        @Override
+                        public void onSuccess() {
+                            FriendsActivity FA = ((FriendsActivity) getContext());
+                            Intent intent = new Intent(getContext(), FriendsActivity.class);
+                            intent.putExtra("profile_id", 0);
+                            FA.startActivity(intent);
+                            FA.finish();
+                            Toast.makeText(getContext(), friend.nickname + " удален из друзей", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            Toast.makeText(getContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            Toast.makeText(getContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+        }
 
 
         return rowView;

@@ -7,6 +7,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -25,12 +27,12 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-public class AddBoardActivity extends SuperMainActivity {
+public class AddBoardActivity extends AppCompatActivity {
 
     private TextView boardCancel;
-    private TextView boardSave;
+    private ImageView boardSave;
     private EditText boardText;
-    private TextView boardPhotos;
+    private ImageButton boardPhotos;
     private String photos = "";
     private String boardTextString = "";
     private Uri sendingImageUri;
@@ -43,18 +45,21 @@ public class AddBoardActivity extends SuperMainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_board);
-        setHeader();
-        setMenuItem("BoardActivity");
 
         boardCancel = (TextView) findViewById(R.id.boardCancel);
-        boardSave = (TextView) findViewById(R.id.boardSave);
+        boardSave = (ImageView) findViewById(R.id.boardSave);
         boardText = (EditText) findViewById(R.id.boardText);
-        boardPhotos = (TextView) findViewById(R.id.boardPhotos);
+        boardPhotos = (ImageButton) findViewById(R.id.boardPhotos);
         anonim = (CheckBox) findViewById(R.id.anonim);
 
         filesLine = (GridView) findViewById(R.id.addBoardPhotos);
 
         files = new Files(getApplicationContext(), this);
+
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_action_back);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //Кнопка "Добавить фото"
         boardPhotos.setOnClickListener(new View.OnClickListener() {
@@ -63,14 +68,6 @@ public class AddBoardActivity extends SuperMainActivity {
                 Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                 photoPickerIntent.setType("image/*");
                 startActivityForResult(photoPickerIntent, 1);
-            }
-        });
-
-        //Кнопка "Отмена"
-        boardCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
             }
         });
 
@@ -217,4 +214,15 @@ public class AddBoardActivity extends SuperMainActivity {
         }
     }
 
+    //Кнопка назад(переход на страницу входа)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:return super.onOptionsItemSelected(item);
+        }
+    }
 }

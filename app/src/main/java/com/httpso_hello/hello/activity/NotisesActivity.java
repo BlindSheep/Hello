@@ -24,9 +24,13 @@ import java.util.Collections;
 public class NotisesActivity extends SuperMainActivity{
 
     private ListView notices_list_new;
-    private View header;
+    private View footerForLoading;
     private Notice notice;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private NoticesAdapter likesAdapterNew;
+    private int page = 1;
+    private boolean thatsAll;
+    private boolean isLaunch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +40,7 @@ public class NotisesActivity extends SuperMainActivity{
         setMenuItem("NotisesActivity");
 
         notices_list_new = ((ListView) findViewById(R.id.notices_list_new));
-        header = getLayoutInflater().inflate(R.layout.footer6dp, null);
+        footerForLoading = getLayoutInflater().inflate(R.layout.footer_loading, null);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.main_blue_color_hello,
@@ -45,13 +49,14 @@ public class NotisesActivity extends SuperMainActivity{
                 android.R.color.holo_red_light
         );
 
-        notices_list_new.addFooterView(header);
+        notices_list_new.addFooterView(footerForLoading);
         getNotices();
 
         // Свайп для обновления
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                page = 1;
                 getNotices();
             }
         });
@@ -59,14 +64,23 @@ public class NotisesActivity extends SuperMainActivity{
 
     private void getNotices() {
         swipeRefreshLayout.setRefreshing(true);
+        if (notices_list_new.getFooterViewsCount() == 0) notices_list_new.addFooterView(footerForLoading);
+        thatsAll = false;
+        isLaunch = true;
+        page = 1;
         notice = new Notice(getApplicationContext());
-        notice.getNotice(this,
+        notice.getNotice(page, this,
                 new Notice.GetNoticeCallback() {
                     @Override
                     public void onSuccess(NoticeItem[] noticeItem, Activity activity) {
+                        page = page + 1;
+                        if ((noticeItem.length == 0) || ((noticeItem.length == 1))) {
+                            thatsAll = true;
+                            notices_list_new.removeFooterView(footerForLoading);
+                        }
                         ArrayList<NoticeItem> newItem = new ArrayList<NoticeItem>();
                         Collections.addAll(newItem, noticeItem);
-                        final NoticesAdapter likesAdapterNew = new NoticesAdapter(activity, newItem);
+                        likesAdapterNew = new NoticesAdapter(activity, newItem);
                         notices_list_new.setAdapter(likesAdapterNew);
                         notices_list_new.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
@@ -80,6 +94,7 @@ public class NotisesActivity extends SuperMainActivity{
                                 }
                             });
                         swipeRefreshLayout.setRefreshing(false);
+                        isLaunch = false;
                     }
                 },
                 new Help.ErrorCallback() {
@@ -101,5 +116,51 @@ public class NotisesActivity extends SuperMainActivity{
                         }, 5000);
                     }
                 });
+    }
+
+    public void getNewPages() {
+        if (!thatsAll && !isLaunch) {
+            isLaunch = true;
+            notice = new Notice(getApplicationContext());
+            notice.getNotice(page, this,
+                    new Notice.GetNoticeCallback() {
+                        @Override
+                        public void onSuccess(NoticeItem[] noticeItem, Activity activity) {
+                            page = page + 1;
+                            if ((noticeItem.length == 0) || ((noticeItem.length == 1))) {
+                                thatsAll = true;
+                                notices_list_new.removeFooterView(footerForLoading);
+                            }
+                            ArrayList<NoticeItem> newItem = new ArrayList<NoticeItem>();
+                            Collections.addAll(newItem, noticeItem);
+                            likesAdapterNew.addAll(newItem);
+                            likesAdapterNew.notifyDataSetChanged();
+                            isLaunch = false;
+                        }
+                    },
+                    new Help.ErrorCallback() {
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            isLaunch = false;
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getNewPages();
+                                }
+                            }, 5000);
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            isLaunch = false;
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getNewPages();
+                                }
+                            }, 5000);
+                        }
+                    });
+        }
     }
 }

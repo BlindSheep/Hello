@@ -38,6 +38,7 @@ public class Notice extends Help {
     }
 
     public void getNotice(
+            final int page,
             final Activity activity,
             final Notice.GetNoticeCallback getNoticeCallback,
             final Help.ErrorCallback errorCallback
@@ -75,6 +76,7 @@ public class Notice extends Help {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    params.put("page", Integer.toString(page));
                     return params;
                 };
             };

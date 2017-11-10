@@ -12,6 +12,7 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.NoticeItem;
 import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.activity.NotisesActivity;
 import com.httpso_hello.hello.helper.*;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -205,7 +206,10 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                 break;
         }
 
-
+        NotisesActivity na = ((NotisesActivity) getContext());
+        if(position == (this.noticeItem.size() - 1)) {
+            na.getNewPages();
+        }
 
         return rowView;
 

@@ -346,6 +346,7 @@ public class SearchActivity extends SuperMainActivity{
 
                         @Override
                         public void onError(int error_code, String error_msg) {
+                            isLaunch = false;
                             new Handler().postDelayed(new Runnable() {
                                 @Override public void run() {
                                     getNew();
@@ -355,6 +356,7 @@ public class SearchActivity extends SuperMainActivity{
 
                         @Override
                         public void onInternetError() {
+                            isLaunch = false;
                             new Handler().postDelayed(new Runnable() {
                                 @Override public void run() {
                                     getNew();

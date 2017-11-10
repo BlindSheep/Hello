@@ -4,19 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/zalivon"
+    android:background="@color/main_white_color_hello"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.httpso_hello.hello.activity.AddBoardActivity"
     tools:showIn="@layout/app_bar_add_board">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginRight="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_centerInParent="true"
-        android:background="@drawable/board">
 
         <EditText
             android:id="@+id/boardText"
@@ -108,7 +99,5 @@
                 android:text="Сохранить" />
 
         </LinearLayout>
-
-    </LinearLayout>
 
 </RelativeLayout>

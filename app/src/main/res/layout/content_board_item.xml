@@ -165,10 +165,11 @@
                 android:padding="15dp">
 
                 <ImageView
+                    android:id="@+id/imageView3"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:background="@mipmap/ic_action_sort_by_size"
-                    android:backgroundTint="@color/main_grey_color_hello" />
+                    android:tint="@color/main_grey_color_hello"
+                    app:srcCompat="@mipmap/ic_action_sort_by_size" />
 
                 <TextView
                     android:id="@+id/comments"
@@ -194,7 +195,7 @@
                     android:layout_height="25dp"
                     android:layout_gravity="center_vertical"
                     android:background="@drawable/ic_action_eyes"
-                    android:backgroundTint="@color/main_grey_color_hello" />
+                    android:backgroundTint="@color/main_dark_grey_color_hello" />
 
                 <TextView
                     android:id="@+id/countReaded"
