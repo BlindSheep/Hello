@@ -249,6 +249,7 @@ public class SendFlirtiksActivity extends SuperMainActivity {
 
     @Override
     public void onResume() {
+        page = 1;
         getFlirtiks();
         super.onResume();
     }
