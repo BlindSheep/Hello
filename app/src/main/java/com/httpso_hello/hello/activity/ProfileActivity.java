@@ -759,7 +759,7 @@ public class ProfileActivity extends SuperMainActivity{
                                             .setAction("Action", null)
                                             .show();
                                 }
-
+                            }, new Help.ErrorCallback() {
                                 @Override
                                 public void onError(int error_code, String error_msg) {
                                     progressBarFlirtik.setVisibility(View.GONE);
