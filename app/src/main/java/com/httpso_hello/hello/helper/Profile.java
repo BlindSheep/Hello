@@ -95,7 +95,53 @@ public class Profile extends Help{
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.getProfile"+Integer.toString(profile_id));
         }
     }
+    public void getSmallUserInfo(
+            final GetSmallUserInfoCallback getSmallUserInfoCallback,
+            final Help.ErrorCallback errorCallback
+    ){
+        if (Constant.api_key !="") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.users_get_small_user_info_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            if (response != null) {
+                                try {
+                                    Log.d("small_user_info", response);
+                                    Resp resp = gson.fromJson(response, Resp.class);
+                                    if (resp.error == null) {
+                                        getSmallUserInfoCallback.onSuccess(resp.user_info);
+                                        return;
+                                    }
+                                    errorCallback.onError(resp.error.error_code, resp.error.error_msg);
+                                    return;
+                                } catch (Exception e) {
 
+                                }
+                            }
+                            errorCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            errorCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = getParamsMap(_context);
+//                    params.put("api_key", Constant.api_key);
+//                    params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.getSmallUserInfo");
+        }
+    }
     public void editProfile(
             final String new_user_info,
             final EditProfileCallback editProfileCallback){
@@ -479,6 +525,9 @@ public class Profile extends Help{
         void onSuccess(User user, Activity activity);
         void onError(int error_code, String error_msg);
         void onInternetError();
+    }
+    public interface GetSmallUserInfoCallback {
+        void onSuccess(User user);
     }
     public interface EditProfileCallback {
         void onSuccess();

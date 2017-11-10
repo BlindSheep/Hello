@@ -13,12 +13,7 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 
 import com.httpso_hello.hello.Structures.User;
-import com.httpso_hello.hello.helper.AlwaysOnline;
-import com.httpso_hello.hello.helper.Auth;
-import com.httpso_hello.hello.helper.Constant;
-import com.httpso_hello.hello.helper.ConverterDate;
-import com.httpso_hello.hello.helper.Profile;
-import com.httpso_hello.hello.helper.Settings;
+import com.httpso_hello.hello.helper.*;
 
 public class MainActivity extends Activity{
 
@@ -57,9 +52,9 @@ public class MainActivity extends Activity{
 
             try {
                 Profile profile = new Profile(getApplicationContext());
-                profile.getProfile(stgs.getSettingInt("user_id"), this, new Profile.GetProfileCallback() {
+                profile.getSmallUserInfo(new Profile.GetSmallUserInfoCallback() {
                     @Override
-                    public void onSuccess(User user, Activity activity) {
+                    public void onSuccess(User user) {
                         stgs.setSetting("user_nickname", user.nickname);
                         if (user.birth_date != null) {
                             stgs.setSetting("user_age", ConverterDate.convertDateToAge(user.birth_date));
@@ -68,10 +63,10 @@ public class MainActivity extends Activity{
                             stgs.setSetting("user_avatar.micro", Constant.upload + user.avatar.micro);
                         }
                     }
-
+                }, new Help.ErrorCallback() {
                     @Override
                     public void onError(int error_code, String error_msg) {
-
+                        Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
                     }
 
                     @Override
@@ -79,89 +74,89 @@ public class MainActivity extends Activity{
 
                     }
                 });
-            } catch (Exception e) {
+        } catch (Exception e) {
 
-            }
         }
+    }
 
-        setContentView(R.layout.activity_main);
+    setContentView(R.layout.activity_main);
 
-        inputEmail = (EditText) findViewById(R.id.email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (TextView) findViewById(R.id.btnLogin);
-        btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
-        progressBarLogin = (ProgressBar) findViewById(R.id.progressBarLogin);
-        rememberPassword = (TextView) findViewById(R.id.rememberPassword);
+    inputEmail = (EditText) findViewById(R.id.email);
+    inputPassword = (EditText) findViewById(R.id.password);
+    btnLogin = (TextView) findViewById(R.id.btnLogin);
+    btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
+    progressBarLogin = (ProgressBar) findViewById(R.id.progressBarLogin);
+    rememberPassword = (TextView) findViewById(R.id.rememberPassword);
 
-        //Переход на страницу регистрации
+    //Переход на страницу регистрации
         btnLinkToRegister.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, RegistrationActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    });
 
-        //Восстановить пароль
+    //Восстановить пароль
         rememberPassword.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, RememmberPassword.class);
-                startActivity(intent);
-            }
-        });
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, RememmberPassword.class);
+            startActivity(intent);
+        }
+    });
 
         progressBarLogin.setVisibility(View.GONE);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
 
-            public void onClick(View view) {
+        public void onClick(View view) {
 
-                String email = inputEmail.getText().toString().trim();
-                String password = inputPassword.getText().toString().trim();
+            String email = inputEmail.getText().toString().trim();
+            String password = inputPassword.getText().toString().trim();
 
-                // Проверка заполнения полей
-                if (!email.isEmpty() && !password.isEmpty()) {
-                    progressBarLogin.setVisibility(View.VISIBLE);
-                    auth.authorize(email, password, new Auth.AuthFinishingCallback() {
-                        @Override
-                        public void onSuccess(User user) {
-                            if (auth.firstLogin()){
-                                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Intent intent = new Intent(MainActivity.this, BoardActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
+            // Проверка заполнения полей
+            if (!email.isEmpty() && !password.isEmpty()) {
+                progressBarLogin.setVisibility(View.VISIBLE);
+                auth.authorize(email, password, new Auth.AuthFinishingCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        if (auth.firstLogin()){
+                            Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Intent intent = new Intent(MainActivity.this, BoardActivity.class);
+                            startActivity(intent);
+                            finish();
                         }
+                    }
 
-                        @Override
-                        public void onError(int error_code, String error_msg) {
-                            progressBarLogin.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(),
-                                    error_msg, Toast.LENGTH_LONG)
-                                    .show();
-                        }
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        progressBarLogin.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(),
+                                error_msg, Toast.LENGTH_LONG)
+                                .show();
+                    }
 
-                        @Override
-                        public void onLoccked() {
-                            progressBarLogin.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(),
-                                    "Ваш аккаунт заблокирован, обратитесь в службу поддержки", Toast.LENGTH_LONG)
-                                    .show();
-                        }
-                    });
-                } else {
-                    if (email.isEmpty()) Toast.makeText(getApplicationContext(), "Введите электронную почту", Toast.LENGTH_LONG).show();
-                    if (password.isEmpty()) Toast.makeText(getApplicationContext(), "Введите пароль", Toast.LENGTH_LONG).show();
-                }
-
-
+                    @Override
+                    public void onLoccked() {
+                        progressBarLogin.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(),
+                                "Ваш аккаунт заблокирован, обратитесь в службу поддержки", Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+            } else {
+                if (email.isEmpty()) Toast.makeText(getApplicationContext(), "Введите электронную почту", Toast.LENGTH_LONG).show();
+                if (password.isEmpty()) Toast.makeText(getApplicationContext(), "Введите пароль", Toast.LENGTH_LONG).show();
             }
 
 
-        });
+        }
 
-    }
+
+    });
+
+}
 }

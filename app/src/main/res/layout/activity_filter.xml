@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:id="@+id/popup_for_wait"
-    android:background="@color/zalivon"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/zalivon"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.httpso_hello.hello.activity.FilterActivity">
 
     <LinearLayout
         android:orientation="vertical"
@@ -65,7 +67,8 @@
             android:layout_height="wrap_content"
             android:background="@drawable/board"
             android:elevation="1.5dp"
-            android:layout_margin="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginLeft="6dp"
             android:orientation="vertical">
 
             <TextView
@@ -84,25 +87,68 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:background="@color/main_white_color_hello"
+                android:orientation="vertical">
 
-                <com.edmodo.rangebar.RangeBar
-                    xmlns:custom="http://schemas.android.com/apk/res-auto"
-                    android:id="@+id/rangebar"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    custom:tickCount="5"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    custom:thumbColorNormal="@color/main_blue_color_hello"
-                    custom:connectingLineColor="@color/main_blue_color_hello" />
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="15dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="От"
+                        android:textColor="@color/main_black_color_hello" />
+
+                    <Spinner
+                        android:id="@+id/birth_date_from"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/ageFrom" />
+
+                    <TextView
+                        android:layout_width="30dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="До"
+                        android:textColor="@color/main_black_color_hello" />
+
+                    <Spinner
+                        android:id="@+id/birth_date_to"
+                        android:layout_width="100dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:entries="@array/ageFrom" />
+                </LinearLayout>
             </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_margin="6dp"
+            android:elevation="1.5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/main_red_color_hello"
+                android:textSize="20sp"
+                android:padding="20dp"
+                android:gravity="right"
+                android:text="Сохранить"/>
 
         </LinearLayout>
 
     </LinearLayout>
 
-</ScrollView>
+</RelativeLayout>

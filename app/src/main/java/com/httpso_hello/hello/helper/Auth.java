@@ -98,7 +98,7 @@ public class Auth extends Help {
                             if(result.user_info.avatar !=null) {
                                 stgs.setSetting("user_avatar.micro", Constant.upload + result.user_info.avatar.micro);
                             }
-
+                            //Установка токена
                             String token = FirebaseInstanceId.getInstance().getToken();
                             api.setPushUpToken(token);
 

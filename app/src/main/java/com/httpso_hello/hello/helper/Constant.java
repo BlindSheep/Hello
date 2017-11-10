@@ -35,6 +35,7 @@ public class Constant {
     public static String board_add_item_uri = start_api_uri + "content.add_item";
 
     public static String users_get_profile_uri = start_api_uri + "users.get_profile";
+    public static String users_get_small_user_info_uri = start_api_uri + "users.get_small_user_info";
     public static String users_edit_profile_uri = start_api_uri + "users.profile_edit";
     public static String users_search_profiles_uri = start_api_uri + "users.search_profiles";
     public static String users_add_friend_uri = start_api_uri + "users.add_friend";
