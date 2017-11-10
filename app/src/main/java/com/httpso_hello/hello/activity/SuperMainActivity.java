@@ -289,4 +289,8 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 .transform(new CircularTransformation(0))
                 .into(headerImageView);
     }
+
+    protected void showMessage(String text){
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+    }
 }

@@ -84,6 +84,7 @@ public class ChatActivity extends SuperMainActivity{
     private MessagesAttachmentsAdapter maAdapter;
     private GridView attachmentsListView;
     private AVLoadingIndicatorView avi;
+    private boolean  canSendMessage = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -269,7 +270,7 @@ public class ChatActivity extends SuperMainActivity{
             @Override
             public void onClick(View v) {
                 String messageContentString = messageContent.getText().toString();
-                if (!messageContentString.isEmpty() || messages.getCountAttachments()!=0) {
+                if ((!messageContentString.isEmpty() || messages.getCountAttachments()!=0) && canSendMessage) {
                     messageContent.setText(null);
 
                     Message message = new Message();
@@ -316,6 +317,8 @@ public class ChatActivity extends SuperMainActivity{
                                     Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
                                 }
                             });
+                } else {
+                    showMessage("Дождитесь отправки файла...");
                 }
             }
         });
@@ -611,6 +614,7 @@ public class ChatActivity extends SuperMainActivity{
                     Help.getFileSize(sendingImageUri, getApplicationContext()),
                     0
             );
+            canSendMessage = false;
             messages.addFileToMessage(
                     "photo",
                     "jpg",
@@ -620,16 +624,17 @@ public class ChatActivity extends SuperMainActivity{
                         @Override
                         public void onSuccess(boolean response, final int id, final int position) {
                             maAdapter.setLoadedAttachment(position, id);
+                            canSendMessage = true;
                         }
                     }, new Help.ErrorCallback() {
                         @Override
                         public void onError(int error_code, String error_msg) {
-
+                            canSendMessage = true;
                         }
 
                         @Override
                         public void onInternetError() {
-
+                            canSendMessage = true;
                         }
                     });
         } catch (Exception e){

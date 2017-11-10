@@ -30,6 +30,8 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by mixir on 13.08.2017.
@@ -38,6 +40,7 @@ import java.util.Date;
 public class Help {
 
     public Gson gson;
+    private Settings stgs;
 
     public static final int REQUEST_ADD_PHOTO_MESSAGE = 1;
     public static final int REQUEST_UPDATE_AVATAR_GALLERY = 2;
@@ -51,6 +54,7 @@ public class Help {
     public Help(){
         GsonBuilder GB = new GsonBuilder();
         this.gson = GB.create();
+//        this.stgs = new Settings(context);
     }
 
     public Object fromJSON(String jsonElement, Class casckade){
@@ -209,5 +213,13 @@ public class Help {
             size = file.length();
         }
         return size;
+    }
+
+    protected Map<String, String> getParamsMap(Context context){
+        this.stgs = new Settings(context);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("api_key", Constant.api_key);
+        params.put("auth_token", stgs.getSettingStr("auth_token"));
+        return params;
     }
 }
