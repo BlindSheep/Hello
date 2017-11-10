@@ -26,8 +26,6 @@ import com.httpso_hello.hello.helper.ZoomOutPageTransformer;
 
 import java.util.ArrayList;
 
-import static android.R.style.Animation_Dialog;
-
 public class SendFlirtiksActivity extends SuperMainActivity {
 
     private Profile profile;
@@ -44,7 +42,6 @@ public class SendFlirtiksActivity extends SuperMainActivity {
     private TextView textName;
     private ImageView back;
     private ImageView settings;
-    private RelativeLayout relative;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,15 +52,10 @@ public class SendFlirtiksActivity extends SuperMainActivity {
         cancel = (ImageView) findViewById(R.id.cancel);
         like = (ImageView) findViewById(R.id.like);
         mViewPager = (HackyViewPager) findViewById(R.id.view_pager);
-        this.gender_str = stgs.getSettingInt("gender");
-        this.ageFrom = stgs.getSettingInt("ageFrom");
-        this.ageTo = stgs.getSettingInt("ageTo");
-        userList = new ArrayList<User>();
         anim = AnimationUtils.loadAnimation(this, R.anim.anim_for_button);
         textName = (TextView) findViewById(R.id.textName);
         back = (ImageView) findViewById(R.id.back);
         settings = (ImageView) findViewById(R.id.settings);
-        relative = (RelativeLayout) findViewById(R.id.relative);
 
         //Если юзер не разу не фильтровал, произвести валидацию
         if (stgs.getSettingInt("ageFrom") == 0) {
@@ -86,6 +78,12 @@ public class SendFlirtiksActivity extends SuperMainActivity {
     }
 
     private void getFlirtiks() {
+        this.gender_str = stgs.getSettingInt("gender");
+        this.ageFrom = stgs.getSettingInt("ageFrom");
+        this.ageTo = stgs.getSettingInt("ageTo");
+        page = 1;
+        userList = new ArrayList<User>();
+
         profile = new Profile(getApplicationContext());
         this.profile.searchProfiles(
                 ageFrom,
