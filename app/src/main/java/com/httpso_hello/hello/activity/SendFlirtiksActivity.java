@@ -26,8 +26,6 @@ import com.httpso_hello.hello.helper.ZoomOutPageTransformer;
 
 import java.util.ArrayList;
 
-import static android.R.style.Animation_Dialog;
-
 public class SendFlirtiksActivity extends SuperMainActivity {
 
     private Profile profile;
@@ -44,7 +42,6 @@ public class SendFlirtiksActivity extends SuperMainActivity {
     private TextView textName;
     private ImageView back;
     private ImageView settings;
-    private RelativeLayout relative;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +60,6 @@ public class SendFlirtiksActivity extends SuperMainActivity {
         textName = (TextView) findViewById(R.id.textName);
         back = (ImageView) findViewById(R.id.back);
         settings = (ImageView) findViewById(R.id.settings);
-        relative = (RelativeLayout) findViewById(R.id.relative);
 
         //Если юзер не разу не фильтровал, произвести валидацию
         if (stgs.getSettingInt("ageFrom") == 0) {
