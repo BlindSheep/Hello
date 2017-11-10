@@ -12,8 +12,9 @@
     <string name="nav_notises">Уведомления</string>
 
     <string name="nav_datting">Знакомства</string>
-    <string name="nav_looking_for">Поиск</string>
+    <string name="nav_flirtik">Отправить симпатии</string>
     <string name="nav_board">Объявления</string>
+    <string name="nav_looking_for">Поиск</string>
     <string name="nav_servises">Услуги</string>
 
     <string name="nav_edit">Прочее</string>
@@ -85,6 +86,7 @@
     <string name="title_activity_board_content">Комментарии</string>
     <string name="title_activity_photo_comments">Комментарии</string>
     <string name="title_activity_setting_of_profile">Настройки</string>
+    <string name="title_activity_send_flirtiks"></string>
 
 
     <string-array name="ageFrom">

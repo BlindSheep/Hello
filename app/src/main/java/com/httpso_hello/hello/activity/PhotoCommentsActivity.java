@@ -183,7 +183,7 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                                 LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                        if (position != 0) {
+                                        if ((position != 0) && (position != (defolt.size() + 1))) {
                                             Intent intent = new Intent(PhotoCommentsActivity.this, ProfileActivity.class);
                                             intent.putExtra("profile_id", defolt.get(position - 1).user_id);
                                             startActivity(intent);

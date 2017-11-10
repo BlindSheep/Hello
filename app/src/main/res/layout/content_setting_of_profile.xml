@@ -367,7 +367,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="Версия: 1.117"
+                    android:text="Версия: 1.118"
                     android:paddingTop="20dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"

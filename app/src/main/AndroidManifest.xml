@@ -86,11 +86,14 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https"
+
+                <data
                     android:host="o-hello.com"
-                    android:pathPrefix="/users/" />
+                    android:pathPrefix="/users/"
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
@@ -173,7 +176,14 @@
             android:label="Подарки" />
         <activity
             android:name=".activity.IgnorListActivity"
-            android:label="Чёрный список"/>
+            android:label="Чёрный список" />
+        <activity
+            android:name=".activity.SendFlirtiksActivity"
+            android:label="@string/title_activity_send_flirtiks"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.FilterActivity"
+            android:label="Фильтр"/>
     </application>
 
 </manifest>
