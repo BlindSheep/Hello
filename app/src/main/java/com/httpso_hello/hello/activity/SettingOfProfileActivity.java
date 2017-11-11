@@ -77,7 +77,7 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         if (stgs.getSettingInt("gift") == 0) {
             switchGifts.setChecked(true);
         }
-        if (stgs.getSettingInt("flirtik") == 0) {
+        if (stgs.getSettingInt("flirtik") == 1) {
             switchGifts.setChecked(true);
         }
 
@@ -136,12 +136,12 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         switchFlirtiks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (stgs.getSettingInt("flirtik") == 0) {
+                if (stgs.getSettingInt("flirtik") == 1) {
                     switchGifts.setChecked(false);
-                    stgs.setSettingInt("flirtik", 1);
+                    stgs.setSettingInt("flirtik", 0);
                 } else {
                     switchGifts.setChecked(true);
-                    stgs.setSettingInt("flirtik", 0);
+                    stgs.setSettingInt("flirtik", 1);
                 }
             }
         });
