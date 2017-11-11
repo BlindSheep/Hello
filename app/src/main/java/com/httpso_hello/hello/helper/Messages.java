@@ -479,7 +479,12 @@ public class Messages extends Help {
 
     public void deleteAttachment(int nuber){
 //        if(this.attachemts.get(nuber) == id){
+        try {
             this.attachemts.remove(nuber);
+        } catch (Exception e){
+
+        }
+
 //        }
 
     }

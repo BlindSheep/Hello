@@ -20,6 +20,7 @@ public class SettingOfProfileActivity extends SuperMainActivity {
     private Switch switchComm;
     private Switch switchLikes;
     private Switch switchGifts;
+    private Switch switchFlirtiks;
     private RadioButton radioButtonProfile;
     private RadioButton radioButtonMsg;
     private RadioButton radioButtonSearch;
@@ -41,6 +42,7 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         switchComm = (Switch) findViewById(R.id.switchComm);
         switchLikes = (Switch) findViewById(R.id.switchLikes);
         switchGifts = (Switch) findViewById(R.id.switchGifts);
+        switchFlirtiks = (Switch) findViewById(R.id.switchFlirtiks);
         radioButtonProfile = (RadioButton) findViewById(R.id.radioButtonProfile);
         radioButtonMsg = (RadioButton) findViewById(R.id.radioButtonMsg);
         radioButtonSearch = (RadioButton) findViewById(R.id.radioButtonSearch);
@@ -73,6 +75,9 @@ public class SettingOfProfileActivity extends SuperMainActivity {
             switchLikes.setChecked(true);
         }
         if (stgs.getSettingInt("gift") == 0) {
+            switchGifts.setChecked(true);
+        }
+        if (stgs.getSettingInt("flirtik") == 0) {
             switchGifts.setChecked(true);
         }
 
@@ -124,6 +129,19 @@ public class SettingOfProfileActivity extends SuperMainActivity {
                 } else {
                     switchGifts.setChecked(true);
                     stgs.setSettingInt("gift", 0);
+                }
+            }
+        });
+
+        switchFlirtiks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stgs.getSettingInt("flirtik") == 0) {
+                    switchGifts.setChecked(false);
+                    stgs.setSettingInt("flirtik", 1);
+                } else {
+                    switchGifts.setChecked(true);
+                    stgs.setSettingInt("flirtik", 0);
                 }
             }
         });
