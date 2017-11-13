@@ -53,7 +53,7 @@ public class Friend extends Help {
                             if (response != null) {
                                 Friends friends = gson.fromJson(response, Friends.class);
                                 if(friends.error == null){
-                                    getFriendsCallback.onSuccess(friends.profiles_list, friends.online, friends.request_in_friends, activity);
+                                    getFriendsCallback.onSuccess(friends.profiles_list, friends.online, friends.request_in_friends, activity, id == 0);
                                     return;
                                 }
                                 getFriendsCallback.onError(friends.error.error_code, friends.error.error_msg);
@@ -223,7 +223,7 @@ public class Friend extends Help {
     }
 
     public interface GetFriendsCallback {
-        void onSuccess(FriendItem[] allFriends, FriendItem[] onlineFriends, FriendItem[] request_in_friends, Activity activity);
+        void onSuccess(FriendItem[] allFriends, FriendItem[] onlineFriends, FriendItem[] request_in_friends, Activity activity, boolean isUserFriends);
         void onError(int error_code, String error_msg);
         void onInternetError();
     }

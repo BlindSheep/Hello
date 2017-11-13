@@ -36,10 +36,10 @@
     <item android:title="@string/nav_datting">
         <menu>
             <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/nav_send_flirtik"
-                    android:icon="@drawable/ic_favorite_border_white_48dp"
-                    android:title="@string/nav_flirtik" />
+                <!--<item-->
+                    <!--android:id="@+id/nav_send_flirtik"-->
+                    <!--android:icon="@drawable/ic_favorite_border_white_48dp"-->
+                    <!--android:title="@string/nav_flirtik" />-->
                 <item
                     android:id="@+id/nav_board"
                     android:icon="@mipmap/ic_action_paste"

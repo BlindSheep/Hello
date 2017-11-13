@@ -45,7 +45,7 @@ public class FriendsActivity extends SuperMainActivity{
         Friend.getInstance(getApplicationContext()).getFriends(extras.getInt("profile_id"), this,
                 new Friend.GetFriendsCallback() {
                     @Override
-                    public void onSuccess(FriendItem[] friendsAll, FriendItem[] friendsOnline, FriendItem[] request_in_friends, Activity activity) {
+                    public void onSuccess(FriendItem[] friendsAll, FriendItem[] friendsOnline, FriendItem[] request_in_friends, Activity activity, boolean isUserFriends) {
 
                         //содаем фрагменты и аргументы
                         Bundle friendsAllFragmentArg = new Bundle();
@@ -58,16 +58,19 @@ public class FriendsActivity extends SuperMainActivity{
                         //формируем аргументы для фрагмента со всеми друзьями
                         friendsAllFragmentArg.putSerializable("friendsArray", friendsAll);
                         friendsAllFragmentArg.putBoolean("isRequests", false);
+                        friendsAllFragmentArg.putBoolean("isUserFriends", isUserFriends);
                         friendsAllFragment.setArguments(friendsAllFragmentArg);
 
                         //формируем аргументы для фрагмента с онлайн друзьями
                         friendsOnlineFragmentArg.putSerializable("friendsArray", friendsOnline);
                         friendsOnlineFragmentArg.putBoolean("isRequests", false);
+                        friendsAllFragmentArg.putBoolean("isUserFriends", isUserFriends);
                         friendsOnlineFragment.setArguments(friendsOnlineFragmentArg);
 
                         //формируем аргументы для фрагмента с заявками в друзья
                         friendsRequestInFriendsFragmentArg.putSerializable("friendsArray", request_in_friends);
                         friendsRequestInFriendsFragmentArg.putBoolean("isRequests", true);
+                        friendsAllFragmentArg.putBoolean("isUserFriends", isUserFriends);
                         friendsRequestInFragment.setArguments(friendsRequestInFriendsFragmentArg);
 
                         int friendsAllCount = friendsAll.length;

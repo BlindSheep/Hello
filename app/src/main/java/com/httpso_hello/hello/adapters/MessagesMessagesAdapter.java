@@ -92,6 +92,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         public GridLayout cloudMessage;
         public ProgressBar progressPhoto1;
 
+        public LinearLayout allContent;
         //Лайаут новой даты
         public TextView isNewDate;
     }
@@ -134,6 +135,8 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
             holder.cloudMessage = (GridLayout) convertView.findViewById(R.id.cloud_meassage);
             holder.otherPhotos = (TextView) convertView.findViewById(R.id.otherPhotos);
             holder.progressPhoto1 = (ProgressBar) convertView.findViewById(R.id.progressPhoto1);
+
+            holder.allContent = (LinearLayout) convertView.findViewById(R.id.allContent);
 
             //дата
             holder.isNewDate = (TextView) convertView.findViewById(R.id.isNewDate);

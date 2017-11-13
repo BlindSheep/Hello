@@ -93,14 +93,12 @@ public class AddBoardActivity extends AppCompatActivity {
                             }, new Help.ErrorCallback() {
                                 @Override
                                 public void onError(int error_code, String error_message) {
-                                    Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
-                                    finish();
+                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения. Попробуйте еще раз.", Toast.LENGTH_LONG).show();
                                 }
 
                                 @Override
                                 public void onInternetError() {
-                                    Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
-                                    finish();
+                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения. Попробуйте еще раз.", Toast.LENGTH_LONG).show();
                                 }
                             });
                 } else if (boardTextString.isEmpty()){

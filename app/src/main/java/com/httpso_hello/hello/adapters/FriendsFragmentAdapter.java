@@ -36,14 +36,16 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
 
     private ArrayList<FriendItem> friends;
     private final Activity context;
+    private boolean isUserFriends;
     private boolean isRequests;
     private Settings stgs;
 
-    public FriendsFragmentAdapter(Activity context, ArrayList<FriendItem> friends, boolean isRequests) {
+    public FriendsFragmentAdapter(Activity context, ArrayList<FriendItem> friends, boolean isRequests, boolean isUserFriends) {
         super(context, R.layout.content_friends, friends);
         this.friends = friends;
         this.context = context;
         this.stgs = new Settings(getContext());
+        this.isUserFriends = isUserFriends;
         this.isRequests = isRequests;
     }
 
@@ -94,7 +96,7 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
         else if (friend.city_cache != null) holder.userInfoFriend.setText(friend.city_cache);
         else holder.userInfoFriend.setText("");
 
-        //Кнопка принять заявку
+        //Кнопка принять заявку и удалить друга
         if (isRequests) {
             holder.deleteFriend.setVisibility(View.GONE);
             holder.acceptRequestInFriend.setVisibility(View.VISIBLE);
@@ -126,7 +128,8 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
             });
         } else {
             holder.acceptRequestInFriend.setVisibility(View.GONE);
-            holder.deleteFriend.setVisibility(View.VISIBLE);
+            if (isUserFriends) holder.deleteFriend.setVisibility(View.VISIBLE);
+            else holder.deleteFriend.setVisibility(View.GONE);
             holder.deleteFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

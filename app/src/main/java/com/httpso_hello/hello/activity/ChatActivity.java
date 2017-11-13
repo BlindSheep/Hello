@@ -655,4 +655,10 @@ public class ChatActivity extends SuperMainActivity{
             textOnline.setText("не в сети");
         }
     }
+
+    public void popupForMgs() {
+        System.out.println("!!!!!!!!!");
+        System.out.println("!!!!!!!!!");
+        System.out.println("!!!!!!!!!");
+    }
 }

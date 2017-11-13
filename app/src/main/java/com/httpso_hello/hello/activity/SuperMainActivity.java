@@ -219,11 +219,11 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
                 finish();
                 break;
-            case R.id.nav_send_flirtik:
-                intent = new Intent(getApplicationContext(), SendFlirtiksActivity.class);
-                startActivity(intent);
-                finish();
-                break;
+//            case R.id.nav_send_flirtik:
+//                intent = new Intent(getApplicationContext(), SendFlirtiksActivity.class);
+//                startActivity(intent);
+//                finish();
+//                break;
             case R.id.nav_board:
                 intent = new Intent(getApplicationContext(), BoardActivity.class);
                 startActivity(intent);

@@ -29,6 +29,7 @@ public class FriendsFragment extends Fragment {
 
     private FriendItem[] friendItemFragment;
     private boolean isRequests;
+    private boolean isUserFriends;
     private View header;
 
     @Override
@@ -38,9 +39,12 @@ public class FriendsFragment extends Fragment {
         Bundle args = getArguments();
         FriendItem[] friendItem = (FriendItem[]) args.getSerializable("friendsArray");
         boolean isRequests = args.getBoolean("isRequests");
+        boolean isUserFriends = args.getBoolean("isUserFriends");
+
 
         this.friendItemFragment = friendItem;
         this.isRequests = isRequests;
+        this.isUserFriends = isUserFriends;
     }
 
     @Override
@@ -54,7 +58,7 @@ public class FriendsFragment extends Fragment {
         ArrayList<FriendItem> friendsAllArray = new ArrayList<FriendItem>();
         Collections.addAll(friendsAllArray, this.friendItemFragment);
 
-        FriendsFragmentAdapter friendsAdapter = new FriendsFragmentAdapter(getActivity(), friendsAllArray, isRequests);
+        FriendsFragmentAdapter friendsAdapter = new FriendsFragmentAdapter(getActivity(), friendsAllArray, isRequests, isUserFriends);
 
         LV.addHeaderView(header);
         LV.setAdapter(friendsAdapter);
