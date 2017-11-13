@@ -13,6 +13,7 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+        android:elevation="1.5dp"
             android:orientation="vertical">
 
         <LinearLayout
@@ -63,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/main_blue_color_hello"
-                        android:text="Цена: "
+                        android:text="Цена ≈ "
                         android:textSize="15sp" />
 
                 <TextView
@@ -85,6 +86,7 @@
 
             <LinearLayout
                     android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
@@ -93,7 +95,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/main_blue_color_hello"
-                        android:text="1 балл = "
+                        android:text="1 балл ≈ "
                         android:textSize="15sp" />
 
                 <TextView
@@ -121,35 +123,20 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
+
             <TextView
                     android:id="@+id/buyBotton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:gravity="end"
+                    android:gravity="center"
                     android:textSize="20sp"
                     android:textColor="@color/main_red_color_hello"
                     android:text="Купить" />
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:layout_marginRight="6dp"
-                android:layout_marginLeft="6dp"
-                android:background="@drawable/board"
-                android:elevation="1.5dp"
-                android:padding="20dp"
-                android:orientation="vertical">
-
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/main_blue_color_hello"
-                    android:text="Чем больше баллов Вы покупаете, тем больше Ваша скидка!\n\n - от 50 баллов - 5%\n\n - от 100 баллов - 10%\n\n - от 500 баллов - 15%\n\nВы сможете потратить баллы на: \n\n - поднятие анкеты \n\n - подарки"
-                    android:textSize="15sp" />
 
         </LinearLayout>
 
