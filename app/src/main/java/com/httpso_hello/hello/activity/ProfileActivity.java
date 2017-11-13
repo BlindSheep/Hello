@@ -816,6 +816,8 @@ public class ProfileActivity extends SuperMainActivity{
                                             .setAction("Action", null).show();
                                 }
                             });
+                        }
+                    });
                 } else if (user.flirt_state == 3) { //симпатия взаимна
                     fab.setImageResource(R.drawable.ic_action_two_heart);
                     fab.setOnClickListener(new View.OnClickListener() {

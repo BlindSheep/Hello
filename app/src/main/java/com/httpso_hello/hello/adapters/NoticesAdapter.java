@@ -204,6 +204,22 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                 }
                 holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "Вам подарок");
                 break;
+            case 4:
+                hideTargetPreview(holder);
+               switch (thisNotice.sender_user.gender){
+                    case User.GENDER_MAN:
+                        appricated = " проявил ";
+                        break;
+                    case  User.GENDER_WOOMEN:
+                        appricated = " проявила ";
+                        break;
+                    default:
+                        appricated = " проявил(а) ";
+                        break;
+
+                }
+                holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + " к Вам симпатию");
+                break;
         }
 
         NotisesActivity na = ((NotisesActivity) getContext());

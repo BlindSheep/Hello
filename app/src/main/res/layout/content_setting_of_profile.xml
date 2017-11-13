@@ -136,6 +136,16 @@
                 android:layout_height="wrap_content"
                 android:text="Новые подарки" />
 
+            <Switch
+                android:id="@+id/switchFlirtiks"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Новые симпатии" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
