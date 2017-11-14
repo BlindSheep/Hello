@@ -135,6 +135,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Новые подарки" />
+            <Switch
+                android:id="@+id/switchRequestFriends"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Новые заявки в друзья" />
+            <Switch
+                android:id="@+id/switchMutualFriends"
+                android:paddingTop="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:paddingBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Принятие заявки в друзья" />
 
             <Switch
                 android:id="@+id/switchFlirtiks"

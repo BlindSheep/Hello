@@ -187,7 +187,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // Сведенья о типе пуш уведомлении
             String type) {
         Settings stgs = new Settings(getApplicationContext());
-        if(type != "flirtik") {
+        if(type.compareTo("flirtik") != 0) {
             if (stgs.getSettingInt(type) != 0) {
                 //Если отключено в настройках то не выводить
                 return;
@@ -226,6 +226,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
                 break;
             case "flirtik":
+                intent = new Intent(this, NotisesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            case "request_friend":
+                intent = new Intent(this, NotisesActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                break;
+            case "mutual_friend":
                 intent = new Intent(this, NotisesActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);

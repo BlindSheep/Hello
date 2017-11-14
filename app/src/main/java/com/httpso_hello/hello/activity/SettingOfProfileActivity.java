@@ -20,6 +20,8 @@ public class SettingOfProfileActivity extends SuperMainActivity {
     private Switch switchComm;
     private Switch switchLikes;
     private Switch switchGifts;
+    private Switch switchRequestFriends;
+    private Switch switchMutualFriends;
     private Switch switchFlirtiks;
     private RadioButton radioButtonProfile;
     private RadioButton radioButtonMsg;
@@ -41,6 +43,9 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         switchMsg = (Switch) findViewById(R.id.switchMsg);
         switchComm = (Switch) findViewById(R.id.switchComm);
         switchLikes = (Switch) findViewById(R.id.switchLikes);
+        switchGifts = (Switch) findViewById(R.id.switchGifts);
+        switchRequestFriends = (Switch) findViewById(R.id.switchRequestFriends);
+        switchMutualFriends = (Switch) findViewById(R.id.switchMutualFriends);
         switchGifts = (Switch) findViewById(R.id.switchGifts);
         switchFlirtiks = (Switch) findViewById(R.id.switchFlirtiks);
         radioButtonProfile = (RadioButton) findViewById(R.id.radioButtonProfile);
@@ -76,6 +81,12 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         }
         if (stgs.getSettingInt("gift") == 0) {
             switchGifts.setChecked(true);
+        }
+        if (stgs.getSettingInt("request_friend") == 0) {
+            switchRequestFriends.setChecked(true);
+        }
+        if (stgs.getSettingInt("mutual_friend") == 0) {
+            switchMutualFriends.setChecked(true);
         }
         if (stgs.getSettingInt("flirtik") == 1) {
             switchFlirtiks.setChecked(true);
@@ -120,6 +131,44 @@ public class SettingOfProfileActivity extends SuperMainActivity {
             }
         });
 
+        switchRequestFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stgs.getSettingInt("request_friend") == 0) {
+                    switchRequestFriends.setChecked(false);
+                    stgs.setSettingInt("request_friend", 1);
+                } else {
+                    switchRequestFriends.setChecked(true);
+                    stgs.setSettingInt("request_friend", 0);
+                }
+            }
+        });
+
+        switchMutualFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stgs.getSettingInt("mutual_friend") == 0) {
+                    switchMutualFriends.setChecked(false);
+                    stgs.setSettingInt("mutual_friend", 1);
+                } else {
+                    switchMutualFriends.setChecked(true);
+                    stgs.setSettingInt("mutual_friend", 0);
+                }
+            }
+        });
+
+        switchGifts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (stgs.getSettingInt("gift") == 0) {
+                    switchGifts.setChecked(false);
+                    stgs.setSettingInt("gift", 1);
+                } else {
+                    switchGifts.setChecked(true);
+                    stgs.setSettingInt("gift", 0);
+                }
+            }
+        });
         switchGifts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
