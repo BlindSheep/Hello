@@ -77,6 +77,8 @@ public class Constant {
 
     public static String temp_files_save_file = start_api_uri + "temp_files.save_file";
 
+    public static String logs_add_uri = start_api_uri + "logs.add";
+
     //Заглушка для аватарки
     public static String default_avatar = upload + "default/avatar.jpg";
 

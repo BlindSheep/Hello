@@ -187,16 +187,17 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             // Сведенья о типе пуш уведомлении
             String type) {
         Settings stgs = new Settings(getApplicationContext());
-        if(type != "flirtik")
-            if(stgs.getSettingInt(type)!=0){
+        if(type != "flirtik") {
+            if (stgs.getSettingInt(type) != 0) {
                 //Если отключено в настройках то не выводить
                 return;
             }
-            else
-            if(stgs.getSettingInt(type) == 0){
+        } else {
+            if (stgs.getSettingInt(type) == 0) {
                 //Если отключено в настройках то не выводить
                 return;
             }
+        }
         Intent intent;
         PendingIntent pIntent;
         switch (type){

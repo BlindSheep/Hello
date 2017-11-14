@@ -57,6 +57,12 @@ public class Help {
 //        this.stgs = new Settings(context);
     }
 
+    public Help(Context context){
+        GsonBuilder GB = new GsonBuilder();
+        this.gson = GB.create();
+        this.stgs = new Settings(context);
+    }
+
     public Object fromJSON(String jsonElement, Class casckade){
         return this.gson.fromJson(jsonElement, casckade);
     }
@@ -217,6 +223,13 @@ public class Help {
 
     protected Map<String, String> getParamsMap(Context context){
         this.stgs = new Settings(context);
+        Map<String, String> params = new HashMap<String, String>();
+        params.put("api_key", Constant.api_key);
+        params.put("auth_token", stgs.getSettingStr("auth_token"));
+        return params;
+    }
+
+    protected Map<String, String> getParamsMap(){
         Map<String, String> params = new HashMap<String, String>();
         params.put("api_key", Constant.api_key);
         params.put("auth_token", stgs.getSettingStr("auth_token"));

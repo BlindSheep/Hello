@@ -424,7 +424,7 @@ public class Messages extends Help {
     }
 
 
-    public void addFileToMessage(
+    public String addFileToMessage(
             final String type,
             final String ext,
             final String file_base64,
@@ -473,14 +473,19 @@ public class Messages extends Help {
                 };
             };
 //            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.addFileToMessage_" + Integer.toString(position));
+            String tag = "messages.addFileToMessage_" + Integer.toString(position);
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, tag);
+            return tag;
         }
+        return null;
     }
 
-    public void deleteAttachment(int nuber){
+    public void deleteAttachment(final int nuber){
 //        if(this.attachemts.get(nuber) == id){
         try {
+            RequestQ.getInstance(_context).cancelPendingRequests("messages.addFileToMessage_" + Integer.toString(nuber));
             this.attachemts.remove(nuber);
+
         } catch (Exception e){
 
         }

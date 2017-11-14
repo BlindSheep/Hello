@@ -66,7 +66,8 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
 //            holder.imagePreview.setImageDrawable(((ImageView)attachment.previewAttachment).getDrawable());
             Picasso.with(this.activity.getApplicationContext())
                     .load(attachment.previewAttachmentUri)
-                    .resize(0, Help.getPxFromDp(100, getContext()))
+                    .resize(Help.getPxFromDp(90, getContext()), Help.getPxFromDp(90, getContext()))
+                    .centerCrop()
                     .into(holder.imagePreview, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -111,10 +112,14 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
     }
 
     public void setLoadedAttachment(final int position, final int id){
-        Attachment attachment = this.attachments.get(position);
-        attachment.isUploaded = true;
-        attachment.id = id;
-        this.notifyDataSetChanged();
+        try {
+            Attachment attachment = this.attachments.get(position);
+            attachment.isUploaded = true;
+            attachment.id = id;
+            this.notifyDataSetChanged();
+        } catch (Exception e){
+
+        }
     }
 
     public Attachment getItem(final int position){

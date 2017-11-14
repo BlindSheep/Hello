@@ -21,7 +21,9 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.httpso_hello.hello.Structures.Contact;
 import com.httpso_hello.hello.Structures.Contacts;
+import com.httpso_hello.hello.Structures.Error;
 import com.httpso_hello.hello.Structures.Registration;
 import com.httpso_hello.hello.Structures.RequestMessages;
 import com.httpso_hello.hello.Structures.ReqSetToken;
@@ -232,7 +234,23 @@ public class Api {
                         public void onResponse(String response){
                             Log.d("contacts", response);
                             if(response!=null){
-                                getContactsCallback.onSuccess(gson.fromJson(response, Contacts.class), activity);
+                                Contacts contacts;
+                                try{
+                                    contacts = gson.fromJson(response, Contacts.class);
+                                } catch (Exception e){
+                                    Logs.getInstance(_context).add(
+                                            "error",
+                                            response,
+                                            "api_messages_get_contacts",
+                                            e.toString()
+                                    );
+                                    contacts = new Contacts();
+                                    contacts.error = new Error();
+                                    contacts.error.error_msg = "Произошла непредвиденая ошибка";
+                                    contacts.error.error_code = 998;
+                                }
+
+                                getContactsCallback.onSuccess(contacts, activity);
                                 return;
                             }
                             getContactsCallback.onInternetError();

@@ -615,7 +615,7 @@ public class ChatActivity extends SuperMainActivity{
                     0
             );
             canSendMessage = false;
-            messages.addFileToMessage(
+            String tag = messages.addFileToMessage(
                     "photo",
                     "jpg",
                     file_base64,
