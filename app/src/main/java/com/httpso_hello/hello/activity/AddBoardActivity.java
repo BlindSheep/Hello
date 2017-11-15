@@ -85,7 +85,7 @@ public class AddBoardActivity extends AppCompatActivity {
                             new HBoard.AddBoardCallback() {
                                 @Override
                                 public void onSuccess() {
-                                    Toast.makeText(getApplicationContext(), "Объявление появится после модерации", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Сообщение появится после модерации", Toast.LENGTH_LONG).show();
                                     finish();
                                 }
 

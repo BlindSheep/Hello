@@ -395,7 +395,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="Версия: 1.121"
+                    android:text="Версия: 1.124"
                     android:paddingTop="20dp"
                     android:paddingLeft="20dp"
                     android:paddingRight="20dp"

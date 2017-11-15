@@ -11,9 +11,9 @@
     <string name="nav_guests">Гости</string>
     <string name="nav_notises">Уведомления</string>
 
-    <string name="nav_datting">Знакомства</string>
+    <string name="nav_datting">Общение</string>
     <string name="nav_flirtik">Отправить симпатии</string>
-    <string name="nav_board">Объявления</string>
+    <string name="nav_board">Лента</string>
     <string name="nav_looking_for">Поиск</string>
     <string name="nav_servises">Услуги</string>
 
@@ -33,7 +33,7 @@
     <string name="guests_title">Гости</string>
     <string name="friends_title">Друзья</string>
     <string name="datting_title">Знакомтсва</string>
-    <string name="board_title">Объявления</string>
+    <string name="board_title">Лента</string>
     <string name="edit_profile_title">Редактировать профиль</string>
     <string name="registration_title">Регистрация</string>
     <string name="exit_title">Выход из профиля</string>
@@ -79,7 +79,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="title_activity_board">Объявления</string>
+    <string name="title_activity_board">Лента</string>
     <string name="title_activity_profile"> </string>
     <string name="title_activity_search">Поиск</string>
     <string name="title_activity_add_board">Новое сообщение</string>

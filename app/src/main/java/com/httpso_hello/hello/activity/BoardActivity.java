@@ -202,7 +202,7 @@ public class BoardActivity extends SuperMainActivity{
                                 public void onSuccess() {
                                     page = 1;
                                     getBoard();
-                                    Toast.makeText(getApplicationContext(), "Объявление удалено", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(), "Сообщение удалено", Toast.LENGTH_LONG).show();
                                 }
 
                                 @Override
