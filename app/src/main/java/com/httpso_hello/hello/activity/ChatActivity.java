@@ -600,14 +600,6 @@ public class ChatActivity extends SuperMainActivity{
                 );
                 this.attachmentsListView.setAdapter(maAdapter);
                 points.add("4");
-                attachmentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                        Attachment attachment = maAdapter.getItem(position);
-//                        messages.deleteAttachment(position, attachment.id);
-//                        maAdapter.deleteAttachment(position);
-                    }
-                });
             }
 
             attachmentsListView.getLayoutParams().width =
@@ -621,9 +613,18 @@ public class ChatActivity extends SuperMainActivity{
                     Help.getFileSize(sendingImageUri, getApplicationContext()),
                     0
             );
-            points.add(file_base64);
+
+//            if(file_base64!=null)
+//                points.add(file_base64);
+
             points.add("6");
             canSendMessage = false;
+            Logs.getInstance(getApplicationContext()).add(
+                    "info",
+                    points.toString(),
+                    "send_image_from_gellery",
+                    "no-exception"
+            );
             String tag = messages.addFileToMessage(
                     "photo",
                     "jpg",
@@ -647,12 +648,7 @@ public class ChatActivity extends SuperMainActivity{
                             canSendMessage = true;
                         }
                     });
-            Logs.getInstance(getApplicationContext()).add(
-                    "info",
-                    points.toString(),
-                    "send_image_from_gellery",
-                    ""
-            );
+
         } catch (Exception e){
             e.printStackTrace();
             Logs.getInstance(getApplicationContext()).add(

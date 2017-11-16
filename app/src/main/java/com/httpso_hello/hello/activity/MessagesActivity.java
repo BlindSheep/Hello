@@ -228,7 +228,7 @@ public class MessagesActivity extends SuperMainActivity{
         getContacts();
 //запускаем автообновление
         getNewContacts();
-        timer.schedule(new TimerTask() {
+        /*timer.schedule(new TimerTask() {
             @Override
             public void run() {
                 Tread1_Handler.post(new Runnable() {public void run() {
@@ -258,7 +258,7 @@ public class MessagesActivity extends SuperMainActivity{
 
                 }});
             }
-        }, 500, 3000);
+        }, 500, 3000);*/
     }
 
     @Override
