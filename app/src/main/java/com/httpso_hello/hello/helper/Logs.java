@@ -43,6 +43,7 @@ public class Logs extends Help{
                     Constant.logs_add_uri,
                     new Response.Listener<String>() {
                         public void onResponse(String response){
+                            Log.d("Log", response);
                             /*if (response != null) {
                                 try {
                                     if (resp.error == null) {
