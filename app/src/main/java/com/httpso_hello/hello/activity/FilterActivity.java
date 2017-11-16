@@ -39,6 +39,7 @@ public class FilterActivity extends AppCompatActivity {
         radioButtonWoman = (RadioButton) findViewById(R.id.radioButtonWoman);
         birth_date_from = (Spinner) findViewById(R.id.birth_date_from);
         birth_date_to = (Spinner) findViewById(R.id.birth_date_to);
+        save = (TextView) findViewById(R.id.save);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
