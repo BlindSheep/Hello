@@ -223,25 +223,54 @@ public class MessagesActivity extends SuperMainActivity{
 
     @Override
     public void onResume(){
+        super.onResume();
 //получаем контент
         getContacts();
-
 //запускаем автообновление
         getNewContacts();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Tread1_Handler.post(new Runnable() {public void run() {
 
-        super.onResume();
+                    messages.refreshContacts(dateLastUpdate, new Messages.RefreshContactsCallback() {
+                        @Override
+                        public void onSuccess(Contact[] contact, String dateLU) {
+                            swipeRefreshLayout.setRefreshing(false);
+                            dateLastUpdate = dateLU;
+                            if(contact.length!=0){
+                                ArrayList<Contact> defolt = new ArrayList<Contact>();
+                                Collections.addAll(defolt, contact);
+                                mcAdapter.updateContacts(defolt);
+                            }
+                        }
+                    }, new Help.ErrorCallback() {
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            swipeRefreshLayout.setRefreshing(true);
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            swipeRefreshLayout.setRefreshing(true);
+                        }
+                    });
+
+                }});
+            }
+        }, 500, 3000);
     }
 
     @Override
     public void onPause(){
-        timer.cancel();
         super.onPause();
+        timer.cancel();
     }
 
     @Override
     public void onDestroy(){
+        super.onDestroy();
         if (popUpWindow != null) popUpWindow.dismiss();
         timer.cancel();
-        super.onDestroy();
     }
 }
