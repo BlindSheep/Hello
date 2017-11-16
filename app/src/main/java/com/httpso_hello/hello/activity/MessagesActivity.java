@@ -92,7 +92,7 @@ public class MessagesActivity extends SuperMainActivity{
                 dateLastUpdate = dateLU;
                 ArrayList<Contact> defolt = new ArrayList<Contact>();
                 Collections.addAll(defolt, contacts);
-                mcAdapter = new MessagesContactsAdapter(activity, defolt);
+                activity.mcAdapter = new MessagesContactsAdapter(activity, defolt);
                 lv.setAdapter(mcAdapter);
 
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -141,13 +141,12 @@ public class MessagesActivity extends SuperMainActivity{
                         popUpWindow.getContentView().findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                final Contact contact = contacts[position - 1];
+                                Contact contact = contacts[position - 1];
                                 popUpWindow.dismiss();
                                 messages.deleteContacts(contact.id, new Messages.DeleteContactsCallback() {
                                     @Override
                                     public void onSuccess() {
-                                        getContacts();
-                                        Toast.makeText(MessagesActivity.this, contact.nickname + " удален(а) из списка контактов", Toast.LENGTH_LONG).show();
+                                        onResume();
                                     }
 
                                     @Override

@@ -87,8 +87,7 @@ public class Help {
      */
     public static boolean runTaskAfterPermission(final Activity activity, final String[] permissions, final int request_code){
         boolean needRequestPermission = false;
-        for (String permission :
-                permissions) {
+        for (String permission : permissions) {
             if(ContextCompat.checkSelfPermission(
                     activity.getApplicationContext(),
                     permission
@@ -98,10 +97,12 @@ public class Help {
         }
         if(needRequestPermission) {
             // Нужно получение прав на доступ
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(
+                    activity,
+                    Manifest.permission.READ_EXTERNAL_STORAGE
+            )) {
 
-                final String message = "Приложению нужны права доступа к фотографиям";
+                final String message = "Приложению нужны права доступа";
                 Snackbar.make(
                         activity.getCurrentFocus(),
                         message,

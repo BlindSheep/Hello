@@ -40,6 +40,7 @@ import com.httpso_hello.hello.helper.AsyncTasks;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Help;
+import com.httpso_hello.hello.helper.Logs;
 import com.httpso_hello.hello.helper.Messages;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -573,28 +574,32 @@ public class ChatActivity extends SuperMainActivity{
 
 
     public void sendImageFromGallery(){
+        String file_base64 = "";
+        final ArrayList<String> points = new ArrayList<>();
         try {
             final InputStream imageStream = getContentResolver().openInputStream(this.sendingImageUri);
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
             int position = 0;
+            points.add("1");
             if(maAdapter != null){
                 Attachment defoltAttachment = new Attachment();
                 defoltAttachment.previewAttachmentUri = this.sendingImageUri;
                 position = maAdapter.addAttachment(defoltAttachment);
+                points.add("2");
 //                attachmentsListView.setNumColumns(attachmentsListView.getColumnWidth()+1);
             } else {
-
                 Attachment defoltAttachment = new Attachment();
                 defoltAttachment.previewAttachmentUri = this.sendingImageUri;
                 ArrayList <Attachment> defoltListAttachment = new ArrayList<>();
                 defoltListAttachment.add(defoltAttachment);
-
+                points.add("3");
                 maAdapter = new MessagesAttachmentsAdapter(
                         ChatActivity.this,
                         defoltListAttachment,
                         messages
                 );
                 this.attachmentsListView.setAdapter(maAdapter);
+                points.add("4");
                 attachmentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -608,14 +613,16 @@ public class ChatActivity extends SuperMainActivity{
             attachmentsListView.getLayoutParams().width =
                     attachmentsListView.getLayoutParams().width +
                             Help.getPxFromDp(130, this);
-
+            points.add("5");
             //Преобразование для отправки на серв
-            final String file_base64 = Help.getBase64FromImage(
+            file_base64 = Help.getBase64FromImage(
                     selectedImage,
                     Bitmap.CompressFormat.JPEG,
                     Help.getFileSize(sendingImageUri, getApplicationContext()),
                     0
             );
+            points.add(file_base64);
+            points.add("6");
             canSendMessage = false;
             String tag = messages.addFileToMessage(
                     "photo",
@@ -625,6 +632,7 @@ public class ChatActivity extends SuperMainActivity{
                     new Messages.AddFileToMessageCallback() {
                         @Override
                         public void onSuccess(boolean response, final int id, final int position) {
+                            points.add("7");
                             maAdapter.setLoadedAttachment(position, id);
                             canSendMessage = true;
                         }
@@ -639,8 +647,20 @@ public class ChatActivity extends SuperMainActivity{
                             canSendMessage = true;
                         }
                     });
+            Logs.getInstance(getApplicationContext()).add(
+                    "info",
+                    points.toString(),
+                    "send_image_from_gellery",
+                    ""
+            );
         } catch (Exception e){
             e.printStackTrace();
+            Logs.getInstance(getApplicationContext()).add(
+                    "error",
+                    points.toString(),
+                    "send_image_from_gellery",
+                    e.toString()
+            );
         }
     }
 
