@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,6 +36,7 @@ import com.httpso_hello.hello.Structures.Attachment;
 import com.httpso_hello.hello.Structures.Message;
 import com.httpso_hello.hello.adapters.MessagesAttachmentsAdapter;
 import com.httpso_hello.hello.adapters.MessagesMessagesAdapter;
+import com.httpso_hello.hello.helper.AsyncTasks;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Help;
@@ -676,9 +678,22 @@ public class ChatActivity extends SuperMainActivity{
         }
     }
 
-    public void popupForMgs() {
-        System.out.println("!!!!!!!!!");
-        System.out.println("!!!!!!!!!");
-        System.out.println("!!!!!!!!!");
+    //Сюда надо автообновление
+    class AsyncTasks extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+
+
+        }
     }
 }
