@@ -78,6 +78,8 @@ public class MessagesActivity extends SuperMainActivity{
         else {
             getSupportActionBar().setTitle("Сообщения");
         }
+
+        getContacts();
     }
 
     // Получение списка контактов
@@ -90,7 +92,7 @@ public class MessagesActivity extends SuperMainActivity{
                 dateLastUpdate = dateLU;
                 ArrayList<Contact> defolt = new ArrayList<Contact>();
                 Collections.addAll(defolt, contacts);
-                activity.mcAdapter = new MessagesContactsAdapter(activity, defolt);
+                mcAdapter = new MessagesContactsAdapter(activity, defolt);
                 lv.setAdapter(mcAdapter);
 
                 lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -139,12 +141,13 @@ public class MessagesActivity extends SuperMainActivity{
                         popUpWindow.getContentView().findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Contact contact = contacts[position - 1];
+                                final Contact contact = contacts[position - 1];
                                 popUpWindow.dismiss();
                                 messages.deleteContacts(contact.id, new Messages.DeleteContactsCallback() {
                                     @Override
                                     public void onSuccess() {
-                                        onResume();
+                                        getContacts();
+                                        Toast.makeText(MessagesActivity.this, contact.nickname + " удален(а) из списка контактов", Toast.LENGTH_LONG).show();
                                     }
 
                                     @Override
@@ -179,6 +182,39 @@ public class MessagesActivity extends SuperMainActivity{
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
                         getContacts();
+                    }
+                }, 5000);
+            }
+        });
+    }
+
+    public void refresh () {
+        swipeRefreshLayout.setRefreshing(true);
+        messages = new Messages(getApplicationContext(), this);
+        messages.getContacts(new Messages.GetContactsCallback() {
+            @Override
+            public void onSuccess(Contact[] contact, MessagesActivity activity, String dateLastUpdate) {
+                swipeRefreshLayout.setRefreshing(false);
+                ArrayList<Contact> defolt = new ArrayList<Contact>();
+                Collections.addAll(defolt, contact);
+                mcAdapter.updateContacts(defolt);
+                mcAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onError(int error_code, String error_msg) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        refresh();
+                    }
+                }, 5000);
+            }
+
+            @Override
+            public void onInternetError(String error_msg) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        refresh();
                     }
                 }, 5000);
             }
@@ -224,8 +260,7 @@ public class MessagesActivity extends SuperMainActivity{
     @Override
     public void onResume(){
 //получаем контент
-        getContacts();
-
+        refresh();
 //запускаем автообновление
         getNewContacts();
 
