@@ -88,6 +88,7 @@ public class ChatActivity extends SuperMainActivity{
     private GridView attachmentsListView;
     private AVLoadingIndicatorView avi;
     private boolean  canSendMessage = true;
+    private boolean isLaunching = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -206,54 +207,7 @@ public class ChatActivity extends SuperMainActivity{
             }
         });
 
-        messages.getMessages(this.contact_id, new Messages.GetMessagesCallback() {
-            @Override
-            public void onSuccess(
-                    Message messages[],
-                    Activity activity,
-                    int user_id,
-                    String user_avatar_micro,
-                    Message[] sendedUnreadedMessagesIDs,
-                    String dateLU,
-                    boolean contactIsOnline
-            ) {
-                dateLastUpdate = dateLU;
-
-                progressBarChat.setVisibility(View.GONE);
-                ChatActivity chatActivity = ((ChatActivity) activity);
-
-                ArrayList<Message> asd = new ArrayList<Message>();
-                for (Message message : messages) {
-                    asd.add(message);
-                }
-
-                mmAdapter = new MessagesMessagesAdapter(
-                        activity,
-                        asd,
-                        user_id,
-                        user_avatar_micro,
-                        Constant.upload + chatActivity.pathContactAvatar
-                );
-                if(contact_id == 3008) chatList.addHeaderView(headerForSupport);
-                else chatList.addHeaderView(header);
-//                chatList.addHeaderView(header);
-                chatList.addFooterView(header);
-                chatList.setAdapter(mmAdapter);
-                contactOnline(contactIsOnline);
-                Collections.addAll(sendedMessages, sendedUnreadedMessagesIDs);
-//                sendedMessages.addAll(sendedUnreadedMessagesIDs);
-            }
-        }, new Help.ErrorCallback() {
-            @Override
-            public void onError(int error_code, String error_msg) {
-                Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onInternetError() {
-                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-            }
-        });
+        getMsg();
 
         // Обработка кнопки прикрепления файлов
         ((ImageButton)findViewById(R.id.docSend)).setOnClickListener(new View.OnClickListener() {
@@ -403,6 +357,114 @@ public class ChatActivity extends SuperMainActivity{
         return super.onOptionsItemSelected(item);
     }
 
+    private void getMsg() {
+        isLaunching = true;
+        messages.getMessages(this.contact_id, new Messages.GetMessagesCallback() {
+            @Override
+            public void onSuccess(
+                    Message messages[],
+                    Activity activity,
+                    int user_id,
+                    String user_avatar_micro,
+                    Message[] sendedUnreadedMessagesIDs,
+                    String dateLU,
+                    boolean contactIsOnline
+            ) {
+                isLaunching = false;
+
+                dateLastUpdate = dateLU;
+
+                progressBarChat.setVisibility(View.GONE);
+                ChatActivity chatActivity = ((ChatActivity) activity);
+
+                ArrayList<Message> asd = new ArrayList<Message>();
+                for (Message message : messages) {
+                    asd.add(message);
+                }
+
+                mmAdapter = new MessagesMessagesAdapter(
+                        activity,
+                        asd,
+                        user_id,
+                        user_avatar_micro,
+                        Constant.upload + chatActivity.pathContactAvatar
+                );
+                if(contact_id == 3008) chatList.addHeaderView(headerForSupport);
+                else chatList.addHeaderView(header);
+//                chatList.addHeaderView(header);
+                chatList.addFooterView(header);
+                chatList.setAdapter(mmAdapter);
+                contactOnline(contactIsOnline);
+                Collections.addAll(sendedMessages, sendedUnreadedMessagesIDs);
+//                sendedMessages.addAll(sendedUnreadedMessagesIDs);
+            }
+        }, new Help.ErrorCallback() {
+            @Override
+            public void onError(int error_code, String error_msg) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        getMsg();
+                    }
+                }, 5000);
+            }
+
+            @Override
+            public void onInternetError() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        getMsg();
+                    }
+                }, 5000);
+            }
+        });
+    }
+
+    private void refresh() {
+        if (!isLaunching) {
+            isLaunching = true;
+            boolean writing = false;
+            if (messageContent.getText().length() != 0) {
+                writing = true;
+            } else {
+                writing = false;
+            }
+            messages.refreshMessages(dateLastUpdate, contact_id, writing, new Messages.RefreshMessagesCallback() {
+                @Override
+                public void onSuccess(Message[] messages, String dateLU, boolean contactIsOnline, boolean is_writing) {
+                    isLaunching = false;
+                    dateLastUpdate = dateLU;
+                    if (firstItemScrolled) {
+                        chatList.setTranscriptMode(0);
+                    } else {
+                        chatList.setTranscriptMode(2);
+                    }
+                    if (messages.length != 0) {
+                        for (Message message : messages) {
+                            if (message.is_new == 1 && message.from_id == user_id) {
+                                sendedMessages.add(message);
+                            }
+                        }
+
+                        mmAdapter.addMessages(messages);
+                    }
+
+                    if (is_writing) contactIsWriting();
+                    else contactOnline(contactIsOnline);
+                }
+            }, new Help.ErrorCallback() {
+                @Override
+                public void onError(int error_code, String error_msg) {
+                    isLaunching = false;
+                }
+
+                @Override
+                public void onInternetError() {
+                    isLaunching = false;
+                }
+            });
+        }
+    }
+
     @Override
     public void onResume(){
         timer = new Timer();
@@ -410,49 +472,11 @@ public class ChatActivity extends SuperMainActivity{
             @Override
             public void run() {
                 Tread1_Handler.post(new Runnable() {public void run() {
-                    boolean writing = false;
-                    if (messageContent.getText().length() != 0) {
-                        writing = true;
-                    } else {
-                        writing = false;
-                    }
-                    messages.refreshMessages(dateLastUpdate, contact_id, writing, new Messages.RefreshMessagesCallback() {
-                        @Override
-                        public void onSuccess(Message[] messages, String dateLU, boolean contactIsOnline, boolean is_writing) {
-                            dateLastUpdate = dateLU;
-                            if(firstItemScrolled) {
-                                chatList.setTranscriptMode(0);
-                            } else {
-                                chatList.setTranscriptMode(2);
-                            }
-                            if(messages.length!=0) {
-                                for(Message message : messages){
-                                    if(message.is_new==1 && message.from_id==user_id){
-                                        sendedMessages.add(message);
-                                    }
-                                }
-
-                                mmAdapter.addMessages(messages);
-                            }
-
-                            if (is_writing) contactIsWriting();
-                            else contactOnline(contactIsOnline);
-                        }
-                    }, new Help.ErrorCallback() {
-                        @Override
-                        public void onError(int error_code, String error_msg) {
-
-                        }
-
-                        @Override
-                        public void onInternetError() {
-
-                        }
-                    });
+                    refresh();
                 }});
             }
         }, 3000, 3000);
-//        if(!isStartedSendedMessagesTimer) {
+
         isStartedSendedMessagesTimer = true;
         sendedMessagesTimer = new Timer();
         sendedMessagesTimer.schedule(new TimerTask() {
@@ -464,20 +488,22 @@ public class ChatActivity extends SuperMainActivity{
                             messages.getStateMessages(sendedMessages, new Messages.GetStateMessagesCallback() {
                                 @Override
                                 public void onSuccess(Message[] messagesIDs) {
-                                    int i = 0;
-                                    for (Message sendedMessage : sendedMessages) {
-                                        boolean isDeleted = true;
-                                        for (Message unreadedMessage : messagesIDs) {
-                                            if (sendedMessage.id == unreadedMessage.id) {
-                                                isDeleted = false;
-                                                break;
+                                    if (messagesIDs.length != 0) {
+                                        int i = 0;
+                                        for (Message sendedMessage : sendedMessages) {
+                                            boolean isDeleted = true;
+                                            for (Message unreadedMessage : messagesIDs) {
+                                                if (sendedMessage.id == unreadedMessage.id) {
+                                                    isDeleted = false;
+                                                    break;
+                                                }
                                             }
-                                        }
-                                        if (isDeleted) {
-                                            mmAdapter.setReadedMessage(sendedMessage.id);
+                                            if (isDeleted) {
+                                                mmAdapter.setReadedMessage(sendedMessage.id);
 //                                        sendedMessages.remove(sendedMessage);
+                                            }
+                                            i++;
                                         }
-                                        i++;
                                     }
                                 }
                             }, new Help.ErrorCallback() {

@@ -2,6 +2,7 @@ package com.httpso_hello.hello.adapters;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Contact;
 
+import com.httpso_hello.hello.activity.MessagesActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
@@ -191,12 +193,15 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
         for(Contact newContact : contacts){
             int position = this.getContactById(newContact.id);
             if(position == -1){
-                this.contacts.add(newContact);
+                this.contacts.add(0, newContact);
+                ((MessagesActivity) getContext()).setDisbalance(this.contacts);
             } else {
-                this.contacts.set(position, newContact);
+                this.contacts.remove(position);
+                this.contacts.add(0, newContact);
+                ((MessagesActivity) getContext()).setDisbalance(this.contacts);
             }
         }
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
     }
     public int getContactById(int id){
         int i = 0;
@@ -207,6 +212,11 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
             i++;
         }
         return -1;
+    }
+
+    @Override
+    public int getCount() {
+        return contacts.size();
     }
 }
 

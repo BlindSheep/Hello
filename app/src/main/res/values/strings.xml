@@ -74,7 +74,7 @@
     <string name="title_activity_chat"> Контактное лицо</string>
     <string name="title_activity_servises">Услуги</string>
     <string name="title_activity_billing">Пополнить кошелек</string>
-    <string name="input_your_message">Напишите сообщение</string>
+    <string name="input_your_message">Сообщение</string>
 
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
@@ -87,6 +87,8 @@
     <string name="title_activity_photo_comments">Комментарии</string>
     <string name="title_activity_setting_of_profile">Настройки</string>
     <string name="title_activity_send_flirtiks"></string>
+
+    <string name="version">Версия: 1.127</string>
 
 
     <string-array name="ageFrom">

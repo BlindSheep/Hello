@@ -2,6 +2,7 @@ package com.httpso_hello.hello.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Contact;
+import com.httpso_hello.hello.Structures.Contacts;
 import com.httpso_hello.hello.adapters.MessagesContactsAdapter;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Help;
@@ -43,6 +45,8 @@ public class MessagesActivity extends SuperMainActivity{
     private Uri imageUri;
     private String dateLastUpdate;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ArrayList<Contact> contactsArray = new ArrayList<Contact>();
+    private boolean isLaunching = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +86,20 @@ public class MessagesActivity extends SuperMainActivity{
         getContacts();
     }
 
+    public void setDisbalance(ArrayList<Contact> contacts) {
+        contactsArray = contacts;
+    }
+
     // Получение списка контактов
     public void getContacts() {
+        isLaunching = true;
         messages = new Messages(getApplicationContext(), this);
         messages.getContacts(new Messages.GetContactsCallback() {
             @Override
             public void onSuccess(final Contact[] contacts, MessagesActivity activity, String dateLU) {
+                isLaunching = false;
+                contactsArray.clear();
+                Collections.addAll(contactsArray, contacts);
                 swipeRefreshLayout.setRefreshing(false);
                 dateLastUpdate = dateLU;
                 ArrayList<Contact> defolt = new ArrayList<Contact>();
@@ -99,7 +111,7 @@ public class MessagesActivity extends SuperMainActivity{
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 // Обработчик клика по контакту
-                        Contact contact = contacts[position - 1];
+                        Contact contact = contactsArray.get(position - 1);
 // Открытие чата
                         Intent intent = new Intent(MessagesActivity.this, ChatActivity.class);
                         intent.putExtra("contact_id", contact.contact_id);
@@ -141,12 +153,13 @@ public class MessagesActivity extends SuperMainActivity{
                         popUpWindow.getContentView().findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Contact contact = contacts[position - 1];
+                                Contact contact = contactsArray.get(position - 1);
                                 popUpWindow.dismiss();
                                 messages.deleteContacts(contact.id, new Messages.DeleteContactsCallback() {
                                     @Override
                                     public void onSuccess() {
-                                        onResume();
+                                        getContacts();
+                                        Toast.makeText(MessagesActivity.this, "Контакт удален", Toast.LENGTH_LONG).show();
                                     }
 
                                     @Override
@@ -187,39 +200,6 @@ public class MessagesActivity extends SuperMainActivity{
         });
     }
 
-    public void refresh () {
-        swipeRefreshLayout.setRefreshing(true);
-        messages = new Messages(getApplicationContext(), this);
-        messages.getContacts(new Messages.GetContactsCallback() {
-            @Override
-            public void onSuccess(Contact[] contact, MessagesActivity activity, String dateLastUpdate) {
-                swipeRefreshLayout.setRefreshing(false);
-                ArrayList<Contact> defolt = new ArrayList<Contact>();
-                Collections.addAll(defolt, contact);
-                mcAdapter.updateContacts(defolt);
-                mcAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onError(int error_code, String error_msg) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        refresh();
-                    }
-                }, 5000);
-            }
-
-            @Override
-            public void onInternetError(String error_msg) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        refresh();
-                    }
-                }, 5000);
-            }
-        });
-    }
-
     public void getNewContacts() {
 //автообновление
         timer = new Timer();
@@ -227,30 +207,31 @@ public class MessagesActivity extends SuperMainActivity{
             @Override
             public void run() {
                 Tread1_Handler.post(new Runnable() {public void run() {
-
-                    messages.refreshContacts(dateLastUpdate, new Messages.RefreshContactsCallback() {
-                        @Override
-                        public void onSuccess(Contact[] contact, String dateLU) {
-                            swipeRefreshLayout.setRefreshing(false);
-                            dateLastUpdate = dateLU;
-                            if(contact.length!=0){
-                                ArrayList<Contact> defolt = new ArrayList<Contact>();
-                                Collections.addAll(defolt, contact);
-                                mcAdapter.updateContacts(defolt);
+                    if (!isLaunching) {
+                        isLaunching = true;
+                        messages.refreshContacts(dateLastUpdate, new Messages.RefreshContactsCallback() {
+                            @Override
+                            public void onSuccess(Contact[] contact, String dateLU) {
+                                if (contact.length != 0) {
+                                    final ArrayList<Contact> result = new ArrayList<Contact>();
+                                    Collections.addAll(result, contact);
+                                    mcAdapter.updateContacts(result);
+                                }
+                                dateLastUpdate = dateLU;
+                                isLaunching = false;
                             }
-                        }
-                    }, new Help.ErrorCallback() {
-                        @Override
-                        public void onError(int error_code, String error_msg) {
-                            swipeRefreshLayout.setRefreshing(true);
-                        }
+                        }, new Help.ErrorCallback() {
+                            @Override
+                            public void onError(int error_code, String error_msg) {
+                                isLaunching = false;
+                            }
 
-                        @Override
-                        public void onInternetError() {
-                            swipeRefreshLayout.setRefreshing(true);
-                        }
-                    });
-
+                            @Override
+                            public void onInternetError() {
+                                isLaunching = false;
+                            }
+                        });
+                    }
                 }});
             }
         }, 500, 3000);
@@ -258,11 +239,7 @@ public class MessagesActivity extends SuperMainActivity{
 
     @Override
     public void onResume(){
-//получаем контент
-        refresh();
-//запускаем автообновление
         getNewContacts();
-
         super.onResume();
     }
 
