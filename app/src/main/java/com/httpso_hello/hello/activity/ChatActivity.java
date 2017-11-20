@@ -486,7 +486,8 @@ public class ChatActivity extends SuperMainActivity{
                             messages.getReadStateMessages(contact_id, new Messages.GetReadStateMessages() {
                                 @Override
                                 public void onSuccess(boolean state) {
-                                    mmAdapter.setReadedMessages();
+                                    if(state)
+                                        mmAdapter.setReadedMessages();
                                 }
                             }, new Help.ErrorCallback() {
                                 @Override
