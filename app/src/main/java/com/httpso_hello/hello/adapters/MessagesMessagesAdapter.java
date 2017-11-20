@@ -475,10 +475,12 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
 
     public boolean getReadStateLastSendedMessage(){
         int lastPosition = this.messages.size();
-        lastPosition--;
-        Message message = this.messages.get(lastPosition);
-        if(message.is_new==1 && message.from_id==this.user_id)
-            return true;
+        if(lastPosition!=0) {
+            lastPosition--;
+            Message message = this.messages.get(lastPosition);
+            if (message.is_new == 1 && message.from_id == this.user_id)
+                return true;
+        }
         return false;
     }
 
