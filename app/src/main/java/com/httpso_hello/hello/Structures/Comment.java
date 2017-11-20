@@ -5,6 +5,7 @@ public class Comment {
     public String content;
     public int user_id;
     public User user;
+    public User parent_user;
 
     public Comment(){
 
