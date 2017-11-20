@@ -30,16 +30,16 @@
         android:text="Просмотренные" />
 
     <LinearLayout
+        android:background="@drawable/board"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:orientation="horizontal">
+    <LinearLayout
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/notice_sender_avatar"

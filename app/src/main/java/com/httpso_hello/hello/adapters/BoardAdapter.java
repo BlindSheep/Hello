@@ -195,13 +195,6 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), BoardContentActivity.class);
                     intent.putExtra("id", boardItem.id);
-                    if (boardItem.avatar != null) intent.putExtra("avatar", boardItem.avatar.micro);
-                    intent.putExtra("likes", boardItem.rating);
-                    intent.putExtra("content", boardItem.content);
-                    intent.putExtra("user_nickname", boardItem.user_nickname);
-                    intent.putExtra("date_pub", ConverterDate.convertDateForGuest(boardItem.date_pub));
-                    intent.putExtra("user_id", boardItem.user_id);
-                    intent.putExtra("anonim", anonim);
                     boardActivity.startActivity(intent);
                 }
             });

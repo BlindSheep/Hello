@@ -52,6 +52,7 @@ public class Constant {
     public static String users_delete_user_ignore_uri = start_api_uri + "users.delete_user_ignore";
 
     public static String content_delete_item_uri = start_api_uri + "content.delete_item";
+    public static String content_get_item_board_uri = start_api_uri + "content.get_item.board";
 
     public static String gifts_get_gifts_uri = start_api_uri + "gifts.get_gifts";
 

@@ -86,11 +86,59 @@ public class NotisesActivity extends SuperMainActivity{
                                 @Override
                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                     NoticeItem noticeItem = likesAdapterNew.getItem(position);
-                                    Intent intent = new Intent(NotisesActivity.this, ProfileActivity.class);
-                                    intent.putExtra("profile_id", noticeItem.profile_id);
-                                    intent.putExtra("profile_nickname", noticeItem.sender_user.nickname);
-                                    intent.putExtra("avatar", "");
-                                    startActivity(intent);
+                                    int type = likesAdapterNew.getItem(position).type_notice;
+                                    Intent intent;
+                                    switch (type) {
+                                        case 1:
+                                            switch(noticeItem.target_controller){
+                                                case "photos":
+                                                    intent = new Intent(NotisesActivity.this, ProfileActivity.class);
+                                                    intent.putExtra("profile_id", noticeItem.profile_id);
+                                                    intent.putExtra("profile_nickname", noticeItem.sender_user.nickname);
+                                                    intent.putExtra("avatar", "");
+                                                    startActivity(intent);
+                                                    break;
+                                                case "content":
+                                                    switch (noticeItem.content_type){
+                                                        case "board":
+                                                            intent = new Intent(NotisesActivity.this, BoardContentActivity.class);
+                                                            intent.putExtra("id", noticeItem.target_id);
+                                                            startActivity(intent);
+                                                            break;
+                                                    }
+                                                    break;
+                                            }
+                                            break;
+                                        case 2:
+                                            switch(noticeItem.target_controller){
+                                                case "photos":
+                                                    intent = new Intent(NotisesActivity.this, ProfileActivity.class);
+                                                    intent.putExtra("profile_id", noticeItem.profile_id);
+                                                    intent.putExtra("profile_nickname", noticeItem.sender_user.nickname);
+                                                    intent.putExtra("avatar", "");
+                                                    startActivity(intent);
+                                                    break;
+                                                case "content":
+                                                    switch (noticeItem.content_type){
+                                                        case "board":
+                                                            intent = new Intent(NotisesActivity.this, BoardContentActivity.class);
+                                                            intent.putExtra("id", noticeItem.target_id);
+                                                            startActivity(intent);
+                                                            break;
+                                                    }
+                                                    break;
+                                            }
+                                            break;
+                                        case 3:
+                                            intent = new Intent(NotisesActivity.this, ProfileActivity.class);
+                                            intent.putExtra("profile_id", noticeItem.profile_id);
+                                            intent.putExtra("profile_nickname", noticeItem.sender_user.nickname);
+                                            intent.putExtra("avatar", "");
+                                            startActivity(intent);
+                                            break;
+                                        default:
+                                            break;
+                                    }
                                 }
                             });
                         swipeRefreshLayout.setRefreshing(false);

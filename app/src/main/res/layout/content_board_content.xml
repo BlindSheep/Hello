@@ -29,7 +29,39 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <RelativeLayout
+        android:id="@+id/ansBLock"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:padding="10dp"
+        android:background="@drawable/board"
+        android:layout_above="@+id/asdasd">
+
+        <TextView
+            android:id="@+id/textAns"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/main_blue_color_hello"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/ansExit"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:tint="@color/main_black_color_hello"
+            app:srcCompat="@mipmap/ic_menu_exit"/>
+
+    </RelativeLayout>
+
     <LinearLayout
+        android:id="@+id/asdasd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

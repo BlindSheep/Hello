@@ -139,6 +139,7 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                             .sendComments("photos",
                                     "photo",
                                     extras.getInt("id"),
+                                    0,
                                     messageContentString,
                                     new Comments.SendCommentsCallback() {
                                         @Override

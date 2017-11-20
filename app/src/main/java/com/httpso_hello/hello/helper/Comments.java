@@ -85,6 +85,7 @@ public class Comments extends Help{
             final String controller,
             final String content_type,
             final int target_id,
+            final int idAns,
             final String content,
             final SendCommentsCallback sendCommentsCallback){
         Log.d("board", "Enter");
@@ -125,6 +126,7 @@ public class Comments extends Help{
                     params.put("content_type", content_type);
                     params.put("target_id", Integer.toString(target_id));
                     params.put("content", content);
+                    if (idAns != 0) params.put("parent_user_id", Integer.toString(idAns));
                     return params;
                 };
             };

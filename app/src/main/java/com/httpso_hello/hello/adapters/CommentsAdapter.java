@@ -1,6 +1,7 @@
 package com.httpso_hello.hello.adapters;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -15,10 +16,12 @@ import com.httpso_hello.hello.Structures.Coment;
 import com.httpso_hello.hello.activity.BoardActivity;
 import com.httpso_hello.hello.activity.BoardContentActivity;
 import com.httpso_hello.hello.activity.PhotoCommentsActivity;
+import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Comments;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
+import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -141,6 +144,14 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
             } else {
                 holder.popupButton.setVisibility(View.GONE);
             }
+            holder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), ProfileActivity.class);
+                    intent.putExtra("profile_id", coment.user_id);
+                    ((BoardContentActivity) getContext()).startActivity(intent);
+                }
+            });
         } else if (type.equals("photo")) {
             if ((stgs.getSettingInt("user_id") == coment.user_id) || isMyPhoto) {
                 holder.popupButton.setVisibility(View.VISIBLE);
@@ -154,6 +165,14 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
             } else {
                 holder.popupButton.setVisibility(View.GONE);
             }
+            holder.avatar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), ProfileActivity.class);
+                    intent.putExtra("profile_id", coment.user_id);
+                    ((PhotoCommentsActivity) getContext()).startActivity(intent);
+                }
+            });
         }
 
         return rowView;

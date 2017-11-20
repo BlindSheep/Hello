@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Attachment;
+import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Coment;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.Message;
@@ -32,6 +34,7 @@ import com.httpso_hello.hello.adapters.CommentsAdapter;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Comments;
 import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.Content;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Messages;
@@ -72,6 +75,8 @@ public class BoardContentActivity extends SuperMainActivity {
     private boolean launching;
     private View popupViewDelete;
     private PopupWindow popUpWindowDelete;
+    private int idAnswer;
+    private TextView textAns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +106,7 @@ public class BoardContentActivity extends SuperMainActivity {
         emojIcon = new EmojIconActions(this, contentBoardContentBlock, messageContent, emojiKeyboard);
         emojIcon.ShowEmojIcon();
         messageSend = (ImageView) findViewById(R.id.messageSend);
+        textAns = (TextView) findViewById(R.id.textAns);
 
         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
         popupViewDelete = getLayoutInflater().inflate(R.layout.popup_for_delete_comment, null);
@@ -113,7 +119,7 @@ public class BoardContentActivity extends SuperMainActivity {
         getComments();
         LV.addHeaderView(header);
         LV.addFooterView(footer);
-        getBoardItem(extras.getString("avatar"), extras.getString("user_nickname"), extras.getString("date_pub"), extras.getString("content"), extras.getInt("likes"), extras.getInt("id"), extras.getBoolean("anonim"));
+        getBoardItem(extras.getInt("id"));
 
         // Свайп для обновления
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -122,24 +128,6 @@ public class BoardContentActivity extends SuperMainActivity {
                 getComments();
             }
         });
-
-        //Клик по шапке
-        if (!extras.getBoolean("anonim")) {
-            header.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
-                    intent.putExtra("profile_id", extras.getInt("user_id"));
-                    startActivity(intent);
-                }
-            });
-        } else {
-            header.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                }
-            });
-        }
 
         //Отправка комментария
         messageSend.setOnClickListener(getOnClick());
@@ -166,15 +154,17 @@ public class BoardContentActivity extends SuperMainActivity {
                     user.nickname = stgs.getSettingStr("user_nickname");
                     avatar.micro = stgs.getSettingStr("user_avatar.micro");
 
-                    coment.user = user;
-                    user.avatar = avatar;
-                    ca.add(coment);
-                    ca.notifyDataSetChanged();
+                    idAnswer = 0;
+                    textAns.setText("");
+                    ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.GONE);
+
+                    deleteAnswer();
 
                     new Comments(getApplicationContext())
                             .sendComments("content",
                                     "board",
                                     extras.getInt("id"),
+                                    idAnswer,
                                     messageContentString,
                                     new Comments.SendCommentsCallback() {
                                         @Override
@@ -197,6 +187,25 @@ public class BoardContentActivity extends SuperMainActivity {
         };
     }
 
+    private void setAnswer(int id, String nickname) {
+        ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.VISIBLE);
+        this.idAnswer = id;
+        textAns.setText(nickname + " получит ответ");
+        messageContent.setText(nickname + ", ");
+        ((ImageView) findViewById(R.id.ansExit)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteAnswer();
+            }
+        });
+    }
+    private void deleteAnswer() {
+        idAnswer = 0;
+        textAns.setText("");
+        messageContent.setText("");
+        ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.GONE);
+    }
+
     //Получение комментов
     private void getComments(){
         launching = true;
@@ -208,114 +217,154 @@ public class BoardContentActivity extends SuperMainActivity {
                         extras.getInt("id"),
                         this,
                         new Comments.GetCommentsCallback() {
-            @Override
-            public void onSuccess(Coment[] commentsStructure, Activity activity) {
-                final ArrayList<Coment> defolt = new ArrayList<Coment>();
-                Collections.addAll(defolt, commentsStructure);
-                ca = new CommentsAdapter(activity, defolt, "board", extras.getInt("id"), false);
-                counts = defolt.size();
-                LV.setAdapter(ca);
-                launching = false;
-                LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        if ((position != 0) && (position != (defolt.size() + 1))) {
-                            System.out.println("!!!!!!!!!!!!!!!!!" + Integer.toString(position));
-                            System.out.println("!!!!!!!!!!!!!!!!!" + Integer.toString(defolt.size()));
-                            Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
-                            intent.putExtra("profile_id", defolt.get(position - 1).user_id);
-                            startActivity(intent);
-                        }
-                    }
-                });
-                swipeRefreshLayout.setRefreshing(false);
-            }
+                            @Override
+                            public void onSuccess(Coment[] commentsStructure, Activity activity) {
+                                final ArrayList<Coment> defolt = new ArrayList<Coment>();
+                                Collections.addAll(defolt, commentsStructure);
+                                ca = new CommentsAdapter(activity, defolt, "board", extras.getInt("id"), false);
+                                counts = defolt.size();
+                                LV.setAdapter(ca);
+                                launching = false;
+                                LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                    @Override
+                                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                        if ((position != 0) && (position != (defolt.size() + 1))) {
+                                            setAnswer(defolt.get(position - 1).user_id, defolt.get(position-1).user.nickname);
+                                        }
+                                    }
+                                });
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
 
-            @Override
-            public void onError(int error_code, String error_message) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        getComments();
-                    }
-                }, 5000);
-            }
+                            @Override
+                            public void onError(int error_code, String error_message) {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override public void run() {
+                                        getComments();
+                                    }
+                                }, 5000);
+                            }
 
-            @Override
-            public void onInternetError() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        getComments();
-                    }
-                }, 5000);
-            }
-        });
+                            @Override
+                            public void onInternetError() {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override public void run() {
+                                        getComments();
+                                    }
+                                }, 5000);
+                            }
+                        });
     }
 
     //Заполнение карточку объявления
-    private void getBoardItem(String avatar, String name, String date_pub, String content, int likes, final int id, boolean anonim) {
-        if (!anonim) {
-            if (avatar != null) {
-                Picasso
-                        .with(getApplicationContext())
-                        .load(Uri.parse(Constant.upload + avatar))
-                        .transform(new CircularTransformation(0))
-                        .into(userAvatarBoardItem, new Callback() {
+    private void getBoardItem(final int id) {
+        Content
+                .getInstance(getApplicationContext())
+                .getContentItem(
+                        id,
+                        new Content.GetContentItemCallback() {
                             @Override
-                            public void onSuccess() {
+                            public void onSuccess(final BoardItem item) {
+                                boolean anonim = true;
+                                if(item.is_anonim.equals("1")) anonim = true;
+                                else anonim = false;
+                                if (!anonim) {
+                                    if (item.avatar != null) {
+                                        Picasso
+                                                .with(getApplicationContext())
+                                                .load(Uri.parse(Constant.upload + item.avatar.micro))
+                                                .transform(new CircularTransformation(0))
+                                                .into(userAvatarBoardItem, new Callback() {
+                                                    @Override
+                                                    public void onSuccess() {
 
+                                                    }
+
+                                                    @Override
+                                                    public void onError() {
+                                                        Picasso
+                                                                .with(getApplicationContext())
+                                                                .load(Uri.parse(Constant.default_avatar))
+                                                                .transform(new CircularTransformation(0))
+                                                                .into(userAvatarBoardItem);
+                                                    }
+                                                });
+                                    } else {
+                                        Picasso
+                                                .with(getApplicationContext())
+                                                .load(Uri.parse(Constant.default_avatar))
+                                                .transform(new CircularTransformation(0))
+                                                .into(userAvatarBoardItem);
+                                    }
+                                    userNameBoardItem.setText(item.user_nickname);
+                                    datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.date_pub));
+                                    boardTextItem.setText(Html.fromHtml(item.content));
+                                    boardLikeItem.setText(ConverterDate.likeStr(item.rating));
+                                    boardLikeItem.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(BoardContentActivity.this, LikeActivity.class);
+                                            intent.putExtra("target_id", id);
+                                            intent.putExtra("subject", "board");
+                                            intent.putExtra("target_controller", "content");
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    //Клик по шапке
+                                        header.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
+                                                intent.putExtra("profile_id", item.user_id);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                } else {
+                                    Picasso
+                                            .with(getApplicationContext())
+                                            .load(R.drawable.ic_action_anonimnost)
+                                            .transform(new CircularTransformation(0))
+                                            .into(userAvatarBoardItem);
+                                    userNameBoardItem.setText("Анонимно");
+                                    datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.date_pub));
+                                    boardTextItem.setText(Html.fromHtml(item.content));
+                                    boardLikeItem.setText(ConverterDate.likeStr(item.rating));
+                                    boardLikeItem.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            Intent intent = new Intent(BoardContentActivity.this, LikeActivity.class);
+                                            intent.putExtra("target_id", id);
+                                            intent.putExtra("subject", "board");
+                                            intent.putExtra("target_controller", "content");
+                                            startActivity(intent);
+                                        }
+                                    });
+                                    header.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                        }
+                                    });
+                                }
                             }
 
                             @Override
-                            public void onError() {
-                                Picasso
-                                        .with(getApplicationContext())
-                                        .load(Uri.parse(Constant.default_avatar))
-                                        .transform(new CircularTransformation(0))
-                                        .into(userAvatarBoardItem);
+                            public void onError(int error_code, String error_msg) {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override public void run() {
+                                        getBoardItem(id);
+                                    }
+                                }, 5000);
+                            }
+
+                            @Override
+                            public void onInternetError() {
+                                new Handler().postDelayed(new Runnable() {
+                                    @Override public void run() {
+                                        getBoardItem(id);
+                                    }
+                                }, 5000);
                             }
                         });
-            } else {
-                Picasso
-                        .with(getApplicationContext())
-                        .load(Uri.parse(Constant.default_avatar))
-                        .transform(new CircularTransformation(0))
-                        .into(userAvatarBoardItem);
-            }
-            userNameBoardItem.setText(name);
-            datePubBoardItem.setText(date_pub);
-            boardTextItem.setText(Html.fromHtml(content));
-            boardLikeItem.setText(ConverterDate.likeStr(likes));
-            boardLikeItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(BoardContentActivity.this, LikeActivity.class);
-                    intent.putExtra("target_id", id);
-                    intent.putExtra("subject", "board");
-                    intent.putExtra("target_controller", "content");
-                    startActivity(intent);
-                }
-            });
-        } else {
-            Picasso
-                    .with(getApplicationContext())
-                    .load(R.drawable.ic_action_anonimnost)
-                    .transform(new CircularTransformation(0))
-                    .into(userAvatarBoardItem);
-            userNameBoardItem.setText("Анонимно");
-            datePubBoardItem.setText(date_pub);
-            boardTextItem.setText(Html.fromHtml(content));
-            boardLikeItem.setText(ConverterDate.likeStr(likes));
-            boardLikeItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(BoardContentActivity.this, LikeActivity.class);
-                    intent.putExtra("target_id", id);
-                    intent.putExtra("subject", "board");
-                    intent.putExtra("target_controller", "content");
-                    startActivity(intent);
-                }
-            });
-        }
     }
 
 
@@ -351,26 +400,26 @@ public class BoardContentActivity extends SuperMainActivity {
             @Override
             public void onClick(View v) {
                 new Comments(getApplicationContext())
-                    .deleteComments(id, target_controller, content_type, contentId, new Comments.DeleteCommentCallback() {
-                        @Override
-                        public void onSuccess() {
-                            popUpWindowDelete.dismiss();
-                            getComments();
-                            Toast.makeText(getApplicationContext(), "Комментарий удален", Toast.LENGTH_LONG).show();
-                        }
+                        .deleteComments(id, target_controller, content_type, contentId, new Comments.DeleteCommentCallback() {
+                            @Override
+                            public void onSuccess() {
+                                popUpWindowDelete.dismiss();
+                                getComments();
+                                Toast.makeText(getApplicationContext(), "Комментарий удален", Toast.LENGTH_LONG).show();
+                            }
 
-                        @Override
-                        public void onError(int error_code, String error_message) {
-                            popUpWindowDelete.dismiss();
-                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                        }
+                            @Override
+                            public void onError(int error_code, String error_message) {
+                                popUpWindowDelete.dismiss();
+                                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                            }
 
-                        @Override
-                        public void onInternetError() {
-                            popUpWindowDelete.dismiss();
-                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                            @Override
+                            public void onInternetError() {
+                                popUpWindowDelete.dismiss();
+                                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                            }
+                        });
             }
         });
     }
@@ -378,6 +427,7 @@ public class BoardContentActivity extends SuperMainActivity {
     @Override
     public void onBackPressed() {
         if(popUpWindowDelete.isShowing()) popUpWindowDelete.dismiss();
+        if(idAnswer != 0) deleteAnswer();
         else super.onBackPressed();
     }
 

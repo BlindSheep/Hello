@@ -8,6 +8,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.httpso_hello.hello.Structures.Board;
+import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Friends;
 
 import java.util.HashMap;
@@ -25,6 +27,7 @@ public class Content extends Help {
     private static Content instance;
 
     public Content(Context context){
+        super(context);
         this._context = context;
         stgs = new Settings(context);
     }
@@ -84,8 +87,58 @@ public class Content extends Help {
         }
     }
 
+    //Получение контента
+    public void getContentItem(
+            final int id,
+            final Content.GetContentItemCallback getContentItemCallback
+    ){
+        if (Constant.api_key !="") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.content_get_item_board_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            Log.d("content", response);
+                            if (response != null) {
+                                Board board = gson.fromJson(response, Board.class);
+                                if(board.error == null){
+                                    getContentItemCallback.onSuccess(board.items[0]);
+                                    return;
+                                }
+                                getContentItemCallback.onError(board.error.error_code, board.error.error_msg);
+                                return;
+                            }
+                            getContentItemCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            getContentItemCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = getParamsMap();
+                    params.put("item_id", Integer.toString(id));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "content.get_item");
+        }
+    }
+
     public interface DeleteContentCallback {
         void onSuccess();
+        void onError(int error_code, String error_msg);
+        void onInternetError();
+    }
+
+    public interface GetContentItemCallback {
+        void onSuccess(BoardItem item);
         void onError(int error_code, String error_msg);
         void onInternetError();
     }
