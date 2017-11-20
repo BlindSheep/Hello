@@ -21,6 +21,7 @@ import com.httpso_hello.hello.Structures.Contacts;
 import com.httpso_hello.hello.Structures.Message;
 import com.httpso_hello.hello.Structures.Notices;
 import com.httpso_hello.hello.Structures.RequestMessages;
+import com.httpso_hello.hello.Structures.UniversalResponse;
 import com.httpso_hello.hello.activity.MessagesActivity;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class Messages extends Help {
     private ArrayList<Integer> attachemts = new ArrayList<>();
 
     public Messages(Context context, Activity activity){
+        super(context);
         this._context = context;
         stgs = new Settings(this._context);
         api = new Api(this._context);
@@ -377,6 +379,13 @@ public class Messages extends Help {
         return attachemts.size();
     }
 
+    /**
+     * Запрос проверки прочитанности отправленных сообщений. Работает индивидуально по сообщениям
+     * @param messagesIDs
+     * @param getStateMessagesCallback
+     * @param errorCallback
+     */
+
     public void getStateMessages(
             final ArrayList<Message> messagesIDs,
             final GetStateMessagesCallback getStateMessagesCallback,
@@ -419,10 +428,61 @@ public class Messages extends Help {
                     return params;
                 };
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_contacts");
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.get_state_messages");
         }
     }
 
+
+    /**
+     * Получение статуса прочитанности последних оптравленных сообщений. Работает по последнему
+     * отправленному сообщению
+     * @param contact_id
+     * @param getReadStateMessages
+     * @param errorCallback
+     */
+    public void getReadStateMessages(
+            final int contact_id,
+            final GetReadStateMessages getReadStateMessages,
+            final ErrorCallback errorCallback
+    ){
+        if(Constant.api_key!=""){
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.messages_get_read_state_messages_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            Log.d("getStateMessages", response);
+                            if (response != null) {
+                                UniversalResponse state = gson.fromJson(response, UniversalResponse.class);
+                                if(state.error == null){
+                                    getReadStateMessages.onSuccess(state.response);
+                                    return;
+                                }
+                                errorCallback.onError(state.error.error_code, state.error.error_msg);
+                                return;
+                            }
+                            errorCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            errorCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = getParamsMap();
+                    params.put("contact_id", Integer.toString(contact_id));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.get_read_state_messages");
+        }
+    }
 
     public String addFileToMessage(
             final String type,
@@ -541,6 +601,9 @@ public class Messages extends Help {
     }
     public interface RefreshMessagesCallback{
         void onSuccess(Message[] messages, String dateLastUpdate, boolean contactIsOnline, boolean contact_is_writing);
+    }
+    public interface GetReadStateMessages{
+        void onSuccess(boolean state);
     }
 }
 

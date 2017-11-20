@@ -29,6 +29,7 @@ public class Constant {
     public static String messages_refresh_contacts_uri = start_api_uri + "messages.refresh_contacts";
     public static String messages_refresh_messages_uri = start_api_uri + "messages.refresh_messages";
     public static String messages_get_state_messages_uri = start_api_uri + "messages.get_state_messages";
+    public static String messages_get_read_state_messages_uri = start_api_uri + "messages.get_read_state_messages";
     public static String messages_add_file_to_message_uri = start_api_uri + "messages.add_file_to_message";
 
     public static String board_get_board_uri = start_api_uri + "content.get.board";

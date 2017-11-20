@@ -51,6 +51,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
     private int user_id;
     public ChatActivity ca;
     private LayoutInflater mInflater;
+    private ArrayList<Integer> unreadedSendedMessages = new ArrayList<>();
 
     public MessagesMessagesAdapter(Activity context, ArrayList<Message> messages, int user_id, String userAvatar, String contactAvatar){
         super(context, R.layout.content_chat, messages);
@@ -448,15 +449,37 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
 
     }
 
-    public  void addMessages(Message[] messages){
+    public void setReadedMessages(){
+        int position = this.messages.size();
+        position--;
+        for(int i = position; i>-1; i--){
+            Message message = this.messages.get(i);
+            if(message.is_new == 1){
+                message.is_new = 0;
+            } else {
+                break;
+            }
+        }
+        this.notifyDataSetChanged();
+    }
+
+    public void addMessages(Message[] messages){
         for (Message message: messages) {
             int index = this.containMessage(message);
-            Log.d("index", Integer.toString(index));
-            Log.d("index", Boolean.toString(this.messages.contains(message)));
             if(index == -1){
                 this.messages.add(message);
             }
         }
         this.notifyDataSetChanged();
     }
+
+    public boolean getReadStateLastSendedMessage(){
+        int lastPosition = this.messages.size();
+        lastPosition--;
+        Message message = this.messages.get(lastPosition);
+        if(message.is_new==1 && message.from_id==this.user_id)
+            return true;
+        return false;
+    }
+
 }

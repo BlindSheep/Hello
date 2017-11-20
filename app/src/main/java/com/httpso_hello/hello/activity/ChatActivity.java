@@ -81,7 +81,6 @@ public class ChatActivity extends SuperMainActivity{
     private float density;
     private String dateLastUpdate;
     private TextView textOnline;
-    private ArrayList<Message> sendedMessages = new ArrayList<>();
     private Uri sendingImageUri;
     private int user_id;
     private MessagesAttachmentsAdapter maAdapter;
@@ -226,6 +225,8 @@ public class ChatActivity extends SuperMainActivity{
         messageSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(mmAdapter==null)
+                    return;
                 String messageContentString = messageContent.getText().toString();
                 if ((!messageContentString.isEmpty() || messages.getCountAttachments()!=0) && canSendMessage) {
                     messageContent.setText(null);
@@ -259,7 +260,6 @@ public class ChatActivity extends SuperMainActivity{
 
 //                                    dateLastUpdate = dateLU;
                                     mmAdapter.setMessage(message, message_number);
-                                    sendedMessages.add(message);
                                 }
 
                             }, new Help.ErrorCallback() {
@@ -275,7 +275,11 @@ public class ChatActivity extends SuperMainActivity{
                                 }
                             });
                 } else {
-                    showMessage("Дождитесь отправки файла...");
+                    if(!canSendMessage) {
+                        showMessage("Дождитесь отправки файла...");
+                    } else {
+                        showMessage("Напишите Ваше сообщение...");
+                    }
                 }
             }
         });
@@ -370,6 +374,8 @@ public class ChatActivity extends SuperMainActivity{
                     String dateLU,
                     boolean contactIsOnline
             ) {
+                ((LinearLayout) findViewById(R.id.chatWindow)).setVisibility(View.VISIBLE);
+
                 isLaunching = false;
 
                 dateLastUpdate = dateLU;
@@ -395,8 +401,6 @@ public class ChatActivity extends SuperMainActivity{
                 chatList.addFooterView(header);
                 chatList.setAdapter(mmAdapter);
                 contactOnline(contactIsOnline);
-                Collections.addAll(sendedMessages, sendedUnreadedMessagesIDs);
-//                sendedMessages.addAll(sendedUnreadedMessagesIDs);
             }
         }, new Help.ErrorCallback() {
             @Override
@@ -439,12 +443,6 @@ public class ChatActivity extends SuperMainActivity{
                         chatList.setTranscriptMode(2);
                     }
                     if (messages.length != 0) {
-                        for (Message message : messages) {
-                            if (message.is_new == 1 && message.from_id == user_id) {
-                                sendedMessages.add(message);
-                            }
-                        }
-
                         mmAdapter.addMessages(messages);
                     }
 
@@ -484,7 +482,26 @@ public class ChatActivity extends SuperMainActivity{
             public void run() {
                 sendedMessagesHandler.post(new Runnable() {
                     public void run() {
-                        if (sendedMessages.size() != 0) {
+                        if(mmAdapter != null && mmAdapter.getReadStateLastSendedMessage()){
+                            messages.getReadStateMessages(contact_id, new Messages.GetReadStateMessages() {
+                                @Override
+                                public void onSuccess(boolean state) {
+                                    mmAdapter.setReadedMessages();
+                                }
+                            }, new Help.ErrorCallback() {
+                                @Override
+                                public void onError(int error_code, String error_msg) {
+                                    showMessage(error_msg);
+                                }
+
+                                @Override
+                                public void onInternetError() {
+                                    showMessage("Ошибка интернет соединения");
+                                }
+                            });
+                        }
+                        /*if (sendedMessages.size() != 0) {
+
                             messages.getStateMessages(sendedMessages, new Messages.GetStateMessagesCallback() {
                                 @Override
                                 public void onSuccess(Message[] messagesIDs) {
@@ -500,7 +517,7 @@ public class ChatActivity extends SuperMainActivity{
                                             }
                                             if (isDeleted) {
                                                 mmAdapter.setReadedMessage(sendedMessage.id);
-//                                        sendedMessages.remove(sendedMessage);
+                                                sendedMessages.remove(i);
                                             }
                                             i++;
                                         }
@@ -517,7 +534,7 @@ public class ChatActivity extends SuperMainActivity{
 
                                 }
                             });
-                        }
+                        }*/
                     }
                 });
             }
