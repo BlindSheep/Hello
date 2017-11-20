@@ -20,6 +20,8 @@ public class NoticeItem {
     public String target_content; // Контент цели, которой косается уведомление. Заполнеяется в случае если уведомление касается коментария или объявления, или подарка
     public String comment_content; // Если уведомление инициировано комментарием то заполняется текстом комментария
     public int is_new;
+    //Для комментариев
+    public User parent_user; // Юзер которому отправлен комментарий овтет
 
 
     public NoticeItem(){
