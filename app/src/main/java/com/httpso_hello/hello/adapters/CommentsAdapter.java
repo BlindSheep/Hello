@@ -58,6 +58,8 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
         private TextView datePub;
         private ImageView isOnline;
         private ImageView popupButton;
+        private ImageView imageAns;
+        private TextView answerNickname;
     }
 
     @Override
@@ -75,6 +77,8 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
             holder.datePub = (TextView) rowView.findViewById(R.id.datePub);
             holder.isOnline = (ImageView) rowView.findViewById(R.id.isOnline);
             holder.popupButton = (ImageView) rowView.findViewById(R.id.popupButton);
+            holder.answerNickname = (TextView) rowView.findViewById(R.id.answerNickname);
+            holder.imageAns = (ImageView) rowView.findViewById(R.id.imageAns);
             rowView.setTag(holder);
         } else {
             holder = (ViewHolder) rowView.getTag();
@@ -122,6 +126,28 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
         //Дата публикации
         if (!coment.date_pub.equals("Только что")) holder.datePub.setText(ConverterDate.convertDateForGuest(coment.date_pub));
         else holder.datePub.setText("Только что");
+
+        //Кому ответ
+        if (coment.parent_user != null) {
+            holder.answerNickname.setText(coment.parent_user.nickname);
+            holder.answerNickname.setVisibility(View.VISIBLE);
+            holder.answerNickname.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), ProfileActivity.class);
+                    intent.putExtra("profile_id", coment.parent_user.id);
+                    if (type.equals("board")){
+                        ((BoardContentActivity) getContext()).startActivity(intent);
+                    } else if (type.equals("photo")) {
+                        ((PhotoCommentsActivity) getContext()).startActivity(intent);
+                    }
+                }
+            });
+            holder.imageAns.setVisibility(View.VISIBLE);
+        } else {
+            holder.answerNickname.setVisibility(View.GONE);
+            holder.imageAns.setVisibility(View.GONE);
+        }
 
         //Контент
         holder.content.setText(Html.fromHtml(coment.content));

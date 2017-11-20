@@ -37,15 +37,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:maxLines="1"
-                    android:text="TextView"
                     android:textColor="@color/main_blue_color_hello" />
 
                 <TextView
                     android:id="@+id/datePubBoardItem"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:text="TextView" />
+                    android:maxLines="1"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -58,7 +56,6 @@
             android:paddingBottom="15dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="Text"
             android:textColor="@color/main_black_color_hello" />
 
         <View
@@ -76,7 +73,6 @@
             android:paddingBottom="15dp"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"
-            android:text="Text"
             android:gravity="center_horizontal"
             android:textColor="@color/main_blue_color_hello" />
 

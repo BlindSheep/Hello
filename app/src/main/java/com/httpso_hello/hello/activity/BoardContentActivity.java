@@ -76,8 +76,10 @@ public class BoardContentActivity extends SuperMainActivity {
     private View popupViewDelete;
     private PopupWindow popUpWindowDelete;
     private int idAnswer;
+    private String nicknameAnswer;
     private TextView textAns;
-
+    private Handler refreshAtError;
+    private Runnable refreshAtErrorRunnable;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,11 +156,17 @@ public class BoardContentActivity extends SuperMainActivity {
                     user.nickname = stgs.getSettingStr("user_nickname");
                     avatar.micro = stgs.getSettingStr("user_avatar.micro");
 
-                    idAnswer = 0;
-                    textAns.setText("");
-                    ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.GONE);
+                    if (idAnswer != 0) {
+                        User parent_user = new User();
+                        parent_user.id = idAnswer;
+                        parent_user.nickname = nicknameAnswer;
+                        coment.parent_user = parent_user;
+                    }
 
-                    deleteAnswer();
+                    coment.user = user;
+                    user.avatar = avatar;
+                    ca.add(coment);
+                    ca.notifyDataSetChanged();
 
                     new Comments(getApplicationContext())
                             .sendComments("content",
@@ -182,6 +190,8 @@ public class BoardContentActivity extends SuperMainActivity {
 
                                         }
                                     });
+
+                    deleteAnswer();
                 }
             }
         };
@@ -192,6 +202,7 @@ public class BoardContentActivity extends SuperMainActivity {
         this.idAnswer = id;
         textAns.setText(nickname + " получит ответ");
         messageContent.setText(nickname + ", ");
+        nicknameAnswer = nickname;
         ((ImageView) findViewById(R.id.ansExit)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,6 +214,7 @@ public class BoardContentActivity extends SuperMainActivity {
         idAnswer = 0;
         textAns.setText("");
         messageContent.setText("");
+        nicknameAnswer = null;
         ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.GONE);
     }
 
@@ -349,20 +361,24 @@ public class BoardContentActivity extends SuperMainActivity {
 
                             @Override
                             public void onError(int error_code, String error_msg) {
-                                new Handler().postDelayed(new Runnable() {
+                                refreshAtError = new Handler();
+                                refreshAtErrorRunnable = new Runnable() {
                                     @Override public void run() {
                                         getBoardItem(id);
                                     }
-                                }, 5000);
+                                };
+                                refreshAtError.postDelayed(refreshAtErrorRunnable,5000);
                             }
 
                             @Override
                             public void onInternetError() {
-                                new Handler().postDelayed(new Runnable() {
+                                refreshAtError = new Handler();
+                                refreshAtErrorRunnable = new Runnable() {
                                     @Override public void run() {
                                         getBoardItem(id);
                                     }
-                                }, 5000);
+                                };
+                                refreshAtError.postDelayed(refreshAtErrorRunnable,5000);
                             }
                         });
     }
@@ -441,11 +457,17 @@ public class BoardContentActivity extends SuperMainActivity {
     public void onPause() {
         timer.cancel();
         super.onPause();
+        if(refreshAtError!=null) {
+            refreshAtError.removeCallbacks(refreshAtErrorRunnable);
+        }
     }
 
     @Override
     public void onDestroy() {
         timer.cancel();
         super.onDestroy();
+        if(refreshAtError!=null) {
+            refreshAtError.removeCallbacks(refreshAtErrorRunnable);
+        }
     }
 }

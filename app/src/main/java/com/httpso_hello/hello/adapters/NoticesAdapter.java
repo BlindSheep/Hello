@@ -198,7 +198,7 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
                             break;
 
                     }
-                    holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + " на Ваш комментарий");
+                    holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "на Ваш комментарий");
                     hideTargetPreview(holder);
                 }
                 break;

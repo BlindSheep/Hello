@@ -43,12 +43,39 @@
                     android:layout_marginRight="45dp"
                     android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/contactNickname"
-                            android:paddingTop="2dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/main_blue_color_hello" />
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                                <TextView
+                                    android:id="@+id/contactNickname"
+                                    android:paddingTop="2dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/main_blue_color_hello" />
+
+                                <ImageView
+                                    android:id="@+id/imageAns"
+                                    android:layout_toRightOf="@+id/contactNickname"
+                                    android:visibility="gone"
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:layout_marginLeft="5dp"
+                                    android:layout_marginRight="5dp"
+                                    android:layout_marginTop="4dp"
+                                    android:tint="@color/main_blue_color_hello"
+                                    app:srcCompat="@mipmap/ic_action_send"/>
+
+                                <TextView
+                                    android:id="@+id/answerNickname"
+                                    android:layout_toRightOf="@+id/imageAns"
+                                    android:visibility="gone"
+                                    android:paddingTop="2dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/main_blue_color_hello" />
+
+                        </RelativeLayout>
 
                         <TextView
                             android:id="@+id/datePub"

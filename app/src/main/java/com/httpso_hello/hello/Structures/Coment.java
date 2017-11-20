@@ -11,6 +11,7 @@ public class Coment {
     public int user_id;
     public User user;
     public String date_pub;
+    public User parent_user;
 
     public Coment(){
 
