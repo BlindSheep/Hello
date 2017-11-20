@@ -152,37 +152,53 @@ public class NoticesAdapter extends ArrayAdapter<NoticeItem> {
 
                 break;
             case 2: // Уведомление о коментарии
-                switch (thisNotice.sender_user.gender){
-                    case User.GENDER_MAN:
-                        appricated = " прокомментировал ";
-                        break;
-                    case  User.GENDER_WOOMEN:
-                        appricated = " прокомментировала ";
-                        break;
-                    default:
-                        appricated = " прокомментировал(а) ";
-                        break;
+                if(thisNotice.parent_user == null) {
+                    switch (thisNotice.sender_user.gender) {
+                        case User.GENDER_MAN:
+                            appricated = " прокомментировал ";
+                            break;
+                        case User.GENDER_WOOMEN:
+                            appricated = " прокомментировала ";
+                            break;
+                        default:
+                            appricated = " прокомментировал(а) ";
+                            break;
 
-                }
-                switch (thisNotice.target_controller){
-                    case "photos":
+                    }
+                    switch (thisNotice.target_controller) {
+                        case "photos":
 
-                        uploadNoticePreview(
-                                thisNotice.target_preview,
-                                holder
-                        );
-                        holder.noticeText.setText(thisNotice.sender_user.nickname + appricated +"вашу фотографию");
-                        break;
-                    case "content":
-                        switch(thisNotice.content_type){
-                            case "board":
-                                hideTargetPreview(holder);
-                                holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "ваше объявление");
+                            uploadNoticePreview(
+                                    thisNotice.target_preview,
+                                    holder
+                            );
+                            holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "вашу фотографию");
+                            break;
+                        case "content":
+                            switch (thisNotice.content_type) {
+                                case "board":
+                                    hideTargetPreview(holder);
+                                    holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + "ваше объявление");
 //                                holder.noticeText.setText(noticeItem.sender_user.nickname + " прокоментировал ваше объявление \" " + noticeItem.target_content +" \"");
-                                break;
-                        }
+                                    break;
+                            }
 
-                        break;
+                            break;
+                    }
+                } else {
+                    switch (thisNotice.sender_user.gender) {
+                        case User.GENDER_MAN:
+                            appricated = " ответил ";
+                            break;
+                        case User.GENDER_WOOMEN:
+                            appricated = " ответила ";
+                            break;
+                        default:
+                            appricated = " ответил(а) ";
+                            break;
+
+                    }
+                    holder.noticeText.setText(thisNotice.sender_user.nickname + appricated + " на Ваш комментарий");
                 }
                 break;
             case 3:
