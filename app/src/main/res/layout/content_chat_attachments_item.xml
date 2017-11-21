@@ -14,17 +14,21 @@
     <ImageView
         android:id="@+id/attachment_delete"
         android:src="@mipmap/ic_menu_exit"
-        android:tint="@color/main_black_color_hello"
-        app:layout_anchor="@+id/avatar"
-        android:layout_margin="10dp"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:background="@color/white" />
+        android:tint="@color/main_white_color_hello"
+        android:layout_marginLeft="-40dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/chat_attachments_item_image_preview"
+        android:padding="5dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/white_circle" />
 
     <ProgressBar
         android:id="@+id/attachment_progress_load"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_centerInParent="true" />
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/for_progress_bar"
+        android:padding="5dp" />
 
 </RelativeLayout>

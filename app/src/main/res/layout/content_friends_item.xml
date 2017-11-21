@@ -51,16 +51,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
-            android:background="@mipmap/ic_action_add_person"
-            android:backgroundTint="@color/main_dark_grey_color_hello"
-            android:visibility="gone" />
+            android:visibility="gone"
+            android:background="@mipmap/ic_action_overflow"
+            android:backgroundTint="@color/main_dark_grey_color_hello" />
 
         <ImageView
             android:id="@+id/deleteFriend"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_marginRight="10dp"
+            android:visibility="gone"
             android:background="@mipmap/ic_menu_exit"
             android:backgroundTint="@color/main_black_color_hello" />
 

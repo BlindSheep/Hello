@@ -62,7 +62,7 @@
                                     android:layout_height="15dp"
                                     android:layout_marginLeft="5dp"
                                     android:layout_marginRight="5dp"
-                                    android:layout_marginTop="4dp"
+                                    android:layout_marginTop="5dp"
                                     android:tint="@color/main_blue_color_hello"
                                     app:srcCompat="@mipmap/ic_action_send"/>
 

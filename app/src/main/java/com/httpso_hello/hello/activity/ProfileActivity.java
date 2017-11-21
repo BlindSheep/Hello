@@ -1008,7 +1008,10 @@ public class ProfileActivity extends SuperMainActivity{
                         public void onClick(View view) {
                             toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
                             toFriends.setHint("Удаляем из друзей...");
-                            Friend.getInstance(getApplicationContext()).deleteFriend(user.id, new Friend.DeleteFriendsCallback() {
+                            Friend.getInstance(getApplicationContext()).deleteFriend(
+                                    0,
+                                    user.id,
+                                    new Friend.DeleteFriendsCallback() {
                                 @Override
                                 public void onSuccess() {
                                     toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));

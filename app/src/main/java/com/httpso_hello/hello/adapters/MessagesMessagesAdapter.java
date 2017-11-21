@@ -478,10 +478,9 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         if(lastPosition!=0) {
             lastPosition--;
             Message message = this.messages.get(lastPosition);
-            if (message.is_new == 1 && message.from_id == this.user_id)
-                return true;
-        }
-        return false;
+            if ((message.is_new == 1) && (message.from_id == this.user_id)) return true;
+            else return false;
+        } else return false;
     }
 
 }

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -12,9 +14,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.httpso_hello.hello.R;
 
 import com.httpso_hello.hello.Structures.FriendItem;
@@ -24,10 +31,17 @@ import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Friend;
 import com.squareup.picasso.Picasso;
 
+import static android.R.style.Animation_Dialog;
+
 public class FriendsActivity extends SuperMainActivity{
 
     private ProgressBar progressBarFriends;
     private Bundle extras;
+    private PopupWindow popUpWindow;
+    private View popupView;
+    private ViewPager listFriends;
+    private ProgressBar launch;
+    private TextView zagolovok;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +52,11 @@ public class FriendsActivity extends SuperMainActivity{
 
         if (extras.getInt("profile_id") == 0) setMenuItem("FriendsActivity");
         progressBarFriends = (ProgressBar) findViewById(R.id.progressBarFriends);
+        popupView = getLayoutInflater().inflate(R.layout.popup_for_friends, null);
+        popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        listFriends = (ViewPager) findViewById(R.id.viewpagerFriends);
+        launch = (ProgressBar) popupView.findViewById(R.id.launch);
+        zagolovok = (TextView) popupView.findViewById(R.id.zagolovok);
         getFriends();
     }
 
@@ -137,5 +156,97 @@ public class FriendsActivity extends SuperMainActivity{
                     }
                 }
         );
+    }
+
+    public void getPopupForAcceptOrDelete(final int id) {
+        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+        popUpWindow.setWidth(displaymetrics.widthPixels);
+        popUpWindow.setHeight(displaymetrics.heightPixels);
+        popUpWindow.setAnimationStyle(Animation_Dialog);
+        zagolovok.setText("Заявка в друзья");
+        popUpWindow.showAtLocation(listFriends, Gravity.CENTER, 0, 0);
+        ((TextView) popupView.findViewById(R.id.acceptFriends)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zagolovok.setText("Ожидайте...");
+                launch.setVisibility(View.VISIBLE);
+                Friend.getInstance(getApplicationContext()).acceptFriend(id, new Friend.AcceptFriendCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Intent intent = new Intent(getApplicationContext(), FriendsActivity.class);
+                        intent.putExtra("profile_id", 0);
+                        startActivity(intent);
+                        finish();
+                        Toast.makeText(getApplicationContext(), "Заявка принята", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                        zagolovok.setText("Заявка в друзья");
+                        launch.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onInternetError() {
+                        Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        zagolovok.setText("Заявка в друзья");
+                        launch.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+        ((TextView) popupView.findViewById(R.id.deleteFriends)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zagolovok.setText("Ожидайте...");
+                launch.setVisibility(View.VISIBLE);
+                Friend.getInstance(getApplicationContext()).deleteFriend(
+                        1,
+                        id,
+                        new Friend.DeleteFriendsCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Intent intent = new Intent(getApplicationContext(), FriendsActivity.class);
+                        intent.putExtra("profile_id", 0);
+                        startActivity(intent);
+                        finish();
+                        Toast.makeText(getApplicationContext(), "Заявка удалена", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                        zagolovok.setText("Заявка в друзья");
+                        launch.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onInternetError() {
+                        Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        zagolovok.setText("Заявка в друзья");
+                        launch.setVisibility(View.GONE);
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (popUpWindow.isShowing()) popUpWindow.dismiss();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onPause() {
+        if (popUpWindow != null) popUpWindow.dismiss();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (popUpWindow != null) popUpWindow.dismiss();
+        super.onDestroy();
     }
 }

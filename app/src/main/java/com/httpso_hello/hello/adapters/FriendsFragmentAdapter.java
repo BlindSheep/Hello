@@ -103,27 +103,8 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
             holder.acceptRequestInFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Friend.getInstance(getContext()).acceptFriend(friend.id, new Friend.AcceptFriendCallback() {
-                        @Override
-                        public void onSuccess() {
-                            FriendsActivity FA = ((FriendsActivity) getContext());
-                            Intent intent = new Intent(getContext(), FriendsActivity.class);
-                            intent.putExtra("profile_id", 0);
-                            FA.startActivity(intent);
-                            FA.finish();
-                            Toast.makeText(getContext(), friend.nickname + " теперь Ваш друг", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onError(int error_code, String error_msg) {
-                            Toast.makeText(getContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onInternetError() {
-                            Toast.makeText(getContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    FriendsActivity FA = ((FriendsActivity) getContext());
+                    FA.getPopupForAcceptOrDelete(friend.id);
                 }
             });
         } else {
@@ -133,7 +114,10 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
             holder.deleteFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Friend.getInstance(getContext()).deleteFriend(friend.id, new Friend.DeleteFriendsCallback() {
+                    Friend.getInstance(getContext()).deleteFriend(
+                            0,
+                            friend.id,
+                            new Friend.DeleteFriendsCallback() {
                         @Override
                         public void onSuccess() {
                             FriendsActivity FA = ((FriendsActivity) getContext());

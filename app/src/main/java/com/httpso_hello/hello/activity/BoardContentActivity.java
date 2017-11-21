@@ -118,10 +118,10 @@ public class BoardContentActivity extends SuperMainActivity {
         popUpWindowDelete.setAnimationStyle(Animation_Dialog);
 
         //Заполняем комментами
-        getComments();
         LV.addHeaderView(header);
         LV.addFooterView(footer);
         getBoardItem(extras.getInt("id"));
+        getComments();
 
         // Свайп для обновления
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -268,6 +268,41 @@ public class BoardContentActivity extends SuperMainActivity {
                         });
     }
 
+    //Автоообновление комментов
+    private void avtoRefresh() {
+        if (!launching) {
+            launching = true;
+            swipeRefreshLayout.setRefreshing(true);
+            new Comments(getApplicationContext())
+                    .getComments(
+                            "content",
+                            "board",
+                            extras.getInt("id"),
+                            this,
+                            new Comments.GetCommentsCallback() {
+                                @Override
+                                public void onSuccess(Coment[] commentsStructure, Activity activity) {
+                                    final ArrayList<Coment> defolt = new ArrayList<Coment>();
+                                    Collections.addAll(defolt, commentsStructure);
+                                    ca.addComments(defolt);
+                                    counts = defolt.size();
+                                    launching = false;
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }
+
+                                @Override
+                                public void onError(int error_code, String error_message) {
+                                    launching = false;
+                                }
+
+                                @Override
+                                public void onInternetError() {
+                                    launching = false;
+                                }
+                            });
+        }
+    }
+
     //Заполнение карточку объявления
     private void getBoardItem(final int id) {
         Content
@@ -391,7 +426,6 @@ public class BoardContentActivity extends SuperMainActivity {
             @Override
             public void run() {
                 handler.post(new Runnable() {public void run() {
-                    if (!launching) {
                         new Comments(getApplicationContext())
                                 .getCountsComments("content",
                                         "board",
@@ -400,11 +434,10 @@ public class BoardContentActivity extends SuperMainActivity {
                                             @Override
                                             public void onSuccess(int count_comments) {
                                                 if (counts != count_comments) {
-                                                    getComments();
+                                                    avtoRefresh();
                                                 }
                                             }
                                         });
-                    }
                 }});
             }
         }, 1000, 10000);

@@ -276,7 +276,7 @@ public class ChatActivity extends SuperMainActivity{
                             });
                 } else {
                     if(!canSendMessage) {
-                        showMessage("Дождитесь отправки файла...");
+                        showMessage("Дождитесь загрузки фотографии...");
                     } else {
                         showMessage("Напишите Ваше сообщение...");
                     }
@@ -501,41 +501,6 @@ public class ChatActivity extends SuperMainActivity{
                                 }
                             });
                         }
-                        /*if (sendedMessages.size() != 0) {
-
-                            messages.getStateMessages(sendedMessages, new Messages.GetStateMessagesCallback() {
-                                @Override
-                                public void onSuccess(Message[] messagesIDs) {
-                                    if (messagesIDs.length != 0) {
-                                        int i = 0;
-                                        for (Message sendedMessage : sendedMessages) {
-                                            boolean isDeleted = true;
-                                            for (Message unreadedMessage : messagesIDs) {
-                                                if (sendedMessage.id == unreadedMessage.id) {
-                                                    isDeleted = false;
-                                                    break;
-                                                }
-                                            }
-                                            if (isDeleted) {
-                                                mmAdapter.setReadedMessage(sendedMessage.id);
-                                                sendedMessages.remove(i);
-                                            }
-                                            i++;
-                                        }
-                                    }
-                                }
-                            }, new Help.ErrorCallback() {
-                                @Override
-                                public void onError(int error_code, String error_msg) {
-
-                                }
-
-                                @Override
-                                public void onInternetError() {
-
-                                }
-                            });
-                        }*/
                     }
                 });
             }
@@ -587,8 +552,8 @@ public class ChatActivity extends SuperMainActivity{
                         )){
                             sendImageFromGallery();
                         }
-
-
+                    } else {
+                        sendImageFromGallery();
                     }
                 }
                 break;

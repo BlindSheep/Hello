@@ -56,6 +56,7 @@ public class RequestQ {
             mRequestQueue.cancelAll(tag);
         }
     }
+
 //    public void canseRequest(String tag){
 //        mRequestQueue.ca
 //    }

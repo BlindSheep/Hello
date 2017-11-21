@@ -132,6 +132,7 @@ public class Friend extends Help {
 
     //удаление друга
     public void deleteFriend(
+            final int typeOfDelete, //Если 0 то удалить друга, если 1 то удалить заявку
             final int id,
             final Friend.DeleteFriendsCallback deleteFriendsCallback
     ){
@@ -168,7 +169,12 @@ public class Friend extends Help {
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("friend_id", Integer.toString(id));
+                    if(typeOfDelete == 0) {
+                        params.put("friend_id", Integer.toString(id));
+                    } else if (typeOfDelete == 1) {
+                        params.put("user_id", Integer.toString(id));
+                        params.put("friend_id", Integer.toString(stgs.getSettingInt("user_id")));
+                    }
                     return params;
                 };
             };

@@ -205,4 +205,10 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
 
     }
 
+    public void addComments(ArrayList<Coment> comments) {
+        this.comments.clear();
+        this.comments.addAll(comments);
+        notifyDataSetChanged();
+    }
+
 }

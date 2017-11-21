@@ -130,8 +130,8 @@ public class AddBoardActivity extends AppCompatActivity {
                         )){
                             sendImageFromGallery();
                         }
-
-
+                    } else {
+                        sendImageFromGallery();
                     }
                 }
                 break;
@@ -151,7 +151,6 @@ public class AddBoardActivity extends AppCompatActivity {
                 defoltAttachment.previewAttachmentUri = this.sendingImageUri;
                 position = faAdapter.addAttachment(defoltAttachment);
             } else {
-
                 Attachment defoltAttachment = new Attachment();
                 defoltAttachment.previewAttachmentUri = this.sendingImageUri;
                 ArrayList<Attachment> defoltListAttachment = new ArrayList<>();
