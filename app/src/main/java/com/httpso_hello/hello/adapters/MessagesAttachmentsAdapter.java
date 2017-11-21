@@ -3,9 +3,12 @@ package com.httpso_hello.hello.adapters;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -29,7 +32,6 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
 
     private final Activity activity;
     private ArrayList<Attachment> attachments;
-    private ArrayList<Bitmap> previewBitmaps;
     private Messages parentClass;
 
     public MessagesAttachmentsAdapter(Activity activity, ArrayList<Attachment> attachments, Messages parentClass){
@@ -42,6 +44,7 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
     static class ViewHolder{
         public ImageView imagePreview;
         public ProgressBar attachmentProgressLoad;
+        public ImageView attachment_isLoad;
     }
 
     @Override
@@ -56,14 +59,15 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
             holder = new ViewHolder();
             holder.imagePreview = (ImageView) rowView.findViewById(R.id.chat_attachments_item_image_preview);
             holder.attachmentProgressLoad = (ProgressBar) rowView.findViewById(R.id.attachment_progress_load);
+            holder.attachment_isLoad = (ImageView) rowView.findViewById(R.id.attachment_isLoad);
             rowView.setTag(holder);
         } else {
             holder = (ViewHolder) rowView.getTag();
         }
 
         final Attachment attachment = this.attachments.get(position);
+
         if(attachment.previewAttachmentUri != null){
-//            holder.imagePreview.setImageDrawable(((ImageView)attachment.previewAttachment).getDrawable());
             Picasso.with(this.activity.getApplicationContext())
                     .load(attachment.previewAttachmentUri)
                     .resize(Help.getPxFromDp(90, getContext()), Help.getPxFromDp(90, getContext()))
@@ -71,30 +75,24 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
                     .into(holder.imagePreview, new Callback() {
                         @Override
                         public void onSuccess() {
-//                            attachment.widthPreviewAttachment = holder.imagePreview.getWidth();
-//                            if(previewBitmaps==null){
-//                                previewBitmaps = new ArrayList<>();
-//                            }
-//                            previewBitmaps.add(((BitmapDrawable)holder.imagePreview.getDrawable()).getBitmap());
                         }
-
                         @Override
                         public void onError() {
-
                         }
                     });
         }
 
         if(attachment.isUploaded){
             holder.attachmentProgressLoad.setVisibility(View.GONE);
+            holder.attachment_isLoad.setVisibility(View.VISIBLE);
         } else {
             holder.attachmentProgressLoad.setVisibility(View.VISIBLE);
+            holder.attachment_isLoad.setVisibility(View.GONE);
         }
 
         holder.imagePreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 parentClass.deleteAttachment(position);
                 deleteAttachment(position);
             }
@@ -107,16 +105,15 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
     public int addAttachment(final Attachment attachment){
         int position = this.attachments.size();
         this.attachments.add(position, attachment);
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
         return position;
     }
 
     public void setLoadedAttachment(final int position, final int id){
         try {
-            Attachment attachment = this.attachments.get(position);
-            attachment.isUploaded = true;
-            attachment.id = id;
-            this.notifyDataSetChanged();
+            this.attachments.get(position).isUploaded = true;
+            this.attachments.get(position).id = id;
+            notifyDataSetChanged();
         } catch (Exception e){
 
         }
@@ -128,11 +125,11 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
 
     public void deleteAttachment(final int position){
         this.attachments.remove(position);
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
     }
     public void deleteAllAttachments(){
         this.attachments.clear();
-        this.notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     public Attachment[] getAttachments(){
@@ -145,4 +142,8 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
         return defoltAttachment;
     }
 
+    @Override
+    public int getCount() {
+        return attachments.size();
+    }
 }

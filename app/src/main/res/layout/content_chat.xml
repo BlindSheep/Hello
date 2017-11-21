@@ -45,7 +45,6 @@
                     android:maxHeight="100dp"
                     android:orientation="horizontal">
 
-
                 <GridView
                         android:id="@+id/messageAttachments"
                         android:numColumns="20"
@@ -63,12 +62,12 @@
         </HorizontalScrollView>
 
         <LinearLayout
-                android:id="@+id/layout_bottom_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+            android:id="@+id/layout_bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/main_white_color_hello"
-                android:clickable="true"
-                android:orientation="horizontal">
+            android:clickable="true"
+            android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/docSend"

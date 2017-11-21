@@ -71,45 +71,44 @@
         <LinearLayout
             android:id="@+id/layout_bottom_bar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="@drawable/board_white"
+            android:layout_height="wrap_content"
+            android:background="@color/main_white_color_hello"
             android:clickable="true"
-            android:orientation="horizontal"
-            android:padding="5dip">
+            android:orientation="horizontal">
 
             <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                 android:id="@+id/messageContent"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 emojicon:emojiconSize="28sp"
                 android:background="@color/main_white_color_hello"
-                android:hint="Напишите комментарий"
-                android:paddingBottom="5dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingTop="5dp"
+                android:hint="Комментарий"
                 android:layout_weight="1"
-                android:inputType="textCapSentences"/>
+                android:maxLines="4"
+                android:layout_gravity="bottom"
+                android:padding="15dp"
+                android:inputType="textCapSentences|textMultiLine"/>
 
             <ImageButton
                 android:id="@+id/emojiKeyboard"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/smiley"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center"
-                android:background="@color/main_white_color_hello"
-                android:padding="5dip" />
+                android:layout_marginBottom="11dp"
+                android:layout_gravity="bottom"
+                android:background="@color/main_white_color_hello"/>
 
             <ImageButton
                 android:id="@+id/messageSend"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="1dp"
                 app:srcCompat="@mipmap/ic_action_send"
-                android:layout_marginLeft="10dp"
                 android:background="@color/main_white_color_hello"
-                android:tint="@color/main_dark_grey_color_hello"
-                android:padding="5dip" />
+                android:tint="@color/main_blue_color_hello"/>
 
         </LinearLayout>
 
