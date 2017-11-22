@@ -225,4 +225,8 @@
         <item>Другое</item>
     </string-array>
 
+    //Описания ImageView
+    <string name="avatar">Аватар</string>
+    <string name="popup">Попап</string>
+
 </resources>
