@@ -3,6 +3,8 @@ package com.httpso_hello.hello.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -79,6 +81,8 @@ public class ChatActivity extends SuperMainActivity{
     public EmojIconActions emojIcon;
     private PopupWindow popUpWindow;
     private View popupView;
+    private PopupWindow popUpWindowForMenu;
+    private View popupViewForMenu;
     private LinearLayout ll;
     private float density;
     private String dateLastUpdate;
@@ -116,6 +120,8 @@ public class ChatActivity extends SuperMainActivity{
         headerForSupport = getLayoutInflater().inflate(R.layout.header_for_support, null);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_msg, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupViewForMenu = getLayoutInflater().inflate(R.layout.popup_for_message_menu, null);
+        popUpWindowForMenu = new PopupWindow(popupViewForMenu, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         ll = (LinearLayout) findViewById(R.id.forImage);
         density = getApplicationContext().getResources().getDisplayMetrics().density;
         textOnline = (TextView) findViewById(R.id.textOnline);
@@ -208,7 +214,7 @@ public class ChatActivity extends SuperMainActivity{
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if((firstVisibleItem < 19) && (mmAdapter != null) && (thisPage == allPage)) {
+                if((firstVisibleItem < (allMsg.size() / 2)) && (mmAdapter != null) && (thisPage == allPage) && (!isLaunchingNewPage)) {
                     GetNewPage getNewPage = new GetNewPage();
                     getNewPage.execute();
                 }
@@ -422,9 +428,15 @@ public class ChatActivity extends SuperMainActivity{
                         user_avatar_micro,
                         Constant.upload + chatActivity.pathContactAvatar
                 );
-//                chatList.addHeaderView(launchHeader);
                 chatList.addFooterView(header);
                 chatList.setAdapter(mmAdapter);
+//                chatList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//                    @Override
+//                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                        popupForMsgMenu("тест");
+//                        return false;
+//                    }
+//                });
                 contactOnline(contactIsOnline);
             }
         }, new Help.ErrorCallback() {
@@ -497,72 +509,25 @@ public class ChatActivity extends SuperMainActivity{
         }
     }
 
-    @Override
-    public void onResume(){
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
+    private void popupForMsgMenu (final String text) {
+        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+
+        popUpWindowForMenu.setWidth(displaymetrics.widthPixels);
+        popUpWindowForMenu.setHeight(displaymetrics.heightPixels);
+        popUpWindowForMenu.setAnimationStyle(Animation_Dialog);
+        popUpWindowForMenu.showAtLocation(chatList, Gravity.CENTER, 0, 0);
+
+        //Копировать сообщение
+        ((TextView) popupViewForMenu.findViewById(R.id.copy)).setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                Tread1_Handler.post(new Runnable() {public void run() {
-                    refresh();
-                }});
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("", text);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(ChatActivity.this, "Текст скопирован в буфер обмена", Toast.LENGTH_LONG).show();
+                popUpWindowForMenu.dismiss();
             }
-        }, 3000, 3000);
-
-        isStartedSendedMessagesTimer = true;
-        sendedMessagesTimer = new Timer();
-        sendedMessagesTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendedMessagesHandler.post(new Runnable() {
-                    public void run() {
-                        if(mmAdapter != null && mmAdapter.getReadStateLastSendedMessage()){
-                            messages.getReadStateMessages(contact_id, new Messages.GetReadStateMessages() {
-                                @Override
-                                public void onSuccess(boolean state) {
-                                    if(state)
-                                        mmAdapter.setReadedMessages();
-                                }
-                            }, new Help.ErrorCallback() {
-                                @Override
-                                public void onError(int error_code, String error_msg) {
-                                }
-
-                                @Override
-                                public void onInternetError() {
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-        }, 3000, 3000);
-
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        timer.cancel();
-        if(isStartedSendedMessagesTimer) {
-            sendedMessagesTimer.cancel();
-            isStartedSendedMessagesTimer = false;
-        }
-        onlineTimer.cancel();
-        writingTimer.cancel();
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        timer.cancel();
-        if(isStartedSendedMessagesTimer) {
-            sendedMessagesTimer.cancel();
-            isStartedSendedMessagesTimer = false;
-        }
-        onlineTimer.cancel();
-        writingTimer.cancel();
-        super.onDestroy();
+        });
     }
 
     //Обрабатываем результат выбора фоток из галереи или с камеры
@@ -736,7 +701,6 @@ public class ChatActivity extends SuperMainActivity{
                                     String dateLU,
                                     boolean contactIsOnline
                             ) {
-                                isLaunchingNewPage = false;
                                 if (messages.length != 0) {
                                     if (messages != null) {
                                         allMsg.clear();
@@ -747,6 +711,7 @@ public class ChatActivity extends SuperMainActivity{
                                     }
                                     allPage = allPage + 1;
                                 } else thatsAll = true;
+                                isLaunchingNewPage = false;
                             }
                         }, new Help.ErrorCallback() {
                             @Override
@@ -769,5 +734,84 @@ public class ChatActivity extends SuperMainActivity{
 
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (popUpWindowForMenu.isShowing()) popUpWindowForMenu.dismiss();
+        else if (popUpWindow.isShowing()) popUpWindow.dismiss();
+        else super.onBackPressed();
+    }
+
+    @Override
+    public void onResume(){
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Tread1_Handler.post(new Runnable() {public void run() {
+                    refresh();
+                }});
+            }
+        }, 3000, 3000);
+
+        isStartedSendedMessagesTimer = true;
+        sendedMessagesTimer = new Timer();
+        sendedMessagesTimer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                sendedMessagesHandler.post(new Runnable() {
+                    public void run() {
+                        if(mmAdapter != null && mmAdapter.getReadStateLastSendedMessage()){
+                            messages.getReadStateMessages(contact_id, new Messages.GetReadStateMessages() {
+                                @Override
+                                public void onSuccess(boolean state) {
+                                    if(state)
+                                        mmAdapter.setReadedMessages();
+                                }
+                            }, new Help.ErrorCallback() {
+                                @Override
+                                public void onError(int error_code, String error_msg) {
+                                }
+
+                                @Override
+                                public void onInternetError() {
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        }, 3000, 3000);
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        if (popUpWindowForMenu != null) popUpWindowForMenu.dismiss();
+        if (popUpWindow != null) popUpWindow.dismiss();
+        timer.cancel();
+        if(isStartedSendedMessagesTimer) {
+            sendedMessagesTimer.cancel();
+            isStartedSendedMessagesTimer = false;
+        }
+        onlineTimer.cancel();
+        writingTimer.cancel();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (popUpWindowForMenu != null) popUpWindowForMenu.dismiss();
+        if (popUpWindow != null) popUpWindow.dismiss();
+        timer.cancel();
+        if(isStartedSendedMessagesTimer) {
+            sendedMessagesTimer.cancel();
+            isStartedSendedMessagesTimer = false;
+        }
+        onlineTimer.cancel();
+        writingTimer.cancel();
+        super.onDestroy();
     }
 }
