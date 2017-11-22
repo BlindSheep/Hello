@@ -24,8 +24,14 @@ public class Message {
 
     //attachments
     public Attachment[] attachments;
+
     public Message(){
 
     }
 
+    public Message(int id, String content, int user_id){
+        this.id = id;
+        this.content = content;
+        this.user_id = user_id;
+    }
 }

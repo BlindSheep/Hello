@@ -476,7 +476,7 @@ public class BoardContentActivity extends SuperMainActivity {
     @Override
     public void onBackPressed() {
         if(popUpWindowDelete.isShowing()) popUpWindowDelete.dismiss();
-        if(idAnswer != 0) deleteAnswer();
+        else if(idAnswer != 0) deleteAnswer();
         else super.onBackPressed();
     }
 
@@ -488,6 +488,7 @@ public class BoardContentActivity extends SuperMainActivity {
 
     @Override
     public void onPause() {
+        if (popUpWindowDelete != null) popUpWindowDelete.dismiss();
         timer.cancel();
         super.onPause();
         if(refreshAtError!=null) {
@@ -497,6 +498,7 @@ public class BoardContentActivity extends SuperMainActivity {
 
     @Override
     public void onDestroy() {
+        if (popUpWindowDelete != null) popUpWindowDelete.dismiss();
         timer.cancel();
         super.onDestroy();
         if(refreshAtError!=null) {

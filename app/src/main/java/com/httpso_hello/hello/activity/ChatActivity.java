@@ -2,6 +2,7 @@ package com.httpso_hello.hello.activity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -74,6 +75,7 @@ public class ChatActivity extends SuperMainActivity{
     private ImageButton emojiKeyboard;
     private View headerForSupport;
     private View header;
+    private View launchHeader;
     public EmojIconActions emojIcon;
     private PopupWindow popUpWindow;
     private View popupView;
@@ -88,6 +90,12 @@ public class ChatActivity extends SuperMainActivity{
     private AVLoadingIndicatorView avi;
     private boolean  canSendMessage = true;
     private boolean isLaunching = false;
+    private int lastId = 0;
+    private ArrayList<Message> allMsg;
+    private boolean isLaunchingNewPage = false;
+    private boolean thatsAll = false;
+    private int thisPage = 0;
+    private int allPage = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +112,7 @@ public class ChatActivity extends SuperMainActivity{
         emojiKeyboard = (ImageButton) findViewById(R.id.emojiKeyboard) ;
         emojIcon = new EmojIconActions(this, rootView, messageContent, emojiKeyboard);
         header = getLayoutInflater().inflate(R.layout.header, null);
+        launchHeader = getLayoutInflater().inflate(R.layout.header_for_chat_loading, null);
         headerForSupport = getLayoutInflater().inflate(R.layout.header_for_support, null);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_msg, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -112,6 +121,7 @@ public class ChatActivity extends SuperMainActivity{
         textOnline = (TextView) findViewById(R.id.textOnline);
         emojIcon.ShowEmojIcon();
         avi = (AVLoadingIndicatorView) findViewById(R.id.avi);
+        allMsg = new ArrayList<Message>();
 
         this.contact_nickname = extras.getString("nickname");
         ((TextView) findViewById(R.id.textName)).setText(this.contact_nickname);
@@ -189,6 +199,7 @@ public class ChatActivity extends SuperMainActivity{
         }
         messages = new Messages(getApplicationContext(), this);
 
+        getMsg();
         chatList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -197,6 +208,13 @@ public class ChatActivity extends SuperMainActivity{
 
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if((firstVisibleItem < 19) && (mmAdapter != null) && (thisPage == allPage)) {
+                    GetNewPage getNewPage = new GetNewPage();
+                    getNewPage.execute();
+                }
+                if((firstVisibleItem <= 1) && (mmAdapter != null) && (thisPage != allPage)) {
+                    getNewPage();
+                }
 
                 if(totalItemCount-firstVisibleItem>visibleItemCount){
                     firstItemScrolled = true;
@@ -205,8 +223,6 @@ public class ChatActivity extends SuperMainActivity{
                 }
             }
         });
-
-        getMsg();
 
         // Обработка кнопки прикрепления файлов
         ((ImageButton)findViewById(R.id.docSend)).setOnClickListener(new View.OnClickListener() {
@@ -363,7 +379,10 @@ public class ChatActivity extends SuperMainActivity{
 
     private void getMsg() {
         isLaunching = true;
-        messages.getMessages(this.contact_id, new Messages.GetMessagesCallback() {
+        messages.getMessages(
+                this.contact_id,
+                lastId,
+                new Messages.GetMessagesCallback() {
             @Override
             public void onSuccess(
                     Message messages[],
@@ -374,6 +393,9 @@ public class ChatActivity extends SuperMainActivity{
                     String dateLU,
                     boolean contactIsOnline
             ) {
+                thisPage = thisPage + 1;
+                allPage = allPage + 1;
+
                 ((LinearLayout) findViewById(R.id.chatWindow)).setVisibility(View.VISIBLE);
 
                 isLaunching = false;
@@ -384,9 +406,14 @@ public class ChatActivity extends SuperMainActivity{
                 ChatActivity chatActivity = ((ChatActivity) activity);
 
                 ArrayList<Message> asd = new ArrayList<Message>();
-                for (Message message : messages) {
-                    asd.add(message);
-                }
+                if (messages.length != 0) {
+                    lastId = messages[0].id;
+                    for (Message message : messages) {
+                        asd.add(message);
+                        if (message.id < lastId) lastId = message.id;
+                    }
+                    allMsg.addAll(asd);
+                } else thatsAll = true;
 
                 mmAdapter = new MessagesMessagesAdapter(
                         activity,
@@ -395,9 +422,7 @@ public class ChatActivity extends SuperMainActivity{
                         user_avatar_micro,
                         Constant.upload + chatActivity.pathContactAvatar
                 );
-                if(contact_id == 3008) chatList.addHeaderView(headerForSupport);
-                else chatList.addHeaderView(header);
-//                chatList.addHeaderView(header);
+//                chatList.addHeaderView(launchHeader);
                 chatList.addFooterView(header);
                 chatList.setAdapter(mmAdapter);
                 contactOnline(contactIsOnline);
@@ -423,6 +448,15 @@ public class ChatActivity extends SuperMainActivity{
         });
     }
 
+    public void getNewPage(){
+        thisPage = thisPage + 1;
+        chatList.setTranscriptMode(0);
+        mmAdapter.setNewPage(allMsg);
+        chatList.clearFocus();
+        chatList.setFocusable(true);
+        chatList.setSelection(allMsg.size() + 2);
+    }
+
     private void refresh() {
         if (!isLaunching) {
             isLaunching = true;
@@ -437,12 +471,12 @@ public class ChatActivity extends SuperMainActivity{
                 public void onSuccess(Message[] messages, String dateLU, boolean contactIsOnline, boolean is_writing) {
                     isLaunching = false;
                     dateLastUpdate = dateLU;
-                    if (firstItemScrolled) {
-                        chatList.setTranscriptMode(0);
-                    } else {
-                        chatList.setTranscriptMode(2);
-                    }
                     if (messages.length != 0) {
+                        if (firstItemScrolled) {
+                            chatList.setTranscriptMode(0);
+                        } else {
+                            chatList.setTranscriptMode(2);
+                        }
                         mmAdapter.addMessages(messages);
                     }
 
@@ -492,12 +526,10 @@ public class ChatActivity extends SuperMainActivity{
                             }, new Help.ErrorCallback() {
                                 @Override
                                 public void onError(int error_code, String error_msg) {
-                                    showMessage(error_msg);
                                 }
 
                                 @Override
                                 public void onInternetError() {
-                                    showMessage("Ошибка интернет соединения");
                                 }
                             });
                         }
@@ -684,13 +716,50 @@ public class ChatActivity extends SuperMainActivity{
     }
 
     //Сюда надо автообновление
-    class AsyncTasks extends AsyncTask<Void, Void, Void> {
+    class GetNewPage extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... params) {
+            if(!isLaunchingNewPage && !thatsAll) {
+                isLaunchingNewPage = true;
+                messages.getMessages(
+                        contact_id,
+                        lastId,
+                        new Messages.GetMessagesCallback() {
+                            @Override
+                            public void onSuccess(
+                                    Message messages[],
+                                    Activity activity,
+                                    int user_id,
+                                    String user_avatar_micro,
+                                    Message[] sendedUnreadedMessagesIDs,
+                                    String dateLU,
+                                    boolean contactIsOnline
+                            ) {
+                                isLaunchingNewPage = false;
+                                if (messages.length != 0) {
+                                    if (messages != null) {
+                                        allMsg.clear();
+                                        for (Message message : messages) {
+                                            allMsg.add(0, message);
+                                            if (message.id < lastId) lastId = message.id;
+                                        }
+                                    }
+                                    allPage = allPage + 1;
+                                } else thatsAll = true;
+                            }
+                        }, new Help.ErrorCallback() {
+                            @Override
+                            public void onError(int error_code, String error_msg) {
+                                isLaunchingNewPage = false;
+                            }
 
-
-
+                            @Override
+                            public void onInternetError() {
+                                isLaunchingNewPage = false;
+                            }
+                        });
+            }
             return null;
         }
 

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,6 +27,8 @@ import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
+import com.httpso_hello.hello.helper.Help;
+import com.httpso_hello.hello.helper.Messages;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -51,6 +54,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
     private int user_id;
     public ChatActivity ca;
     private LayoutInflater mInflater;
+    private boolean thasAll;
     private ArrayList<Integer> unreadedSendedMessages = new ArrayList<>();
 
     public MessagesMessagesAdapter(Activity context, ArrayList<Message> messages, int user_id, String userAvatar, String contactAvatar){
@@ -58,11 +62,14 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         this.context = context;
         this.userAvatar = userAvatar;
         this.contactAvatar = contactAvatar;
+        this.thasAll = thasAll;
         mInflater = (LayoutInflater) context.getLayoutInflater();
 
         this.messages = messages;
         stgs = new Settings(getContext());
         this.user_id = user_id;
+
+        ca = ((ChatActivity) getContext());
     }
 
     static class ViewHolder{
@@ -105,7 +112,6 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
-        ca = ((ChatActivity) getContext());
         final ViewHolder holder;
         if (convertView == null) {
             holder = new ViewHolder();
@@ -384,10 +390,15 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                 holder.isNewDate.setText(ConverterDate.convertDayForChat(thisMessage.date_pub));
                 holder.isNewDate.setVisibility(View.VISIBLE);
             } else holder.isNewDate.setVisibility(View.GONE);
+
         }
         return convertView;
     }
 
+    public void setNewPage(ArrayList<Message> messages) {
+        this.messages.addAll(0, messages);
+        notifyDataSetChanged();
+    }
     public void setAllMessages(Message[] messages){
         this.messages.clear();
         for (Message message : messages ) {

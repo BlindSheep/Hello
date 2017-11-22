@@ -114,30 +114,8 @@ public class FriendsFragmentAdapter extends ArrayAdapter<FriendItem> {
             holder.deleteFriend.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Friend.getInstance(getContext()).deleteFriend(
-                            0,
-                            friend.id,
-                            new Friend.DeleteFriendsCallback() {
-                        @Override
-                        public void onSuccess() {
-                            FriendsActivity FA = ((FriendsActivity) getContext());
-                            Intent intent = new Intent(getContext(), FriendsActivity.class);
-                            intent.putExtra("profile_id", 0);
-                            FA.startActivity(intent);
-                            FA.finish();
-                            Toast.makeText(getContext(), friend.nickname + " удален из друзей", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onError(int error_code, String error_msg) {
-                            Toast.makeText(getContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                        }
-
-                        @Override
-                        public void onInternetError() {
-                            Toast.makeText(getContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                        }
-                    });
+                    FriendsActivity FA = ((FriendsActivity) getContext());
+                    FA.getPopupForDeleteFriend(friend.id, friend.nickname, friend.avatar);
                 }
             });
         }

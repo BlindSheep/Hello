@@ -43,6 +43,7 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
 
     static class ViewHolder{
         public ImageView imagePreview;
+        public ImageView attachment_delete;
         public ProgressBar attachmentProgressLoad;
         public ImageView attachment_isLoad;
     }
@@ -58,6 +59,7 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
             rowView = inflater.inflate(R.layout.content_chat_attachments_item, null, true);
             holder = new ViewHolder();
             holder.imagePreview = (ImageView) rowView.findViewById(R.id.chat_attachments_item_image_preview);
+            holder.attachment_delete = (ImageView) rowView.findViewById(R.id.attachment_delete);
             holder.attachmentProgressLoad = (ProgressBar) rowView.findViewById(R.id.attachment_progress_load);
             holder.attachment_isLoad = (ImageView) rowView.findViewById(R.id.attachment_isLoad);
             rowView.setTag(holder);
@@ -90,7 +92,7 @@ public class MessagesAttachmentsAdapter extends ArrayAdapter<Attachment> {
             holder.attachment_isLoad.setVisibility(View.GONE);
         }
 
-        holder.imagePreview.setOnClickListener(new View.OnClickListener() {
+        holder.attachment_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 parentClass.deleteAttachment(position);

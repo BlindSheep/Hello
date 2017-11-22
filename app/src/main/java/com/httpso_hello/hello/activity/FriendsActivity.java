@@ -25,9 +25,11 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 
 import com.httpso_hello.hello.Structures.FriendItem;
+import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.adapters.FriendsAdapter;
 import com.httpso_hello.hello.fragments.FriendsFragment;
 import com.httpso_hello.hello.helper.CircularTransformation;
+import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Friend;
 import com.squareup.picasso.Picasso;
 
@@ -39,9 +41,13 @@ public class FriendsActivity extends SuperMainActivity{
     private Bundle extras;
     private PopupWindow popUpWindow;
     private View popupView;
+    private PopupWindow popUpWindow2;
+    private View popupView2;
     private ViewPager listFriends;
     private ProgressBar launch;
     private TextView zagolovok;
+    private ProgressBar launch2;
+    private TextView zagolovok2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,9 +60,13 @@ public class FriendsActivity extends SuperMainActivity{
         progressBarFriends = (ProgressBar) findViewById(R.id.progressBarFriends);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_friends, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popupView2 = getLayoutInflater().inflate(R.layout.popup_for_friends_second, null);
+        popUpWindow2 = new PopupWindow(popupView2, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         listFriends = (ViewPager) findViewById(R.id.viewpagerFriends);
         launch = (ProgressBar) popupView.findViewById(R.id.launch);
         zagolovok = (TextView) popupView.findViewById(R.id.zagolovok);
+        launch2 = (ProgressBar) popupView2.findViewById(R.id.launch);
+        zagolovok2 = (TextView) popupView2.findViewById(R.id.zagolovok);
         getFriends();
     }
 
@@ -232,21 +242,81 @@ public class FriendsActivity extends SuperMainActivity{
         });
     }
 
+    public void getPopupForDeleteFriend(final int id, final String name, final Image avatar) {
+        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+        popUpWindow2.setWidth(displaymetrics.widthPixels);
+        popUpWindow2.setHeight(displaymetrics.heightPixels);
+        popUpWindow2.setAnimationStyle(Animation_Dialog);
+        zagolovok2.setText(name);
+        popUpWindow2.showAtLocation(listFriends, Gravity.CENTER, 0, 0);
+        ((TextView) popupView2.findViewById(R.id.writeToFriends)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(FriendsActivity.this, ChatActivity.class);
+                intent.putExtra("contact_id", id);
+                intent.putExtra("nickname", name);
+                if (avatar == null) {
+                    intent.putExtra("avatar", Constant.default_avatar);
+                } else {
+                    intent.putExtra("avatar", avatar.micro);
+                }
+                startActivity(intent);
+            }
+        });
+        ((TextView) popupView2.findViewById(R.id.deleteFriends)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                zagolovok2.setText("Ожидайте...");
+                launch2.setVisibility(View.VISIBLE);
+                Friend.getInstance(getApplicationContext()).deleteFriend(
+                        0,
+                        id,
+                        new Friend.DeleteFriendsCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Intent intent = new Intent(getApplicationContext(), FriendsActivity.class);
+                                intent.putExtra("profile_id", 0);
+                                startActivity(intent);
+                                finish();
+                                Toast.makeText(getApplicationContext(), name + " удален(а) из друзей", Toast.LENGTH_LONG).show();
+                            }
+
+                            @Override
+                            public void onError(int error_code, String error_msg) {
+                                Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                                zagolovok2.setText(name);
+                                launch2.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onInternetError() {
+                                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                zagolovok2.setText(name);
+                                launch2.setVisibility(View.GONE);
+                            }
+                        });
+            }
+        });
+    }
+
     @Override
     public void onBackPressed() {
         if (popUpWindow.isShowing()) popUpWindow.dismiss();
-        super.onBackPressed();
+        else if (popUpWindow2.isShowing()) popUpWindow2.dismiss();
+        else super.onBackPressed();
     }
 
     @Override
     public void onPause() {
         if (popUpWindow != null) popUpWindow.dismiss();
+        if (popUpWindow2 != null) popUpWindow2.dismiss();
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
         if (popUpWindow != null) popUpWindow.dismiss();
+        if (popUpWindow2 != null) popUpWindow2.dismiss();
         super.onDestroy();
     }
 }

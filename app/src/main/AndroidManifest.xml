@@ -52,7 +52,11 @@
                 <action android:name="com.hello.alwaysOnline" />
             </intent-filter>
         </service>
-
+        <service android:name=".AvtoRefresh.FoneServise">
+            <intent-filter>
+                <action android:name="com.hello.FoneServise" />
+            </intent-filter>
+        </service>
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

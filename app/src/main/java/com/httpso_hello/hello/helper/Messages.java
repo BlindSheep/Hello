@@ -53,6 +53,17 @@ public class Messages extends Help {
         }
     }
 
+    public Messages(Context context){
+        super(context);
+        this._context = context;
+        stgs = new Settings(this._context);
+        api = new Api(this._context);
+        device_id = Integer.toString(stgs.getSettingInt("device_id"));
+        if(device_id == "0"){
+            device_id = null;
+        }
+    }
+
     public void getContacts(final Messages.GetContactsCallback getContactsCallback){
         api.getContacts(this.activity, new Api.GetContactsCallback() {
             @Override
@@ -259,6 +270,7 @@ public class Messages extends Help {
 
     public void getMessages(
             final int contact_id,
+            final int page,
             final Messages.GetMessagesCallback getMessagesCallback,
             final Help.ErrorCallback errorCallback
     ){
@@ -305,6 +317,7 @@ public class Messages extends Help {
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("contact_id", Integer.toString(contact_id));
+                    params.put("last_viewed_id", Integer.toString(page));
                     return params;
                 };
             };

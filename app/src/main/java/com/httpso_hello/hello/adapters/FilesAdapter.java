@@ -24,7 +24,6 @@ public class FilesAdapter extends ArrayAdapter<Attachment> {
 
     private final Activity activity;
     private ArrayList<Attachment> files;
-//    private Messages parentClass;
 
     public FilesAdapter(Activity activity, ArrayList<Attachment> files, int resource){
         super(activity, resource, files);
@@ -35,6 +34,8 @@ public class FilesAdapter extends ArrayAdapter<Attachment> {
     static class ViewHolder{
         public ImageView imagePreview;
         public ProgressBar fileProgressLoad;
+        public ImageView attachment_delete;
+        public ImageView attachment_isLoad;
     }
 
     @Override
@@ -49,6 +50,8 @@ public class FilesAdapter extends ArrayAdapter<Attachment> {
             holder = new ViewHolder();
             holder.imagePreview = (ImageView) rowView.findViewById(R.id.files_adapter_item_image_preview);
             holder.fileProgressLoad = (ProgressBar) rowView.findViewById(R.id.files_adapter_item_progress_load);
+            holder.attachment_delete = (ImageView) rowView.findViewById(R.id.files_adapter_item_delete);
+            holder.attachment_isLoad = (ImageView) rowView.findViewById(R.id.attachment_isLoad);
             rowView.setTag(holder);
         } else {
             holder = (ViewHolder) rowView.getTag();
@@ -59,7 +62,8 @@ public class FilesAdapter extends ArrayAdapter<Attachment> {
 //            holder.imagePreview.setImageDrawable(((ImageView)attachment.previewAttachment).getDrawable());
             Picasso.with(this.activity.getApplicationContext())
                     .load(file.previewAttachmentUri)
-                    .resize(0, Help.getPxFromDp(100, getContext()))
+                    .resize(Help.getPxFromDp(90, getContext()), Help.getPxFromDp(90, getContext()))
+                    .centerCrop()
                     .into(holder.imagePreview, new Callback() {
                         @Override
                         public void onSuccess() {
@@ -75,14 +79,16 @@ public class FilesAdapter extends ArrayAdapter<Attachment> {
 
         if(file.isUploaded){
             holder.fileProgressLoad.setVisibility(View.GONE);
+            holder.attachment_isLoad.setVisibility(View.VISIBLE);
         } else {
             holder.fileProgressLoad.setVisibility(View.VISIBLE);
+            holder.attachment_isLoad.setVisibility(View.GONE);
         }
 
-        holder.imagePreview.setOnClickListener(new View.OnClickListener() {
+        holder.attachment_delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                //Удаление фото сделать
             }
         });
 
