@@ -47,23 +47,29 @@
 
         <ImageView
             android:id="@+id/acceptRequestInFriend"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:paddingRight="20dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="20dp"
             android:visibility="gone"
-            android:layout_marginRight="10dp"
-            android:background="@mipmap/ic_action_overflow"
-            android:backgroundTint="@color/main_dark_grey_color_hello" />
+            android:layout_gravity="center"
+            android:tint="@color/main_grey_color_hello"
+            app:srcCompat="@mipmap/ic_action_overflow" />
 
         <ImageView
             android:id="@+id/deleteFriend"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:paddingRight="20dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:paddingLeft="20dp"
             android:visibility="gone"
-            android:layout_marginRight="10dp"
-            android:background="@mipmap/ic_action_overflow"
-            android:backgroundTint="@color/main_dark_grey_color_hello" />
+            android:layout_gravity="center"
+            android:tint="@color/main_grey_color_hello"
+            app:srcCompat="@mipmap/ic_action_overflow" />
 
     </LinearLayout>
 
