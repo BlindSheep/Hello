@@ -88,9 +88,6 @@
     <string name="title_activity_setting_of_profile">Настройки</string>
     <string name="title_activity_send_flirtiks"></string>
 
-    <string name="version">Версия: 1.138</string>
-
-
     <string-array name="ageFrom">
         <item> </item>
         <item>1</item>
@@ -228,5 +225,8 @@
     //Описания ImageView
     <string name="avatar">Аватар</string>
     <string name="popup">Попап</string>
+
+    //Версия
+    <string name="version">Версия: 1.140</string>
 
 </resources>

@@ -478,15 +478,7 @@ public class ProfileActivity extends SuperMainActivity{
 
 //Кол-во друзей
                 if(user.friends_count != 0) {
-                    String friendsStr = Integer.toString(user.friends_count);
-                    if(user.friends_count == 1) friendsCount.setText(friendsStr + " друг");
-                    else if((user.friends_count >= 2) && (user.friends_count < 5)) friendsCount.setText(friendsStr + " друга");
-                    else if((user.friends_count >= 5) && (user.friends_count < 21)) friendsCount.setText(friendsStr + " друзей");
-                    else if((user.friends_count >= 21) && (user.friends_count % 10 == 1)) friendsCount.setText(friendsStr + " друг");
-                    else if((user.friends_count >= 21) && (user.friends_count % 10 == 2)) friendsCount.setText(friendsStr + " друга");
-                    else if((user.friends_count >= 21) && (user.friends_count % 10 == 3)) friendsCount.setText(friendsStr + " друга");
-                    else if((user.friends_count >= 21) && (user.friends_count % 10 == 4)) friendsCount.setText(friendsStr + " друга");
-                    else friendsCount.setText(friendsStr + " друзей");
+                    friendsCount.setText("Друзья");
                 } else {
                     friendsCount.setText("Нет друзей");
                 }

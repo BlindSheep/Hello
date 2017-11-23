@@ -397,27 +397,17 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
 
     public void setNewPage(ArrayList<Message> messages) {
         this.messages.addAll(0, messages);
+        ca.setAllMsgForMenu(this.messages);
         notifyDataSetChanged();
-    }
-    public void setAllMessages(Message[] messages){
-        this.messages.clear();
-        for (Message message : messages ) {
-            this.messages.add(this.messages.size(), message);
-        }
-        this.notifyDataSetChanged();
     }
     public int addMessage(Message message){
         this.messages.add(this.messages.size(), message);
+        ca.setAllMsgForMenu(this.messages);
         this.notifyDataSetChanged();
         return this.messages.size();
     }
 
     public void setMessage(Message message, int message_number){
-        /*if(this.messages.get(message_number).deviceMessageId == message.deviceMessageId){
-            this.messages.set(message_number, message);
-        } else {
-
-        }*/
         int i = this.messages.size()-1;
         while (i>=0){
             if(this.messages.get(i).deviceMessageId == message.deviceMessageId)
@@ -435,6 +425,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
             j++;
         }
         this.messages.set(i, message);
+        ca.setAllMsgForMenu(this.messages);
         this.notifyDataSetChanged();
     }
 
@@ -447,17 +438,6 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
             i++;
         }
         return -1;
-    }
-
-    public void setReadedMessage(int messageID){
-        for(Message message : this.messages){
-            if(message.id == messageID){
-                message.is_new = 0;
-                this.notifyDataSetChanged();
-                break;
-            }
-        }
-
     }
 
     public void setReadedMessages(){
@@ -481,6 +461,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                 this.messages.add(message);
             }
         }
+        ca.setAllMsgForMenu(this.messages);
         this.notifyDataSetChanged();
     }
 

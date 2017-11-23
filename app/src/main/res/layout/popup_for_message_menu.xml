@@ -42,6 +42,15 @@
             android:textColor="@color/main_black_color_hello"
             android:text="Копировать" />
 
+        <TextView
+            android:id="@+id/badContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:textSize="15sp"
+            android:textColor="@color/main_black_color_hello"
+            android:text="Пожаловаться" />
+
     </LinearLayout>
 
 </LinearLayout>

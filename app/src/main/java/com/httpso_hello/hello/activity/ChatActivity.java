@@ -100,6 +100,7 @@ public class ChatActivity extends SuperMainActivity{
     private boolean thatsAll = false;
     private int thisPage = 0;
     private int allPage = 0;
+    private ArrayList<Message> allMessagesForMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +129,7 @@ public class ChatActivity extends SuperMainActivity{
         emojIcon.ShowEmojIcon();
         avi = (AVLoadingIndicatorView) findViewById(R.id.avi);
         allMsg = new ArrayList<Message>();
+        allMessagesForMenu = new ArrayList<Message>();
 
         this.contact_nickname = extras.getString("nickname");
         ((TextView) findViewById(R.id.textName)).setText(this.contact_nickname);
@@ -417,6 +419,7 @@ public class ChatActivity extends SuperMainActivity{
                     for (Message message : messages) {
                         asd.add(message);
                         if (message.id < lastId) lastId = message.id;
+                        allMessagesForMenu.add(message);
                     }
                     allMsg.addAll(asd);
                 } else thatsAll = true;
@@ -430,13 +433,12 @@ public class ChatActivity extends SuperMainActivity{
                 );
                 chatList.addFooterView(header);
                 chatList.setAdapter(mmAdapter);
-//                chatList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//                    @Override
-//                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                        popupForMsgMenu("тест");
-//                        return false;
-//                    }
-//                });
+                chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        popupForMsgMenu(allMessagesForMenu.get(position).content);
+                    }
+                });
                 contactOnline(contactIsOnline);
             }
         }, new Help.ErrorCallback() {
@@ -525,6 +527,14 @@ public class ChatActivity extends SuperMainActivity{
                 ClipData clip = ClipData.newPlainText("", text);
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(ChatActivity.this, "Текст скопирован в буфер обмена", Toast.LENGTH_LONG).show();
+                popUpWindowForMenu.dismiss();
+            }
+        });
+        //Отправить жалобу
+        ((TextView) popupViewForMenu.findViewById(R.id.badContent)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ChatActivity.this, "Жалоба успешно отправлена", Toast.LENGTH_LONG).show();
                 popUpWindowForMenu.dismiss();
             }
         });
@@ -734,6 +744,10 @@ public class ChatActivity extends SuperMainActivity{
 
 
         }
+    }
+
+    public void setAllMsgForMenu(ArrayList<Message> allMessagesForMenu) {
+        this.allMessagesForMenu = allMessagesForMenu;
     }
 
     @Override
