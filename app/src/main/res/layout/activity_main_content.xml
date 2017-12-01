@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainContent"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:layout_margin="30dp"
     android:focusable="true"
+    android:layout_marginTop="?attr/actionBarSize"
     android:focusableInTouchMode="true"
+    android:background="@color/zalivon"
     tools:context="com.httpso_hello.hello.activity.RegistrationActivity">
 
     <LinearLayout
@@ -15,97 +17,105 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="70dp"
-    android:orientation="horizontal">
+        <LinearLayout
+            android:background="@color/main_white_color_hello"
+            android:orientation="vertical"
+            android:padding="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:background="@mipmap/ic_action_mail"
-        android:backgroundTint="@color/main_dark_grey_color_hello"/>
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textEmailAddress"
+                android:hint="Электронная почта"/>
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:inputType="textEmailAddress"
-        android:layout_marginLeft="30dp"
-        android:hint="Электронная почта"/>
 
-</LinearLayout>
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:inputType="textPassword"
+                android:hint="Пароль"/>
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginTop="30dp"
-    android:orientation="horizontal">
+        </LinearLayout>
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:background="@mipmap/ic_action_about"
-        android:backgroundTint="@color/main_dark_grey_color_hello"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view"/>
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:inputType="textPassword"
-        android:layout_marginLeft="30dp"
-        android:hint="Пароль"/>
+        <TextView
+            android:id="@+id/btnLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="20sp"
+            android:paddingRight="30dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="30dp"
+            android:paddingTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="right"
+            android:background="@drawable/button_hello"
+            android:textColor="@color/zalivon"
+            android:text="Войти"/>
 
-</LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/btnLogin"
+                android:id="@+id/btnLinkToRegisterScreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="20sp"
-                android:padding="20dp"
-                android:textColor="@color/main_red_color_hello"
-                android:layout_gravity="end"
-                android:text="ВОЙТИ"/>
+                android:paddingRight="30dp"
+                android:paddingLeft="30dp"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:textSize="16sp"
+                android:maxLines="1"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Регистрация"/>
 
-<RelativeLayout
-android:layout_width="match_parent"
-android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/rememberPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:paddingRight="30dp"
+                android:paddingLeft="30dp"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
+                android:maxLines="1"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Восстановить пароль"/>
 
-    <TextView
-        android:id="@+id/rememberPassword"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:padding="15dp"
-        android:maxLines="1"
-        android:textColor="@color/main_blue_color_hello"
-        android:text="Восстановить пароль"/>
-
-    <TextView
-        android:id="@+id/btnLinkToRegisterScreen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="15dp"
-        android:textSize="14sp"
-        android:maxLines="1"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:textColor="@color/main_blue_color_hello"
-        android:text="Регистрация"/>
-
-</RelativeLayout>
+        </LinearLayout>
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/logo"
+        android:visibility="gone"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/ic_launcher"/>
+
     <ProgressBar
         android:id="@+id/progressBarLogin"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_centerInParent="true"/>
+        style="@android:style/Widget.ProgressBar.Small"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerInParent="true" />
 
 </RelativeLayout>
 

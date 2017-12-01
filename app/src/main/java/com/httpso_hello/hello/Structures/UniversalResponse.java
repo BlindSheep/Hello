@@ -7,6 +7,7 @@ package com.httpso_hello.hello.Structures;
 public class UniversalResponse {
 
     public boolean response;
+    public int id;
     public Error error;
 
     public UniversalResponse(){

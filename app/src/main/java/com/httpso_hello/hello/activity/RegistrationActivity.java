@@ -6,16 +6,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
-import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.helper.Auth;
 
 public class RegistrationActivity extends AppCompatActivity {
@@ -59,7 +56,6 @@ public class RegistrationActivity extends AppCompatActivity {
         btnLinkToEnter = (TextView) findViewById(R.id.btnLinkToEnter);
         actionBar = getSupportActionBar();
         checkBoxPrivatePolice = (CheckBox) findViewById(R.id.checkBoxPrivatePolice);
-        progressBarRegistration = (ProgressBar) findViewById(R.id.progressBarRegistration);
 
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setHomeButtonEnabled(true);
@@ -75,8 +71,6 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        progressBarRegistration.setVisibility(View.GONE);
-
         //Кнопка Регистрации
         btnForReg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
@@ -86,7 +80,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 String password2 = inputPasswordForReg2.getText().toString().trim();
                 if ((!nickname.isEmpty()) && (!email.isEmpty()) && (!password1.isEmpty()) && (!password2.isEmpty()) && (password1.equals(password2)) && checkBoxPrivatePolice.isChecked() && (password1.length() > 5)){
                     //Если всё заполнено правильно
-                    progressBarRegistration.setVisibility(View.VISIBLE);
                     btnForReg.setText("Регистрация...");
                     btnForReg.setTextColor(getResources().getColor(R.color.main_grey_color_hello));
                     auth.registration(email, password1, nickname, new Auth.RegistrationFinishCallBack() {
@@ -100,7 +93,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
                         @Override
                         public void onError(int error_code, String error_msg) {
-                            progressBarRegistration.setVisibility(View.GONE);
                             btnForReg.setText("Зарегистрироваться");
                             btnForReg.setTextColor(getResources().getColor(R.color.main_red_color_hello));
                             if (error_code == 100) {

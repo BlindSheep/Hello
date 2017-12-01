@@ -33,7 +33,12 @@ public class HBoard extends Help{
         stgs = new Settings(_context);
     }
 
-    public void getBoard(final Activity activity, final int page, final GetBoardCallback getBoardCallback){
+    public void getBoard(
+            final Activity activity,
+            final int groupId,
+            final int page,
+            final int wait_moderate,
+            final GetBoardCallback getBoardCallback){
         Log.d("board", "Enter");
         if (Constant.api_key !="") {
             StringRequest SReq = new StringRequest(
@@ -45,8 +50,6 @@ public class HBoard extends Help{
                             if (response != null) {
                                 Board board = gson.fromJson(response, Board.class);
                                 if (board.error==null){
-//                                    Log.d("board_error", board.content_error);
-//                                    Log.d("board", Integer.toString(board.items[0].id));
                                     getBoardCallback.onSuccess(board.items, activity);
                                     return;
                                 }
@@ -71,6 +74,8 @@ public class HBoard extends Help{
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("page", Integer.toString(page));
+                    params.put("group_id", Integer.toString(groupId));
+                    if (wait_moderate == 1) params.put("wait_moderate", Integer.toString(wait_moderate));
                     return params;
                 };
             };
@@ -80,6 +85,7 @@ public class HBoard extends Help{
 
     public void addBoard(
             final String content,
+            final int groupId,
             final boolean is_anonim,
             final ArrayList<Integer> uploadedFiles,
             final AddBoardCallback addBoardCallback,
@@ -124,6 +130,7 @@ public class HBoard extends Help{
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("content", content);
                     params.put("ctype_name", "board");
+                    params.put("group_id", Integer.toString(groupId));
                     if (is_anonim) params.put("is_anonim", "1");
                     else params.put("is_anonim", "0");
                     if(uploadedFiles.size()!=0){

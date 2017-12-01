@@ -21,6 +21,9 @@ public class BoardItem {
     public int comments;
     public String is_anonim;
 
+    public int group_id;
+    public Groups groupInfo;
+
     public BoardItem(){
 
     };

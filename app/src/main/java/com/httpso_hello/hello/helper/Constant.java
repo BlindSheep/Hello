@@ -77,6 +77,14 @@ public class Constant {
     public static String flirtiki_get_info_uri = start_api_uri + "flirtiki.get_flirtiki";
     public static String flirtiki_send_flirtik_uri = start_api_uri + "flirtiki.send_flirtik";
 
+    public static String groups_get_groups_uri = start_api_uri + "groups.get_groups";
+    public static String groups_get_members_uri = start_api_uri + "groups.get_members";
+    public static String groups_subscribe_uri = start_api_uri + "groups.subscribe";
+    public static String groups_create_group_uri = start_api_uri + "groups.add_group";
+    public static String groups_moderate_group_item_uri = start_api_uri + "groups.moderate_group_item";
+    public static String groups_edit_group_uri = start_api_uri + "groups.edit_group";
+    public static String groups_update_group_avatar_uri = start_api_uri + "groups.update_group_avatar";
+
     public static String temp_files_save_file = start_api_uri + "temp_files.save_file";
 
     public static String logs_add_uri = start_api_uri + "logs.add";

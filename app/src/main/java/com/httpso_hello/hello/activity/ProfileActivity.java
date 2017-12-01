@@ -1156,24 +1156,8 @@ public class ProfileActivity extends SuperMainActivity{
 //загрузка нового фото с камеры в ленту
             case 2:
                 if (resultCode == RESULT_OK) {
-// try {
                     imageUri = Uri.fromFile(photoFile);
                     openAvatarUpdateWindow(sendPhotoClick);
-/*
-if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-if(Help.runTaskAfterPermission(
-ProfileActivity.this,
-new String[]{
-Manifest.permission.READ_EXTERNAL_STORAGE
-},
-Help.REQUEST_READ_EXTERNAL_STORAGE
-)){
-openAvatarUpdateWindow(sendPhotoClick);
-}
-} else{
-openAvatarUpdateWindow(sendPhotoClick);
-}
-*/
                 }
                 break;
 //загрузка новой аватарки из галереи

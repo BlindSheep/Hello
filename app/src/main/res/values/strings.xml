@@ -87,6 +87,7 @@
     <string name="title_activity_photo_comments">Комментарии</string>
     <string name="title_activity_setting_of_profile">Настройки</string>
     <string name="title_activity_send_flirtiks"></string>
+    <string name="title_activity_groups">Сообщества</string>
 
     <string-array name="ageFrom">
         <item> </item>
@@ -227,6 +228,6 @@
     <string name="popup">Попап</string>
 
     //Версия
-    <string name="version">Версия: 1.140</string>
+    <string name="version">Версия: 1.145</string>
 
 </resources>

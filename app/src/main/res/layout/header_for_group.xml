@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/zalivon"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="@color/main_white_color_hello"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        
+            <ImageView
+                android:id="@+id/logotip"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:padding="10dp"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@mipmap/avatar" />
+
+            <TextView
+                android:id="@+id/name"
+                android:padding="10dp"
+                android:layout_gravity="center"
+                android:textSize="18sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Название сообщества"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/following"
+            android:paddingTop="10dp"
+            android:paddingBottom="9dp"
+            android:layout_margin="9dp"
+            android:background="@color/main_blue_color_hello"
+            android:textColor="@color/main_white_color_hello"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Подписаться"/>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:tint="@color/main_dark_grey_color_hello"
+                app:srcCompat="@mipmap/ic_action_view_as_list"/>
+
+            <TextView
+                android:id="@+id/descr"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Описание сообщества"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/membersLayout"
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:tint="@color/main_dark_grey_color_hello"
+                app:srcCompat="@mipmap/ic_menu_guests"/>
+
+            <TextView
+                android:id="@+id/members"
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1000 подписчиков"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/isModer"
+            android:orientation="horizontal"
+            android:paddingBottom="20dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center_vertical"
+                android:tint="@color/main_dark_grey_color_hello"
+                app:srcCompat="@mipmap/ic_action_about"/>
+
+            <TextView
+                android:layout_marginLeft="20dp"
+                android:layout_gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Включена модерация новых сообщений"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/new_view" />
+
+    <LinearLayout
+        android:id="@+id/adminLayout"
+        android:orientation="vertical"
+        android:layout_marginTop="5dp"
+        android:background="@color/main_white_color_hello"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/adminBar"
+            android:background="?android:attr/selectableItemBackground"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:tint="@color/main_dark_grey_color_hello"
+                app:srcCompat="@mipmap/ic_menu_settings"/>
+
+            <TextView
+                android:padding="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Управление сообществом"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/view" />
+
+        <LinearLayout
+            android:id="@+id/moderation"
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:tint="@color/main_dark_grey_color_hello"
+                app:srcCompat="@mipmap/ic_menu_notify"/>
+
+            <TextView
+                android:padding="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Модерация"/>
+
+            <TextView
+                android:id="@+id/countOfModerate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="6dp"
+                android:paddingLeft="6dp"
+                android:paddingBottom="1dp"
+                android:paddingTop="1dp"
+                android:layout_gravity="center_vertical"
+                android:background="@drawable/border_for_numbers"
+                android:textColor="@color/main_white_color_hello"/>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/sendMsg"
+        android:background="@color/main_white_color_hello"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:src="@mipmap/ic_action_edit"
+                android:tint="@color/main_blue_color_hello"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/asd"
+                android:layout_width="25dp"
+                android:layout_height="25dp" />
+
+            <TextView
+                android:id="@+id/asd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textColor="@color/main_blue_color_hello"
+                android:padding="15dp"
+                android:text="Написать сообщение" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/new_view" />
+
+</LinearLayout>

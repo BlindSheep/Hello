@@ -3,7 +3,6 @@
 xmlns:app="http://schemas.android.com/apk/res-auto"
 android:orientation="vertical"
 android:background="@color/zalivon"
-android:elevation="1.5dp"
 android:layout_width="match_parent"
 android:layout_height="wrap_content">
 
@@ -30,7 +29,7 @@ android:layout_height="wrap_content">
         android:text="Просмотренные" />
 
 <LinearLayout
-    android:background="@drawable/board"
+    android:background="@color/main_white_color_hello"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -83,5 +82,10 @@ android:layout_height="wrap_content">
         </LinearLayout>
 
 </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/new_view" />
 
 </LinearLayout>

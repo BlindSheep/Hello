@@ -80,16 +80,30 @@
                 android:layout_gravity="center_vertical"
                 android:text="Анонимно" />
 
-            <ImageButton
-                android:id="@+id/boardSave"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+            <RelativeLayout
                 android:layout_alignParentRight="true"
-                app:srcCompat="@mipmap/ic_action_send"
-                android:background="@color/main_white_color_hello"
-                android:tint="@color/main_blue_color_hello"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageButton
+                    android:id="@+id/boardSave"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    app:srcCompat="@mipmap/ic_action_send"
+                    android:background="@color/main_white_color_hello"
+                    android:tint="@color/main_blue_color_hello"/>
+
+                <ProgressBar
+                    android:visibility="gone"
+                    android:id="@+id/progress"
+                    android:layout_centerInParent="true"
+                    android:padding="10dp"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
 

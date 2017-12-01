@@ -107,7 +107,7 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
 
         final SearchActivity SA = ((SearchActivity) context);
         DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
-        int width = displaymetrics.widthPixels / 2 - 50;
+        int width = displaymetrics.widthPixels / 2 - (int) (displaymetrics.density * 6);
 
         //Первый юзер
         holder.search_profile_avatar.setMinimumHeight(width);

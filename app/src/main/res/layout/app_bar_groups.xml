@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.httpso_hello.hello.activity.GroupsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/main_linear_background"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+                <TextView
+                    android:id="@+id/textName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/main_white_color_hello"
+                    android:layout_centerVertical="true"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="70dp"
+                    android:text="Сообщества"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"/>
+
+                <EditText
+                    android:visibility="gone"
+                    android:hint="Поиск"
+                    android:textColorHint="@color/main_grey_color_hello"
+                    android:id="@+id/editForSearch"
+                    android:layout_marginLeft="70dp"
+                    android:layout_marginRight="50dp"
+                    android:paddingRight="50dp"
+                    android:layout_centerVertical="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <ImageView
+                android:id="@+id/search"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="60dp"
+                android:tint="@color/main_white_color_hello"
+                app:srcCompat="@mipmap/ic_action_search"/>
+
+            <ImageView
+                android:id="@+id/create"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="15dp"
+                android:tint="@color/main_white_color_hello"
+                app:srcCompat="@mipmap/ic_action_add_group"/>
+
+        </RelativeLayout>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_groups" />
+
+</android.support.design.widget.CoordinatorLayout>

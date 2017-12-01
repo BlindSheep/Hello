@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:background="@drawable/board"
-    android:elevation="1.5dp"
+    android:orientation="vertical"
+    android:background="@color/main_white_color_hello"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -39,6 +38,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TextView" />
+
         </LinearLayout>
+
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/new_view"/>
+
 </LinearLayout>

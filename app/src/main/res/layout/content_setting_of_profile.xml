@@ -16,10 +16,8 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_margin="6dp"
-            android:background="@drawable/board"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical"
-            android:elevation="1.5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -73,13 +71,17 @@
                 android:textColor="@color/main_dark_grey_color_hello"
                 android:text="Вы всегда будете Онлайн.\nПривлеките больше внимания!" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_margin="6dp"
-            android:background="@drawable/board"
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical"
-            android:elevation="1.5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -176,13 +178,17 @@
                 android:textColor="@color/main_dark_grey_color_hello"
                 android:text="* Уведомления, которые приходят, когда приложение свернуто" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_margin="6dp"
-            android:background="@drawable/board"
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical"
-            android:elevation="1.5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -233,17 +239,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="18dp"
                     android:padding="20dp"
-                    android:text="Объявления" />
+                    android:text="Лента" />
 
             </RadioGroup>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view" />
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_margin="6dp"
-            android:background="@drawable/board"
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical"
-            android:elevation="1.5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -366,13 +376,18 @@
 
             </LinearLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view" />
+
         </LinearLayout>
 
         <LinearLayout
-            android:layout_margin="6dp"
-            android:background="@drawable/board"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical"
-            android:elevation="1.5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -405,6 +420,11 @@
                     android:layout_height="wrap_content" />
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view" />
 
         </LinearLayout>
 

@@ -40,17 +40,24 @@ public class AddBoardActivity extends AppCompatActivity {
     private GridView filesLine;
     private Files files;
     private CheckBox anonim;
+    private int groupId = 0;
+    private boolean isModeratble;
+    private ProgressBar progress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_board);
 
+        groupId = getIntent().getExtras().getInt("groupId", 0);
+        isModeratble = getIntent().getExtras().getBoolean("isModeratble", true);
+
         boardCancel = (TextView) findViewById(R.id.boardCancel);
         boardSave = (ImageView) findViewById(R.id.boardSave);
         boardText = (EditText) findViewById(R.id.boardText);
         boardPhotos = (ImageButton) findViewById(R.id.boardPhotos);
         anonim = (CheckBox) findViewById(R.id.anonim);
+        progress = (ProgressBar) findViewById(R.id.progress);
 
         filesLine = (GridView) findViewById(R.id.addBoardPhotos);
 
@@ -75,17 +82,22 @@ public class AddBoardActivity extends AppCompatActivity {
         boardSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progress.setVisibility(View.VISIBLE);
+                boardSave.setVisibility(View.GONE);
                 boardTextString = boardText.getText().toString();
-                if ((!boardTextString.isEmpty()) /*&& (!photos.isEmpty())*/) {
+                //if ((!boardTextString.isEmpty()) || (files.getUploadedFiles().size() != 0)) {
+                if (!boardTextString.isEmpty()) {
                     HBoard hBoard = new HBoard(getApplicationContext());
                     hBoard.addBoard(
                             boardTextString,
+                            groupId,
                             anonim.isChecked(),
                             files.getUploadedFiles(),
                             new HBoard.AddBoardCallback() {
                                 @Override
                                 public void onSuccess() {
-                                    Toast.makeText(getApplicationContext(), "Сообщение появится после модерации", Toast.LENGTH_LONG).show();
+                                    if (isModeratble) Toast.makeText(getApplicationContext(), "Сообщение появится после модерации", Toast.LENGTH_LONG).show();
+                                    else Toast.makeText(getApplicationContext(), "Сообщение успешно отправлено", Toast.LENGTH_LONG).show();
                                     finish();
                                 }
 
@@ -94,17 +106,21 @@ public class AddBoardActivity extends AppCompatActivity {
                                 @Override
                                 public void onError(int error_code, String error_message) {
                                     Toast.makeText(getApplicationContext(), "Ошибка интернет соединения. Попробуйте еще раз.", Toast.LENGTH_LONG).show();
+                                    progress.setVisibility(View.GONE);
+                                    boardSave.setVisibility(View.VISIBLE);
                                 }
 
                                 @Override
                                 public void onInternetError() {
                                     Toast.makeText(getApplicationContext(), "Ошибка интернет соединения. Попробуйте еще раз.", Toast.LENGTH_LONG).show();
+                                    progress.setVisibility(View.GONE);
+                                    boardSave.setVisibility(View.VISIBLE);
                                 }
                             });
-                } else if (boardTextString.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Напишите текст объявления", Toast.LENGTH_LONG).show();
-                } else if (photos.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Добавьте хотябы одну фотографию", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Напишите текст сообщения", Toast.LENGTH_LONG).show();
+                    progress.setVisibility(View.GONE);
+                    boardSave.setVisibility(View.VISIBLE);
                 }
             }
         });

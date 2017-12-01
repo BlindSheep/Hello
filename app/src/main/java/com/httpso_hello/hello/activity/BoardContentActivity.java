@@ -80,6 +80,7 @@ public class BoardContentActivity extends SuperMainActivity {
     private TextView textAns;
     private Handler refreshAtError;
     private Runnable refreshAtErrorRunnable;
+    private ImageView answer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,6 +103,7 @@ public class BoardContentActivity extends SuperMainActivity {
         userNameBoardItem = (TextView) header.findViewById(R.id.userNameBoardItem);
         datePubBoardItem = (TextView) header.findViewById(R.id.datePubBoardItem);
         boardTextItem = (TextView) header.findViewById(R.id.boardTextItem);
+        answer = (ImageView) header.findViewById(R.id.answer);
         contentBoardContentBlock = (RelativeLayout) findViewById(R.id.content_board_content_block);
         messageContent = (EmojiconEditText) findViewById(R.id.messageContent);
         emojiKeyboard = (ImageButton) findViewById(R.id.emojiKeyboard);
@@ -195,27 +197,6 @@ public class BoardContentActivity extends SuperMainActivity {
                 }
             }
         };
-    }
-
-    private void setAnswer(int id, String nickname) {
-        ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.VISIBLE);
-        this.idAnswer = id;
-        textAns.setText(nickname + " получит ответ");
-        messageContent.setText(nickname + ", ");
-        nicknameAnswer = nickname;
-        ((ImageView) findViewById(R.id.ansExit)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteAnswer();
-            }
-        });
-    }
-    private void deleteAnswer() {
-        idAnswer = 0;
-        textAns.setText("");
-        messageContent.setText("");
-        nicknameAnswer = null;
-        ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.GONE);
     }
 
     //Получение комментов
@@ -316,6 +297,13 @@ public class BoardContentActivity extends SuperMainActivity {
                                 if(item.is_anonim.equals("1")) anonim = true;
                                 else anonim = false;
                                 if (!anonim) {
+                                    answer.setVisibility(View.VISIBLE);
+                                    answer.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            setAnswer(item.user_id, item.user_nickname);
+                                        }
+                                    });
                                     if (item.avatar != null) {
                                         Picasso
                                                 .with(getApplicationContext())
@@ -358,7 +346,7 @@ public class BoardContentActivity extends SuperMainActivity {
                                         }
                                     });
                                     //Клик по шапке
-                                        header.setOnClickListener(new View.OnClickListener() {
+                                    userAvatarBoardItem.setOnClickListener(new View.OnClickListener() {
                                             @Override
                                             public void onClick(View v) {
                                                 Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
@@ -367,6 +355,7 @@ public class BoardContentActivity extends SuperMainActivity {
                                             }
                                         });
                                 } else {
+                                    answer.setVisibility(View.GONE);
                                     Picasso
                                             .with(getApplicationContext())
                                             .load(R.drawable.ic_action_anonimnost)
@@ -386,7 +375,7 @@ public class BoardContentActivity extends SuperMainActivity {
                                             startActivity(intent);
                                         }
                                     });
-                                    header.setOnClickListener(new View.OnClickListener() {
+                                    userAvatarBoardItem.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
                                         }
@@ -418,6 +407,26 @@ public class BoardContentActivity extends SuperMainActivity {
                         });
     }
 
+    private void setAnswer(int id, String nickname) {
+        ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.VISIBLE);
+        this.idAnswer = id;
+        textAns.setText(nickname + " получит ответ");
+        messageContent.setText(nickname + ", ");
+        nicknameAnswer = nickname;
+        ((ImageView) findViewById(R.id.ansExit)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteAnswer();
+            }
+        });
+    }
+    private void deleteAnswer() {
+        idAnswer = 0;
+        textAns.setText("");
+        messageContent.setText("");
+        nicknameAnswer = null;
+        ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.GONE);
+    }
 
     //Проверка новых комментов
     private void getCountsComments() {

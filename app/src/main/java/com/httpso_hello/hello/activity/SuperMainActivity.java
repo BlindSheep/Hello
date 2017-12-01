@@ -116,6 +116,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         else if (activityName.equals("SettingsActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_edit)).setChecked(true);
         else if (activityName.equals("SimpationActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_simpatii)).setChecked(true);
         else if (activityName.equals("SettingOfProfileActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_edit_profile)).setChecked(true);
+        else if (activityName.equals("GroupsActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_groups)).setChecked(true);
     }
 
     private void getCountIntoDrawer() {
@@ -219,13 +220,13 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 startActivity(intent);
                 finish();
                 break;
-//            case R.id.nav_send_flirtik:
-//                intent = new Intent(getApplicationContext(), SendFlirtiksActivity.class);
-//                startActivity(intent);
-//                finish();
-//                break;
             case R.id.nav_board:
                 intent = new Intent(getApplicationContext(), BoardActivity.class);
+                startActivity(intent);
+                finish();
+                break;
+            case R.id.nav_groups:
+                intent = new Intent(getApplicationContext(), GroupsActivity.class);
                 startActivity(intent);
                 finish();
                 break;

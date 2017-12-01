@@ -9,7 +9,21 @@ import android.text.format.Time;
 public class ConverterDate {
 
 
-
+    //Склонение подписчиков
+    public static String getFollowers (int count) {
+        String result = null;
+        if (count != 0) {
+            if (count == 1) result = "1 подписчик";
+            if ((count == 2) || (count == 3) || (count == 4)) result = Integer.toString(count) + " подписчика";
+            if ((count >= 5) && (count < 21)) result = Integer.toString(count) + " подписчиков";
+            if ((count >= 21) && (count % 10 == 1)) result = Integer.toString(count) + " подписчик";
+            else if ((count >= 22) && (count % 10 == 2)) result = Integer.toString(count) + " подписчика";
+            else if ((count >= 23) && (count % 10 == 3)) result = Integer.toString(count) + " подписчика";
+            else if ((count >= 24) && (count % 10 == 4)) result = Integer.toString(count) + " подписчика";
+            else if (count >= 25) result = Integer.toString(count) + " подписчиков";
+        } else result = "Нет подписчиков";
+        return result;
+    }
 
     //Входящее int лайков, исходящее Strung вида "Понравилось 5 людям"
     public static String likeStr(int likeInt){

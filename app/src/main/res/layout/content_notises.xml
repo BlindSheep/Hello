@@ -18,10 +18,8 @@ tools:showIn="@layout/app_bar_guests">
             android:id="@+id/notices_list_new"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@color/zalivon"
-            android:paddingLeft="6dp"
-            android:paddingRight="2dp"
-            android:scrollbarStyle="outsideInset" />
+            android:dividerHeight="0dp"
+            android:divider="@color/main_polublue"/>
 
     </android.support.v4.widget.SwipeRefreshLayout>
 

@@ -20,7 +20,7 @@
             android:padding="20dp"
             android:textSize="18sp"
             android:textColor="@color/main_blue_color_hello"
-            android:text="Объявление" />
+            android:text="Сообщение" />
 
         <View
             android:layout_width="match_parent"

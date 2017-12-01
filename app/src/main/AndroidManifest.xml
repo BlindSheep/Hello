@@ -52,11 +52,7 @@
                 <action android:name="com.hello.alwaysOnline" />
             </intent-filter>
         </service>
-        <service android:name=".AvtoRefresh.FoneServise">
-            <intent-filter>
-                <action android:name="com.hello.FoneServise" />
-            </intent-filter>
-        </service>
+
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -187,7 +183,27 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.FilterActivity"
-            android:label="Фильтр"/>
+            android:label="Фильтр" />
+        <activity
+            android:name=".activity.GroupsActivity"
+            android:label=""
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.OneGroupActivity" />
+        <activity
+            android:name=".activity.FollowersActivity"
+            android:label="Подписчики" />
+        <activity
+            android:name=".activity.CreateNewGroupActivity"
+            android:label="Новое сообщество" />
+        <activity
+            android:name=".activity.SettingsOfGroupActivity"
+            android:label="Управление сообществом" />
+        <activity
+            android:label="Описание и настройки"
+            android:name=".activity.StgsAndDescOfGroupActivity" />
+        <activity
+            android:label="Модерация"
+            android:name=".activity.ModerationActivity"/>
     </application>
 
 </manifest>

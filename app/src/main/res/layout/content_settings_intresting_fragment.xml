@@ -18,12 +18,7 @@
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/board"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp"
-                android:elevation="1.5dp"
+                android:background="@color/main_white_color_hello"
                 android:orientation="vertical">
 
             <TextView
@@ -50,18 +45,20 @@
                     android:layout_marginBottom="15dp"
                     android:textSize="15sp"
                     android:hint="Любимая музыка"
-                android:inputType="textCapSentences|textMultiLine"/>
+                    android:inputType="textCapSentences|textMultiLine"/>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view" />
 
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/board"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp"
-                android:elevation="1.5dp"
+                android:background="@color/main_white_color_hello"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
             <TextView
@@ -91,14 +88,16 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view" />
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/board"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp"
-                android:elevation="1.5dp"
+                android:background="@color/main_white_color_hello"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
             <TextView
@@ -128,14 +127,16 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view" />
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/board"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp"
-                android:elevation="1.5dp"
+                android:background="@color/main_white_color_hello"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
             <TextView
@@ -165,13 +166,16 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view" />
+
         <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/board"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp"
-                android:elevation="1.5dp"
+                android:background="@color/main_white_color_hello"
+                android:layout_marginTop="5dp"
                 android:orientation="vertical">
 
             <TextView
@@ -201,17 +205,28 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view" />
+
         <TextView
-                android:id="@+id/saveButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:textSize="20sp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:textColor="@color/main_red_color_hello"
-                android:text="Сохранить"/>
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="20sp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            android:layout_gravity="right"
+            android:background="@drawable/button_hello"
+            android:textColor="@color/zalivon"
+            android:text="Сохранить"/>
 
     </LinearLayout>
 

@@ -13,12 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/board"
-        android:elevation="1.5dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="6dp"
-        android:layout_marginRight="6dp"
+        android:background="@color/main_white_color_hello"
         android:orientation="vertical">
 
     <TextView
@@ -160,5 +155,10 @@
     </LinearLayout>
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/new_view" />
 
 </LinearLayout>

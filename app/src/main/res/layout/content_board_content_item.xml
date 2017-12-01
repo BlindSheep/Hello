@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:background="@drawable/board"
+    android:orientation="vertical"
+    android:background="@color/main_white_color_hello"
     android:weightSum="1"
     app:layout_collapseParallaxMultiplier="1.0">
 
@@ -63,7 +63,7 @@
                                     android:layout_marginLeft="5dp"
                                     android:layout_marginRight="5dp"
                                     android:layout_marginTop="5dp"
-                                    android:tint="@color/main_blue_color_hello"
+                                    android:tint="@color/main_dark_grey_color_hello"
                                     app:srcCompat="@mipmap/ic_action_send"/>
 
                                 <TextView
@@ -105,5 +105,10 @@
                     app:srcCompat="@mipmap/ic_action_overflow"/>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view"/>
 
 </LinearLayout>

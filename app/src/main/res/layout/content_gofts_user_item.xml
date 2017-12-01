@@ -2,8 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@drawable/board"
-    android:elevation="1.5dp"
+    android:background="@color/main_white_color_hello"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -66,5 +65,10 @@
             android:layout_height="wrap_content" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/new_view"/>
 
 </LinearLayout>

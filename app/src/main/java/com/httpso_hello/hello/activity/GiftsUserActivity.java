@@ -47,7 +47,6 @@ public class GiftsUserActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_action_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        LV.addHeaderView(header);
         LV.addFooterView(header);
         getGifts();
 
@@ -73,9 +72,9 @@ public class GiftsUserActivity extends AppCompatActivity {
                         LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                if (extras.getBoolean("isUserProfile") || (defolt.get(position - 1).isPrivate == 0)) {
+                                if (extras.getBoolean("isUserProfile") || (defolt.get(position).isPrivate == 0)) {
                                     Intent intent = new Intent(GiftsUserActivity.this, ProfileActivity.class);
-                                    intent.putExtra("profile_id", defolt.get(position - 1).sender);
+                                    intent.putExtra("profile_id", defolt.get(position).sender);
                                     startActivity(intent);
                                 }
                             }

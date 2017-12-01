@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zalivon"
+    android:scrollbars="vertical"
+    tools:context="com.httpso_hello.hello.activity.CreateNewGroupActivity">
+
+    <LinearLayout
+        android:id="@+id/settings"
+        android:orientation="vertical"
+        android:layout_marginTop="6dp"
+        android:background="@color/main_white_color_hello"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="20dp"
+                app:srcCompat="@mipmap/ic_menu_settings"
+                android:tint="@color/main_dark_grey_color_hello"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:maxLines="1"
+                android:textColor="@color/main_black_color_hello"
+                android:text="Описание и настройки" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/view" />
+
+        <LinearLayout
+            android:id="@+id/followers"
+            android:orientation="horizontal"
+            android:background="?android:attr/selectableItemBackground"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="20dp"
+                app:srcCompat="@mipmap/ic_menu_guests"
+                android:tint="@color/main_dark_grey_color_hello"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:maxLines="1"
+                android:textColor="@color/main_black_color_hello"
+                android:text="Подписчики" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view"/>
+
+    </LinearLayout>
+
+</ScrollView>

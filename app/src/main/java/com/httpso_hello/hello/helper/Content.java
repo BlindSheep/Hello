@@ -43,6 +43,7 @@ public class Content extends Help {
     public void deleteContent(
             final int id,
             final String content_type,
+            final int group_id,
             final Content.DeleteContentCallback deleteContentCallback
     ){
         if (Constant.api_key !="") {
@@ -80,6 +81,7 @@ public class Content extends Help {
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
                     params.put("id", Integer.toString(id));
                     params.put("content_type", content_type);
+                    if(group_id!=0) params.put("group_id", Integer.toString(group_id));
                     return params;
                 };
             };

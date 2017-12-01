@@ -11,8 +11,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_weight="1"
-        android:background="@drawable/board"
-        android:elevation="1.5dp"
+        android:background="@color/main_white_color_hello"
         android:layout_marginRight="3dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -31,8 +30,7 @@
                 <ImageView
                     android:id="@+id/search_profile_avatar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_height="match_parent"/>
 
                 <ProgressBar
                     android:id="@+id/search_profile_load"
@@ -44,7 +42,6 @@
                     android:id="@+id/isOnline"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:layout_marginRight="7dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/rounded_button"/>
@@ -52,6 +49,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:background="@drawable/board"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -83,14 +81,18 @@
 
         </LinearLayout>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/new_view" />
+
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_weight="1"
         android:layout_marginLeft="3dp"
-        android:background="@drawable/board"
-        android:elevation="1.5dp"
+        android:background="@color/main_white_color_hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
@@ -108,8 +110,7 @@
                 <ImageView
                     android:id="@+id/search_profile_avatar_second"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_height="match_parent"/>
 
                 <ProgressBar
                     android:id="@+id/search_profile_load_second"
@@ -121,7 +122,6 @@
                     android:id="@+id/isOnline_second"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:layout_marginRight="7dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentRight="true"
                     android:background="@drawable/rounded_button"/>
@@ -129,6 +129,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:background="@drawable/board"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -159,6 +160,11 @@
             </RelativeLayout>
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@drawable/new_view" />
 
     </LinearLayout>
 

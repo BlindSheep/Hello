@@ -22,12 +22,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/board"
-            android:layout_marginTop="6dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="2dp"
-            android:elevation="1.5dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical">
 
             <LinearLayout
@@ -56,10 +51,13 @@
                     android:layout_gravity="center"
                     android:background="@mipmap/ic_action_photo"
                     android:backgroundTint="@color/main_dark_grey_color_hello"/>
+
                 <TextView
-                    android:layout_width="170dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:text="Загрузить новое фото"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:text="Новое фото"
                     android:gravity="center"/>
 
             </LinearLayout>
@@ -96,8 +94,16 @@
                                 android:stretchMode="none"
                                 android:verticalSpacing="1dp"/>
                         </LinearLayout>
+
                     </FrameLayout>
+
             </HorizontalScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view"/>
+
         </LinearLayout>
 
         <RelativeLayout
@@ -105,8 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="4dp">
+            android:layout_marginTop="5dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -121,8 +126,8 @@
                     android:background="@drawable/main_linear_background"
                     android:hint="Сообщение"
                     android:paddingBottom="8dp"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="8dp"
                     android:textColorHint="@color/main_white_color_hello" />
 
@@ -130,12 +135,12 @@
                     android:id="@+id/to_friends"
                     android:layout_width="wrap_content"
                     android:layout_height="35dp"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginLeft="2dp"
                     android:background="@drawable/main_linear_background"
                     android:hint="Дружба"
                     android:paddingBottom="8dp"
-                    android:paddingLeft="30dp"
-                    android:paddingRight="30dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
                     android:paddingTop="8dp"
                     android:textColorHint="@color/main_white_color_hello" />
             </LinearLayout>
@@ -145,217 +150,225 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="2dp"
-            android:paddingBottom="10dp"
-            android:background="@drawable/board"
-            android:elevation="1.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical">
 
             <LinearLayout
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:tint="@color/main_dark_grey_color_hello"
-                    app:srcCompat="@drawable/ic_home_black_24dp"/>
-
-                <TextView
-                    android:id="@+id/cityCache"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:text=" "
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:tint="@color/main_dark_grey_color_hello"
+                        app:srcCompat="@drawable/ic_home_black_24dp"/>
+
+                    <TextView
+                        android:id="@+id/cityCache"
+                        android:layout_width="match_parent"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:text=" "
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/spProfileContener"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:tint="@color/main_dark_grey_color_hello"
+                        app:srcCompat="@drawable/ic_action_otnosheniya"/>
+
+                    <TextView
+                        android:id="@+id/spProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/phoneNumProfileConteiner"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:tint="@color/main_dark_grey_color_hello"
+                        app:srcCompat="@mipmap/ic_action_call"/>
+
+                    <TextView
+                        android:id="@+id/phoneNumProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:text=" "
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/skypeProfileConteiner"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:tint="@color/main_dark_grey_color_hello"
+                        app:srcCompat="@drawable/ic_action_skype"/>
+
+                    <TextView
+                        android:id="@+id/skypeProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:text=" "
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/dohodProfileContener"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:tint="@color/main_dark_grey_color_hello"
+                        app:srcCompat="@drawable/ic_action_dohod" />
+
+                    <TextView
+                        android:id="@+id/dohodProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/autoProfileContener"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:tint="@color/main_dark_grey_color_hello"
+                        app:srcCompat="@drawable/ic_action_auto" />
+
+                    <TextView
+                        android:id="@+id/autoProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/rostAndVesProfileContener"
+                    android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="10dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/rostTitleProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:text="Рост"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/rostProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/vesTitleProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:text="Вес"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/vesProfile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="10dp"
+                        android:gravity="center_vertical"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/spProfileContener"
+            <View
                 android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:tint="@color/main_dark_grey_color_hello"
-                    app:srcCompat="@drawable/ic_action_otnosheniya"/>
-
-                <TextView
-                    android:id="@+id/spProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/phoneNumProfileConteiner"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:tint="@color/main_dark_grey_color_hello"
-                    app:srcCompat="@mipmap/ic_action_call"/>
-
-                <TextView
-                    android:id="@+id/phoneNumProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:text=" "
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/skypeProfileConteiner"
-                android:layout_marginTop="10dp"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:tint="@color/main_dark_grey_color_hello"
-                    app:srcCompat="@drawable/ic_action_skype"/>
-
-                <TextView
-                    android:id="@+id/skypeProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:text=" "
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/dohodProfileContener"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:tint="@color/main_dark_grey_color_hello"
-                    app:srcCompat="@drawable/ic_action_dohod" />
-
-                <TextView
-                    android:id="@+id/dohodProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/autoProfileContener"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:tint="@color/main_dark_grey_color_hello"
-                    app:srcCompat="@drawable/ic_action_auto" />
-
-                <TextView
-                    android:id="@+id/autoProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/rostAndVesProfileContener"
-                android:layout_width="match_parent"
-                android:orientation="horizontal"
-                android:layout_marginTop="10dp"
-                android:layout_height="wrap_content">
-
-                <TextView
-                    android:id="@+id/rostTitleProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical"
-                    android:text="Рост"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/rostProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/vesTitleProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical"
-                    android:text="Вес"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/vesProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="10dp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
+                android:layout_height="1dp"
+                android:background="@drawable/new_view"/>
 
         </LinearLayout>
 
@@ -363,12 +376,8 @@
             android:id="@+id/friendsAndGiftsBlock"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/board"
-            android:elevation="1.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical">
 
         <HorizontalScrollView
@@ -393,8 +402,7 @@
                         android:layout_height="30dp"
                         android:layout_marginLeft="10dp"
                         android:gravity="center_vertical"
-                        android:text="Нет друзей"
-                        android:textSize="15dp" />
+                        android:text="Нет друзей"/>
 
                     <LinearLayout
                         android:id="@+id/friendsBlock"
@@ -417,26 +425,20 @@
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_marginRight="3dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                             <ImageView
                                 android:id="@+id/friend2"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_marginRight="3dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                             <ImageView
                                 android:id="@+id/friend3"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                         </LinearLayout>
 
@@ -453,26 +455,20 @@
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_marginRight="3dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                             <ImageView
                                 android:id="@+id/friend5"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_marginRight="3dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                             <ImageView
                                 android:id="@+id/friend6"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                         </LinearLayout>
 
@@ -488,26 +484,20 @@
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_marginRight="3dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                             <ImageView
                                 android:id="@+id/friend8"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
                                 android:layout_marginRight="3dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                             <ImageView
                                 android:id="@+id/friend9"
                                 android:layout_width="30dp"
                                 android:layout_height="30dp"
-                                android:visibility="gone"
-                                android:background="@mipmap/ic_action_user"
-                                android:backgroundTint="@color/main_blue_color_hello" />
+                                android:visibility="gone" />
 
                         </LinearLayout>
 
@@ -519,17 +509,17 @@
 
         </HorizontalScrollView>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view"/>
+
         </LinearLayout>
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_marginTop="4dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="2dp"
-            android:paddingBottom="10dp"
-            android:background="@drawable/board"
-            android:elevation="1.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -563,6 +553,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="60dp"
                             android:paddingLeft="10dp"
+                            android:layout_marginBottom="10dp"
                             android:columnWidth="60dp"
                             android:gravity="center"
                             android:horizontalSpacing="4dp"
@@ -571,9 +562,17 @@
                             android:scrollbars="horizontal"
                             android:stretchMode="none"
                             android:verticalSpacing="1dp"/>
+
                     </LinearLayout>
+
                 </FrameLayout>
+
             </HorizontalScrollView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view"/>
 
         </LinearLayout>
 
@@ -581,67 +580,30 @@
             android:id="@+id/lookinForBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="4dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="2dp"
-            android:paddingBottom="10dp"
-            android:background="@drawable/board"
-            android:elevation="1.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:text="Ищу"
-                android:textColor="@color/main_blue_color_hello"
-                android:textSize="15dp" />
-
-            <View
-                android:id="@+id/findView"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginLeft="-2dp"
-                android:layout_marginRight="-2dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/view" />
-
-            <TextView
-                android:id="@+id/looking_for"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:text=""
-                android:textColor="@color/main_black_color_hello"
-                android:textSize="15dp" />
-
-            <TextView
-                android:id="@+id/ageLookinFor"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:text=""
-                android:textColor="@color/main_black_color_hello"
-                android:textSize="15dp" />
-
             <LinearLayout
-                android:id="@+id/celZnakomstvaProfileLL"
+                android:orientation="vertical"
+                android:paddingBottom="10dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="Ищу"
+                    android:textColor="@color/main_blue_color_hello"
+                    android:textSize="15dp" />
 
                 <View
+                    android:id="@+id/findView"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginLeft="-2dp"
@@ -650,160 +612,205 @@
                     android:background="@drawable/view" />
 
                 <TextView
+                    android:id="@+id/looking_for"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:text="Цель знакомства"
+                    android:text=""
+                    android:textColor="@color/main_black_color_hello"
                     android:textSize="15dp" />
 
                 <TextView
-                    android:id="@+id/celZnakomstvaProfile0"
+                    android:id="@+id/ageLookinFor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:text="Дружба и общение"
+                    android:text=""
                     android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile1"
+                <LinearLayout
+                    android:id="@+id/celZnakomstvaProfileLL"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Новые знакомства"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Переписка"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="-2dp"
+                        android:layout_marginRight="-2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/view" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Серьезные отношения"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Цель знакомства"
+                        android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Брак"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile0"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Дружба и общение"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Секс"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Новые знакомства"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Занятия спортом"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Переписка"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Бизнес"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Серьезные отношения"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Путешествия"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Брак"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile9"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Свидания и встречи"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Секс"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile10"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Походы в кино"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Занятия спортом"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/celZnakomstvaProfile11"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="10dp"
-                    android:layout_weight="1"
-                    android:text="Другое"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp"
-                    android:visibility="gone" />
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Бизнес"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Путешествия"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Свидания и встречи"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile10"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Походы в кино"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/celZnakomstvaProfile11"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_weight="1"
+                        android:text="Другое"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp"
+                        android:visibility="gone" />
+
+                </LinearLayout>
 
             </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view"/>
 
         </LinearLayout>
 
@@ -811,201 +818,209 @@
             android:id="@+id/anketaBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginBottom="2dp"
-            android:paddingBottom="10dp"
-            android:background="@drawable/board"
-            android:elevation="1.5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:text="Интересы"
-                android:textColor="@color/main_blue_color_hello"
-                android:textSize="15dp" />
-
-
             <LinearLayout
-                android:id="@+id/musicProfileContener"
-                android:layout_width="match_parent"
                 android:orientation="vertical"
+                android:paddingBottom="10dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="-2dp"
-                    android:layout_marginRight="-2dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/view" />
-
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
-                    android:text="Любимая музыка"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="Интересы"
+                    android:textColor="@color/main_blue_color_hello"
                     android:textSize="15dp" />
 
-                <TextView
-                    android:id="@+id/musicProfile"
+
+                <LinearLayout
+                    android:id="@+id/musicProfileContener"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="-2dp"
+                        android:layout_marginRight="-2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/view" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="Любимая музыка"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/musicProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/moviesProfileContener"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="-2dp"
+                        android:layout_marginRight="-2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/view" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="Любимые фильмы"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/moviesProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/booksProfileContener"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="-2dp"
+                        android:layout_marginRight="-2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/view" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="Любимые книги"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/booksProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/gamesProfileContener"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="-2dp"
+                        android:layout_marginRight="-2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/view" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="Любимые игры"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/gamesProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/intrestingProfileContener"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginLeft="-2dp"
+                        android:layout_marginRight="-2dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/view" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="Другие интересы"
+                        android:textSize="15dp" />
+
+                    <TextView
+                        android:id="@+id/intrestingProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/main_black_color_hello"
+                        android:textSize="15dp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/moviesProfileContener"
+            <View
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="-2dp"
-                    android:layout_marginRight="-2dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/view" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Любимые фильмы"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/moviesProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/booksProfileContener"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="-2dp"
-                    android:layout_marginRight="-2dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/view" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Любимые книги"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/booksProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/gamesProfileContener"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="-2dp"
-                    android:layout_marginRight="-2dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/view" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Любимые игры"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/gamesProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/intrestingProfileContener"
-                android:layout_width="match_parent"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginLeft="-2dp"
-                    android:layout_marginRight="-2dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/view" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Другие интересы"
-                    android:textSize="15dp" />
-
-                <TextView
-                    android:id="@+id/intrestingProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:textColor="@color/main_black_color_hello"
-                    android:textSize="15dp" />
-
-            </LinearLayout>
+                android:layout_height="1dp"
+                android:background="@drawable/new_view"/>
 
         </LinearLayout>
 

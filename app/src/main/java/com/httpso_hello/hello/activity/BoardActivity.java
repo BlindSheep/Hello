@@ -79,6 +79,7 @@ public class BoardActivity extends SuperMainActivity{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BoardActivity.this, AddBoardActivity.class);
+                intent.putExtra("groupId", 0);
                 startActivity(intent);
             }
         });
@@ -98,13 +99,13 @@ public class BoardActivity extends SuperMainActivity{
     public void getBoard(){
         hBoard = new HBoard(getApplicationContext());
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
-        hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
+        hBoard.getBoard(this, 0, 0, page, new HBoard.GetBoardCallback() {
             @Override
             public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                 swipeRefreshLayout.setRefreshing(false);
                 ArrayList<BoardItem> boardItem = new ArrayList<>();
                 Collections.addAll(boardItem, boardItems);
-                bAdapter = new BoardAdapter(activity, boardItem);
+                bAdapter = new BoardAdapter(activity, false, boardItem, 0);
                 LV.setAdapter(bAdapter);
                 page += 1;
             }
@@ -136,7 +137,7 @@ public class BoardActivity extends SuperMainActivity{
             YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
             loading = true;
             HBoard hBoard = new HBoard(getApplicationContext());
-            hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
+            hBoard.getBoard(this, 0, page, 0, new HBoard.GetBoardCallback() {
                 @Override
                 public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                     loading = false;
@@ -197,7 +198,7 @@ public class BoardActivity extends SuperMainActivity{
                 public void onClick(View v) {
                     swipeRefreshLayout.setRefreshing(true);
                     Content.getInstance(getApplicationContext())
-                            .deleteContent(boardId, "board", new Content.DeleteContentCallback() {
+                            .deleteContent(boardId, "board", 0, new Content.DeleteContentCallback() {
                                 @Override
                                 public void onSuccess() {
                                     page = 1;
