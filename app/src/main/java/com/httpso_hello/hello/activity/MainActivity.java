@@ -8,7 +8,9 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,7 @@ public class MainActivity extends Activity{
     private Settings stgs;
     private TextView rememberPassword;
     private ImageView logo;
+    private LinearLayout mainContent;
 
 
     @Override
@@ -44,19 +47,18 @@ public class MainActivity extends Activity{
         progressBarLogin = (ProgressBar) findViewById(R.id.progressBarLogin);
         rememberPassword = (TextView) findViewById(R.id.rememberPassword);
         logo = (ImageView) findViewById(R.id.logo);
+        mainContent = (LinearLayout) findViewById(R.id.mainContent);
 
         if (auth.autoLogion()) {
             //если авторизован
-            inputEmail.setVisibility(View.GONE);
-            inputPassword.setVisibility(View.GONE);
-            btnLogin.setVisibility(View.GONE);
-            btnLinkToRegister.setVisibility(View.GONE);
+            mainContent.setVisibility(View.GONE);
             progressBarLogin.setVisibility(View.GONE);
-            rememberPassword.setVisibility(View.GONE);
             logo.setVisibility(View.VISIBLE);
             login();
         } else {
             //если не авторизован
+            mainContent.setVisibility(View.VISIBLE);
+            progressBarLogin.setVisibility(View.GONE);
             logo.setVisibility(View.GONE);
 
             //Переход на страницу регистрации
@@ -75,8 +77,6 @@ public class MainActivity extends Activity{
                     startActivity(intent);
                 }
             });
-
-            progressBarLogin.setVisibility(View.GONE);
 
             btnLogin.setOnClickListener(new View.OnClickListener() {
 

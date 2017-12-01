@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context="com.httpso_hello.hello.activity.MainActivity">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Вход"
-        android:gravity="center_vertical"
-        android:textSize="20dp"
-        android:paddingLeft="40dp"
-        android:textColor="@color/main_white_color_hello"
-        android:background="@color/main_blue_color_hello"/>
-
     <include layout="@layout/activity_main_content" />
 
 </android.support.design.widget.CoordinatorLayout>
