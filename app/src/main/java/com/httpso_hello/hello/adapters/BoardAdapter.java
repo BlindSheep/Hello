@@ -538,7 +538,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     });
                 } else {
                     //есди анонимно и в группе
-                    holder.nameOfUser.setText("Анонимно");
+                    if (boardItem.user_id == boardItem.groupInfo.owner_id) holder.nameOfUser.setText("Администратор");
+                    else holder.nameOfUser.setText("Анонимно");
                     holder.nameOfUser.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
