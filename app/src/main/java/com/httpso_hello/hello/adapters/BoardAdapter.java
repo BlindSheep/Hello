@@ -28,6 +28,7 @@ import com.httpso_hello.hello.activity.BoardActivity;
 import com.httpso_hello.hello.activity.BoardContentActivity;
 import com.httpso_hello.hello.activity.ChatActivity;
 import com.httpso_hello.hello.activity.FullscreenPhotoActivity;
+import com.httpso_hello.hello.activity.ModerationActivity;
 import com.httpso_hello.hello.activity.OneGroupActivity;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
@@ -640,7 +641,12 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     .Builder("R-M-250514-2", true)
                     .setImageSizes()
                     .build();
-            NativeAdLoader mNativeAdLoader = new NativeAdLoader((BoardActivity) getContext(), adLoaderConfiguration);
+
+            NativeAdLoader mNativeAdLoader = null;
+            if (settings == 0) mNativeAdLoader = new NativeAdLoader((BoardActivity) getContext(), adLoaderConfiguration);
+            else if (settings == 1) mNativeAdLoader = new NativeAdLoader((OneGroupActivity) getContext(), adLoaderConfiguration);
+            else if (settings == 2) mNativeAdLoader = new NativeAdLoader((ModerationActivity) getContext(), adLoaderConfiguration);
+
             mNativeAdLoader.setOnLoadListener(new NativeAdLoader.OnLoadListener() {
                 @Override
                 public void onAdFailedToLoad(@NonNull AdRequestError adRequestError) {
@@ -677,8 +683,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                     holder.nativeContentAdView.setAgeView((TextView) holder.nativeContentAdView.findViewById(R.id.content_age));
                     holder.nativeContentAdView.setBodyView((TextView) holder.nativeContentAdView.findViewById(R.id.content_body));
-                    holder.nativeContentAdView.setDomainView((TextView)
-                            holder.nativeContentAdView.findViewById(R.id.content_domain));
+                    holder.nativeContentAdView.setDomainView((TextView) holder.nativeContentAdView.findViewById(R.id.content_domain));
                     holder.nativeContentAdView.setIconView((ImageView) holder.nativeContentAdView.findViewById(R.id.content_favicon));
                     holder.nativeContentAdView.setImageView((ImageView) holder.nativeContentAdView.findViewById(R.id.content_image));
                     holder.nativeContentAdView.setSponsoredView((TextView) holder.nativeContentAdView.findViewById(R.id.content_sponsored));
@@ -719,6 +724,11 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
     public BoardItem getItem(int position){
         return this.boardItems.get(position);
+    }
+
+    @Override
+    public int getCount () {
+        return this.boardItems.size() + (this.boardItems.size() / 10);
     }
 
     public void set(ArrayList<BoardItem> boardItem){
