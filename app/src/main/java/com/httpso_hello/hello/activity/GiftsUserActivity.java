@@ -24,7 +24,6 @@ public class GiftsUserActivity extends AppCompatActivity {
 
     private Bundle extras;
     private ListView LV;
-    private View header;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -34,7 +33,6 @@ public class GiftsUserActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gifts_user);
 
         LV = (ListView) findViewById(R.id.listGifts);
-        header = getLayoutInflater().inflate(R.layout.header, null);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh);
         swipeRefreshLayout.setColorSchemeResources(
                 R.color.main_blue_color_hello,
@@ -47,7 +45,6 @@ public class GiftsUserActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_action_back);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        LV.addFooterView(header);
         getGifts();
 
         // Свайп для обновления

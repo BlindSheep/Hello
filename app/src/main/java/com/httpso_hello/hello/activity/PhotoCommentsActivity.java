@@ -217,7 +217,7 @@ public class PhotoCommentsActivity extends SuperMainActivity {
     //Заполнение карточку объявления
     private void getPhotoItem(String url, int likes, final int id) {
         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
-        final int width = (int) (displaymetrics.widthPixels - (12 * displaymetrics.density));
+        final int width = (int) (displaymetrics.widthPixels);
         if (url != null) {
             Picasso
                     .with(getApplicationContext())
