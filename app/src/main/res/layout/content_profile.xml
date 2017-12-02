@@ -108,41 +108,43 @@
 
         <RelativeLayout
             android:id="@+id/msgAndFrndBtn"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
             android:layout_marginTop="5dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:orientation="horizontal">
 
-                <Button
+                <TextView
                     android:id="@+id/write_message"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:background="@drawable/main_linear_background"
-                    android:hint="Сообщение"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="8dp"
-                    android:textColorHint="@color/main_white_color_hello" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/button_hello"
+                    android:text="Сообщение"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:textColor="@color/zalivon" />
 
-                <Button
+                <TextView
                     android:id="@+id/to_friends"
-                    android:layout_width="wrap_content"
-                    android:layout_height="35dp"
-                    android:layout_marginLeft="2dp"
-                    android:background="@drawable/main_linear_background"
-                    android:hint="Дружба"
-                    android:paddingBottom="8dp"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
-                    android:paddingTop="8dp"
-                    android:textColorHint="@color/main_white_color_hello" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="1dp"
+                    android:background="@drawable/button_hello"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:textColor="@color/zalivon" />
+
             </LinearLayout>
 
         </RelativeLayout>
@@ -150,7 +152,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="6dp"
             android:background="@color/main_white_color_hello"
             android:orientation="vertical">
 

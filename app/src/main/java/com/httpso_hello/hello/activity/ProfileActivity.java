@@ -944,7 +944,7 @@ public class ProfileActivity extends SuperMainActivity{
                 });
 
 //Обработка нажатия кнопки "Сообщение"
-                Button writeMes = (Button) findViewById(R.id.write_message);
+                TextView writeMes = (TextView) findViewById(R.id.write_message);
                 writeMes.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -961,32 +961,28 @@ public class ProfileActivity extends SuperMainActivity{
                 });
 
 //Обработка нажатия кнопки "Добавить в друзья"
-                final Button toFriends = (Button) findViewById(R.id.to_friends);
+                final TextView toFriends = (TextView) findViewById(R.id.to_friends);
                 if (user.friends_state == 0) {
-                    toFriends.setHint("Добавить в друзья");
+                    toFriends.setText("Добавить в друзья");
                     toFriends.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                            toFriends.setHint("Отправляем заявку...");
+                            toFriends.setText("Отправляем заявку...");
                             Friend.getInstance(getApplicationContext()).addFriend(user.id, new Friend.AddFriendsCallback() {
                                 @Override
                                 public void onSuccess() {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                                    toFriends.setHint("Заявка отправлена");
+                                    toFriends.setText("Заявка отправлена");
                                 }
 
                                 @Override
                                 public void onError(int error_code, String error_msg) {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
-                                    toFriends.setHint("Добавить в друзья");
+                                    toFriends.setText("Добавить в друзья");
                                     Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
                                 }
 
                                 @Override
                                 public void onInternetError() {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
-                                    toFriends.setHint("Добавить в друзья");
+                                    toFriends.setText("Добавить в друзья");
                                     Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
                                 }
                             });
@@ -994,72 +990,63 @@ public class ProfileActivity extends SuperMainActivity{
                     });
                 }
                 else if (user.friends_state == 3) {
-                    toFriends.setHint("Удалить из друзей");
+                    toFriends.setText("Удалить из друзей");
                     toFriends.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                            toFriends.setHint("Удаляем из друзей...");
+                            toFriends.setText("Удаляем из друзей...");
                             Friend.getInstance(getApplicationContext()).deleteFriend(
                                     0,
                                     user.id,
                                     new Friend.DeleteFriendsCallback() {
-                                @Override
-                                public void onSuccess() {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                                    toFriends.setHint("Удален из друзей");
-                                }
+                                        @Override
+                                        public void onSuccess() {
+                                            toFriends.setText("Удален из друзей");
+                                        }
 
-                                @Override
-                                public void onError(int error_code, String error_msg) {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
-                                    toFriends.setHint("Удалить из друзей");
-                                    Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                                }
+                                        @Override
+                                        public void onError(int error_code, String error_msg) {
+                                            toFriends.setText("Удалить из друзей");
+                                            Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                                        }
 
-                                @Override
-                                public void onInternetError() {
-                                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
-                                    toFriends.setHint("Удалить из друзей");
-                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                                        @Override
+                                        public void onInternetError() {
+                                            toFriends.setText("Удалить из друзей");
+                                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                        }
+                                    });
                         }
                     });
                 } else if (user.friends_state == 2) {
-                    toFriends.setHint("Принять заявку");
+                    toFriends.setText("Принять заявку");
                     toFriends.setOnClickListener(new
                                                          View.OnClickListener() {
                                                              @Override
                                                              public void onClick(View view) {
-                                                                 toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                                                                 toFriends.setHint("Принимаем заявку...");
+                                                                 toFriends.setText("Принимаем заявку...");
                                                                  Friend.getInstance(getApplicationContext()).acceptFriend(user.id, new Friend.AcceptFriendCallback() {
                                                                      @Override
                                                                      public void onSuccess() {
-                                                                         toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                                                                         toFriends.setHint("Добавлен в друзья");
+                                                                         toFriends.setText("Добавлен в друзья");
                                                                      }
 
                                                                      @Override
                                                                      public void onError(int error_code, String error_msg) {
-                                                                         toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
-                                                                         toFriends.setHint("Принять заявку");
+                                                                         toFriends.setText("Принять заявку");
                                                                          Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
                                                                      }
 
                                                                      @Override
                                                                      public void onInternetError() {
-                                                                         toFriends.setBackgroundColor(getResources().getColor(R.color.main_blue_color_hello));
-                                                                         toFriends.setHint("Принять заявку");
+                                                                         toFriends.setText("Принять заявку");
                                                                          Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
                                                                      }
                                                                  });
                                                              }
                                                          });
                 } else if (user.friends_state == 1) {
-                    toFriends.setBackgroundColor(getResources().getColor(R.color.main_dark_grey_color_hello));
-                    toFriends.setHint("Заявка отправлена");
+                    toFriends.setText("Заявка отправлена");
                 }
 
                 //Скрытия индикатора загрузки и открытие профиля

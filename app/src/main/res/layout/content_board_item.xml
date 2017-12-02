@@ -35,7 +35,9 @@
                     android:id="@+id/userNameBoard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="TextView"
                     android:textColor="@color/main_blue_color_hello" />
 
@@ -43,7 +45,9 @@
                     android:id="@+id/datePubBoard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:maxLines="1"
+                    android:lines="1"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:text="TextView" />
             </LinearLayout>
 

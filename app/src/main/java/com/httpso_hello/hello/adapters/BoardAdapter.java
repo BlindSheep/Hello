@@ -150,13 +150,13 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         }
 
 
-        if ((position % 10 != 0) || (position == 0)) {
+        if ((position % 10 != 0) || (position == 0) || (settings != 0)) {
             holder.content.setVisibility(View.VISIBLE);
             holder.nativeContentAdView.setVisibility(View.GONE);
             holder.nativeAppInstallAdView.setVisibility(View.GONE);
 
             final BoardItem boardItem;
-            if (position < 10) boardItem = this.boardItems.get(position);
+            if ((position < 10) || (settings != 0)) boardItem = this.boardItems.get(position);
             else boardItem = this.boardItems.get(position - position / 10);
             final boolean anonim;
             if (boardItem.is_anonim.equals("0")) anonim = false;
@@ -705,11 +705,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
         }
 
 //Подгрузка новых обьявлений
-        if(position == (this.boardItems.size() - 2)) {
-            if (settings == 0) ((BoardActivity) getContext()).getNew();
-            else if (settings == 1) ((OneGroupActivity) getContext()).getNew();
-            else if (settings == 2) ;
-        }
+        if (position == (this.boardItems.size() - 2) && (settings == 0)) ((BoardActivity) getContext()).getNew();
+        else if (position == (this.boardItems.size() - 1) && (settings == 1)) ((OneGroupActivity) getContext()).getNew();
 
         return rowView;
 
@@ -729,7 +726,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
     @Override
     public int getCount () {
-        return this.boardItems.size() + (this.boardItems.size() / 10);
+        if (settings != 0) return this.boardItems.size();
+        else return this.boardItems.size() + (this.boardItems.size() / 10);
     }
 
     public void set(ArrayList<BoardItem> boardItem){
