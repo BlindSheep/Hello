@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -51,7 +52,7 @@ public class RememmberPassword extends AppCompatActivity {
         sendEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                popUpWindow.showAtLocation((RelativeLayout) findViewById(R.id.RL), Gravity.CENTER, 0, 0);
+                popUpWindow.showAtLocation((LinearLayout) findViewById(R.id.RL), Gravity.CENTER, 0, 0);
                 String getEmail = enterEmail.getText().toString();
                 new Auth(getApplicationContext()).authRestore(getEmail, getApplicationContext(), new Auth.AuthRestoreCallBack() {
                     @Override

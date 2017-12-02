@@ -62,6 +62,10 @@
                 android:layout_marginBottom="24dp"
                 android:layout_gravity="bottom"
                 app:layout_anchor="@+id/avatar"
+                android:lines="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_marginRight="50dp"
                 android:layout_marginLeft="70dp"/>
 
             <TextView
@@ -72,6 +76,10 @@
                 android:layout_marginBottom="7dp"
                 android:layout_gravity="bottom"
                 app:layout_anchor="@+id/avatar"
+                android:lines="1"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_marginRight="50dp"
                 android:layout_marginLeft="70dp"/>
 
         </android.support.design.widget.CollapsingToolbarLayout>
