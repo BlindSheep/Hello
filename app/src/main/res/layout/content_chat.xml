@@ -27,9 +27,12 @@
     <LinearLayout
         android:id="@+id/chatWindow"
         android:visibility="gone"
+        android:layout_marginBottom="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginRight="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/main_white_color_hello"
+        android:background="@drawable/for_chat_send"
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
@@ -46,18 +49,20 @@
                     android:orientation="horizontal">
 
                 <GridView
-                        android:id="@+id/messageAttachments"
-                        android:numColumns="20"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="10dp"
-                        android:columnWidth="120dp"
-                        android:gravity="center"
-                        android:horizontalSpacing="4dp"
-                        android:scrollbarAlwaysDrawHorizontalTrack="true"
-                        android:scrollbarAlwaysDrawVerticalTrack="true"
-                        android:scrollbars="horizontal"
-                        android:stretchMode="none" />
+                    android:id="@+id/messageAttachments"
+                    android:numColumns="20"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:columnWidth="120dp"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginLeft="2dp"
+                    android:gravity="center"
+                    android:horizontalSpacing="4dp"
+                    android:scrollbarAlwaysDrawHorizontalTrack="true"
+                    android:scrollbarAlwaysDrawVerticalTrack="true"
+                    android:scrollbars="horizontal"
+                    android:stretchMode="none" />
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -65,53 +70,56 @@
             android:id="@+id/layout_bottom_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/main_white_color_hello"
             android:clickable="true"
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/docSend"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginLeft="15dp"
+                android:id="@+id/emojiKeyboard"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/smiley"
+                android:layout_marginBottom="11dp"
+                android:layout_marginLeft="11dp"
                 android:layout_gravity="bottom"
-                app:srcCompat="@mipmap/ic_action_photo"
-                android:background="@color/main_white_color_hello"
-                android:tint="@color/main_dark_grey_color_hello" />
+                android:background="@color/main_white_color_hello"/>
 
             <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                 android:id="@+id/messageContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                emojicon:emojiconSize="28sp"
-                android:background="@color/main_white_color_hello"
+                emojicon:emojiconSize="16sp"
                 android:hint="@string/input_your_message"
+                android:textSize="16sp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="11dp"
                 android:layout_weight="1"
                 android:maxLines="4"
                 android:layout_gravity="bottom"
-                android:padding="15dp"
+                android:background="@color/main_white_color_hello"
                 android:inputType="textCapSentences|textMultiLine"/>
 
             <ImageButton
-                android:id="@+id/emojiKeyboard"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/smiley"
-                android:layout_marginBottom="11dp"
-                android:layout_gravity="bottom"
-                android:background="@color/main_white_color_hello"/>
+                android:id="@+id/docSend"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="15dp"
+                android:paddingBottom="9dp"
+                android:paddingTop="9dp"
+                android:layout_gravity="center_vertical"
+                app:srcCompat="@mipmap/ic_action_photo"
+                android:background="@color/main_white_color_hello"
+                android:tint="@color/main_dark_grey_color_hello" />
 
             <ImageButton
                 android:id="@+id/messageSend"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:padding="10dp"
                 android:layout_gravity="bottom"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="1dp"
                 app:srcCompat="@mipmap/ic_action_send"
-                android:background="@color/main_white_color_hello"
+                android:background="@drawable/for_send_button"
                 android:tint="@color/main_blue_color_hello"/>
 
         </LinearLayout>
