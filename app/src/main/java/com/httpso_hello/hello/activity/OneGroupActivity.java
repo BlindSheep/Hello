@@ -496,20 +496,6 @@ public class OneGroupActivity extends AppCompatActivity {
             popUpWindowUser.setHeight(displaymetrics.heightPixels);
             popUpWindowUser.setAnimationStyle(Animation_Dialog);
             popUpWindowUser.showAtLocation(parrentView, Gravity.CENTER, 0, 0);
-            (popupViewUser.findViewById(R.id.write)).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(OneGroupActivity.this, ChatActivity.class);
-                    intent.putExtra("contact_id", userId);
-                    intent.putExtra("nickname", nickname);
-                    if (avatar == null) {
-                        intent.putExtra("avatar", Constant.default_avatar);
-                    } else {
-                        intent.putExtra("avatar", avatar.micro);
-                    }
-                    startActivity(intent);
-                }
-            });
             (popupViewUser.findViewById(R.id.delete)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

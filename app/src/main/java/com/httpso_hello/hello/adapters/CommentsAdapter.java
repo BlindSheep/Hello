@@ -28,6 +28,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
+
 /**
  * Created by mixir on 24.08.2017.
  */
@@ -52,7 +54,7 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
     }
 
     private class ViewHolder{
-        private TextView content;
+        private EmojiconTextView content;
         private ImageView avatar;
         private TextView contactNickname;
         private TextView datePub;
@@ -71,7 +73,7 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
             LayoutInflater inflater = context.getLayoutInflater();
             rowView = inflater.inflate(R.layout.content_board_content_item, null, true);
             holder = new ViewHolder();
-            holder.content = (TextView) rowView.findViewById(R.id.content);
+            holder.content = (EmojiconTextView) rowView.findViewById(R.id.content);
             holder.avatar = (ImageView) rowView.findViewById(R.id.avatar);
             holder.contactNickname = (TextView) rowView.findViewById(R.id.contactNickname);
             holder.datePub = (TextView) rowView.findViewById(R.id.datePub);
