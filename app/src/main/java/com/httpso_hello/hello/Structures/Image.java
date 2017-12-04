@@ -14,7 +14,7 @@ public class Image implements Serializable {
     public String normal;
     public String big;
     public String normal_form_original;
-    public ImageSizes sizes;
+    public ImageSizes imageSizes;
 
     public Image(){
 
