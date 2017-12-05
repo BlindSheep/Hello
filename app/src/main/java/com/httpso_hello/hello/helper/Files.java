@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.httpso_hello.hello.Structures.AddFile;
+import com.httpso_hello.hello.Structures.UniversalResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,13 +21,23 @@ public class Files extends Help {
     private Activity activity;
     private ArrayList<Integer> uploadedFiles = new ArrayList<>();
 
+    public static Files instance;
+
+    public static synchronized Files getInstance(Context context, Activity activity){
+        if(instance == null){
+            instance = new Files(context, activity);
+        }
+        return instance;
+    }
+
     public Files(Context context, Activity activity){
+        super(context);
         this._context = context;
         stgs = new Settings(this._context);
         this.activity = activity;
     }
 
-    public void uploadFile(
+    public String uploadFile(
             final String type,
             final String ext,
             final String file_base64,
@@ -79,7 +90,61 @@ public class Files extends Help {
                 };
             };
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "Files.uploadFile" + Integer.toString(position));
+            return "Files.uploadFile" + Integer.toString(position);
         }
+        return null;
+    }
+
+    public void deleteFile(
+            final int id,
+            final DeleteFileCallback deleteFileCallback,
+            final ErrorCallback errorCallback
+    ){
+        if(Constant.api_key!=""){
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.temp_files_delete_file,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            if (response != null) {
+                                Log.d("temp_file.delete", response);
+                                UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
+                                if(universalResponse.error == null){
+                                    deleteFileCallback.onSuccess();
+                                    return;
+                                }
+                                errorCallback.onError(universalResponse.error.error_code, universalResponse.error.error_msg);
+                                return;
+                            }
+                            errorCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            errorCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = getParamsMap();
+                    params.put("id", Integer.toString(id));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "Files.deleteFile" + Integer.toString(id));
+        }
+    }
+
+    public void breakUploadRequest(String tag){
+        RequestQ.getInstance(_context).cancelPendingRequests(tag);
+    }
+
+    public interface DeleteFileCallback{
+        void onSuccess();
     }
 
     public interface UploadFileCallback{

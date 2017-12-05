@@ -23,6 +23,8 @@ public class Attachment {
     public int widthPreviewAttachment;
     // Флаг, устанавливается в true когда прикладываемый файл загружен на сервер
     public boolean isUploaded;
+    // Тэг request-а загрузки на сервер
+    public String requestTag;
 
 
     public Attachment(){

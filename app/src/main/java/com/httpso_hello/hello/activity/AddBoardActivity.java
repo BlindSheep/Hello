@@ -198,7 +198,7 @@ public class AddBoardActivity extends AppCompatActivity {
                     Help.getFileSize(sendingImageUri, getApplicationContext()),
                     0
             );
-            files.uploadFile(
+            String tag = files.uploadFile(
                     "photo",
                     "jpg",
                     file_base64,
@@ -221,6 +221,7 @@ public class AddBoardActivity extends AppCompatActivity {
 
                         }
                     });
+            faAdapter.setRequestTag(position, tag);
         } catch (Exception e){
             e.printStackTrace();
         }

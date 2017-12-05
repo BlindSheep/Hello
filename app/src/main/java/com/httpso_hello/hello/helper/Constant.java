@@ -86,6 +86,7 @@ public class Constant {
     public static String groups_update_group_avatar_uri = start_api_uri + "groups.update_group_avatar";
 
     public static String temp_files_save_file = start_api_uri + "temp_files.save_file";
+    public static String temp_files_delete_file = start_api_uri + "temp_files.delete_file";
 
     public static String logs_add_uri = start_api_uri + "logs.add";
 
