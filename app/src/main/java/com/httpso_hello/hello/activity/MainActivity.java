@@ -166,11 +166,20 @@ public class MainActivity extends Activity{
         }, new Help.ErrorCallback() {
             @Override
             public void onError(int error_code, String error_msg) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        login();
+                auth.logout(new Auth.LogoutFinishingCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(getApplicationContext().getApplicationContext(), "Произошла какая-то ошибка, возможно ваш аккаунт заблокирован! Попробуйте позднее или обратитесь в службу поддержки", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
-                }, 1000);
+
+                    @Override
+                    public void onError() {
+
+                    }
+                });
             }
 
             @Override

@@ -101,6 +101,8 @@ public class ChatActivity extends SuperMainActivity{
     private int thisPage = 0;
     private int allPage = 0;
     private ArrayList<Message> allMessagesForMenu;
+    private boolean contactIsOnline;
+    private boolean is_writing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -494,8 +496,12 @@ public class ChatActivity extends SuperMainActivity{
                         mmAdapter.addMessages(messages);
                     }
 
-                    if (is_writing) contactIsWriting();
-                    else contactOnline(contactIsOnline);
+                    if ((ChatActivity.this.contactIsOnline != contactIsOnline) || (ChatActivity.this.is_writing != is_writing)) {
+                        if (is_writing) contactIsWriting();
+                        else contactOnline(contactIsOnline);
+                    }
+                    ChatActivity.this.contactIsOnline = contactIsOnline;
+                    ChatActivity.this.is_writing = is_writing;
                 }
             }, new Help.ErrorCallback() {
                 @Override

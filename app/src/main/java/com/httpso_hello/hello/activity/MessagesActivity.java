@@ -239,6 +239,12 @@ public class MessagesActivity extends SuperMainActivity{
     }
 
     @Override
+    public void onBackPressed() {
+        if (popUpWindow.isShowing()) popUpWindow.dismiss();
+        else super.onBackPressed();
+    }
+
+    @Override
     public void onResume(){
         getNewContacts();
         super.onResume();
@@ -246,6 +252,7 @@ public class MessagesActivity extends SuperMainActivity{
 
     @Override
     public void onPause(){
+        if (popUpWindow != null) popUpWindow.dismiss();
         timer.cancel();
         super.onPause();
     }

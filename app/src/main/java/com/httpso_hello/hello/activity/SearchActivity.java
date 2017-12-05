@@ -367,4 +367,10 @@ public class SearchActivity extends SuperMainActivity{
             );
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        if(bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_EXPANDED) bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        else super.onBackPressed();
+    }
 }

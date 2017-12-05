@@ -81,6 +81,8 @@ public class BoardContentActivity extends SuperMainActivity {
     private Handler refreshAtError;
     private Runnable refreshAtErrorRunnable;
     private ImageView answer;
+    private ImageView firstPhotoBoard;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +113,7 @@ public class BoardContentActivity extends SuperMainActivity {
         emojIcon.ShowEmojIcon();
         messageSend = (ImageView) findViewById(R.id.messageSend);
         textAns = (TextView) findViewById(R.id.textAns);
+        firstPhotoBoard = (ImageView) header.findViewById(R.id.firstPhotoBoard);
 
         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
         popupViewDelete = getLayoutInflater().inflate(R.layout.popup_for_delete_comment, null);
@@ -331,9 +334,58 @@ public class BoardContentActivity extends SuperMainActivity {
                                                 .transform(new CircularTransformation(0))
                                                 .into(userAvatarBoardItem);
                                     }
+
+                                    if (item.photos != null) {
+                                        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+                                        firstPhotoBoard.setVisibility(View.VISIBLE);
+
+                                        if ((item.photos[0].sizes != null) && (item.photos[0].original != null) && (item.photos[0].sizes.original.width != 0) && (item.photos[0].sizes.original.height != 0)) {
+                                            int widthScreen = (int) (displaymetrics.widthPixels);
+                                            double heightCooeficient = (double) widthScreen / (double) item.photos[0].sizes.original.width;
+                                            double heightDouble = item.photos[0].sizes.original.height * heightCooeficient;
+                                            int height = (int) (heightDouble);
+                                            firstPhotoBoard.setMinimumWidth(widthScreen);
+                                            firstPhotoBoard.setMinimumHeight(height);
+                                            Picasso
+                                                    .with(getApplicationContext())
+                                                    .load(Uri.parse(ConverterDate.convertUrlAvatar(item.photos[0].original)))
+                                                    .resize(widthScreen, height)
+                                                    .into(firstPhotoBoard);
+                                        } else {
+                                            int width = (int) (displaymetrics.widthPixels);
+                                            firstPhotoBoard.setMinimumWidth(width);
+                                            firstPhotoBoard.setMinimumHeight(width);
+                                            Picasso
+                                                    .with(getApplicationContext())
+                                                    .load(Uri.parse(ConverterDate.convertUrlAvatar(item.photos[0].normal)))
+                                                    .resize(width, width)
+                                                    .centerCrop()
+                                                    .into(firstPhotoBoard);
+                                        }
+                                        firstPhotoBoard.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                ArrayList<String> photoOrig = new ArrayList<String>();
+                                                Collections.addAll(photoOrig, ConverterDate.convertUrlAvatar(item.photos[0].original));
+                                                Intent intent = new Intent(getApplicationContext(), FullscreenPhotoActivity.class);
+                                                intent.putStringArrayListExtra("photoOrig", photoOrig);
+                                                intent.putExtra("likeble", false);
+                                                intent.putExtra("position", 0);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    }
+
                                     userNameBoardItem.setText(item.user_nickname);
                                     datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.date_pub));
-                                    boardTextItem.setText(Html.fromHtml(item.content));
+
+                                    if (!item.content.equals("-")) {
+                                        boardTextItem.setText(Html.fromHtml(item.content));
+                                        boardTextItem.setVisibility(View.VISIBLE);
+                                    } else {
+                                        boardTextItem.setVisibility(View.GONE);
+                                    }
+
                                     boardLikeItem.setText(ConverterDate.likeStr(item.rating));
                                     boardLikeItem.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -363,7 +415,55 @@ public class BoardContentActivity extends SuperMainActivity {
                                             .into(userAvatarBoardItem);
                                     userNameBoardItem.setText("Анонимно");
                                     datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.date_pub));
-                                    boardTextItem.setText(Html.fromHtml(item.content));
+
+                                    if (item.photos != null) {
+                                        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+                                        firstPhotoBoard.setVisibility(View.VISIBLE);
+
+                                        if ((item.photos[0].sizes != null) && (item.photos[0].original != null) && (item.photos[0].sizes.original.width != 0) && (item.photos[0].sizes.original.height != 0)) {
+                                            int widthScreen = (int) (displaymetrics.widthPixels);
+                                            double heightCooeficient = (double) widthScreen / (double) item.photos[0].sizes.original.width;
+                                            double heightDouble = item.photos[0].sizes.original.height * heightCooeficient;
+                                            int height = (int) (heightDouble);
+                                            firstPhotoBoard.setMinimumWidth(widthScreen);
+                                            firstPhotoBoard.setMinimumHeight(height);
+                                            Picasso
+                                                    .with(getApplicationContext())
+                                                    .load(Uri.parse(ConverterDate.convertUrlAvatar(item.photos[0].original)))
+                                                    .resize(widthScreen, height)
+                                                    .into(firstPhotoBoard);
+                                        } else {
+                                            int width = (int) (displaymetrics.widthPixels);
+                                            firstPhotoBoard.setMinimumWidth(width);
+                                            firstPhotoBoard.setMinimumHeight(width);
+                                            Picasso
+                                                    .with(getApplicationContext())
+                                                    .load(Uri.parse(ConverterDate.convertUrlAvatar(item.photos[0].normal)))
+                                                    .resize(width, width)
+                                                    .centerCrop()
+                                                    .into(firstPhotoBoard);
+                                        }
+                                        firstPhotoBoard.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View v) {
+                                                ArrayList<String> photoOrig = new ArrayList<String>();
+                                                Collections.addAll(photoOrig, ConverterDate.convertUrlAvatar(item.photos[0].original));
+                                                Intent intent = new Intent(getApplicationContext(), FullscreenPhotoActivity.class);
+                                                intent.putStringArrayListExtra("photoOrig", photoOrig);
+                                                intent.putExtra("likeble", false);
+                                                intent.putExtra("position", 0);
+                                                startActivity(intent);
+                                            }
+                                        });
+                                    }
+
+                                    if (!item.content.equals("-")) {
+                                        boardTextItem.setText(Html.fromHtml(item.content));
+                                        boardTextItem.setVisibility(View.VISIBLE);
+                                    } else {
+                                        boardTextItem.setVisibility(View.GONE);
+                                    }
+
                                     boardLikeItem.setText(ConverterDate.likeStr(item.rating));
                                     boardLikeItem.setOnClickListener(new View.OnClickListener() {
                                         @Override
