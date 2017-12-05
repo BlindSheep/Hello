@@ -90,6 +90,7 @@ public class Groups extends Help {
 
     public void getFollowers(
             final int group_id,
+            final int page,
             final GetFollowersCallback getFollowersCallback
     ){
         if (Constant.api_key !="") {
@@ -124,6 +125,7 @@ public class Groups extends Help {
                 protected Map<String, String> getParams() {
                     Map<String, String> params = getParamsMap();
                     params.put("group_id", Integer.toString(group_id));
+                    params.put("page", Integer.toString(page));
                     return params;
                 };
             };

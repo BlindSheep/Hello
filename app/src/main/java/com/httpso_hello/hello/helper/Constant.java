@@ -89,6 +89,8 @@ public class Constant {
     public static String temp_files_save_file = start_api_uri + "temp_files.save_file";
     public static String temp_files_delete_file = start_api_uri + "temp_files.delete_file";
 
+    public static String complaint_add_complaint_uri = start_api_uri + "complaint.add_complaint";
+
     public static String logs_add_uri = start_api_uri + "logs.add";
 
     //Заглушка для аватарки

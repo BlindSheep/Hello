@@ -41,6 +41,7 @@ import com.httpso_hello.hello.adapters.MessagesAttachmentsAdapter;
 import com.httpso_hello.hello.adapters.MessagesMessagesAdapter;
 import com.httpso_hello.hello.helper.AsyncTasks;
 import com.httpso_hello.hello.helper.CircularTransformation;
+import com.httpso_hello.hello.helper.Complaint;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Logs;
@@ -551,8 +552,26 @@ public class ChatActivity extends SuperMainActivity{
         ((TextView) popupViewForMenu.findViewById(R.id.badContent)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ChatActivity.this, "Жалоба успешно отправлена", Toast.LENGTH_LONG).show();
-                popUpWindowForMenu.dismiss();
+                Complaint complaint = new Complaint(getApplicationContext());
+                complaint.addComplaint(message.content, "Message", "Message", message.id, new Complaint.SendComplaintCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(ChatActivity.this, "Жалоба успешно отправлена", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        Toast.makeText(ChatActivity.this, "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+
+                    @Override
+                    public void onInternetError() {
+                        Toast.makeText(ChatActivity.this, "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+                });
             }
         });
         //Удалить сообщение

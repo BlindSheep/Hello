@@ -40,6 +40,11 @@ public class FollowersActivity extends AppCompatActivity {
     private PopupWindow popUpWindowUser;
     private View popupViewUser;
     private ProgressBar launch;
+    private int page = 1;
+    private boolean isLaunch = false;
+    private boolean thatsAll = false;
+    private View footerLoading;
+    private ArrayList<User> userArray;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +66,8 @@ public class FollowersActivity extends AppCompatActivity {
         popupViewUser = getLayoutInflater().inflate(R.layout.popup_for_followers, null);
         popUpWindowUser = new PopupWindow(popupViewUser, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         launch = (ProgressBar) popupViewUser.findViewById(R.id.launch);
+        footerLoading = getLayoutInflater().inflate(R.layout.footer_loading, null);
+        userArray = new ArrayList<User>();
 
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setHomeButtonEnabled(true);
@@ -68,7 +75,7 @@ public class FollowersActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
 
         followers.addHeaderView(header);
-        followers.addFooterView(header);
+        followers.addFooterView(footerLoading);
         getFollowers();
 
         // Свайп для обновления
@@ -81,13 +88,22 @@ public class FollowersActivity extends AppCompatActivity {
     }
 
     private void getFollowers () {
+        if (followers.getFooterViewsCount() == 0) followers.addFooterView(footerLoading);
+        thatsAll = false;
+        isLaunch = true;
+        page = 1;
         swipeRefreshLayout.setRefreshing(true);
         Groups groups = new Groups(getApplicationContext());
-        groups.getFollowers(groupId, new Groups.GetFollowersCallback() {
+        groups.getFollowers(
+                groupId,
+                page,
+                new Groups.GetFollowersCallback() {
             @Override
             public void onSuccess(final User[] users) {
+                page = page + 1;
                 ArrayList<User> result = new ArrayList<User>();
                 Collections.addAll(result, users);
+                Collections.addAll(userArray, users);
                 followersAdapter = new FollowersAdapter(FollowersActivity.this, result, isAdmin, groupId);
                 followers.setAdapter(followersAdapter);
                 followers.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -95,12 +111,13 @@ public class FollowersActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         if (position != 0) {
                             Intent intent = new Intent(FollowersActivity.this, ProfileActivity.class);
-                            intent.putExtra("profile_id", users[position - 1].id);
+                            intent.putExtra("profile_id", userArray.get(position - 1).id);
                             startActivity(intent);
                         }
                     }
                 });
                 swipeRefreshLayout.setRefreshing(false);
+                isLaunch = false;
             }
 
             @Override
@@ -123,7 +140,56 @@ public class FollowersActivity extends AppCompatActivity {
         });
     }
 
-    public void getPopup(final int group_id, final int user_id, final String nickname) {
+    public void getNextPage () {
+        if (!thatsAll && !isLaunch) {
+            isLaunch = true;
+            Groups groups = new Groups(getApplicationContext());
+            groups.getFollowers(
+                    groupId,
+                    page,
+                    new Groups.GetFollowersCallback() {
+                        @Override
+                        public void onSuccess(final User[] users) {
+                            if (users.length == 0) {
+                                thatsAll = true;
+                                followers.removeFooterView(footerLoading);
+                            } else {
+                                page = page + 1;
+                                ArrayList<User> result = new ArrayList<>();
+                                Collections.addAll(result, users);
+                                Collections.addAll(userArray, users);
+                                followersAdapter.add(result);
+                                followersAdapter.notifyDataSetChanged();
+                            }
+                            isLaunch = false;
+                        }
+
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getFollowers();
+                                }
+                            }, 5000);
+                            isLaunch = false;
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getFollowers();
+                                }
+                            }, 5000);
+                            isLaunch = false;
+                        }
+                    });
+        }
+    }
+
+    public void getPopup(final int group_id, final int user_id, final String nickname, final int position) {
         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
         popUpWindowUser.setWidth(displaymetrics.widthPixels);
         popUpWindowUser.setHeight(displaymetrics.heightPixels);
@@ -141,7 +207,7 @@ public class FollowersActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext().getApplicationContext(), nickname + " удален(а) из сообщества", Toast.LENGTH_LONG).show();
                         launch.setVisibility(View.GONE);
                         popUpWindowUser.dismiss();
-                        getFollowers();
+                        followersAdapter.delete(position);
                     }
 
                     @Override

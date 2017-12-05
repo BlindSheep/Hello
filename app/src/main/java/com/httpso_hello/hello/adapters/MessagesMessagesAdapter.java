@@ -179,11 +179,19 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
             holder.getterLayout.setVisibility(View.GONE);
 
             //Аватарка
-            Picasso
-                    .with(getContext())
-                    .load(userAvatar)
-                    .transform(new CircularTransformation(0))
-                    .into(holder.avatar_sender);
+            if (userAvatar.equals("ic_launcher.png")) {
+                Picasso
+                        .with(getContext())
+                        .load(R.mipmap.ic_launcher)
+                        .transform(new CircularTransformation(0))
+                        .into(holder.avatar_sender);
+            } else {
+                Picasso
+                        .with(getContext())
+                        .load(userAvatar)
+                        .transform(new CircularTransformation(0))
+                        .into(holder.avatar_sender);
+            }
 
             //Текст
             holder.chatMessage_sender.setText(thisMessage.content);

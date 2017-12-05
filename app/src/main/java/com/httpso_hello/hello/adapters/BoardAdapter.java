@@ -239,8 +239,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     holder.writeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            if (settings == 0) ((BoardActivity) getContext()).showPopup(true, boardItem.user_id, boardItem.user_nickname, boardItem.avatar, boardItem.id);
-                            else if (settings == 1) ((OneGroupActivity) getContext()).showPopup(true, boardItem.user_id, boardItem.user_nickname, boardItem.avatar, boardItem.id, boardItem.groupInfo.id);
+                            if (settings == 0) ((BoardActivity) getContext()).showPopup(true, boardItem);
+                            else if (settings == 1) ((OneGroupActivity) getContext()).showPopup(true, boardItem, boardItem.groupInfo.id);
                         }
                     });
                 } else {
@@ -249,8 +249,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                         holder.writeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                if (settings == 0) ((BoardActivity) getContext()).showPopup(false, boardItem.user_id, boardItem.user_nickname, boardItem.avatar, boardItem.id);
-                                else if (settings == 1) ((OneGroupActivity) getContext()).showPopup(false, boardItem.user_id, boardItem.user_nickname, boardItem.avatar, boardItem.id, boardItem.groupInfo.id);
+                                if (settings == 0) ((BoardActivity) getContext()).showPopup(false, boardItem);
+                                else if (settings == 1) ((OneGroupActivity) getContext()).showPopup(false, boardItem, boardItem.groupInfo.id);
                             }
                         });
                     } else {
