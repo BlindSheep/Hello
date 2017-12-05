@@ -300,11 +300,19 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
             holder.getterLayout.setVisibility(View.VISIBLE);
 
             //Аватарка
-            Picasso
-                    .with(getContext())
-                    .load(contactAvatar)
-                    .transform(new CircularTransformation(0))
-                    .into(holder.avatar);
+            if (contactAvatar.equals("ic_launcher.png")) {
+                Picasso
+                        .with(getContext())
+                        .load(R.mipmap.ic_launcher)
+                        .transform(new CircularTransformation(0))
+                        .into(holder.avatar);
+            } else {
+                Picasso
+                        .with(getContext())
+                        .load(contactAvatar)
+                        .transform(new CircularTransformation(0))
+                        .into(holder.avatar);
+            }
 
             //Текст
             holder.chatMessage.setText(thisMessage.content);
@@ -463,6 +471,11 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         }
         ca.setAllMsgForMenu(this.messages);
         this.notifyDataSetChanged();
+    }
+
+    public void deleteMessege (int position) {
+        this.messages.remove(position);
+        notifyDataSetChanged();
     }
 
     public boolean getReadStateLastSendedMessage(){

@@ -126,7 +126,9 @@ public class AddBoardActivity extends AppCompatActivity {
                         boardSave.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Дождитесь завершения загрузки файлов", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "Дождитесь загрузки фотографии...", Toast.LENGTH_LONG).show();
+                    progress.setVisibility(View.GONE);
+                    boardSave.setVisibility(View.VISIBLE);
                 }
             }
         });

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -82,6 +83,8 @@ public class BoardContentActivity extends SuperMainActivity {
     private Runnable refreshAtErrorRunnable;
     private ImageView answer;
     private ImageView firstPhotoBoard;
+    private View popupViewSend;
+    private PopupWindow popUpWindowSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +124,12 @@ public class BoardContentActivity extends SuperMainActivity {
         popUpWindowDelete.setWidth(displaymetrics.widthPixels);
         popUpWindowDelete.setHeight(displaymetrics.heightPixels);
         popUpWindowDelete.setAnimationStyle(Animation_Dialog);
+        popupViewSend = getLayoutInflater().inflate(R.layout.popup_for_wait, null);
+        popUpWindowSend = new PopupWindow(popupViewSend, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popUpWindowSend.setWidth(displaymetrics.widthPixels);
+        popUpWindowSend.setHeight(displaymetrics.heightPixels);
+        popUpWindowSend.setAnimationStyle(Animation_Dialog);
+        ((TextView) popupViewSend.findViewById(R.id.textForWaiting)).setText("Отправляем комментарий...");
 
         //Заполняем комментами
         LV.addHeaderView(header);
@@ -146,33 +155,9 @@ public class BoardContentActivity extends SuperMainActivity {
         return  new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                popUpWindowSend.showAtLocation(LV, Gravity.CENTER, 0, 0);
                 String messageContentString = messageContent.getText().toString();
                 if (!messageContentString.isEmpty()) {
-                    messageContent.setText(null);
-
-                    Coment coment = new Coment();
-                    User user = new User();
-                    Image avatar = new Image();
-
-                    coment.content = messageContentString ;
-                    coment.date_pub = "Только что";
-                    coment.user_id = stgs.getSettingInt("user_id");
-                    user.is_online = true;
-                    user.nickname = stgs.getSettingStr("user_nickname");
-                    avatar.micro = stgs.getSettingStr("user_avatar.micro");
-
-                    if (idAnswer != 0) {
-                        User parent_user = new User();
-                        parent_user.id = idAnswer;
-                        parent_user.nickname = nicknameAnswer;
-                        coment.parent_user = parent_user;
-                    }
-
-                    coment.user = user;
-                    user.avatar = avatar;
-                    ca.add(coment);
-                    ca.notifyDataSetChanged();
-
                     new Comments(getApplicationContext())
                             .sendComments("content",
                                     "board",
@@ -182,17 +167,22 @@ public class BoardContentActivity extends SuperMainActivity {
                                     new Comments.SendCommentsCallback() {
                                         @Override
                                         public void onSuccess(boolean response) {
-
+                                            avtoRefresh();
+                                            messageContent.setText(null);
+                                            popUpWindowSend.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Комментарий отправлен", Toast.LENGTH_LONG).show();
                                         }
 
                                         @Override
                                         public void onError(int error_code, String error_message) {
-
+                                            popUpWindowSend.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
                                         }
 
                                         @Override
                                         public void onInternetError() {
-
+                                            popUpWindowSend.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
                                         }
                                     });
 
@@ -585,6 +575,7 @@ public class BoardContentActivity extends SuperMainActivity {
     @Override
     public void onBackPressed() {
         if(popUpWindowDelete.isShowing()) popUpWindowDelete.dismiss();
+        else if(popUpWindowSend.isShowing()) popUpWindowSend.dismiss();
         else if(idAnswer != 0) deleteAnswer();
         else super.onBackPressed();
     }
@@ -598,6 +589,7 @@ public class BoardContentActivity extends SuperMainActivity {
     @Override
     public void onPause() {
         if (popUpWindowDelete != null) popUpWindowDelete.dismiss();
+        if (popUpWindowSend != null) popUpWindowSend.dismiss();
         timer.cancel();
         super.onPause();
         if(refreshAtError!=null) {
@@ -608,6 +600,7 @@ public class BoardContentActivity extends SuperMainActivity {
     @Override
     public void onDestroy() {
         if (popUpWindowDelete != null) popUpWindowDelete.dismiss();
+        if (popUpWindowSend != null) popUpWindowSend.dismiss();
         timer.cancel();
         super.onDestroy();
         if(refreshAtError!=null) {

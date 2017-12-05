@@ -59,6 +59,8 @@ public class PhotoCommentsActivity extends SuperMainActivity {
     private RelativeLayout content_photo_comments_block;
     private View popupViewDelete;
     private PopupWindow popUpWindowDelete;
+    private View popupViewSend;
+    private PopupWindow popUpWindowSend;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,12 @@ public class PhotoCommentsActivity extends SuperMainActivity {
         popUpWindowDelete.setWidth(displaymetrics.widthPixels);
         popUpWindowDelete.setHeight(displaymetrics.heightPixels);
         popUpWindowDelete.setAnimationStyle(Animation_Dialog);
+        popupViewSend = getLayoutInflater().inflate(R.layout.popup_for_wait, null);
+        popUpWindowSend = new PopupWindow(popupViewSend, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        popUpWindowSend.setWidth(displaymetrics.widthPixels);
+        popUpWindowSend.setHeight(displaymetrics.heightPixels);
+        popUpWindowSend.setAnimationStyle(Animation_Dialog);
+        ((TextView) popupViewSend.findViewById(R.id.textForWaiting)).setText("Отправляем комментарий...");
 
         //Заполняем комментами
         getComments();
@@ -115,26 +123,9 @@ public class PhotoCommentsActivity extends SuperMainActivity {
         return  new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                popUpWindowSend.showAtLocation(LV, Gravity.CENTER, 0, 0);
                 String messageContentString = messageContent.getText().toString();
                 if (!messageContentString.isEmpty()) {
-                    messageContent.setText(null);
-
-                    Coment coment = new Coment();
-                    User user = new User();
-                    Image avatar = new Image();
-
-                    coment.content = messageContentString ;
-                    coment.date_pub = "Только что";
-                    coment.user_id = stgs.getSettingInt("user_id");
-                    user.is_online = true;
-                    user.nickname = stgs.getSettingStr("user_nickname");
-                    avatar.micro = stgs.getSettingStr("user_avatar.micro");
-
-                    coment.user = user;
-                    user.avatar = avatar;
-                    ca.add(coment);
-                    ca.notifyDataSetChanged();
-
                     new Comments(getApplicationContext())
                             .sendComments("photos",
                                     "photo",
@@ -144,17 +135,22 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                                     new Comments.SendCommentsCallback() {
                                         @Override
                                         public void onSuccess(boolean response) {
-
+                                            avtoRefresh();
+                                            messageContent.setText(null);
+                                            popUpWindowSend.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Комментарий отправлен", Toast.LENGTH_LONG).show();
                                         }
 
                                         @Override
                                         public void onError(int error_code, String error_message) {
-
+                                            popUpWindowSend.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
                                         }
 
                                         @Override
                                         public void onInternetError() {
-
+                                            popUpWindowSend.dismiss();
+                                            Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
                                         }
                                     });
                 }
@@ -212,6 +208,41 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                                 }, 5000);
                             }
                         });
+    }
+
+    //Автоообновление комментов
+    private void avtoRefresh() {
+        if (!launching) {
+            launching = true;
+            swipeRefreshLayout.setRefreshing(true);
+            new Comments(getApplicationContext())
+                    .getComments(
+                            "photos",
+                            "photo",
+                            extras.getInt("id"),
+                            this,
+                            new Comments.GetCommentsCallback() {
+                                @Override
+                                public void onSuccess(Coment[] commentsStructure, Activity activity) {
+                                    final ArrayList<Coment> defolt = new ArrayList<Coment>();
+                                    Collections.addAll(defolt, commentsStructure);
+                                    ca.addComments(defolt);
+                                    counts = defolt.size();
+                                    launching = false;
+                                    swipeRefreshLayout.setRefreshing(false);
+                                }
+
+                                @Override
+                                public void onError(int error_code, String error_message) {
+                                    launching = false;
+                                }
+
+                                @Override
+                                public void onInternetError() {
+                                    launching = false;
+                                }
+                            });
+        }
     }
 
     //Заполнение карточку объявления
@@ -274,7 +305,7 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                                             @Override
                                             public void onSuccess(int count_comments) {
                                                 if (counts != count_comments) {
-                                                    getComments();
+                                                    avtoRefresh();
                                                 }
                                             }
                                         });

@@ -157,30 +157,41 @@ public class ChatActivity extends SuperMainActivity{
         textOnline.setText("не в сети");
 
         if(extras.getString("avatar")!=null) {
-            Picasso
-                    .with(getApplicationContext())
-                    .load(Constant.upload + extras.getString("avatar"))
-                    .resize(300, 300)
-                    .centerCrop()
-                    .transform(new CircularTransformation(0))
-                    .into((ImageView) findViewById(R.id.imageAvatar), new Callback() {
-                        @Override
-                        public void onSuccess() {
+            if (extras.getString("avatar").equals("ic_launcher.png")) {
+                Picasso
+                        .with(getApplicationContext())
+                        .load(R.mipmap.ic_launcher)
+                        .resize(300, 300)
+                        .centerCrop()
+                        .transform(new CircularTransformation(0))
+                        .into((ImageView) findViewById(R.id.imageAvatar));
+                this.pathContactAvatar = "ic_launcher.png";
+            } else {
+                Picasso
+                        .with(getApplicationContext())
+                        .load(Constant.upload + extras.getString("avatar"))
+                        .resize(300, 300)
+                        .centerCrop()
+                        .transform(new CircularTransformation(0))
+                        .into((ImageView) findViewById(R.id.imageAvatar), new Callback() {
+                            @Override
+                            public void onSuccess() {
 
-                        }
+                            }
 
-                        @Override
-                        public void onError() {
-                            Picasso
-                                    .with(getApplicationContext())
-                                    .load(R.mipmap.avatar)
-                                    .resize(300, 300)
-                                    .centerCrop()
-                                    .transform(new CircularTransformation(0))
-                                    .into((ImageView) findViewById(R.id.imageAvatar));
-                        }
-                    });
-            this.pathContactAvatar = extras.getString("avatar");
+                            @Override
+                            public void onError() {
+                                Picasso
+                                        .with(getApplicationContext())
+                                        .load(R.mipmap.avatar)
+                                        .resize(300, 300)
+                                        .centerCrop()
+                                        .transform(new CircularTransformation(0))
+                                        .into((ImageView) findViewById(R.id.imageAvatar));
+                            }
+                        });
+                this.pathContactAvatar = extras.getString("avatar");
+            }
         } else {
             Picasso
                     .with(getApplicationContext())
@@ -438,7 +449,7 @@ public class ChatActivity extends SuperMainActivity{
                 chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        popupForMsgMenu(allMessagesForMenu.get(position));
+                        popupForMsgMenu(allMessagesForMenu.get(position), position);
                     }
                 });
                 contactOnline(contactIsOnline);
@@ -517,7 +528,7 @@ public class ChatActivity extends SuperMainActivity{
         }
     }
 
-    private void popupForMsgMenu (final Message message) {
+    private void popupForMsgMenu (final Message message, final int position) {
         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
 
         popUpWindowForMenu.setWidth(displaymetrics.widthPixels);
@@ -554,6 +565,7 @@ public class ChatActivity extends SuperMainActivity{
                 messages.deleteMessage(message.id, from, new Messages.DeleteMessageCallback() {
                     @Override
                     public void onSuccess() {
+                        mmAdapter.deleteMessege(position);
                         Toast.makeText(ChatActivity.this, "Сообщение удалено", Toast.LENGTH_LONG).show();
                         popUpWindowForMenu.dismiss();
                     }
