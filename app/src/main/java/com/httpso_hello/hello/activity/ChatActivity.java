@@ -438,7 +438,7 @@ public class ChatActivity extends SuperMainActivity{
                 chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        popupForMsgMenu(allMessagesForMenu.get(position).content);
+                        popupForMsgMenu(allMessagesForMenu.get(position));
                     }
                 });
                 contactOnline(contactIsOnline);
@@ -517,7 +517,7 @@ public class ChatActivity extends SuperMainActivity{
         }
     }
 
-    private void popupForMsgMenu (final String text) {
+    private void popupForMsgMenu (final Message message) {
         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
 
         popUpWindowForMenu.setWidth(displaymetrics.widthPixels);
@@ -530,7 +530,7 @@ public class ChatActivity extends SuperMainActivity{
             @Override
             public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("", text);
+                ClipData clip = ClipData.newPlainText("", message.content);
                 clipboard.setPrimaryClip(clip);
                 Toast.makeText(ChatActivity.this, "Текст скопирован в буфер обмена", Toast.LENGTH_LONG).show();
                 popUpWindowForMenu.dismiss();
@@ -541,6 +541,35 @@ public class ChatActivity extends SuperMainActivity{
             @Override
             public void onClick(View v) {
                 Toast.makeText(ChatActivity.this, "Жалоба успешно отправлена", Toast.LENGTH_LONG).show();
+                popUpWindowForMenu.dismiss();
+            }
+        });
+        //Удалить сообщение
+        ((TextView) popupViewForMenu.findViewById(R.id.deleteContent)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int from = 0;
+                if (message.from_id == stgs.getSettingInt("user_id")) from = 1;
+                else from = 0;
+                messages.deleteMessage(message.id, from, new Messages.DeleteMessageCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(ChatActivity.this, "Сообщение удалено", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        Toast.makeText(ChatActivity.this, "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+
+                    @Override
+                    public void onInternetError() {
+                        Toast.makeText(ChatActivity.this, "Ошибка", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+                });
                 popUpWindowForMenu.dismiss();
             }
         });
