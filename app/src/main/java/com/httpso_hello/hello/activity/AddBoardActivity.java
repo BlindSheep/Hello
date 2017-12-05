@@ -43,6 +43,7 @@ public class AddBoardActivity extends AppCompatActivity {
     private int groupId = 0;
     private boolean isModeratble;
     private ProgressBar progress;
+    private boolean uploadingFile = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,41 +86,47 @@ public class AddBoardActivity extends AppCompatActivity {
                 progress.setVisibility(View.VISIBLE);
                 boardSave.setVisibility(View.GONE);
                 boardTextString = boardText.getText().toString();
-                if ((!boardTextString.isEmpty()) || (files.getUploadedFiles().size() != 0)) {
-                    HBoard hBoard = new HBoard(getApplicationContext());
-                    hBoard.addBoard(
-                            boardTextString,
-                            groupId,
-                            anonim.isChecked(),
-                            files.getUploadedFiles(),
-                            new HBoard.AddBoardCallback() {
-                                @Override
-                                public void onSuccess() {
-                                    if (isModeratble) Toast.makeText(getApplicationContext(), "Сообщение появится после модерации", Toast.LENGTH_LONG).show();
-                                    else Toast.makeText(getApplicationContext(), "Сообщение успешно отправлено", Toast.LENGTH_LONG).show();
-                                    finish();
-                                }
+                if(!uploadingFile) {
+                    if ((!boardTextString.isEmpty()) || (files.getUploadedFiles().size() != 0)) {
+                        HBoard hBoard = new HBoard(getApplicationContext());
+                        hBoard.addBoard(
+                                boardTextString,
+                                groupId,
+                                anonim.isChecked(),
+                                files.getUploadedFiles(),
+                                new HBoard.AddBoardCallback() {
+                                    @Override
+                                    public void onSuccess() {
+                                        if (isModeratble)
+                                            Toast.makeText(getApplicationContext(), "Сообщение появится после модерации", Toast.LENGTH_LONG).show();
+                                        else
+                                            Toast.makeText(getApplicationContext(), "Сообщение успешно отправлено", Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }
 
 
-                            }, new Help.ErrorCallback() {
-                                @Override
-                                public void onError(int error_code, String error_message) {
-                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения. Попробуйте еще раз.", Toast.LENGTH_LONG).show();
-                                    progress.setVisibility(View.GONE);
-                                    boardSave.setVisibility(View.VISIBLE);
-                                }
+                                }, new Help.ErrorCallback() {
+                                    @Override
+                                    public void onError(int error_code, String error_message) {
+                                        Toast.makeText(getApplicationContext(), "Ошибка интернет соединения. Попробуйте еще раз.", Toast.LENGTH_LONG).show();
+                                        progress.setVisibility(View.GONE);
+                                        boardSave.setVisibility(View.VISIBLE);
+                                    }
 
-                                @Override
-                                public void onInternetError() {
-                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения. Попробуйте еще раз.", Toast.LENGTH_LONG).show();
-                                    progress.setVisibility(View.GONE);
-                                    boardSave.setVisibility(View.VISIBLE);
-                                }
-                            });
+                                    @Override
+                                    public void onInternetError() {
+                                        Toast.makeText(getApplicationContext(), "Ошибка интернет соединения. Попробуйте еще раз.", Toast.LENGTH_LONG).show();
+                                        progress.setVisibility(View.GONE);
+                                        boardSave.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Напишите текст сообщения", Toast.LENGTH_LONG).show();
+                        progress.setVisibility(View.GONE);
+                        boardSave.setVisibility(View.VISIBLE);
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "Напишите текст сообщения", Toast.LENGTH_LONG).show();
-                    progress.setVisibility(View.GONE);
-                    boardSave.setVisibility(View.VISIBLE);
+                    Toast.makeText(getApplicationContext(), "Дождитесь завершения загрузки файлов", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -158,6 +165,7 @@ public class AddBoardActivity extends AppCompatActivity {
 
     public void sendImageFromGallery(){
         try {
+            uploadingFile = true;
             final InputStream imageStream = getContentResolver().openInputStream(this.sendingImageUri);
             final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
             int position = 0;
@@ -198,7 +206,7 @@ public class AddBoardActivity extends AppCompatActivity {
                     Help.getFileSize(sendingImageUri, getApplicationContext()),
                     0
             );
-            files.uploadFile(
+            String tag = files.uploadFile(
                     "photo",
                     "jpg",
                     file_base64,
@@ -209,18 +217,20 @@ public class AddBoardActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(int id, int position) {
                             faAdapter.setLoadedFile(position, id);
+                            uploadingFile = false;
                         }
                     }, new Help.ErrorCallback() {
                         @Override
                         public void onError(int error_code, String error_msg) {
-
+                            uploadingFile = false;
                         }
 
                         @Override
                         public void onInternetError() {
-
+                            uploadingFile = false;
                         }
                     });
+            faAdapter.setRequestTag(position, tag);
         } catch (Exception e){
             e.printStackTrace();
         }
