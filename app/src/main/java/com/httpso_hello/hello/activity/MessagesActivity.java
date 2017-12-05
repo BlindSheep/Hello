@@ -219,6 +219,7 @@ public class MessagesActivity extends SuperMainActivity{
                                 }
                                 dateLastUpdate = dateLU;
                                 isLaunching = false;
+                                swipeRefreshLayout.setRefreshing(false);
                             }
                         }, new Help.ErrorCallback() {
                             @Override

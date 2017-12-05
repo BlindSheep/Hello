@@ -85,8 +85,7 @@ public class AddBoardActivity extends AppCompatActivity {
                 progress.setVisibility(View.VISIBLE);
                 boardSave.setVisibility(View.GONE);
                 boardTextString = boardText.getText().toString();
-                //if ((!boardTextString.isEmpty()) || (files.getUploadedFiles().size() != 0)) {
-                if (!boardTextString.isEmpty()) {
+                if ((!boardTextString.isEmpty()) || (files.getUploadedFiles().size() != 0)) {
                     HBoard hBoard = new HBoard(getApplicationContext());
                     hBoard.addBoard(
                             boardTextString,

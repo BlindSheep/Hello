@@ -54,7 +54,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
-                    android:layout_marginLeft="3dp"
                     android:textSize="18sp"
                     android:textColor="@color/main_blue_color_hello"
                     android:text="Имя" />
@@ -67,6 +66,7 @@
                     android:layout_marginTop="10dp"
                     android:textSize="15sp"
                     android:hint="Имя"
+                    android:background="@android:color/transparent"
                     android:inputType="textCapWords"/>
 
             </LinearLayout>
@@ -280,16 +280,17 @@
                 android:background="@drawable/view" />
 
             <EditText
-                    android:id="@+id/userEditPhone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/userEditPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="15sp"
-                    android:hint="Телефон"
-                    android:inputType="phone"/>
+                android:hint="Телефон"
+                android:background="@android:color/transparent"
+                android:inputType="phone"/>
 
             <View
                 android:layout_width="match_parent"
@@ -319,16 +320,17 @@
                 android:background="@drawable/view" />
 
             <EditText
-                    android:id="@+id/userEditSkype"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/userEditSkype"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="15sp"
-                    android:hint="Skype"
-                    android:inputType="textCapSentences"/>
+                android:background="@android:color/transparent"
+                android:hint="Skype"
+                android:inputType="textCapSentences"/>
 
             <View
                 android:layout_width="match_parent"
@@ -358,16 +360,17 @@
                 android:background="@drawable/view" />
 
             <EditText
-                    android:id="@+id/userEditAuto"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/userEditAuto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="15sp"
-                    android:hint="Автомобиль"
-                    android:inputType="textCapSentences"/>
+                android:background="@android:color/transparent"
+                android:hint="Автомобиль"
+                android:inputType="textCapSentences"/>
 
             <View
                 android:layout_width="match_parent"
@@ -402,16 +405,17 @@
                     android:background="@drawable/view" />
 
                 <EditText
-                        android:id="@+id/userRostAuto"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/userRostAuto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="15dp"
                     android:textSize="15sp"
-                        android:hint="160"
-                        android:inputType="number"/>
+                    android:hint="160"
+                    android:background="@android:color/transparent"
+                    android:inputType="number"/>
 
             </LinearLayout>
 
@@ -434,16 +438,17 @@
                     android:background="@drawable/view" />
 
                 <EditText
-                        android:id="@+id/userVesAuto"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
+                    android:id="@+id/userVesAuto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:layout_marginTop="15dp"
                     android:layout_marginBottom="15dp"
                     android:textSize="15sp"
-                        android:hint="50"
-                        android:inputType="number"/>
+                    android:hint="50"
+                    android:background="@android:color/transparent"
+                    android:inputType="number"/>
 
             </LinearLayout>
 

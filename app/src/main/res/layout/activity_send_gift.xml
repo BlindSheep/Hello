@@ -111,6 +111,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:background="@android:color/transparent"
             android:hint="Комментарий к подарку"/>
 
         <CheckBox
@@ -118,7 +119,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingLeft="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="12dp"
             android:paddingRight="20dp"
             android:layout_marginBottom="20dp"
             android:text="Анонимно (ваше имя и комментарий увидит только получатель подарка)"/>

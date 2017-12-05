@@ -31,6 +31,9 @@ public class ModerationActivity extends AppCompatActivity {
     private SwipeRefreshLayout swipeRefreshLayout;
     private ActionBar actionBar;
     private View header;
+    private int page = 1;
+    private boolean loading = false;
+    private boolean thatsAll = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +72,17 @@ public class ModerationActivity extends AppCompatActivity {
 
     //Получаем объявления
     public void getBoard(){
+        page = 1;
+        thatsAll = false;
+        loading = false;
         swipeRefreshLayout.setRefreshing(true);
         hBoard = new HBoard(getApplicationContext());
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
-        hBoard.getBoard(this, groupId, 0, 1, new HBoard.GetBoardCallback() {
+        hBoard.getBoard(this, groupId, page, 1, new HBoard.GetBoardCallback() {
             @Override
             public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                 swipeRefreshLayout.setRefreshing(false);
+                page = page + 1;
                 ArrayList<BoardItem> boardItem = new ArrayList<>();
                 Collections.addAll(boardItem, boardItems);
                 bAdapter = new BoardAdapter(activity, true, boardItem, 2);
@@ -100,6 +107,50 @@ public class ModerationActivity extends AppCompatActivity {
                 }, 5000);
             }
         });
+    }
+
+    public void getNew () {
+        if (!thatsAll && !loading) {
+            swipeRefreshLayout.setRefreshing(true);
+            loading = true;
+            HBoard hBoard = new HBoard(getApplicationContext());
+            hBoard.getBoard(this, groupId, page, 1, new HBoard.GetBoardCallback() {
+                @Override
+                public void onSuccess(final BoardItem[] boardItems, Activity activity) {
+                    if (boardItems.length == 0) {
+                        thatsAll = true;
+                    } else {
+                        ArrayList<BoardItem> boardItem = new ArrayList<>();
+                        Collections.addAll(boardItem, boardItems);
+                        bAdapter.add(boardItem);
+                        bAdapter.notifyDataSetChanged();
+                        page += 1;
+                    }
+                    loading = false;
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+                @Override
+                public void onError(int error_code, String error_message) {
+                    loading = false;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override public void run() {
+                            getNew();
+                        }
+                    }, 5000);
+                }
+
+                @Override
+                public void onInternetError() {
+                    loading = false;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override public void run() {
+                            getNew();
+                        }
+                    }, 5000);
+                }
+            });
+        }
     }
 
     //Кнопка назад(переход на страницу входа)

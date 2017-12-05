@@ -99,7 +99,7 @@ public class BoardActivity extends SuperMainActivity{
     public void getBoard(){
         hBoard = new HBoard(getApplicationContext());
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
-        hBoard.getBoard(this, 0, 0, page, new HBoard.GetBoardCallback() {
+        hBoard.getBoard(this, 0, page, 0, new HBoard.GetBoardCallback() {
             @Override
             public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -132,7 +132,6 @@ public class BoardActivity extends SuperMainActivity{
 
     //Автоподгрузка объявлений
     public void getNew(){
-
         if (!loading) {
             YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
             loading = true;

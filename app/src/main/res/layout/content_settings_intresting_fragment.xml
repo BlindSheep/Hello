@@ -36,16 +36,17 @@
                 android:background="@drawable/view" />
 
             <EditText
-                    android:id="@+id/userEditFavoriteMusic"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="15dp"
-                    android:layout_marginBottom="15dp"
-                    android:textSize="15sp"
-                    android:hint="Любимая музыка"
-                    android:inputType="textCapSentences|textMultiLine"/>
+                android:id="@+id/userEditFavoriteMusic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:textSize="15sp"
+                android:background="@android:color/transparent"
+                android:hint="Любимая музыка"
+                android:inputType="textCapSentences|textMultiLine"/>
 
         </LinearLayout>
 
@@ -75,15 +76,16 @@
                 android:background="@drawable/view" />
 
             <EditText
-                    android:id="@+id/userFavoriteFilms"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/userFavoriteFilms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="15sp"
-                    android:hint="Любимые фильмы"
+                android:background="@android:color/transparent"
+                android:hint="Любимые фильмы"
                 android:inputType="textCapSentences|textMultiLine"/>
 
         </LinearLayout>
@@ -114,15 +116,16 @@
                 android:background="@drawable/view" />
 
             <EditText
-                    android:id="@+id/userFavoriteBooks"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/userFavoriteBooks"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="15sp"
-                    android:hint="Любимые книги"
+                android:background="@android:color/transparent"
+                android:hint="Любимые книги"
                 android:inputType="textCapSentences|textMultiLine"/>
 
         </LinearLayout>
@@ -153,15 +156,16 @@
                 android:background="@drawable/view" />
 
             <EditText
-                    android:id="@+id/userFavoriteGames"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/userFavoriteGames"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="15sp"
-                    android:hint="Любимые игры"
+                android:background="@android:color/transparent"
+                android:hint="Любимые игры"
                 android:inputType="textCapSentences|textMultiLine"/>
 
         </LinearLayout>
@@ -192,15 +196,16 @@
                 android:background="@drawable/view" />
 
             <EditText
-                    android:id="@+id/userAnotherIntresting"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                android:layout_marginLeft="16dp"
+                android:id="@+id/userAnotherIntresting"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="15dp"
                 android:layout_marginBottom="15dp"
                 android:textSize="15sp"
-                    android:hint="Другие интересы"
+                android:background="@android:color/transparent"
+                android:hint="Другие интересы"
                 android:inputType="textCapSentences|textMultiLine"/>
 
         </LinearLayout>

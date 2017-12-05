@@ -366,7 +366,12 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             //Конец дата объявления
 
             //Начало текст объявления
-            holder.boardText.setText(Html.fromHtml(boardItem.content));
+            if (!boardItem.content.equals("-")) {
+                holder.boardText.setVisibility(View.VISIBLE);
+                holder.boardText.setText(Html.fromHtml(boardItem.content));
+            } else {
+                holder.boardText.setVisibility(View.GONE);
+            }
             //Конец текст объявления
 
             //Начало имя и аватарка отправителя
@@ -560,18 +565,34 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             //Конец имя и аватарка отправителя
 
             //Начало фотки
-            DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
-            int width = (int) (displaymetrics.widthPixels);
-            holder.firstPhoto.setMinimumWidth(width);
-            holder.firstPhoto.setMinimumHeight(width);
             if (boardItem.photos != null) {
+                DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
                 holder.firstPhoto.setVisibility(View.VISIBLE);
-                Picasso
-                        .with(getContext())
-                        .load(Uri.parse(ConverterDate.convertUrlAvatar(boardItem.photos[0].normal)))
-                        .resize(width, width)
-                        .centerCrop()
-                        .into(holder.firstPhoto);
+
+                if ((boardItem.photos[0].sizes != null) && (boardItem.photos[0].original != null) && (boardItem.photos[0].sizes.original.width != 0) && (boardItem.photos[0].sizes.original.height != 0)){
+                    int widthScreen = (int) (displaymetrics.widthPixels);
+                    double heightCooeficient = (double) widthScreen / (double) boardItem.photos[0].sizes.original.width;
+                    double heightDouble = boardItem.photos[0].sizes.original.height * heightCooeficient;
+                    int height = (int) (heightDouble);
+                    holder.firstPhoto.setMinimumWidth(widthScreen);
+                    holder.firstPhoto.setMinimumHeight(height);
+                    Picasso
+                            .with(getContext())
+                            .load(Uri.parse(ConverterDate.convertUrlAvatar(boardItem.photos[0].original)))
+                            .resize(widthScreen, height)
+                            .into(holder.firstPhoto);
+                } else {
+                    int width = (int) (displaymetrics.widthPixels);
+                    holder.firstPhoto.setMinimumWidth(width);
+                    holder.firstPhoto.setMinimumHeight(width);
+                    Picasso
+                            .with(getContext())
+                            .load(Uri.parse(ConverterDate.convertUrlAvatar(boardItem.photos[0].normal)))
+                            .resize(width, width)
+                            .centerCrop()
+                            .into(holder.firstPhoto);
+                }
+
                 ArrayList<Photo> defolt = new ArrayList<Photo>();
 
                 if (boardItem.photos.length > 1) {
@@ -707,6 +728,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 //Подгрузка новых обьявлений
         if (position == (this.boardItems.size() - 2) && (settings == 0)) ((BoardActivity) getContext()).getNew();
         else if (position == (this.boardItems.size() - 1) && (settings == 1)) ((OneGroupActivity) getContext()).getNew();
+        else if (position == (this.boardItems.size() - 1) && (settings == 2)) ((ModerationActivity) getContext()).getNew();
 
         return rowView;
 

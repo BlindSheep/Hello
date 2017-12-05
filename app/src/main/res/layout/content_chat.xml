@@ -78,6 +78,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:src="@drawable/smiley"
+                android:tint="@color/main_dark_grey_color_hello"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="bottom"
@@ -119,7 +120,7 @@
                 android:layout_gravity="bottom"
                 app:srcCompat="@mipmap/ic_action_send"
                 android:background="@drawable/for_send_button"
-                android:tint="@color/main_blue_color_hello"/>
+                android:tint="@color/main_white_color_hello"/>
 
         </LinearLayout>
 
