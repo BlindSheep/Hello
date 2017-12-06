@@ -179,6 +179,7 @@ public class Messages extends Help {
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.refresh_contacts");
         }
     }
+
     public void deleteContacts(
             final int contactId,
             final Messages.DeleteContactsCallback deleteContactsCallback
@@ -223,6 +224,54 @@ public class Messages extends Help {
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_contacts");
         }
     }
+
+    public void deleteMessage(
+            final int message_id,
+            final int from, // 1 - сообщение юзера, 0 - сообщение юзеру
+            final Messages.DeleteMessageCallback deleteMessageCallback
+    ){
+        if (Constant.api_key !="") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.messages_delete_message_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            Log.d("deleteMessage", response);
+                            if (response != null) {
+                                UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
+                                if(universalResponse.error == null){
+                                    deleteMessageCallback.onSuccess();
+                                    return;
+                                }
+                                deleteMessageCallback.onError(universalResponse.error.error_code, universalResponse.error.error_msg);
+                                return;
+                            }
+                            deleteMessageCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            deleteMessageCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("api_key", Constant.api_key);
+                    params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    params.put("message_id", Integer.toString(message_id));
+                    params.put("from", Integer.toString(from));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_Message");
+        }
+    }
+
     public void ignorContact(
             final int contactId,
             final Messages.IgnorContactCallback ignorContactCallback
@@ -587,6 +636,12 @@ public class Messages extends Help {
     }
 
     public interface DeleteContactsCallback {
+        void onSuccess();
+        void onError(int error_code, String error_msg);
+        void onInternetError();
+    }
+
+    public interface DeleteMessageCallback {
         void onSuccess();
         void onError(int error_code, String error_msg);
         void onInternetError();

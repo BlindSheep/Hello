@@ -34,6 +34,7 @@ import com.httpso_hello.hello.Structures.Groups;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.adapters.BoardAdapter;
 import com.httpso_hello.hello.helper.CircularTransformation;
+import com.httpso_hello.hello.helper.Complaint;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Content;
 import com.httpso_hello.hello.helper.ConverterDate;
@@ -489,7 +490,7 @@ public class OneGroupActivity extends AppCompatActivity {
     }
 
     //Попапы
-    public void showPopup(boolean isUserContent, final int userId, final String nickname, final Image avatar, final int boardId, final int group_id) {
+    public void showPopup(boolean isUserContent, final BoardItem boardItem, final int group_id) {
         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
         if (isUserContent) {
             popUpWindowUser.setWidth(displaymetrics.widthPixels);
@@ -501,7 +502,7 @@ public class OneGroupActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     swipeRefreshLayout.setRefreshing(true);
                     Content.getInstance(getApplicationContext())
-                            .deleteContent(boardId, "board", group_id, new Content.DeleteContentCallback() {
+                            .deleteContent(boardItem.id, "board", group_id, new Content.DeleteContentCallback() {
                                 @Override
                                 public void onSuccess() {
                                     page = 1;
@@ -533,12 +534,12 @@ public class OneGroupActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(OneGroupActivity.this, ChatActivity.class);
-                    intent.putExtra("contact_id", userId);
-                    intent.putExtra("nickname", nickname);
-                    if (avatar == null) {
+                    intent.putExtra("contact_id", boardItem.user_id);
+                    intent.putExtra("nickname", boardItem.user_nickname);
+                    if (boardItem.avatar == null) {
                         intent.putExtra("avatar", Constant.default_avatar);
                     } else {
-                        intent.putExtra("avatar", avatar.micro);
+                        intent.putExtra("avatar", boardItem.avatar.micro);
                     }
                     startActivity(intent);
                     popUpWindowOther.dismiss();
@@ -547,9 +548,26 @@ public class OneGroupActivity extends AppCompatActivity {
             (popupViewOther.findViewById(R.id.badContent)).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //ПОЖАЛОВАТЬСЯ НА ОБЪЯВЛЕНИЕ
-                    Toast.makeText(getApplicationContext(), "Жалоба отправлена", Toast.LENGTH_LONG).show();
-                    popUpWindowOther.dismiss();
+                    Complaint complaint = new Complaint(getApplicationContext());
+                    complaint.addComplaint(boardItem.content, "content", "board", boardItem.id, new Complaint.SendComplaintCallback() {
+                        @Override
+                        public void onSuccess() {
+                            Toast.makeText(OneGroupActivity.this, "Жалоба успешно отправлена", Toast.LENGTH_LONG).show();
+                            popUpWindowOther.dismiss();
+                        }
+
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            Toast.makeText(OneGroupActivity.this, "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                            popUpWindowOther.dismiss();
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            Toast.makeText(OneGroupActivity.this, "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                            popUpWindowOther.dismiss();
+                        }
+                    });
                 }
             });
         }

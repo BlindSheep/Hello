@@ -32,7 +32,7 @@ public class MainActivity extends Activity{
     private ProgressBar progressBarLogin;
     private Settings stgs;
     private TextView rememberPassword;
-    private ImageView logo;
+    private RelativeLayout logo;
     private LinearLayout mainContent;
 
 
@@ -49,7 +49,7 @@ public class MainActivity extends Activity{
         btnLinkToRegister = (TextView) findViewById(R.id.btnLinkToRegisterScreen);
         progressBarLogin = (ProgressBar) findViewById(R.id.progressBarLogin);
         rememberPassword = (TextView) findViewById(R.id.rememberPassword);
-        logo = (ImageView) findViewById(R.id.logo);
+        logo = (RelativeLayout) findViewById(R.id.logo);
         mainContent = (LinearLayout) findViewById(R.id.mainContent);
 
         if (auth.autoLogion()) {

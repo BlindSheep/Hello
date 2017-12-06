@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.activity.FollowersActivity;
+import com.httpso_hello.hello.activity.SearchActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
@@ -103,15 +104,27 @@ public class FollowersAdapter extends ArrayAdapter<User> {
             holder.deleteFollower.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ((FollowersActivity) getContext()).getPopup(group_id, user.id, user.nickname);
+                    ((FollowersActivity) getContext()).getPopup(group_id, user.id, user.nickname, position);
                 }
             });
         } else {
             holder.deleteFollower.setVisibility(View.GONE);
         }
 
+        //Подгружаем новых Юзеров
+        FollowersActivity fa = ((FollowersActivity) getContext());
+        if(position == (this.users.size()) - 1) fa.getNextPage();
+
         return rowView;
 
     }
 
+    public void add (ArrayList<User> users) {
+        this.users.addAll(users);
+    }
+
+    public void delete (int position) {
+        this.users.remove(position);
+        notifyDataSetChanged();
+    }
 }
