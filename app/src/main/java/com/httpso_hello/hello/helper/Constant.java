@@ -85,6 +85,8 @@ public class Constant {
     public static String groups_moderate_group_item_uri = start_api_uri + "groups.moderate_group_item";
     public static String groups_edit_group_uri = start_api_uri + "groups.edit_group";
     public static String groups_update_group_avatar_uri = start_api_uri + "groups.update_group_avatar";
+    public static String groups_request_delete_group_uri = start_api_uri + "groups.request_delete_group";
+    public static String groups_delete_group_uri = start_api_uri + "groups.delete_group";
 
     public static String temp_files_save_file = start_api_uri + "temp_files.save_file";
     public static String temp_files_delete_file = start_api_uri + "temp_files.delete_file";

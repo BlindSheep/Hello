@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.httpso_hello.hello.Structures.AllGroups;
+import com.httpso_hello.hello.Structures.ReqCSRFToken;
 import com.httpso_hello.hello.Structures.SearchProfiles;
 import com.httpso_hello.hello.Structures.UniversalResponse;
 import com.httpso_hello.hello.Structures.User;
@@ -371,6 +372,107 @@ public class Groups extends Help {
             };
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.editGroups");
         }
+    }
+
+    public void requestDeleteGroup(
+            final int id,
+            final RequestDeleteGroupCallback requestDeleteGroupCallback,
+            final ErrorCallback errorCallback
+    ){
+        if(Constant.api_key!=""){
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.groups_request_delete_group_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            Log.d("request_d_g", response);
+                            if (response != null) {
+                                ReqCSRFToken res = gson.fromJson(response, ReqCSRFToken.class);
+                                if(res.error==null){
+                                    requestDeleteGroupCallback.onSuccess(res.csrf_token);
+                                    return;
+                                }
+                                errorCallback.onError(res.error.error_code, res.error.error_msg);
+                                return;
+                            }
+                            errorCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            errorCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = getParamsMap();
+                    params.put("id", Integer.toString(id));
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.requestDeleteGroup");
+        }
+    }
+
+    public void deleteGroup(
+            final int id,
+            final String csrf_token,
+            final DeleteGroupCallback deleteGroupCallback,
+            final ErrorCallback errorCallback
+    ){
+        if(Constant.api_key!=""){
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.groups_delete_group_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response){
+                            Log.d("delete_group", response);
+                            if (response != null) {
+                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                                if(res.error==null){
+                                    deleteGroupCallback.onSuccess();
+                                    return;
+                                }
+                                errorCallback.onError(res.error.error_code, res.error.error_msg);
+                                return;
+                            }
+                            errorCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener(){
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            errorCallback.onInternetError();
+                        }
+                    }
+            )
+            {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = getParamsMap();
+                    params.put("id", Integer.toString(id));
+                    params.put("csrf_token", csrf_token);
+                    params.put("submit", "1");
+                    params.put("is_delete_content", "1");
+                    params.put("request_in_api", "1");
+                    return params;
+                };
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.requestDeleteGroup");
+        }
+    }
+
+    public interface DeleteGroupCallback{
+        void onSuccess();
+    }
+
+    public interface RequestDeleteGroupCallback{
+        void onSuccess(String CSRFToken);
     }
 
     public interface UpdateAvatarCallback{
