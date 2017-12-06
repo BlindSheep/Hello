@@ -14,6 +14,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
 import com.httpso_hello.hello.R;
 
 import com.httpso_hello.hello.Structures.User;
@@ -136,7 +139,9 @@ public class MainActivity extends Activity{
     private void login () {
         startService(new Intent(getApplicationContext(), AlwaysOnline.class));
         Profile profile = new Profile(getApplicationContext());
-        profile.getSmallUserInfo(new Profile.GetSmallUserInfoCallback() {
+        profile.getSmallUserInfo(
+                FirebaseInstanceId.getInstance().getToken(),
+                new Profile.GetSmallUserInfoCallback() {
             @Override
             public void onSuccess(User user) {
                     //Заполняем инфу

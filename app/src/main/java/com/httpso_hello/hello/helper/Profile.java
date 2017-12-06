@@ -96,6 +96,7 @@ public class Profile extends Help{
         }
     }
     public void getSmallUserInfo(
+            final String pushUpToken,
             final GetSmallUserInfoCallback getSmallUserInfoCallback,
             final Help.ErrorCallback errorCallback
     ){
@@ -134,6 +135,7 @@ public class Profile extends Help{
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = getParamsMap(_context);
+                    params.put("pushUpToken", pushUpToken);
 //                    params.put("api_key", Constant.api_key);
 //                    params.put("auth_token", stgs.getSettingStr("auth_token"));
                     return params;
