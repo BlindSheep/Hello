@@ -61,6 +61,9 @@ public class PhotoCommentsActivity extends SuperMainActivity {
     private PopupWindow popUpWindowDelete;
     private View popupViewSend;
     private PopupWindow popUpWindowSend;
+    private int idAnswer;
+    private String nicknameAnswer;
+    private TextView textAns;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +102,7 @@ public class PhotoCommentsActivity extends SuperMainActivity {
         popUpWindowSend.setHeight(displaymetrics.heightPixels);
         popUpWindowSend.setAnimationStyle(Animation_Dialog);
         ((TextView) popupViewSend.findViewById(R.id.textForWaiting)).setText("Отправляем комментарий...");
+        textAns = (TextView) findViewById(R.id.textAns);
 
         //Заполняем комментами
         getComments();
@@ -130,7 +134,7 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                             .sendComments("photos",
                                     "photo",
                                     extras.getInt("id"),
-                                    0,
+                                    idAnswer,
                                     messageContentString,
                                     new Comments.SendCommentsCallback() {
                                         @Override
@@ -139,6 +143,7 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                                             messageContent.setText(null);
                                             popUpWindowSend.dismiss();
                                             Toast.makeText(getApplicationContext(), "Комментарий отправлен", Toast.LENGTH_LONG).show();
+                                            deleteAnswer();
                                         }
 
                                         @Override
@@ -181,9 +186,7 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                         if ((position != 0) && (position != (defolt.size() + 1))) {
-                                            Intent intent = new Intent(PhotoCommentsActivity.this, ProfileActivity.class);
-                                            intent.putExtra("profile_id", defolt.get(position - 1).user_id);
-                                            startActivity(intent);
+                                            setAnswer(defolt.get(position - 1).user_id, defolt.get(position-1).user.nickname);
                                         }
                                     }
                                 });
@@ -313,6 +316,27 @@ public class PhotoCommentsActivity extends SuperMainActivity {
                 }});
             }
         }, 1000, 10000);
+    }
+
+    private void setAnswer(int id, String nickname) {
+        ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.VISIBLE);
+        this.idAnswer = id;
+        textAns.setText(nickname + " получит ответ");
+        messageContent.setText(nickname + ", ");
+        nicknameAnswer = nickname;
+        ((ImageView) findViewById(R.id.ansExit)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteAnswer();
+            }
+        });
+    }
+    private void deleteAnswer() {
+        idAnswer = 0;
+        textAns.setText("");
+        messageContent.setText("");
+        nicknameAnswer = null;
+        ((RelativeLayout) findViewById(R.id.ansBLock)).setVisibility(View.GONE);
     }
 
     public void popupComment(final int id, final String target_controller, final String content_type, final int contentId) {

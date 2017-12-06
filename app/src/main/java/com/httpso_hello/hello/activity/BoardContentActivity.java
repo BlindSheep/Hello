@@ -171,6 +171,7 @@ public class BoardContentActivity extends SuperMainActivity {
                                             messageContent.setText(null);
                                             popUpWindowSend.dismiss();
                                             Toast.makeText(getApplicationContext(), "Комментарий отправлен", Toast.LENGTH_LONG).show();
+                                            deleteAnswer();
                                         }
 
                                         @Override
@@ -185,8 +186,6 @@ public class BoardContentActivity extends SuperMainActivity {
                                             Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
                                         }
                                     });
-
-                    deleteAnswer();
                 }
             }
         };
