@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/parent"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:background="@color/zalivon"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-app:layout_behavior="@string/appbar_scrolling_view_behavior"
-tools:context="com.httpso_hello.hello.activity.SearchActivity"
-tools:showIn="@layout/app_bar_guests">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:id="@+id/popup_msg"
+    android:gravity="center"
+    android:background="@drawable/zatemnenie"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/paidGuests"
-        android:background="@color/main_white_color_hello"
+        android:layout_margin="20dp"
+        android:background="@drawable/board_white"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -57,7 +54,7 @@ tools:showIn="@layout/app_bar_guests">
                 android:text="Отмена" />
 
             <TextView
-                android:id="@+id/go"
+                android:id="@+id/delete"
                 android:layout_marginRight="20dp"
                 android:textColor="@color/main_white_color_hello"
                 android:layout_width="wrap_content"
@@ -74,18 +71,4 @@ tools:showIn="@layout/app_bar_guests">
 
     </LinearLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-            <ListView
-                android:id="@+id/listGuestsNew"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:dividerHeight="0dp"
-                android:divider="@color/main_polublue"/>
-
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-</RelativeLayout>
+</LinearLayout>

@@ -279,6 +279,57 @@ public class Billing extends Help {
         }
     }
 
+    public void removePoints(
+            final int points,
+            final Billing.RemovePointsCallback removePointsCallback) {
+        if (Constant.api_key != "") {
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.paid_services_remove_points_uri,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response) {
+                            Log.d("remove_points", response);
+                            if (response != null) {
+                                TokenReq tokenReq = gson.fromJson(response, TokenReq.class);
+                                if (tokenReq.error == null) {
+                                    removePointsCallback.onSuccess();
+                                    return;
+                                }
+                                removePointsCallback.onError(tokenReq.error.error_code, tokenReq.error.error_msg);
+                                return;
+                            }
+                            removePointsCallback.onInternetError();
+                            return;
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            removePointsCallback.onInternetError();
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("api_key", Constant.api_key);
+                    params.put("auth_token", stgs.getSettingStr("auth_token"));
+                    params.put("points", Integer.toString(points));
+                    return params;
+                }
+
+                ;
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.removePoints");
+        }
+    }
+
+    public interface RemovePointsCallback {
+        public void onSuccess();
+        public void onError(int error_code, String error_msg);
+        public void onInternetError();
+    }
+
     public interface GetTokenCallback {
         public void onSuccess();
         public void onError(int error_code, String error_msg);

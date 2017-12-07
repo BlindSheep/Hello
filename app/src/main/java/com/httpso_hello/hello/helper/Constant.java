@@ -64,6 +64,7 @@ public class Constant {
     public static String paid_services_paid_raising_uri = start_api_uri + "paid_services.paid_raising";
     public static String paid_services_add_balance_uri = start_api_uri + "paid_services.add_balance";
     public static String paid_services_paid_gift_uri = start_api_uri + "paid_services.paid_gift";
+    public static String paid_services_remove_points_uri = start_api_uri + "paid_services.remove_points";
 
     public static String guests_get_guests_uri = start_api_uri + "guests.get_guests";
 

@@ -202,7 +202,6 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
             case R.id.nav_guests:
                 intent = new Intent(getApplicationContext(), GuestsActivity.class);
                 startActivity(intent);
-                finish();
                 break;
             case R.id.nav_simpatii:
                 intent = new Intent(getApplicationContext(), SimpationActivity.class);

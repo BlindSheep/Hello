@@ -5,22 +5,30 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Guest;
 import com.httpso_hello.hello.Structures.NoticeItem;
 import com.httpso_hello.hello.adapters.GuestsListAdapter;
+import com.httpso_hello.hello.helper.Billing;
 import com.httpso_hello.hello.helper.Profile;
 
 import java.util.ArrayList;
 import java.util.Collections;
+
+import static android.R.style.Animation_Dialog;
 
 
 public class GuestsActivity extends SuperMainActivity{
@@ -33,6 +41,9 @@ public class GuestsActivity extends SuperMainActivity{
     private View footerLoading;
     private boolean thatsAll = false;
     private boolean isLaunch = false;
+    private LinearLayout paidGuests;
+    private TextView cancel;
+    private TextView go;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,20 +60,46 @@ public class GuestsActivity extends SuperMainActivity{
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
         footerLoading = getLayoutInflater().inflate(R.layout.footer_loading, null);
-        listGuestsNew.addFooterView(footerLoading);
-        getGuests();
+        paidGuests = (LinearLayout) findViewById(R.id.paidGuests);
+        cancel = (TextView) findViewById(R.id.cancel);
+        go = (TextView) findViewById(R.id.go);
 
-        // Свайп для обновления
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        paidGuests.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setVisibility(View.GONE);
+
+        cancel.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onRefresh() {
-                thatsAll = false;
-                pageNumber = 1;
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        go.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //После согласия на просмотр гостей
+
+                //Скрываем блок с предупреждением и открываем блок с контентом
+                paidGuests.setVisibility(View.GONE);
+                swipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                //Получаем контент
+                listGuestsNew.addFooterView(footerLoading);
                 getGuests();
+
+                // Свайп для обновления
+                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        getGuests();
+                    }
+                });
+
+                //Списываем деньги
+                paidGuests(1);
             }
         });
     }
-
 
     private void getGuests() {
         if (listGuestsNew.getFooterViewsCount() == 0) listGuestsNew.addFooterView(footerLoading);
@@ -159,5 +196,33 @@ public class GuestsActivity extends SuperMainActivity{
                     }
             );
         } else listGuestsNew.removeFooterView(footerLoading);
+    }
+
+    private void paidGuests(final int points) {
+        Billing billing = new Billing(getApplicationContext());
+        billing.removePoints(points, new Billing.RemovePointsCallback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError(int error_code, String error_msg) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        paidGuests(points);
+                    }
+                }, 5000);
+            }
+
+            @Override
+            public void onInternetError() {
+                new Handler().postDelayed(new Runnable() {
+                    @Override public void run() {
+                        paidGuests(points);
+                    }
+                }, 5000);
+            }
+        });
     }
 }
