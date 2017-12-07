@@ -29,6 +29,7 @@ public class Billing extends Help {
     private static Billing instance;
 
     public Billing(Context context) {
+        super(context);
         this._context = context;
         stgs = new Settings(context);
     }
@@ -279,55 +280,52 @@ public class Billing extends Help {
         }
     }
 
-    public void removePoints(
-            final int points,
-            final Billing.RemovePointsCallback removePointsCallback) {
+    public void paidViewGuests(
+            final String paid_token,
+            final RemovePointsCallback removePointsCallback,
+            final ErrorCallback errorCallback) {
         if (Constant.api_key != "") {
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
                     Constant.paid_services_remove_points_uri,
                     new Response.Listener<String>() {
                         public void onResponse(String response) {
-                            Log.d("remove_points", response);
+                            Log.d("paid_view_g", response);
                             if (response != null) {
-                                TokenReq tokenReq = gson.fromJson(response, TokenReq.class);
-                                if (tokenReq.error == null) {
+                                UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
+                                if (universalResponse.error == null) {
                                     removePointsCallback.onSuccess();
                                     return;
                                 }
-                                removePointsCallback.onError(tokenReq.error.error_code, tokenReq.error.error_msg);
+                                errorCallback.onError(universalResponse.error.error_code, universalResponse.error.error_msg);
                                 return;
                             }
-                            removePointsCallback.onInternetError();
+                            errorCallback.onInternetError();
                             return;
                         }
                     },
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            removePointsCallback.onInternetError();
+                            errorCallback.onInternetError();
                         }
                     }
             ) {
                 @Override
                 protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("points", Integer.toString(points));
+                    Map<String, String> params = getParamsMap();
+                    params.put("paid_token", paid_token);
                     return params;
                 }
 
                 ;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.removePoints");
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.paidViewGuests");
         }
     }
 
     public interface RemovePointsCallback {
         public void onSuccess();
-        public void onError(int error_code, String error_msg);
-        public void onInternetError();
     }
 
     public interface GetTokenCallback {

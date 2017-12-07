@@ -5,30 +5,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Guest;
-import com.httpso_hello.hello.Structures.NoticeItem;
 import com.httpso_hello.hello.adapters.GuestsListAdapter;
 import com.httpso_hello.hello.helper.Billing;
+import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Profile;
+import com.httpso_hello.hello.helper.push_services.TokenReq;
 
 import java.util.ArrayList;
 import java.util.Collections;
-
-import static android.R.style.Animation_Dialog;
 
 
 public class GuestsActivity extends SuperMainActivity{
@@ -44,6 +36,7 @@ public class GuestsActivity extends SuperMainActivity{
     private LinearLayout paidGuests;
     private TextView cancel;
     private TextView go;
+    private String paidToken=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,30 +66,53 @@ public class GuestsActivity extends SuperMainActivity{
                 finish();
             }
         });
+        // Запрос токена на просмотр гостей
+        Billing.getInstance(getApplicationContext()).getRaisingToken(
+                "paid_view_guests",
+                new Billing.GetRaisingTokenCallback() {
+                    @Override
+                    public void onSuccess(TokenReq token) {
+                        // Оплачиваем повторно
+                        GuestsActivity.this.paidToken  = token.token;
+                    }
 
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+//                                    showMessage(error_msg);
+                    }
+
+                    @Override
+                    public void onInternetError() {
+//                                    showMessage("Ошибка интернет соединения");
+                    }
+                }
+        );
         go.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //После согласия на просмотр гостей
+                if (paidToken!=null) {
+                    //После согласия на просмотр гостей
+                    //Скрываем блок с предупреждением и открываем блок с контентом
+                    paidGuests.setVisibility(View.GONE);
+                    swipeRefreshLayout.setVisibility(View.VISIBLE);
 
-                //Скрываем блок с предупреждением и открываем блок с контентом
-                paidGuests.setVisibility(View.GONE);
-                swipeRefreshLayout.setVisibility(View.VISIBLE);
+                    //Получаем контент
+                    listGuestsNew.addFooterView(footerLoading);
+                    getGuests();
 
-                //Получаем контент
-                listGuestsNew.addFooterView(footerLoading);
-                getGuests();
+                    // Свайп для обновления
+                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            getGuests();
+                        }
+                    });
 
-                // Свайп для обновления
-                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                    @Override
-                    public void onRefresh() {
-                        getGuests();
-                    }
-                });
-
-                //Списываем деньги
-                paidGuests(1);
+                    //Списываем деньги
+                    paidViewGuests(paidToken);
+                } else {
+                    showMessage("Дождитесь получения информации");
+                }
             }
         });
     }
@@ -198,28 +214,48 @@ public class GuestsActivity extends SuperMainActivity{
         } else listGuestsNew.removeFooterView(footerLoading);
     }
 
-    private void paidGuests(final int points) {
-        Billing billing = new Billing(getApplicationContext());
-        billing.removePoints(points, new Billing.RemovePointsCallback() {
+    private void paidViewGuests(final String paidToken) {
+
+        Billing.getInstance(getApplicationContext()).paidViewGuests(paidToken, new Billing.RemovePointsCallback() {
             @Override
             public void onSuccess() {
-
+                //Оплата прошла успешно
             }
-
+        }, new Help.ErrorCallback() {
             @Override
             public void onError(int error_code, String error_msg) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        paidGuests(points);
-                    }
-                }, 5000);
+                // С момента запроса токена прошло слишком много времени
+                if(error_code == 401){
+                    // Повторно получаем токен
+                    Billing.getInstance(getApplicationContext()).getRaisingToken(
+                            "paid_view_guests",
+                            new Billing.GetRaisingTokenCallback() {
+                                @Override
+                                public void onSuccess(TokenReq token) {
+                                    // Оплачиваем повторно
+                                    GuestsActivity.this.paidToken  = token.token;
+                                    paidViewGuests(token.token);
+                                }
+
+                                @Override
+                                public void onError(int error_code, String error_msg) {
+//                                    showMessage(error_msg);
+                                }
+
+                                @Override
+                                public void onInternetError() {
+//                                    showMessage("Ошибка интернет соединения");
+                                }
+                            }
+                    );
+                }
             }
 
             @Override
             public void onInternetError() {
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
-                        paidGuests(points);
+                        paidViewGuests(paidToken);
                     }
                 }, 5000);
             }
