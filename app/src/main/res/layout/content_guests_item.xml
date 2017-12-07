@@ -72,12 +72,44 @@ android:layout_height="wrap_content">
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/guest_time_enter"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"/>
+        <LinearLayout
+            android:id="@+id/countLayout"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_gravity="right"
+                android:id="@+id/guest_time_enter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"/>
+
+            <LinearLayout
+                android:padding="10dp"
+                android:layout_gravity="right"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center_vertical"
+                    android:tint="@color/main_dark_grey_color_hello"
+                    app:srcCompat="@drawable/ic_action_eyes"/>
+
+                <TextView
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
 
         </LinearLayout>
 

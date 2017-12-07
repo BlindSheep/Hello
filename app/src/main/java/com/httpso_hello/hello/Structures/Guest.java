@@ -12,6 +12,7 @@ public class Guest {
     public String date;
     public int status;
     public int readed;
+    public int inc_count;
     public String header;
     public User user_info;
 

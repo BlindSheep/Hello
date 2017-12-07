@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Guest;
@@ -53,6 +55,8 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
         public TextView old_guests;
         public TextView new_guests;
         public TextView guest_time_enter;
+        public TextView count;
+        public LinearLayout countLayout;
     }
 
     @Override
@@ -69,6 +73,8 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
             holder.guest_time_enter = (TextView) rowView.findViewById(R.id.guest_time_enter);
             holder.new_guests = (TextView) rowView.findViewById(R.id.new_guests);
             holder.old_guests = (TextView) rowView.findViewById(R.id.old_guests);
+            holder.count = (TextView) rowView.findViewById(R.id.count);
+            holder.countLayout = (LinearLayout) rowView.findViewById(R.id.countLayout);
             rowView.setTag(holder);
         } else {
             holder = (GuestsListAdapter.ViewHolder) rowView.getTag();
@@ -76,7 +82,7 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
 
 
 
-        Guest thisGuest = this.guests.get(position);
+        final Guest thisGuest = this.guests.get(position);
         Guest lastGuest = null;
         if (position != 0) lastGuest = this.guests.get(position - 1);
 
@@ -130,7 +136,14 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
 
         holder.guest_time_enter.setText(ConverterDate.convertDateForGuest(thisGuest.date));
 
+        holder.count.setText(Integer.toString(thisGuest.inc_count));
 
+        holder.countLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext().getApplicationContext(), thisGuest.user_info.nickname + " просмотрел(а) ваш профиль " + Integer.toString(thisGuest.inc_count) + " раз(а)", Toast.LENGTH_LONG).show();
+            }
+        });
 
         GuestsActivity ba = ((GuestsActivity) getContext());
         if(position == (this.guests.size() - 1)) {

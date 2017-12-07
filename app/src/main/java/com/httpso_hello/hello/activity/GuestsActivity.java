@@ -5,17 +5,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Guest;
 import com.httpso_hello.hello.adapters.GuestsListAdapter;
 import com.httpso_hello.hello.helper.Billing;
 import com.httpso_hello.hello.helper.Help;
+import com.httpso_hello.hello.helper.Photo;
 import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.push_services.TokenReq;
 
@@ -41,6 +46,9 @@ public class GuestsActivity extends SuperMainActivity{
     private TextView prise;
     private TextView error;
     private boolean firstView = true;
+    private CheckBox checkBox;
+    private TextView newGuests;
+    private boolean notPayd = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,86 +70,168 @@ public class GuestsActivity extends SuperMainActivity{
         balance = (TextView) findViewById(R.id.balance);
         prise = (TextView) findViewById(R.id.prise);
         error = (TextView) findViewById(R.id.error);
+        checkBox = (CheckBox) findViewById(R.id.checkBox);
+        newGuests = (TextView) findViewById(R.id.newGuests);
     }
 
     private void getToken() {
-        paidGuests.setVisibility(View.GONE);
-        swipeRefreshLayout.setVisibility(View.VISIBLE);
-        swipeRefreshLayout.setRefreshing(true);
-        // Запрос токена на просмотр гостей
-        Billing.getInstance(getApplicationContext()).getRaisingToken(
-                "paid_view_guests",
-                new Billing.GetRaisingTokenCallback() {
-                    @Override
-                    public void onSuccess(final TokenReq token) {
-                        balance.setText("У вас на счету " + token.balance + " баллов");
-                        if (token.action_price == 1) prise.setText("Стоимость просмотра " + Integer.toString(token.action_price) + " балл");
-                        else prise.setText("Стоимость просмотра " + Integer.toString(token.action_price) + " балла");
-                        paidGuests.setVisibility(View.VISIBLE);
-                        swipeRefreshLayout.setRefreshing(false);
-                        swipeRefreshLayout.setVisibility(View.GONE);
+        if (stgs.getSettingInt("avtoGetGuests") == 0) {
+            paidGuests.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(true);
+            // Запрос токена на просмотр гостей
+            Billing.getInstance(getApplicationContext()).getRaisingToken(
+                    "paid_view_guests",
+                    new Billing.GetRaisingTokenCallback() {
+                        @Override
+                        public void onSuccess(final TokenReq token) {
+                            if (token.count_new_guests == 0) newGuests.setText("У вас нет новых гостей");
+                            else newGuests.setText("У вас " + Integer.toString(token.count_new_guests) + " новых гостей");
+                            balance.setText("У вас на счету - " + token.balance + " баллов");
+                            if (token.action_price == 1) prise.setText("Стоимость просмотра - " + Integer.toString(token.action_price) + " балл");
+                            else prise.setText("Стоимость просмотра - " + Integer.toString(token.action_price) + " балла");
+                            paidGuests.setVisibility(View.VISIBLE);
+                            swipeRefreshLayout.setRefreshing(false);
+                            swipeRefreshLayout.setVisibility(View.GONE);
 
-                        if (Integer.parseInt(token.balance) < token.action_price) {
-                            error.setVisibility(View.VISIBLE);
-                            go.setText("Пополнить");
-                            go.setOnClickListener(new View.OnClickListener() {
+                            if (Integer.parseInt(token.balance) < token.action_price) {
+                                error.setVisibility(View.VISIBLE);
+                                checkBox.setVisibility(View.GONE);
+                                go.setText("Пополнить");
+                                go.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(GuestsActivity.this, BillingActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                            } else {
+                                error.setVisibility(View.GONE);
+                                checkBox.setVisibility(View.VISIBLE);
+                                checkBox.setText("Не показывать предупреждение.\nПри каждом заходе в данный раздел, автоматически будет списываться " + Integer.toString(token.action_price) + " балл");
+                                go.setText("Продолжить");
+                                go.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        //После согласия на просмотр гостей
+                                        //Скрываем блок с предупреждением и открываем блок с контентом
+                                        paidGuests.setVisibility(View.GONE);
+                                        swipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                                        //Автопросмотр
+                                        if (checkBox.isChecked()) stgs.setSettingInt("avtoGetGuests", 1);
+                                        else stgs.setSettingInt("avtoGetGuests", 0);
+
+                                        //Получаем контент
+                                        getGuests(token.token);
+
+                                        // Свайп для обновления
+                                        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                                            @Override
+                                            public void onRefresh() {
+                                                getGuests(null);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            new Handler().postDelayed(new Runnable() {
                                 @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(GuestsActivity.this, BillingActivity.class);
-                                    startActivity(intent);
+                                public void run() {
+                                    getToken();
                                 }
-                            });
-                        } else {
-                            error.setVisibility(View.GONE);
-                            go.setText("Продолжить");
-                            go.setOnClickListener(new View.OnClickListener() {
+                            }, 5000);
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            new Handler().postDelayed(new Runnable() {
                                 @Override
-                                public void onClick(View v) {
-                                    //После согласия на просмотр гостей
-                                    //Скрываем блок с предупреждением и открываем блок с контентом
-                                    paidGuests.setVisibility(View.GONE);
-                                    swipeRefreshLayout.setVisibility(View.VISIBLE);
-
-                                    //Получаем контент
-                                    getGuests();
-
-                                    // Свайп для обновления
-                                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                                        @Override
-                                        public void onRefresh() {
-                                            getGuests();
-                                        }
-                                    });
-
-                                    //Списываем деньги
-                                    paidViewGuests(token.token);
+                                public void run() {
+                                    getToken();
                                 }
-                            });
+                            }, 5000);
                         }
                     }
+            );
+        } else {
+            paidGuests.setVisibility(View.GONE);
+            swipeRefreshLayout.setVisibility(View.VISIBLE);
+            swipeRefreshLayout.setRefreshing(true);
+            // Запрос токена на просмотр гостей
+            Billing.getInstance(getApplicationContext()).getRaisingToken(
+                    "paid_view_guests",
+                    new Billing.GetRaisingTokenCallback() {
+                        @Override
+                        public void onSuccess(final TokenReq token) {
+                            if (Integer.parseInt(token.balance) < token.action_price) {
+                                if (token.count_new_guests == 0) newGuests.setText("У вас нет новых гостей");
+                                else newGuests.setText("У вас " + Integer.toString(token.count_new_guests) + " новых гостей");
+                                balance.setText("У вас на счету - " + token.balance + " баллов");
+                                if (token.action_price == 1) prise.setText("Стоимость просмотра - " + Integer.toString(token.action_price) + " балл");
+                                else prise.setText("Стоимость просмотра - " + Integer.toString(token.action_price) + " балла");
+                                paidGuests.setVisibility(View.VISIBLE);
+                                swipeRefreshLayout.setRefreshing(false);
+                                swipeRefreshLayout.setVisibility(View.GONE);
+                                error.setVisibility(View.VISIBLE);
+                                stgs.setSettingInt("avtoGetGuests", 0);
+                                checkBox.setVisibility(View.GONE);
+                                go.setText("Пополнить");
+                                go.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        Intent intent = new Intent(GuestsActivity.this, BillingActivity.class);
+                                        startActivity(intent);
+                                    }
+                                });
+                            } else {
+                                //После согласия на просмотр гостей
+                                //Скрываем блок с предупреждением и открываем блок с контентом
+                                paidGuests.setVisibility(View.GONE);
+                                swipeRefreshLayout.setVisibility(View.VISIBLE);
 
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override public void run() {
-                                getToken();
-                            }
-                        }, 5000);
-                    }
+                                //Получаем контент
+                                getGuests(token.token);
 
-                    @Override
-                    public void onInternetError() {
-                        new Handler().postDelayed(new Runnable() {
-                            @Override public void run() {
-                                getToken();
+                                // Свайп для обновления
+                                swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                                    @Override
+                                    public void onRefresh() {
+                                        getGuests(null);
+                                    }
+                                });
                             }
-                        }, 5000);
+                        }
+
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getToken();
+                                }
+                            }, 5000);
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    getToken();
+                                }
+                            }, 5000);
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
-    private void getGuests() {
+    private void getGuests(final String token) {
         firstView = false;
         if (listGuestsNew.getFooterViewsCount() == 0) listGuestsNew.addFooterView(footerLoading);
         thatsAll = false;
@@ -152,6 +242,10 @@ public class GuestsActivity extends SuperMainActivity{
         profile.getGuests(pageNumber, this, new Profile.GetGuestsCallback() {
             @Override
             public void onSuccess(final Guest[] guests, Activity activity) {
+                if (!notPayd) {
+                    paidViewGuests(token);
+                    notPayd = true;
+                }
                 pageNumber += 1;
                 if ((guests.length == 0) || ((guests.length == 1))) {
                     thatsAll = true;
@@ -179,7 +273,7 @@ public class GuestsActivity extends SuperMainActivity{
             public void onError(int error_code, String error_msg) {
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
-                        getGuests();
+                        getGuests(token);
                     }
                 }, 5000);
             }
@@ -188,7 +282,7 @@ public class GuestsActivity extends SuperMainActivity{
             public void onInternetError() {
                 new Handler().postDelayed(new Runnable() {
                     @Override public void run() {
-                        getGuests();
+                        getGuests(token);
                     }
                 }, 5000);
             }
@@ -283,6 +377,28 @@ public class GuestsActivity extends SuperMainActivity{
                 }, 5000);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (stgs.getSettingInt("avtoGetGuests") == 1) {
+            getMenuInflater().inflate(R.menu.guests, menu);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.action_show:
+                stgs.setSettingInt("avtoGetGuests", 0);
+                Toast.makeText(getApplicationContext().getApplicationContext(), "Готово", Toast.LENGTH_LONG).show();
+                return true;
+
+            default:return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

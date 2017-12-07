@@ -11,6 +11,7 @@ public class TokenReq {
     public String token;
     public String balance;
     public int action_price;
+    public int count_new_guests;
     public Error error;
 
     public TokenReq(){
