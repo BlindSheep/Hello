@@ -49,6 +49,7 @@ public class GuestsActivity extends SuperMainActivity{
     private CheckBox checkBox;
     private TextView newGuests;
     private boolean notPayd = false;
+    private LinearLayout empty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,7 @@ public class GuestsActivity extends SuperMainActivity{
         error = (TextView) findViewById(R.id.error);
         checkBox = (CheckBox) findViewById(R.id.checkBox);
         newGuests = (TextView) findViewById(R.id.newGuests);
+        empty = (LinearLayout) findViewById(R.id.empty);
     }
 
     private void getToken() {
@@ -237,6 +239,8 @@ public class GuestsActivity extends SuperMainActivity{
         thatsAll = false;
         isLaunch = true;
         pageNumber = 1;
+        listGuestsNew.setVisibility(View.VISIBLE);
+        empty.setVisibility(View.GONE);
         swipeRefreshLayout.setRefreshing(true);
         profile = new Profile(getApplicationContext());
         profile.getGuests(pageNumber, this, new Profile.GetGuestsCallback() {
@@ -247,9 +251,11 @@ public class GuestsActivity extends SuperMainActivity{
                     notPayd = true;
                 }
                 pageNumber += 1;
-                if ((guests.length == 0) || ((guests.length == 1))) {
+                if (guests.length == 0) {
                     thatsAll = true;
                     listGuestsNew.removeFooterView(footerLoading);
+                    listGuestsNew.setVisibility(View.GONE);
+                    empty.setVisibility(View.VISIBLE);
                 }
                 final ArrayList<Guest> newItem = new ArrayList<Guest>();
                 Collections.addAll(newItem, guests);

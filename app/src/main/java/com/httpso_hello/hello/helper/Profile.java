@@ -107,21 +107,16 @@ public class Profile extends Help{
                     new Response.Listener<String>() {
                         public void onResponse(String response){
                             if (response != null) {
-                                try {
                                     Log.d("small_user_info", response);
                                     Resp resp = gson.fromJson(response, Resp.class);
                                     if (resp.error == null) {
                                         getSmallUserInfoCallback.onSuccess(resp.user_info);
                                         return;
-                                    }
-                                    errorCallback.onError(resp.error.error_code, resp.error.error_msg);
-                                    return;
-                                } catch (Exception e) {
-
-                                }
+                                    } else errorCallback.onError(resp.error.error_code, resp.error.error_msg);
+                            } else {
+                                errorCallback.onInternetError();
+                                return;
                             }
-                            errorCallback.onInternetError();
-                            return;
                         }
                     },
                     new Response.ErrorListener(){

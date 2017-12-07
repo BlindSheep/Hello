@@ -12,6 +12,7 @@ tools:showIn="@layout/app_bar_guests">
 
     <LinearLayout
         android:id="@+id/paidGuests"
+        android:visibility="gone"
         android:background="@color/main_white_color_hello"
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -102,6 +103,28 @@ tools:showIn="@layout/app_bar_guests">
                 android:text="Продолжить" />
 
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/empty"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:background="@color/main_white_color_hello"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="Ваш профиль еще никто не посещал"/>
 
         <View
             android:layout_width="match_parent"
