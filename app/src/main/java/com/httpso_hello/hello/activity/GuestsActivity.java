@@ -37,6 +37,10 @@ public class GuestsActivity extends SuperMainActivity{
     private TextView cancel;
     private TextView go;
     private String paidToken=null;
+    private TextView balance;
+    private TextView prise;
+    private TextView error;
+    private boolean firstView = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,70 +58,91 @@ public class GuestsActivity extends SuperMainActivity{
                 android.R.color.holo_red_light);
         footerLoading = getLayoutInflater().inflate(R.layout.footer_loading, null);
         paidGuests = (LinearLayout) findViewById(R.id.paidGuests);
-        cancel = (TextView) findViewById(R.id.cancel);
         go = (TextView) findViewById(R.id.go);
+        balance = (TextView) findViewById(R.id.balance);
+        prise = (TextView) findViewById(R.id.prise);
+        error = (TextView) findViewById(R.id.error);
+    }
 
-        paidGuests.setVisibility(View.VISIBLE);
-        swipeRefreshLayout.setVisibility(View.GONE);
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    private void getToken() {
+        paidGuests.setVisibility(View.GONE);
+        swipeRefreshLayout.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
         // Запрос токена на просмотр гостей
         Billing.getInstance(getApplicationContext()).getRaisingToken(
                 "paid_view_guests",
                 new Billing.GetRaisingTokenCallback() {
                     @Override
-                    public void onSuccess(TokenReq token) {
-                        // Оплачиваем повторно
-                        GuestsActivity.this.paidToken  = token.token;
+                    public void onSuccess(final TokenReq token) {
+                        balance.setText("У вас на счету " + token.balance + " баллов");
+                        if (token.action_price == 1) prise.setText("Стоимость просмотра " + Integer.toString(token.action_price) + " балл");
+                        else prise.setText("Стоимость просмотра " + Integer.toString(token.action_price) + " балла");
+                        paidGuests.setVisibility(View.VISIBLE);
+                        swipeRefreshLayout.setRefreshing(false);
+                        swipeRefreshLayout.setVisibility(View.GONE);
+
+                        if (Integer.parseInt(token.balance) < token.action_price) {
+                            error.setVisibility(View.VISIBLE);
+                            go.setText("Пополнить");
+                            go.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent = new Intent(GuestsActivity.this, BillingActivity.class);
+                                    startActivity(intent);
+                                }
+                            });
+                        } else {
+                            error.setVisibility(View.GONE);
+                            go.setText("Продолжить");
+                            go.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //После согласия на просмотр гостей
+                                    //Скрываем блок с предупреждением и открываем блок с контентом
+                                    paidGuests.setVisibility(View.GONE);
+                                    swipeRefreshLayout.setVisibility(View.VISIBLE);
+
+                                    //Получаем контент
+                                    getGuests();
+
+                                    // Свайп для обновления
+                                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                                        @Override
+                                        public void onRefresh() {
+                                            getGuests();
+                                        }
+                                    });
+
+                                    //Списываем деньги
+                                    paidViewGuests(token.token);
+                                }
+                            });
+                        }
                     }
 
                     @Override
                     public void onError(int error_code, String error_msg) {
-//                                    showMessage(error_msg);
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                getToken();
+                            }
+                        }, 5000);
                     }
 
                     @Override
                     public void onInternetError() {
-//                                    showMessage("Ошибка интернет соединения");
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                getToken();
+                            }
+                        }, 5000);
                     }
                 }
         );
-        go.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (paidToken!=null) {
-                    //После согласия на просмотр гостей
-                    //Скрываем блок с предупреждением и открываем блок с контентом
-                    paidGuests.setVisibility(View.GONE);
-                    swipeRefreshLayout.setVisibility(View.VISIBLE);
-
-                    //Получаем контент
-                    listGuestsNew.addFooterView(footerLoading);
-                    getGuests();
-
-                    // Свайп для обновления
-                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                        @Override
-                        public void onRefresh() {
-                            getGuests();
-                        }
-                    });
-
-                    //Списываем деньги
-                    paidViewGuests(paidToken);
-                } else {
-                    showMessage("Дождитесь получения информации");
-                }
-            }
-        });
     }
 
     private void getGuests() {
+        firstView = false;
         if (listGuestsNew.getFooterViewsCount() == 0) listGuestsNew.addFooterView(footerLoading);
         thatsAll = false;
         isLaunch = true;
@@ -225,7 +250,6 @@ public class GuestsActivity extends SuperMainActivity{
             @Override
             public void onError(int error_code, String error_msg) {
                 // С момента запроса токена прошло слишком много времени
-                if(error_code == 401){
                     // Повторно получаем токен
                     Billing.getInstance(getApplicationContext()).getRaisingToken(
                             "paid_view_guests",
@@ -248,7 +272,6 @@ public class GuestsActivity extends SuperMainActivity{
                                 }
                             }
                     );
-                }
             }
 
             @Override
@@ -260,5 +283,13 @@ public class GuestsActivity extends SuperMainActivity{
                 }, 5000);
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        if (firstView) {
+            getToken();
+        }
+        super.onResume();
     }
 }

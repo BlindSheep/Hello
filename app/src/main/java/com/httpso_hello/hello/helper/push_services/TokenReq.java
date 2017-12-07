@@ -10,6 +10,7 @@ public class TokenReq {
 
     public String token;
     public String balance;
+    public int action_price;
     public Error error;
 
     public TokenReq(){
