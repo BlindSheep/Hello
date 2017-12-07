@@ -27,6 +27,7 @@ public class ServisesActivity extends SuperMainActivity{
     private LinearLayout raiseTheProfile;
     private Toolbar toolbar;
     private ProgressBar progressBarServises;
+    private LinearLayout problems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +42,7 @@ public class ServisesActivity extends SuperMainActivity{
         recomendationUpAnket = (TextView) findViewById(R.id.recomendationUpAnket);
         raiseTheProfile = (LinearLayout) findViewById(R.id.raiseTheProfile);
         progressBarServises = (ProgressBar) findViewById(R.id.progressBarServises);
+        problems = (LinearLayout) findViewById(R.id.problems);
 
         billing.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +56,18 @@ public class ServisesActivity extends SuperMainActivity{
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ServisesActivity.this, UpAnketActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        problems.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent;
+                intent = new Intent(getApplicationContext(), ChatActivity.class);
+                intent.putExtra("contact_id", 3008);
+                intent.putExtra("nickname", "Поддержка");
+                intent.putExtra("avatar", "ic_launcher.png");
                 startActivity(intent);
             }
         });
