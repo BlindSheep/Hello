@@ -48,6 +48,7 @@ public class Files extends Help {
             final Help.ErrorCallback errorCallback
     ){
         if(Constant.api_key!=""){
+            uploadedFiles.add(0);
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
                     Constant.temp_files_save_file,
@@ -57,7 +58,7 @@ public class Files extends Help {
                                 Log.d("temp_file", response);
                                 AddFile addFile = gson.fromJson(response, AddFile.class);
                                 if(addFile.error == null){
-                                    uploadedFiles.add(addFile.id);
+                                    setUploadedFiles(addFile.id, position);
                                     uploadFileCallback.onSuccess(addFile.id, position);
                                     return;
                                 }
@@ -94,22 +95,29 @@ public class Files extends Help {
         }
         return null;
     }
-
+    public void deleteFile(
+            final int position
+    ){
+        this.deleteFileFromUploadedFiles(0, position);
+    }
     public void deleteFile(
             final int id,
+            final int position,
             final DeleteFileCallback deleteFileCallback,
             final ErrorCallback errorCallback
     ){
         if(Constant.api_key!=""){
+            // Удаляем из массива
+            this.deleteFileFromUploadedFiles(id, position);
             StringRequest SReq = new StringRequest(
                     Request.Method.POST,
                     Constant.temp_files_delete_file,
                     new Response.Listener<String>() {
-                        public void onResponse(String response){
+                        public void onResponse(String response) {
                             if (response != null) {
                                 Log.d("temp_file.delete", response);
                                 UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
-                                if(universalResponse.error == null){
+                                if (universalResponse.error == null) {
                                     deleteFileCallback.onSuccess();
                                     return;
                                 }
@@ -120,20 +128,54 @@ public class Files extends Help {
                             return;
                         }
                     },
-                    new Response.ErrorListener(){
+                    new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             errorCallback.onInternetError();
                         }
                     }
-            )
-            {
+            ) {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = getParamsMap();
                     params.put("id", Integer.toString(id));
                     return params;
-                };
+                }
+
+                ;
+            };
+            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "Files.deleteFile" + Integer.toString(id));
+        }
+    }
+    public void deleteFile(
+            final int id,
+            final int position
+    ){
+        if(Constant.api_key!=""){
+            // Удаляем из массива
+            StringRequest SReq = new StringRequest(
+                    Request.Method.POST,
+                    Constant.temp_files_delete_file,
+                    new Response.Listener<String>() {
+                        public void onResponse(String response) {
+
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+
+                        }
+                    }
+            ) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = getParamsMap();
+                    params.put("id", Integer.toString(id));
+                    return params;
+                }
+
+                ;
             };
             RequestQ.getInstance(this._context).addToRequestQueue(SReq, "Files.deleteFile" + Integer.toString(id));
         }
@@ -149,6 +191,28 @@ public class Files extends Help {
 
     public interface UploadFileCallback{
         void onSuccess(int id, int position);
+    }
+
+    private void setUploadedFiles(final int id, final int position){
+        if(uploadedFiles.get(position)==-1){
+            // Удалить файл
+            uploadedFiles.remove(position);
+            deleteFile(id, position);
+        } else {
+            uploadedFiles.set(position, id);
+        }
+    }
+
+    private void deleteFileFromUploadedFiles(final int id, final int position){
+        if(position>=uploadedFiles.size())
+            return;
+        if(uploadedFiles.get(position) != id)
+            return;
+        if(id==0){
+            uploadedFiles.set(position, -1);
+        } else {
+            uploadedFiles.remove(position);
+        }
     }
 
     public ArrayList<Integer> getUploadedFiles(){

@@ -39,7 +39,7 @@ public class Api {
 
     private Resp result;
 
-    Api(Context context){
+    public Api(Context context){
         //Сохраняем контекст
         this._context = context;
         GsonBuilder GB = new GsonBuilder();
@@ -141,7 +141,6 @@ public class Api {
 
     public void setPushUpToken(final String token){
         if(Constant.api_key!=""){
-            Log.d("PUSHUP", "!!!");
             StringRequest SReq = new StringRequest(
                     Method.POST,
                     Constant.set_token_uri,
@@ -152,7 +151,6 @@ public class Api {
                                 ReqSetToken reqSetToken = gson.fromJson(response, ReqSetToken.class);
                                 if(reqSetToken.error == null){
                                     stgs.setSettingInt("device_id", reqSetToken.device_id);
-                                    Log.d("PUSHUP", Integer.toString(stgs.getSettingInt("device_id")));
                                     return;
                                 }
 

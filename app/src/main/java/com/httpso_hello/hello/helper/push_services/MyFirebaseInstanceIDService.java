@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
+import com.httpso_hello.hello.helper.Api;
 
 /**
  * Created by mixir on 02.08.2017.
@@ -36,6 +37,8 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
+        Api api = new Api(getApplicationContext());
+        api.setPushUpToken(token);
     }
 
 }
