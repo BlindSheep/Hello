@@ -381,7 +381,7 @@ public class OneGroupActivity extends AppCompatActivity {
         thatsAll = false;
         if (groupContent.getFooterViewsCount() == 0) groupContent.addFooterView(footer);
         HBoard hd = new HBoard(getApplicationContext());
-        hd.getBoard(OneGroupActivity.this, groupId, page, 0, new HBoard.GetBoardCallback() {
+        hd.getBoard(OneGroupActivity.this, 0, groupId, page, 0, new HBoard.GetBoardCallback() {
             @Override
             public void onSuccess(BoardItem[] boardItems, Activity activity) {
                 page += 1;
@@ -422,7 +422,7 @@ public class OneGroupActivity extends AppCompatActivity {
         if (!thatsAll && !loading) {
             loading = true;
             HBoard hBoard = new HBoard(getApplicationContext());
-            hBoard.getBoard(this, groupId, page, 0, new HBoard.GetBoardCallback() {
+            hBoard.getBoard(this, 0, groupId, page, 0, new HBoard.GetBoardCallback() {
                 @Override
                 public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                     loading = false;
