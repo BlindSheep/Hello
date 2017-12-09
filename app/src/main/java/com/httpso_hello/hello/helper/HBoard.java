@@ -35,6 +35,7 @@ public class HBoard extends Help{
 
     public void getBoard(
             final Activity activity,
+            final int user_id,
             final int groupId,
             final int page,
             final int wait_moderate,
@@ -73,6 +74,7 @@ public class HBoard extends Help{
                     Map<String, String> params = new HashMap<String, String>();
                     params.put("api_key", Constant.api_key);
                     params.put("auth_token", stgs.getSettingStr("auth_token"));
+//                    if (user_id != 0) params.put("user_id", Integer.toString(user_id));
                     params.put("page", Integer.toString(page));
                     params.put("group_id", Integer.toString(groupId));
                     if (wait_moderate == 1) params.put("wait_moderate", Integer.toString(wait_moderate));

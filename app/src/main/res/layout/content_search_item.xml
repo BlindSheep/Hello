@@ -75,7 +75,7 @@
                     android:text="Город"
                     android:maxLines="1"
                     android:layout_alignTop="@+id/search_profile_nickname"
-                    android:textColor="@color/main_blue_color_hello" />
+                    android:textColor="@color/main_dark_grey_color_hello" />
 
             </RelativeLayout>
 
@@ -155,7 +155,7 @@
                     android:text="Город"
                     android:maxLines="1"
                     android:layout_alignTop="@+id/search_profile_nickname_second"
-                    android:textColor="@color/main_blue_color_hello" />
+                    android:textColor="@color/main_dark_grey_color_hello" />
 
             </RelativeLayout>
 
