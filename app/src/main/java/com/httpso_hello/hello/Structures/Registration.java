@@ -6,7 +6,8 @@ package com.httpso_hello.hello.Structures;
 
 public class Registration {
 
-    public int user_id;
+    public RegistereledUser registeredUser;
+
     public Error error;
 
     public Registration(){

@@ -12,7 +12,6 @@ public class BoardItem {
     public Image[] photos;
     public String user_nickname;
     public int user_id;
-    public String seo_desc;
     public Image avatar;
     public boolean is_voted;
     public String content;

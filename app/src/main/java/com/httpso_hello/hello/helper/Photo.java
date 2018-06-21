@@ -43,100 +43,80 @@ public class Photo extends Help {
             final AddPhotoCallback addPhotoCallback,
             final ErrorCallback errorCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.photos_add_photo,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.photos_add_photo,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
 
-                            if(response!=null){
-                                Log.d("add_photo", response);
-//                                ReqUpdateAvatar reqUpdateAvatar = gson.fromJson(response, ReqUpdateAvatar.class);
-//                                if(reqUpdateAvatar.error==null) {
-//                                    updateAvatarCallback.onSuccess(reqUpdateAvatar.avatar);
-//                                    return;
-//                                }
-//                                errorCallback.onError(reqUpdateAvatar.error.error_code, reqUpdateAvatar.error.error_msg);
-//                                return;
-                            }
-                            errorCallback.onInternetError();
-                            return;
+                        if(response!=null){
+                            Log.d("add_photo", response);
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("ext", ext);
-                    params.put("file_base64", file_base64);
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("ext", ext);
+                params.put("file_base64", file_base64);
+                return params;
             };
-            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.update_avatar");
-        }
+        };
+        SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.update_avatar");
     }
 
     public void deletePhoto(
             final int photoId,
             final DeletePhotoCalback deletePhotoCalback,
             final Help.ErrorCallback errorCallback
-            ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.photos_delete_photo,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
+    ){
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.photos_delete_photo,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
 
-                            if(response!=null){
-                                Log.d("delete_photo", response);
-                                deletePhotoCalback.onSuccess();
-                                return;
-//                                ReqUpdateAvatar reqUpdateAvatar = gson.fromJson(response, ReqUpdateAvatar.class);
-//                                if(reqUpdateAvatar.error==null) {
-//                                    updateAvatarCallback.onSuccess(reqUpdateAvatar.avatar);
-//                                    return;
-//                                }
-//                                errorCallback.onError(reqUpdateAvatar.error.error_code, reqUpdateAvatar.error.error_msg);
-//                                return;
-                            }
-                            errorCallback.onInternetError();
+                        if(response!=null){
+                            Log.d("delete_photo", response);
+                            deletePhotoCalback.onSuccess();
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("photo_id", Integer.toString(photoId));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("photo_id", Integer.toString(photoId));
+                return params;
             };
-            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.update_avatar");
-        }
+        };
+        SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.update_avatar");
     }
 
     public interface AddPhotoCallback {

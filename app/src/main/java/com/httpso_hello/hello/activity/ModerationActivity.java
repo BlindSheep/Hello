@@ -78,7 +78,7 @@ public class ModerationActivity extends AppCompatActivity {
         swipeRefreshLayout.setRefreshing(true);
         hBoard = new HBoard(getApplicationContext());
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
-        hBoard.getBoard(this, 0, groupId, page, 1, new HBoard.GetBoardCallback() {
+        hBoard.getBoard(this, page,new HBoard.GetBoardCallback() {
             @Override
             public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -114,7 +114,7 @@ public class ModerationActivity extends AppCompatActivity {
             swipeRefreshLayout.setRefreshing(true);
             loading = true;
             HBoard hBoard = new HBoard(getApplicationContext());
-            hBoard.getBoard(this, 0, groupId, page, 1, new HBoard.GetBoardCallback() {
+            hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
                 @Override
                 public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                     if (boardItems.length == 0) {

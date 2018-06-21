@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.GiftItem;
 import com.httpso_hello.hello.Structures.Photo;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Settings;
@@ -22,13 +23,13 @@ import java.util.ArrayList;
  * Created by mixir on 02.11.2017.
  */
 
-public class GiftsInProfileAdapter extends ArrayAdapter<String> {
+public class GiftsInProfileAdapter extends ArrayAdapter<GiftItem> {
 
     private final Activity context;
     private final Settings stgs;
-    private ArrayList<String> gifts;
+    private ArrayList<GiftItem> gifts;
 
-    public GiftsInProfileAdapter(Activity context, ArrayList<String> gifts){
+    public GiftsInProfileAdapter(Activity context, ArrayList<GiftItem> gifts){
         super(context, R.layout.content_profile, gifts);
         this.context = context;
         stgs = new Settings(context.getApplicationContext());
@@ -68,9 +69,9 @@ public class GiftsInProfileAdapter extends ArrayAdapter<String> {
                     .resize((int) (displaymetrics.density * 30), (int) (displaymetrics.density * 30))
                     .into(holder.imageView);
         } else {
-            final String gift = this.gifts.get(position - 1);
+            final GiftItem gift = this.gifts.get(position - 1);
             Picasso.with(getContext())
-                    .load(Constant.upload + gift)
+                    .load(Constant.upload + gift.photo.small)
                     .resize((int) (displaymetrics.density * 60), (int) (displaymetrics.density * 60))
                     .into(holder.imageView);
         }

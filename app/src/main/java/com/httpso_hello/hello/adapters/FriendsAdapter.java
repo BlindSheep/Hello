@@ -8,8 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.httpso_hello.hello.Structures.FriendItem;
-import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.Structures.ForUserOnly;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ public class FriendsAdapter extends FragmentStatePagerAdapter {
 
     private final List<Fragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
-    private ArrayList<FriendItem> friends = new ArrayList<FriendItem>();
+    private ArrayList<ForUserOnly> friends = new ArrayList<ForUserOnly>();
 
     public FriendsAdapter(FragmentManager fm) {
         super(fm);

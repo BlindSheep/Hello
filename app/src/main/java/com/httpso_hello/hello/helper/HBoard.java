@@ -11,7 +11,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.httpso_hello.hello.Structures.Board;
 import com.httpso_hello.hello.Structures.BoardItem;
-import com.httpso_hello.hello.Structures.Resp;
 import com.yandex.metrica.YandexMetrica;
 
 import java.util.ArrayList;
@@ -22,67 +21,60 @@ import java.util.Map;
  * Created by mixir on 19.08.2017.
  */
 
-public class HBoard extends Help{
+public class HBoard extends Help {
 
     private Settings stgs;
     private Context _context;
 
-    public HBoard(Context context){
-        super();
+    public HBoard(Context context) {
+        super(context);
         this._context = context;
         stgs = new Settings(_context);
     }
 
+
     public void getBoard(
             final Activity activity,
-            final int user_id,
-            final int groupId,
             final int page,
-            final int wait_moderate,
-            final GetBoardCallback getBoardCallback){
+            final GetBoardCallback getBoardCallback) {
         Log.d("board", "Enter");
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.board_get_board_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("board", response);
-                            if (response != null) {
-                                Board board = gson.fromJson(response, Board.class);
-                                if (board.error==null){
-                                    getBoardCallback.onSuccess(board.items, activity);
-                                    return;
-                                }
-                                getBoardCallback.onError(board.error.error_code, board.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.board_get_board_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response) {
+                        Log.d("board", response);
+                        if (response != null) {
+                            Board board = gson.fromJson(response, Board.class);
+                            if (board.error == null) {
+                                getBoardCallback.onSuccess(board.items, activity);
+                                setNewToken(board.token);
                                 return;
                             }
-                            getBoardCallback.onInternetError();
+                            getBoardCallback.onError(board.error.code, board.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getBoardCallback.onInternetError();
-                        }
+                        getBoardCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-//                    if (user_id != 0) params.put("user_id", Integer.toString(user_id));
-                    params.put("page", Integer.toString(page));
-                    params.put("group_id", Integer.toString(groupId));
-                    if (wait_moderate == 1) params.put("wait_moderate", Integer.toString(wait_moderate));
-                    return params;
-                };
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.getProfile");
-        }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getBoardCallback.onInternetError();
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap(_context);
+                params.put("page", Integer.toString(page));
+                return params;
+            }
+
+            ;
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.getProfile");
     }
 
     public void addBoard(
@@ -92,17 +84,16 @@ public class HBoard extends Help{
             final ArrayList<Integer> uploadedFiles,
             final AddBoardCallback addBoardCallback,
             final Help.ErrorCallback errorCallback
-    ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.board_add_item_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("add_board", response);
-                            if (response != null) {
-                                YandexMetrica.getReporter(_context, Constant.metrika_api_key).reportEvent("add_board");
-                                addBoardCallback.onSuccess();
+    ) {
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.board_add_item_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response) {
+                        Log.d("add_board", response);
+                        if (response != null) {
+                            YandexMetrica.getReporter(_context, Constant.metrika_api_key).reportEvent("add_board");
+                            addBoardCallback.onSuccess();
 //                                Board board = gson.fromJson(response, Board.class);
 //                                Log.d("add_item", board.content_error);
 //                                if (board.error==null){
@@ -110,49 +101,50 @@ public class HBoard extends Help{
 //                                    addBoardCallback.onSuccess();
 //                                    return;
 //                                }
-//                                addBoardCallback.onError(board.error.error_code, board.error.error_msg);
+//                                addBoardCallback.onError(board.error.code, board.error.message);
 //                                return;
-                            }
+                        }
 //                            addBoardCallback.onInternetError();
 //                            return;
-                        }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("content", content);
-                    params.put("ctype_name", "board");
-                    params.put("group_id", Integer.toString(groupId));
-                    if (is_anonim) params.put("is_anonim", "1");
-                    else params.put("is_anonim", "0");
-                    if(uploadedFiles.size()!=0){
-                        params.put("uploaded_files", gson.toJson(uploadedFiles.toArray()));
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
                     }
-                    return params;
-                };
-            };
-            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "board.addBoard");
-        }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("content", content);
+                params.put("ctype_name", "board");
+                params.put("group_id", Integer.toString(groupId));
+                if (is_anonim) params.put("is_anonim", "1");
+                else params.put("is_anonim", "0");
+                if (uploadedFiles.size() != 0) {
+                    params.put("uploaded_files", gson.toJson(uploadedFiles.toArray()));
+                }
+                return params;
+            }
+
+            ;
+        };
+        SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "board.addBoard");
     }
 
-    public interface GetBoardCallback{
+    public interface GetBoardCallback {
         void onSuccess(BoardItem[] boardItems, Activity activity);
+
         void onError(int error_code, String error_message);
+
         void onInternetError();
     }
 
-    public interface AddBoardCallback{
+    public interface AddBoardCallback {
         void onSuccess();
     }
 

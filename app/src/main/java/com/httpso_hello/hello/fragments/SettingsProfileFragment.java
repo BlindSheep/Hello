@@ -13,9 +13,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 
 import android.support.v4.content.FileProvider;
-import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,24 +23,16 @@ import android.widget.*;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.httpso_hello.hello.R;
-import com.httpso_hello.hello.Structures.FlirtikItem;
 import com.httpso_hello.hello.Structures.Image;
-import com.httpso_hello.hello.Structures.Region;
 import com.httpso_hello.hello.Structures.User;
-import com.httpso_hello.hello.activity.ProfileActivity;
-import com.httpso_hello.hello.activity.SettingsActivity;
-import com.httpso_hello.hello.adapters.FlirtikiFragmentAdapter;
 import com.httpso_hello.hello.helper.*;
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -168,7 +158,7 @@ public class SettingsProfileFragment extends Fragment {
             userEditGenderWoman.setChecked(true);
         }
 
-        if (user.birth_date != null) currentDateTime.setText(ConverterDate.getBirthdate(user.birth_date));
+        if (user.birthDate != null) currentDateTime.setText(ConverterDate.getBirthdate(user.birthDate));
         else currentDateTime.setText("01 января 1990 г.");
 
         currentDateTime.setOnClickListener(new View.OnClickListener() {
@@ -230,7 +220,7 @@ public class SettingsProfileFragment extends Fragment {
                 params.put("nickname", userEditNameString);
                 params.put("gender", genderString);
                 params.put("phone", userEditPhoneString);
-                if (day != 0) params.put("birth_date", ConverterDate.sendBirthdate(year, month, day));
+                if (day != 0) params.put("birthDate", ConverterDate.sendBirthdate(year, month, day));
                 params.put("skype", userEditSkypeString);
                 params.put("avto", userEditAutoString);
                 params.put("ves", userEditVesString);
@@ -244,33 +234,33 @@ public class SettingsProfileFragment extends Fragment {
 
                 System.out.println(gsonString);
 
-                Profile profile = new Profile(getContext());
-                profile.editProfile(gsonString, new Profile.EditProfileCallback() {
-                    @Override
-                    public void onSuccess() {
-                        saveButton.setText("Сохранить");
-                        Toast.makeText(getContext().getApplicationContext(), "Все данные успешно сохранены", Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        saveButton.setText("Сохранить");
-                        Toast.makeText(getContext().getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onInternetError() {
-                        saveButton.setText("Сохранить");
-                        Toast.makeText(getContext().getApplicationContext(),
-                                "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                    }
-                });
+//                Profile profile = new Profile(getContext());
+//                profile.editProfile(gsonString, new Profile.EditProfileCallback() {
+//                    @Override
+//                    public void onSuccess() {
+//                        saveButton.setText("Сохранить");
+//                        Toast.makeText(getContext().getApplicationContext(), "Все данные успешно сохранены", Toast.LENGTH_LONG).show();
+//                    }
+//
+//                    @Override
+//                    public void onError(int code, String message) {
+//                        saveButton.setText("Сохранить");
+//                        Toast.makeText(getContext().getApplicationContext(), message, Toast.LENGTH_LONG).show();
+//                    }
+//
+//                    @Override
+//                    public void onInternetError() {
+//                        saveButton.setText("Сохранить");
+//                        Toast.makeText(getContext().getApplicationContext(),
+//                                "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+//                    }
+//                });
             }
         });
         ((ImageView) rootView.findViewById(R.id.settings_profile_new_avatar)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 popupViewForUpdateAvatar = getLayoutInflater(new Bundle()).inflate(R.layout.popup_for_new_photo, null);
+                popupViewForUpdateAvatar = getLayoutInflater(new Bundle()).inflate(R.layout.popup_for_new_photo, null);
                 popUpForUpdateAvatar = new PopupWindow(popupViewForUpdateAvatar, ViewGroup.LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                 DisplayMetrics displaymetrics = getContext().getResources().getDisplayMetrics();
                 popUpForUpdateAvatar.setWidth(displaymetrics.widthPixels);
@@ -343,10 +333,10 @@ public class SettingsProfileFragment extends Fragment {
 
     // установка начальных даты и времени
     private void setInitialDateTime() {
-        if (user.birth_date != null) {
-            dateAndTime.set(Calendar.YEAR, ConverterDate.getYear(user.birth_date));
-            dateAndTime.set(Calendar.MONTH, ConverterDate.getMonth(user.birth_date));
-            dateAndTime.set(Calendar.DAY_OF_MONTH, ConverterDate.getDay(user.birth_date));
+        if (user.birthDate != null) {
+            dateAndTime.set(Calendar.YEAR, ConverterDate.getYear(user.birthDate));
+            dateAndTime.set(Calendar.MONTH, ConverterDate.getMonth(user.birthDate));
+            dateAndTime.set(Calendar.DAY_OF_MONTH, ConverterDate.getDay(user.birthDate));
         } else {
             dateAndTime.set(Calendar.YEAR, 1990);
             dateAndTime.set(Calendar.MONTH, 0);
@@ -354,7 +344,7 @@ public class SettingsProfileFragment extends Fragment {
         }
     }
 
-//    @Override
+    //    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {

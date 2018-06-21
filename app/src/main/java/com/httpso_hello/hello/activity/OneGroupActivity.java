@@ -31,7 +31,6 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Groups;
-import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.adapters.BoardAdapter;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Complaint;
@@ -41,7 +40,6 @@ import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.HBoard;
 import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Photo;
-import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -199,7 +197,7 @@ public class OneGroupActivity extends AppCompatActivity {
                 actionBar.setTitle(groupItem.title);
                 name.setText(groupItem.title);
                 descr.setText(groupItem.description);
-                members.setText(ConverterDate.getFollowers(groupItem.members_count));
+                members.setText(ConverterDate.getFollowers(groupItem.membersCount));
                 membersLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -210,7 +208,7 @@ public class OneGroupActivity extends AppCompatActivity {
                     }
                 });
 
-                if (groupItem.moderate == 1) {
+                if (groupItem.moderate) {
                     isModer.setVisibility(View.VISIBLE);
                 } else {
                     isModer.setVisibility(View.GONE);
@@ -227,7 +225,7 @@ public class OneGroupActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
-                    if (groupItem.moderate == 1) {
+                    if (groupItem.moderate) {
                         moderation.setVisibility(View.VISIBLE);
                         moderation.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -346,7 +344,7 @@ public class OneGroupActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent intent = new Intent(OneGroupActivity.this, AddBoardActivity.class);
                         intent.putExtra("groupId", groupItem.id);
-                        if (groupItem.moderate == 1) intent.putExtra("isModeratble", true);
+                        if (groupItem.moderate) intent.putExtra("isModeratble", true);
                         else intent.putExtra("isModeratble", false);
                         startActivity(intent);
                     }
@@ -381,7 +379,7 @@ public class OneGroupActivity extends AppCompatActivity {
         thatsAll = false;
         if (groupContent.getFooterViewsCount() == 0) groupContent.addFooterView(footer);
         HBoard hd = new HBoard(getApplicationContext());
-        hd.getBoard(OneGroupActivity.this, 0, groupId, page, 0, new HBoard.GetBoardCallback() {
+        hd.getBoard(OneGroupActivity.this, page, new HBoard.GetBoardCallback() {
             @Override
             public void onSuccess(BoardItem[] boardItems, Activity activity) {
                 page += 1;
@@ -422,7 +420,7 @@ public class OneGroupActivity extends AppCompatActivity {
         if (!thatsAll && !loading) {
             loading = true;
             HBoard hBoard = new HBoard(getApplicationContext());
-            hBoard.getBoard(this, 0, groupId, page, 0, new HBoard.GetBoardCallback() {
+            hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
                 @Override
                 public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                     loading = false;

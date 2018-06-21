@@ -38,47 +38,44 @@ public class Comments extends Help{
             final Activity activity,
             final GetCommentsCallback getCommentsCallback){
         Log.d("board", "Enter");
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.comments_get_comments_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("comments", response);
-                            if (response != null) {
-                                ReqComments comment = gson.fromJson(response, ReqComments.class);
-                                if (comment.error==null){
-                                    getCommentsCallback.onSuccess(comment.comments, activity);
-                                    return;
-                                }
-                                getCommentsCallback.onError(comment.error.error_code, comment.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.comments_get_comments_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("comments", response);
+                        if (response != null) {
+                            ReqComments comment = gson.fromJson(response, ReqComments.class);
+                            if (comment.error==null){
+                                getCommentsCallback.onSuccess(comment.comments, activity);
                                 return;
                             }
-                            getCommentsCallback.onInternetError();
+                            getCommentsCallback.onError(comment.error.code, comment.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getCommentsCallback.onInternetError();
-                        }
+                        getCommentsCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("controller", controller);
-                    params.put("content_type", content_type);
-                    params.put("target_id", Integer.toString(target_id));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getCommentsCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("controller", controller);
+                params.put("content_type", content_type);
+                params.put("target_id", Integer.toString(target_id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.getComments");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.getComments");
     }
 
     public void sendComments(
@@ -89,49 +86,46 @@ public class Comments extends Help{
             final String content,
             final SendCommentsCallback sendCommentsCallback){
         Log.d("board", "Enter");
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.comments_send_comments_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("comments", response);
-                            if (response != null) {
-                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
-                                if (res.error==null){
-                                    sendCommentsCallback.onSuccess(res.response);
-                                    return;
-                                }
-                                sendCommentsCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.comments_send_comments_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("comments", response);
+                        if (response != null) {
+                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            if (res.error==null){
+                                sendCommentsCallback.onSuccess(res.response);
                                 return;
                             }
-                            sendCommentsCallback.onInternetError();
+                            sendCommentsCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            sendCommentsCallback.onInternetError();
-                        }
+                        sendCommentsCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("controller", controller);
-                    params.put("content_type", content_type);
-                    params.put("target_id", Integer.toString(target_id));
-                    params.put("content", content);
-                    if (idAns != 0) params.put("parent_user_id", Integer.toString(idAns));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        sendCommentsCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("controller", controller);
+                params.put("content_type", content_type);
+                params.put("target_id", Integer.toString(target_id));
+                params.put("content", content);
+                if (idAns != 0) params.put("parent_user_id", Integer.toString(idAns));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.sendComments");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.sendComments");
     }
 
     public void getCountsComments(
@@ -140,41 +134,38 @@ public class Comments extends Help{
             final int target_id,
             final GetCountsCommentsCallback getCountsCommentsCallback){
         Log.d("board", "Enter");
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.comments_get_counts_comments_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("comments", response);
-                            if (response != null) {
-                                Counts count_comments = gson.fromJson(response, Counts.class);
-                                    getCountsCommentsCallback.onSuccess(count_comments.count_comments);
-                                    return;
-                            }
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.comments_get_counts_comments_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("comments", response);
+                        if (response != null) {
+                            Counts count_comments = gson.fromJson(response, Counts.class);
+                            getCountsCommentsCallback.onSuccess(count_comments.count_comments);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                        }
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("controller", controller);
-                    params.put("content_type", content_type);
-                    params.put("target_id", Integer.toString(target_id));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("controller", controller);
+                params.put("content_type", content_type);
+                params.put("target_id", Integer.toString(target_id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.getComments");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.getComments");
     }
 
     public void deleteComments(
@@ -184,48 +175,45 @@ public class Comments extends Help{
             final int target_id,
             final DeleteCommentCallback deleteCommentCallback){
         Log.d("board", "Enter");
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.comments_delete_comments_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("comments", response);
-                            if (response != null) {
-                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
-                                if (res.error==null){
-                                    deleteCommentCallback.onSuccess();
-                                    return;
-                                }
-                                deleteCommentCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.comments_delete_comments_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("comments", response);
+                        if (response != null) {
+                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            if (res.error==null){
+                                deleteCommentCallback.onSuccess();
                                 return;
                             }
-                            deleteCommentCallback.onInternetError();
+                            deleteCommentCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            deleteCommentCallback.onInternetError();
-                        }
+                        deleteCommentCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("id", Integer.toString(id));
-                    params.put("target_controller", target_controller);
-                    params.put("content_type", content_type);
-                    params.put("target_id", Integer.toString(target_id));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        deleteCommentCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("id", Integer.toString(id));
+                params.put("target_controller", target_controller);
+                params.put("content_type", content_type);
+                params.put("target_id", Integer.toString(target_id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.deleteComments");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "comments.deleteComments");
     }
 
     public interface GetCommentsCallback{

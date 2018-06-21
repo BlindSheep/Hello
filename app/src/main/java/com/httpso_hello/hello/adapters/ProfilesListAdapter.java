@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -146,10 +143,10 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
                         }
                     });
 
-        if (userFirst.is_online){
+        if (userFirst.isOnline){
             holder.isOnline.setVisibility(View.VISIBLE);
         } else holder.isOnline.setVisibility(View.INVISIBLE);
-        holder.search_profile_city.setText(convertDateToAge(userFirst.birth_date) + ", " + userFirst.city_cache);
+        holder.search_profile_city.setText(convertDateToAge(userFirst.birthDate) + ", " + userFirst.city_cache);
         holder.search_profile_nickname.setText(userFirst.nickname);
         holder.click.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,10 +195,10 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
                         }
                     });
 
-        if (userSecond.is_online){
+        if (userSecond.isOnline){
             holder.isOnline_second.setVisibility(View.VISIBLE);
         } else holder.isOnline_second.setVisibility(View.INVISIBLE);
-        holder.search_profile_city_second.setText(convertDateToAge(userSecond.birth_date) + ", " + userSecond.city_cache);
+        holder.search_profile_city_second.setText(convertDateToAge(userSecond.birthDate) + ", " + userSecond.city_cache);
         holder.search_profile_nickname_second.setText(userSecond.nickname);
         holder.click_second.setOnClickListener(new View.OnClickListener() {
             @Override

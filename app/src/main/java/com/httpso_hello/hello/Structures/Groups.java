@@ -6,16 +6,16 @@ package com.httpso_hello.hello.Structures;
 
 public class Groups {
 
-    public Error error;
-
     public int id;
     public int owner_id;
     public String title;
     public String description;
     public Image logo;
-    public int members_count;
-    public int moderate;
+    public int membersCount;
+    public boolean moderate;
     public int count_of_moderate;
+
+    public cmsGroupsMembers cms_groups_members;
 
     public boolean isFollowing;
 

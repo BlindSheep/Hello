@@ -75,7 +75,7 @@ public class Messages extends Help {
                             contacts.dateLastUpdate);
                     return;
                 }
-                getContactsCallback.onError(contacts.error.error_code, contacts.error.error_msg);
+                getContactsCallback.onError(contacts.error.code, contacts.error.message);
             }
             @Override
             public void onInternetError(){
@@ -86,46 +86,44 @@ public class Messages extends Help {
     }
 
     public void refreshContacts(final String dateLastUpdate, final RefreshContactsCallback refreshContactsCallback, final ErrorCallback errorCallback){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_refresh_contacts_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("refresh_contacts", response);
-                            if (response != null) {
-                                Contacts contacts = gson.fromJson(response, Contacts.class);
-                                if(contacts.error == null){
-                                    refreshContactsCallback.onSuccess(contacts.contact, contacts.dateLastUpdate);
-                                    return;
-                                }
-                                errorCallback.onError(contacts.error.error_code, contacts.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_refresh_contacts_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("refresh_contacts", response);
+                        if (response != null) {
+                            Contacts contacts = gson.fromJson(response, Contacts.class);
+                            if(contacts.error == null){
+                                refreshContactsCallback.onSuccess(contacts.contact, contacts.dateLastUpdate);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(contacts.error.code, contacts.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("dateLastUpdate", dateLastUpdate);
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("dateLastUpdate", dateLastUpdate);
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.refresh_contacts");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.refresh_contacts");
     }
+
     public void refreshMessages(
             final String dateLastUpdate,
             final int contact_id,
@@ -133,96 +131,90 @@ public class Messages extends Help {
             final RefreshMessagesCallback refreshMessagesCallback,
             final ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_refresh_messages_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("refresh_messages", response);
-                            if (response != null) {
-                                RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
-                                if(requestMessages.error == null){
-                                    refreshMessagesCallback.onSuccess(requestMessages.messages, requestMessages.dateLastUpdate, requestMessages.contact_is_online, requestMessages.is_writing);
-                                    return;
-                                }
-                                errorCallback.onError(requestMessages.error.error_code, requestMessages.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_refresh_messages_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("refresh_messages", response);
+                        if (response != null) {
+                            RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
+                            if(requestMessages.error == null){
+                                refreshMessagesCallback.onSuccess(requestMessages.messages, requestMessages.dateLastUpdate, requestMessages.contact_is_online, requestMessages.is_writing);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(requestMessages.error.code, requestMessages.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("dateLastUpdate", dateLastUpdate);
-                    params.put("contact_id", Integer.toString(contact_id));
-                    if (writing) params.put("is_writing", Boolean.toString(writing));
-                    // Если есть device_id отправляем его для устранения дубляжа сообщений
-                    if(device_id != null){
-                        params.put("device_id", device_id);
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
                     }
-                    return params;
-                };
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("dateLastUpdate", dateLastUpdate);
+                params.put("contact_id", Integer.toString(contact_id));
+                if (writing) params.put("is_writing", Boolean.toString(writing));
+                // Если есть device_id отправляем его для устранения дубляжа сообщений
+                if(device_id != null){
+                    params.put("device_id", device_id);
+                }
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.refresh_contacts");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.refresh_contacts");
     }
 
     public void deleteContacts(
             final int contactId,
             final Messages.DeleteContactsCallback deleteContactsCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_delete_contact_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("deleteContacts", response);
-                            if (response != null) {
-                                Notices notises = gson.fromJson(response, Notices.class);
-                                if(notises.error == null){
-                                    deleteContactsCallback.onSuccess();
-                                    return;
-                                }
-                                deleteContactsCallback.onError(notises.error.error_code, notises.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_delete_contact_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("deleteContacts", response);
+                        if (response != null) {
+                            Notices notises = gson.fromJson(response, Notices.class);
+                            if(notises.error == null){
+                                deleteContactsCallback.onSuccess();
                                 return;
                             }
-                            deleteContactsCallback.onInternetError();
+                            deleteContactsCallback.onError(notises.error.code, notises.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            deleteContactsCallback.onInternetError();
-                        }
+                        deleteContactsCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("contact_id", Integer.toString(contactId));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        deleteContactsCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("contact_id", Integer.toString(contactId));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_contacts");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_contacts");
     }
 
     public void deleteMessage(
@@ -230,91 +222,85 @@ public class Messages extends Help {
             final int from, // 1 - сообщение юзера, 0 - сообщение юзеру
             final Messages.DeleteMessageCallback deleteMessageCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_delete_message_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("deleteMessage", response);
-                            if (response != null) {
-                                UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
-                                if(universalResponse.error == null){
-                                    deleteMessageCallback.onSuccess();
-                                    return;
-                                }
-                                deleteMessageCallback.onError(universalResponse.error.error_code, universalResponse.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_delete_message_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("deleteMessage", response);
+                        if (response != null) {
+                            UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
+                            if(universalResponse.error == null){
+                                deleteMessageCallback.onSuccess();
                                 return;
                             }
-                            deleteMessageCallback.onInternetError();
+                            deleteMessageCallback.onError(universalResponse.error.code, universalResponse.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            deleteMessageCallback.onInternetError();
-                        }
+                        deleteMessageCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("message_id", Integer.toString(message_id));
-                    params.put("from", Integer.toString(from));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        deleteMessageCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("message_id", Integer.toString(message_id));
+                params.put("from", Integer.toString(from));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_Message");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.delete_Message");
     }
 
     public void ignorContact(
             final int contactId,
             final Messages.IgnorContactCallback ignorContactCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.users_ignor_contact_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("ignorContact", response);
-                            if (response != null) {
-                                Notices notises = gson.fromJson(response, Notices.class);
-                                if(notises.error == null){
-                                    ignorContactCallback.onSuccess();
-                                    return;
-                                }
-                                ignorContactCallback.onError(notises.error.error_code, notises.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.users_ignor_contact_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("ignorContact", response);
+                        if (response != null) {
+                            Notices notises = gson.fromJson(response, Notices.class);
+                            if(notises.error == null){
+                                ignorContactCallback.onSuccess();
                                 return;
                             }
-                            ignorContactCallback.onInternetError();
+                            ignorContactCallback.onError(notises.error.code, notises.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            ignorContactCallback.onInternetError();
-                        }
+                        ignorContactCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("contact_id", Integer.toString(contactId));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        ignorContactCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("contact_id", Integer.toString(contactId));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.ignor_contact");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.ignor_contact");
     }
 
     public void getMessages(
@@ -323,55 +309,52 @@ public class Messages extends Help {
             final Messages.GetMessagesCallback getMessagesCallback,
             final Help.ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_get_messages_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("messages", response);
-                            if(response!=null){
-                                RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
-                                if(requestMessages.error == null){
-                                    getMessagesCallback.onSuccess(
-                                            requestMessages.messages,
-                                            activity,
-                                            stgs.getSettingInt("user_id"),
-                                            Constant.host + requestMessages.userAvatar.micro,
-                                            requestMessages.sendedUnreadedMessagesIDs,
-                                            requestMessages.dateLastUpdate,
-                                            requestMessages.contact_is_online
-                                    );
-                                    return;
-                                }
-                                errorCallback.onError(requestMessages.error.error_code, requestMessages.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_get_messages_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("messages", response);
+                        if(response!=null){
+                            RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
+                            if(requestMessages.error == null){
+                                getMessagesCallback.onSuccess(
+                                        requestMessages.messages,
+                                        activity,
+                                        stgs.getSettingInt("user_id"),
+                                        Constant.host + requestMessages.userAvatar.micro,
+                                        requestMessages.sendedUnreadedMessagesIDs,
+                                        requestMessages.dateLastUpdate,
+                                        requestMessages.contact_is_online
+                                );
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(requestMessages.error.code, requestMessages.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("contact_id", Integer.toString(contact_id));
-                    params.put("last_viewed_id", Integer.toString(page));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("contact_id", Integer.toString(contact_id));
+                params.put("last_viewed_id", Integer.toString(page));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getMessages_"+Integer.toString(contact_id));
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getMessages_"+Integer.toString(contact_id));
     }
 
     public void sendMessage(
@@ -382,59 +365,56 @@ public class Messages extends Help {
             final Messages.MessagesSendMessage messagesSendMessage,
             final ErrorCallback errorCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_send_message_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("send_message", response);
-                            if(response!=null){
-                                attachemts.clear();
-                                RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
-                                if(requestMessages.error==null){
-                                    messagesSendMessage.onSuccess(
-                                            requestMessages.messages[0],
-                                            requestMessages.dateLastUpdate,
-                                            message_number);
-                                    return;
-                                }
-                                errorCallback.onError(requestMessages.error.error_code, requestMessages.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_send_message_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("send_message", response);
+                        if(response!=null){
+                            attachemts.clear();
+                            RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
+                            if(requestMessages.error==null){
+                                messagesSendMessage.onSuccess(
+                                        requestMessages.messages[0],
+                                        requestMessages.dateLastUpdate,
+                                        message_number);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(requestMessages.error.code, requestMessages.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("contact_id", Integer.toString(contact_id));
-                    if(messageContent!=null)
-                        params.put("messageContent", messageContent);
-                    if(attachemts.size()!=0)
-                        params.put("attachments", gson.toJson(attachemts.toArray()));
-                    if(device_id != null){
-                        params.put("device_id", device_id);
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
                     }
-                    params.put("device_message_id", Long.toString(deviceMessageId));
-                    return params;
-                };
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("contact_id", Integer.toString(contact_id));
+                if(messageContent!=null)
+                    params.put("messageContent", messageContent);
+                if(attachemts.size()!=0)
+                    params.put("attachments", gson.toJson(attachemts.toArray()));
+                if(device_id != null){
+                    params.put("device_id", device_id);
+                }
+                params.put("device_message_id", Long.toString(deviceMessageId));
+                return params;
             };
-            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.sendMessage_"+Integer.toString(contact_id));
-        }
+        };
+        SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.sendMessage_"+Integer.toString(contact_id));
     }
 
     public int getCountAttachments(){
@@ -453,45 +433,42 @@ public class Messages extends Help {
             final GetStateMessagesCallback getStateMessagesCallback,
             final ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_get_state_messages_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("getStateMessages", response);
-                            if (response != null) {
-                                RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
-                                if(requestMessages.error == null){
-                                    getStateMessagesCallback.onSuccess(requestMessages.messages);
-                                    return;
-                                }
-                                errorCallback.onError(requestMessages.error.error_code, requestMessages.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_get_state_messages_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("getStateMessages", response);
+                        if (response != null) {
+                            RequestMessages requestMessages = gson.fromJson(response, RequestMessages.class);
+                            if(requestMessages.error == null){
+                                getStateMessagesCallback.onSuccess(requestMessages.messages);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(requestMessages.error.code, requestMessages.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("messagesIDs", gson.toJson(messagesIDs.toArray()));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("messagesIDs", gson.toJson(messagesIDs.toArray()));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.get_state_messages");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.get_state_messages");
     }
 
 
@@ -507,43 +484,41 @@ public class Messages extends Help {
             final GetReadStateMessages getReadStateMessages,
             final ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_get_read_state_messages_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("getStateMessages", response);
-                            if (response != null) {
-                                UniversalResponse state = gson.fromJson(response, UniversalResponse.class);
-                                if(state.error == null){
-                                    getReadStateMessages.onSuccess(state.response);
-                                    return;
-                                }
-                                errorCallback.onError(state.error.error_code, state.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_get_read_state_messages_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("getStateMessages", response);
+                        if (response != null) {
+                            UniversalResponse state = gson.fromJson(response, UniversalResponse.class);
+                            if(state.error == null){
+                                getReadStateMessages.onSuccess(state.response);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(state.error.code, state.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("contact_id", Integer.toString(contact_id));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("contact_id", Integer.toString(contact_id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.get_read_state_messages");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.get_read_state_messages");
     }
 
     public String addFileToMessage(
@@ -554,66 +529,57 @@ public class Messages extends Help {
             final AddFileToMessageCallback addFileToMessageCallback,
             final Help.ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_add_file_to_message_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("add_file_to_message", response);
-                            if (response != null) {
-                                AddFile addFile = gson.fromJson(response, AddFile.class);
-                                if(addFile.error == null){
-                                    attachemts.add(addFile.id);
-                                    addFileToMessageCallback.onSuccess(addFile.response, addFile.id, position);
-                                    return;
-                                }
-                                errorCallback.onError(addFile.error.error_code, addFile.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_add_file_to_message_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("add_file_to_message", response);
+                        if (response != null) {
+                            AddFile addFile = gson.fromJson(response, AddFile.class);
+                            if(addFile.error == null){
+                                attachemts.add(addFile.id);
+                                addFileToMessageCallback.onSuccess(addFile.response, addFile.id, position);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(addFile.error.code, addFile.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("type", type);
-                    params.put("file_base64" , file_base64);
-                    params.put("ext" , ext);
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("type", type);
+                params.put("file_base64" , file_base64);
+                params.put("ext" , ext);
+                return params;
             };
+        };
 //            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            String tag = "messages.addFileToMessage_" + Integer.toString(position);
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, tag);
-            return tag;
-        }
-        return null;
+        String tag = "messages.addFileToMessage_" + Integer.toString(position);
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, tag);
+        return tag;
     }
 
     public void deleteAttachment(final int nuber){
-//        if(this.attachemts.get(nuber) == id){
         try {
             RequestQ.getInstance(_context).cancelPendingRequests("messages.addFileToMessage_" + Integer.toString(nuber));
             this.attachemts.remove(nuber);
 
         } catch (Exception e){
-
         }
-
-//        }
-
     }
 
 

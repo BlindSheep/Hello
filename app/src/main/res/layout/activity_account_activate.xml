@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zalivon"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    tools:context="com.httpso_hello.hello.activity.AccountActivateActivity">
+
+    <LinearLayout
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/plus"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="20dp"
+                android:paddingTop="15dp"
+                android:visibility="gone"
+                android:layout_marginRight="-20dp"
+                android:textColor="@color/main_black_color_hello"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"/>
+
+            <EditText
+                android:id="@+id/telNumber"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:textSize="18sp"
+                android:padding="10dp"
+                android:background="@android:color/transparent"
+                android:hint="Введите ваш номер телефона"
+                android:inputType="number"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/sendButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="20sp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            android:layout_gravity="right"
+            android:background="@drawable/button_hello"
+            android:textColor="@color/zalivon"
+            android:text="Отправить SMS-код"/>
+
+        <EditText
+            android:id="@+id/smsCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:background="@android:color/transparent"
+            android:hint="Введите SMS-код"
+            android:visibility="gone"
+            android:inputType="number"/>
+
+        <TextView
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:textSize="20sp"
+            android:paddingRight="20dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="20dp"
+            android:paddingTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="40dp"
+            android:layout_gravity="right"
+            android:visibility="gone"
+            android:background="@drawable/button_hello"
+            android:textColor="@color/zalivon"
+            android:text="Готово"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/new_view" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress"
+        android:visibility="gone"
+        android:layout_centerInParent="true"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
+
+</RelativeLayout>

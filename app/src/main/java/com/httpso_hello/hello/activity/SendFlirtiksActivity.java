@@ -4,15 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
-import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.PopupWindow;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
@@ -99,8 +94,8 @@ public class SendFlirtiksActivity extends SuperMainActivity {
                         }
                         page = page + 1;
 
-                        if(users[0].birth_date != null) {
-                            textName.setText(users[0].nickname + ", " + ConverterDate.convertDateToAge(users[0].birth_date));
+                        if(users[0].birthDate != null) {
+                            textName.setText(users[0].nickname + ", " + ConverterDate.convertDateToAge(users[0].birthDate));
                         } else textName.setText(users[0].nickname);
 
                         ArrayList<String> defolt = new ArrayList<>();
@@ -154,7 +149,7 @@ public class SendFlirtiksActivity extends SuperMainActivity {
                                     back.setVisibility(View.GONE);
                                 }
 
-                                if(userList.get(position).birth_date != null) textName.setText(userList.get(position).nickname + ", " + ConverterDate.convertDateToAge(userList.get(position).birth_date));
+                                if(userList.get(position).birthDate != null) textName.setText(userList.get(position).nickname + ", " + ConverterDate.convertDateToAge(userList.get(position).birthDate));
                                 else textName.setText(userList.get(position).nickname);
 
                                 mViewPager.setLocked(true);

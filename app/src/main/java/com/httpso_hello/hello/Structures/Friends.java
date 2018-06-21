@@ -6,12 +6,9 @@ import java.io.Serializable;
  * Created by mixir on 23.08.2017.
  */
 
-public class Friends{
+public class Friends extends SuperStructure{
 
-    public Error error;
-    public FriendItem[] profiles_list;
-    public FriendItem[] online;
-    public FriendItem[] request_in_friends;
+    public ForUserOnly[] friends;
 
     public Friends(){
 

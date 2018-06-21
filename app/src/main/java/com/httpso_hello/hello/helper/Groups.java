@@ -13,7 +13,6 @@ import com.httpso_hello.hello.Structures.SearchProfiles;
 import com.httpso_hello.hello.Structures.UniversalResponse;
 import com.httpso_hello.hello.Structures.User;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -48,45 +47,43 @@ public class Groups extends Help {
             final String search,
             final GetGroupsCallback getGroupsCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_get_groups_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("like", response);
-                            if (response != null) {
-                                AllGroups allGroups = gson.fromJson(response, AllGroups.class);
-                                if(allGroups.error==null){
-                                    getGroupsCallback.onSuccess(allGroups.groups);
-                                    return;
-                                }
-                                getGroupsCallback.onError(allGroups.error.error_code, allGroups.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_get_groups_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("like", response);
+                        if (response != null) {
+                            AllGroups allGroups = gson.fromJson(response, AllGroups.class);
+                            if(allGroups.error==null){
+                                getGroupsCallback.onSuccess(allGroups.groups);
                                 return;
                             }
-                            getGroupsCallback.onInternetError();
+                            getGroupsCallback.onError(allGroups.error.code, allGroups.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getGroupsCallback.onInternetError();
-                        }
+                        getGroupsCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    if (group_id != 0) params.put("group_id", Integer.toString(group_id));
-                    if (search != null) params.put("search", search);
-                    params.put("parameters", Integer.toString(parameters));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getGroupsCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                if (group_id != 0) params.put("group_id", Integer.toString(group_id));
+                if (search != null) params.put("search", search);
+                params.put("parameters", Integer.toString(parameters));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.getGroups");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.getGroups");
     }
 
     public void getFollowers(
@@ -94,44 +91,42 @@ public class Groups extends Help {
             final int page,
             final GetFollowersCallback getFollowersCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_get_members_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("like", response);
-                            if (response != null) {
-                                SearchProfiles allFollowers = gson.fromJson(response, SearchProfiles.class);
-                                if(allFollowers.error==null){
-                                    getFollowersCallback.onSuccess(allFollowers.profiles_list);
-                                    return;
-                                }
-                                getFollowersCallback.onError(allFollowers.error.error_code, allFollowers.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_get_members_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("like", response);
+                        if (response != null) {
+                            SearchProfiles allFollowers = gson.fromJson(response, SearchProfiles.class);
+                            if(allFollowers.error==null){
+                                getFollowersCallback.onSuccess(allFollowers.users);
                                 return;
                             }
-                            getFollowersCallback.onInternetError();
+                            getFollowersCallback.onError(allFollowers.error.code, allFollowers.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getFollowersCallback.onInternetError();
-                        }
+                        getFollowersCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("group_id", Integer.toString(group_id));
-                    params.put("page", Integer.toString(page));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getFollowersCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("group_id", Integer.toString(group_id));
+                params.put("page", Integer.toString(page));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.getMembers");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.getMembers");
     }
 
     public void subscribe(
@@ -140,45 +135,43 @@ public class Groups extends Help {
             final int user_id,
             final GetSubscribeCallback getSubscribeCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_subscribe_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("like", response);
-                            if (response != null) {
-                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
-                                if(res.error==null){
-                                    getSubscribeCallback.onSuccess();
-                                    return;
-                                }
-                                getSubscribeCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_subscribe_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("like", response);
+                        if (response != null) {
+                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            if(res.error==null){
+                                getSubscribeCallback.onSuccess();
                                 return;
                             }
-                            getSubscribeCallback.onInternetError();
+                            getSubscribeCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getSubscribeCallback.onInternetError();
-                        }
+                        getSubscribeCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("group_id", Integer.toString(group_id));
-                    params.put("action", Integer.toString(action));
-                    if (user_id != 0) params.put("user_id", Integer.toString(user_id));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getSubscribeCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("group_id", Integer.toString(group_id));
+                params.put("action", Integer.toString(action));
+                if (user_id != 0) params.put("user_id", Integer.toString(user_id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.getGroups");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.getGroups");
     }
 
     public void createGroup(
@@ -187,46 +180,44 @@ public class Groups extends Help {
             final boolean isModeration,
             final CreateGroupCallback createGroupCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_create_group_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("like", response);
-                            if (response != null) {
-                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
-                                if(res.error==null){
-                                    createGroupCallback.onSuccess(res.id);
-                                    return;
-                                }
-                                createGroupCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_create_group_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("like", response);
+                        if (response != null) {
+                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            if(res.error==null){
+                                createGroupCallback.onSuccess(res.id);
                                 return;
                             }
-                            createGroupCallback.onInternetError();
+                            createGroupCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            createGroupCallback.onInternetError();
-                        }
+                        createGroupCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("title", title);
-                    params.put("description", desc);
-                    if (isModeration) params.put("moderate", Integer.toString(1));
-                    else params.put("moderate", Integer.toString(0));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        createGroupCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("title", title);
+                params.put("description", desc);
+                if (isModeration) params.put("moderate", Integer.toString(1));
+                else params.put("moderate", Integer.toString(0));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.createGroups");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.createGroups");
     }
 
     public void moderateGroupItem(
@@ -235,45 +226,43 @@ public class Groups extends Help {
             final int group_id,
             final ModerateGroupItemCallback moderateGroupItemCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_moderate_group_item_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("like", response);
-                            if (response != null) {
-                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
-                                if(res.error==null){
-                                    moderateGroupItemCallback.onSuccess();
-                                    return;
-                                }
-                                moderateGroupItemCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_moderate_group_item_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("like", response);
+                        if (response != null) {
+                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            if(res.error==null){
+                                moderateGroupItemCallback.onSuccess();
                                 return;
                             }
-                            moderateGroupItemCallback.onInternetError();
+                            moderateGroupItemCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            moderateGroupItemCallback.onInternetError();
-                        }
+                        moderateGroupItemCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params =getParamsMap();
-                    params.put("id", Integer.toString(id));
-                    params.put("group_id", Integer.toString(group_id));
-                    params.put("action", Integer.toString(action));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        moderateGroupItemCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params =getParamsMap();
+                params.put("id", Integer.toString(id));
+                params.put("group_id", Integer.toString(group_id));
+                params.put("action", Integer.toString(action));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.moderateGroupsItem");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.moderateGroupsItem");
     }
 
     public void editGroup(
@@ -283,47 +272,45 @@ public class Groups extends Help {
             final boolean isModeration,
             final EditGroupCallback editGroupCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_edit_group_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("group", response);
-                            if (response != null) {
-                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
-                                if(res.error==null){
-                                    editGroupCallback.onSuccess();
-                                    return;
-                                }
-                                editGroupCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_edit_group_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("group", response);
+                        if (response != null) {
+                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            if(res.error==null){
+                                editGroupCallback.onSuccess();
                                 return;
                             }
-                            editGroupCallback.onInternetError();
+                            editGroupCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            editGroupCallback.onInternetError();
-                        }
+                        editGroupCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("group_id", Integer.toString(group_id));
-                    params.put("title", title);
-                    params.put("description", desc);
-                    if (isModeration) params.put("moderate", Integer.toString(1));
-                    else params.put("moderate", Integer.toString(0));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        editGroupCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("group_id", Integer.toString(group_id));
+                params.put("title", title);
+                params.put("description", desc);
+                if (isModeration) params.put("moderate", Integer.toString(1));
+                else params.put("moderate", Integer.toString(0));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.editGroups");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.editGroups");
     }
 
     public void updateGroupAvatar(
@@ -333,45 +320,43 @@ public class Groups extends Help {
             final UpdateAvatarCallback updateAvatarCallback,
             final ErrorCallback errorCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_update_group_avatar_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("update_avatar", response);
-                            if (response != null) {
-                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
-                                if(res.error==null){
-                                    updateAvatarCallback.onSuccess();
-                                    return;
-                                }
-                                errorCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_update_group_avatar_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("update_avatar", response);
+                        if (response != null) {
+                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            if(res.error==null){
+                                updateAvatarCallback.onSuccess();
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("base64_code_ava", base64_code_ava);
-                    params.put("ext", ext);
-                    params.put("group_id", Integer.toString(group_id));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("base64_code_ava", base64_code_ava);
+                params.put("ext", ext);
+                params.put("group_id", Integer.toString(group_id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.editGroups");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.editGroups");
     }
 
     public void requestDeleteGroup(
@@ -379,43 +364,41 @@ public class Groups extends Help {
             final RequestDeleteGroupCallback requestDeleteGroupCallback,
             final ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_request_delete_group_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("request_d_g", response);
-                            if (response != null) {
-                                ReqCSRFToken res = gson.fromJson(response, ReqCSRFToken.class);
-                                if(res.error==null){
-                                    requestDeleteGroupCallback.onSuccess(res.csrf_token);
-                                    return;
-                                }
-                                errorCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_request_delete_group_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("request_d_g", response);
+                        if (response != null) {
+                            ReqCSRFToken res = gson.fromJson(response, ReqCSRFToken.class);
+                            if(res.error==null){
+                                requestDeleteGroupCallback.onSuccess(res.csrf_token);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("id", Integer.toString(id));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("id", Integer.toString(id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.requestDeleteGroup");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.requestDeleteGroup");
     }
 
     public void deleteGroup(
@@ -424,47 +407,45 @@ public class Groups extends Help {
             final DeleteGroupCallback deleteGroupCallback,
             final ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.groups_delete_group_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("delete_group", response);
-                            if (response != null) {
-                                UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
-                                if(res.error==null){
-                                    deleteGroupCallback.onSuccess();
-                                    return;
-                                }
-                                errorCallback.onError(res.error.error_code, res.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.groups_delete_group_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("delete_group", response);
+                        if (response != null) {
+                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            if(res.error==null){
+                                deleteGroupCallback.onSuccess();
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(res.error.code, res.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("id", Integer.toString(id));
-                    params.put("csrf_token", csrf_token);
-                    params.put("submit", "1");
-                    params.put("is_delete_content", "1");
-                    params.put("request_in_api", "1");
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("id", Integer.toString(id));
+                params.put("csrf_token", csrf_token);
+                params.put("submit", "1");
+                params.put("is_delete_content", "1");
+                params.put("request_in_api", "1");
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.requestDeleteGroup");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.requestDeleteGroup");
     }
 
     public interface DeleteGroupCallback{

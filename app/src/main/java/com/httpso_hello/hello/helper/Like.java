@@ -44,47 +44,44 @@ public class Like extends Help {
             final String target_controller,
             final GetInfoCallback getInfoCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.rating_get_info_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("like", response);
-                            if (response != null) {
-                                Votes votes = gson.fromJson(response, Votes.class);
-                                if(votes.error==null){
-                                    getInfoCallback.onSuccess(votes.votes, activity);
-                                    return;
-                                }
-                                getInfoCallback.onError(votes.error.error_code, votes.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.rating_get_info_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("like", response);
+                        if (response != null) {
+                            Votes votes = gson.fromJson(response, Votes.class);
+                            if(votes.error==null){
+                                getInfoCallback.onSuccess(votes.votes, activity);
                                 return;
                             }
-                            getInfoCallback.onInternetError();
+                            getInfoCallback.onError(votes.error.code, votes.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getInfoCallback.onInternetError();
-                        }
+                        getInfoCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("target_id", Integer.toString(target_id));
-                    params.put("subject", subject);
-                    params.put("target_controller", target_controller);
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getInfoCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("target_id", Integer.toString(target_id));
+                params.put("subject", subject);
+                params.put("target_controller", target_controller);
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "rating.getInfo");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "rating.getInfo");
     }
 
     public void sendLike(
@@ -94,48 +91,45 @@ public class Like extends Help {
             final String target_controller,
             final SendLikeCallback sendLikeCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.rating_send_like_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("like", response);
-                            if (response != null) {
-                                Votes votes = gson.fromJson(response, Votes.class);
-                                if(votes.error==null){
-                                    sendLikeCallback.onSuccess();
-                                    return;
-                                }
-                                sendLikeCallback.onError(votes.error.error_code, votes.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.rating_send_like_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("like", response);
+                        if (response != null) {
+                            Votes votes = gson.fromJson(response, Votes.class);
+                            if(votes.error==null){
+                                sendLikeCallback.onSuccess();
                                 return;
                             }
-                            sendLikeCallback.onInternetError();
+                            sendLikeCallback.onError(votes.error.code, votes.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            sendLikeCallback.onInternetError();
-                        }
+                        sendLikeCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("direction", direction);
-                    params.put("target_id", Integer.toString(target_id));
-                    params.put("content_type", content_type);
-                    params.put("target_controller", target_controller);
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        sendLikeCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("direction", direction);
+                params.put("target_id", Integer.toString(target_id));
+                params.put("content_type", content_type);
+                params.put("target_controller", target_controller);
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "rating.send_like");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "rating.send_like");
     }
 
     public interface GetInfoCallback {

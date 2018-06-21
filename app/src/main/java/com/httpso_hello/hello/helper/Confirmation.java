@@ -7,144 +7,127 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.httpso_hello.hello.Structures.GiftItem;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by mixir on 03.11.2017.
  */
 
-public class Gifts extends Help {
+public class Confirmation extends Help {
 
     private Settings stgs;
     private Context _context;
 
-    private static Gifts instance;
+    private static Confirmation instance;
 
-    public Gifts(Context context) {
+    public Confirmation(Context context) {
         this._context = context;
         stgs = new Settings(context);
     }
 
-    public static synchronized Gifts getInstance(Context context) {
+    public static synchronized Confirmation getInstance(Context context) {
         if (instance == null) {
-            instance = new Gifts(context);
+            instance = new Confirmation(context);
         }
         return instance;
     }
 
-    //Получения списка подарков
-    public void getGifts(
-            final int user_id,
-            final Gifts.GetGiftsCallback getGiftsCallback
+    public void startConfirm(
+            final String reason,
+            final Confirmation.StartConfirmCallback startConfirmCallback
     ) {
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.gifts_get_gifts_uri,
+                Constant.confirmation_start_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response) {
-                        Log.d("gifts", response);
+                        Log.d("startConfirm", response);
                         if (response != null) {
                             com.httpso_hello.hello.Structures.Gifts gifts = gson.fromJson(response, com.httpso_hello.hello.Structures.Gifts.class);
                             if (gifts.error == null) {
-                                getGiftsCallback.onSuccess(gifts.gifts);
+                                startConfirmCallback.onSuccess();
                                 return;
                             }
-                            getGiftsCallback.onError(gifts.error.code, gifts.error.message);
+                            startConfirmCallback.onError(gifts.error.code, gifts.error.message);
                             return;
                         }
-                        getGiftsCallback.onInternetError();
+                        startConfirmCallback.onInternetError();
                         return;
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        getGiftsCallback.onInternetError();
+                        startConfirmCallback.onInternetError();
                     }
                 }
         ) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                if (user_id != 0) params.put("user_id", Integer.toString(user_id));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("reason", reason);
                 return params;
             }
 
             ;
         };
-        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "gifts.get_gifts");
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "startConfirm");
     }
 
-    public void sendGifts(
-            final int gift_id,
-            final int to_id,
-            final String text,
-            final int isPrivate,
-            final String paid_token,
-            final int price,
-            final Gifts.SendGiftsCallback sendGiftsCallback
+    public void endConfirm(
+            final String password,
+            final String reason,
+            final Confirmation.EndConfirmCallback endConfirmCallback
     ) {
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.paid_services_paid_gift_uri,
+                Constant.confirmation_finish_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response) {
-                        Log.d("gifts", response);
+                        Log.d("endConfirm", response);
                         if (response != null) {
                             com.httpso_hello.hello.Structures.Gifts gifts = gson.fromJson(response, com.httpso_hello.hello.Structures.Gifts.class);
                             if (gifts.error == null) {
-                                sendGiftsCallback.onSuccess();
+                                endConfirmCallback.onSuccess();
                                 return;
                             }
-                            sendGiftsCallback.onError(gifts.error.code, gifts.error.message);
+                            endConfirmCallback.onError(gifts.error.code, gifts.error.message);
                             return;
                         }
-                        sendGiftsCallback.onInternetError();
+                        endConfirmCallback.onInternetError();
                         return;
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        sendGiftsCallback.onInternetError();
+                        endConfirmCallback.onInternetError();
                     }
                 }
         ) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("gift_id", Integer.toString(gift_id));
-                params.put("to_id", Integer.toString(to_id));
-                params.put("text", text);
-                params.put("private", Integer.toString(isPrivate));
-                params.put("paid_token", paid_token);
-                params.put("price", Integer.toString(price));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("password", password);
+                params.put("reason", reason);
                 return params;
             }
 
             ;
         };
-        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "gifts.send_gifts");
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "endConfirm");
     }
 
-    public interface GetGiftsCallback {
-        void onSuccess(GiftItem[] gi);
-
+    public interface StartConfirmCallback {
+        void onSuccess();
         void onError(int error_code, String error_msg);
-
         void onInternetError();
     }
 
-    public interface SendGiftsCallback {
+    public interface EndConfirmCallback {
         void onSuccess();
-
         void onError(int error_code, String error_msg);
-
         void onInternetError();
     }
 }

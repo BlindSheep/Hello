@@ -70,7 +70,7 @@ public class StgsAndDescOfGroupActivity extends AppCompatActivity {
                 com.httpso_hello.hello.Structures.Groups group = groupItem[0];
                 if (group.title != null) title.setText(group.title);
                 if (group.description != null) desc.setText(group.description);
-                if (group.moderate == 0) moderation.setChecked(false);
+                if (!group.moderate) moderation.setChecked(false);
                 else moderation.setChecked(true);
                 swipeRefreshLayout.setRefreshing(false);
             }

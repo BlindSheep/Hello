@@ -93,15 +93,16 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         TextView user_id_header = (TextView) headerLayout.findViewById(R.id.user_id_header);
         Picasso
                 .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
+                .load(stgs.getSettingStr("avatar.micro"))
                 .resize(300, 300)
                 .centerCrop()
                 .transform(new CircularTransformation(0))
                 .into(headerImageView);
+
         if(stgs.getSettingStr("user_age") != null) {
-            user_name_and_age_header.setText(stgs.getSettingStr("user_nickname") + ", " + stgs.getSettingStr("user_age"));
-        } else user_name_and_age_header.setText(stgs.getSettingStr("user_nickname"));
-        user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("user_id")));
+            user_name_and_age_header.setText(stgs.getSettingStr("nickname") + ", " + stgs.getSettingStr("birthDate"));
+        } else user_name_and_age_header.setText(stgs.getSettingStr("nickname"));
+        user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("userId")));
     }
 
     public void setMenuItem(String activityName) {
@@ -120,55 +121,55 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     }
 
     private void getCountIntoDrawer() {
-        countsTimer = new Timer();
-        countsTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                countsHandler.post(new Runnable() {public void run() {
-                    Profile.getInstance(getApplicationContext())
-                            .getCount(new Profile.GetCountCallback() {
-                        @Override
-                        public void onSuccess(AllCounts allCounts) {
-                            //Новые сообщения
-                            if (allCounts.new_messages != 0) {
-                                nav_messages.setVisibility(View.VISIBLE);
-                                nav_messages.setGravity(Gravity.CENTER_VERTICAL);
-                                nav_messages.setTypeface(null, Typeface.BOLD);
-                                nav_messages.setText(Integer.toString(allCounts.new_messages));
-                            } else nav_messages.setVisibility(View.GONE);
-                            if (allCounts.new_guests != 0) {
-                                nav_guests.setVisibility(View.VISIBLE);
-                                nav_guests.setGravity(Gravity.CENTER_VERTICAL);
-                                nav_guests.setTypeface(null, Typeface.BOLD);
-                                nav_guests.setText(Integer.toString(allCounts.new_guests));
-                            } else nav_guests.setVisibility(View.GONE);
-                            if (allCounts.new_notices != 0) {
-                                nav_notises.setVisibility(View.VISIBLE);
-                                nav_notises.setGravity(Gravity.CENTER_VERTICAL);
-                                nav_notises.setTypeface(null, Typeface.BOLD);
-                                nav_notises.setText(Integer.toString(allCounts.new_notices));
-                            } else nav_notises.setVisibility(View.GONE);
-                            if (allCounts.requests_in_friends != 0) {
-                                nav_frinds.setVisibility(View.VISIBLE);
-                                nav_frinds.setGravity(Gravity.CENTER_VERTICAL);
-                                nav_frinds.setTypeface(null, Typeface.BOLD);
-                                nav_frinds.setText(Integer.toString(allCounts.requests_in_friends));
-                            } else nav_frinds.setVisibility(View.GONE);
-                        }
-
-                        @Override
-                        public void onError(int error_code, String error_msg) {
-
-                        }
-
-                        @Override
-                        public void onInternetError() {
-
-                        }
-                    });
-                }});
-            }
-        }, 1000, 30000);
+//        countsTimer = new Timer();
+//        countsTimer.schedule(new TimerTask() {
+//            @Override
+//            public void run() {
+//                countsHandler.post(new Runnable() {public void run() {
+//                    Profile.getInstance(getApplicationContext())
+//                            .getCount(new Profile.GetCountCallback() {
+//                        @Override
+//                        public void onSuccess(AllCounts allCounts) {
+//                            //Новые сообщения
+//                            if (allCounts.new_messages != 0) {
+//                                nav_messages.setVisibility(View.VISIBLE);
+//                                nav_messages.setGravity(Gravity.CENTER_VERTICAL);
+//                                nav_messages.setTypeface(null, Typeface.BOLD);
+//                                nav_messages.setText(Integer.toString(allCounts.new_messages));
+//                            } else nav_messages.setVisibility(View.GONE);
+//                            if (allCounts.new_guests != 0) {
+//                                nav_guests.setVisibility(View.VISIBLE);
+//                                nav_guests.setGravity(Gravity.CENTER_VERTICAL);
+//                                nav_guests.setTypeface(null, Typeface.BOLD);
+//                                nav_guests.setText(Integer.toString(allCounts.new_guests));
+//                            } else nav_guests.setVisibility(View.GONE);
+//                            if (allCounts.new_notices != 0) {
+//                                nav_notises.setVisibility(View.VISIBLE);
+//                                nav_notises.setGravity(Gravity.CENTER_VERTICAL);
+//                                nav_notises.setTypeface(null, Typeface.BOLD);
+//                                nav_notises.setText(Integer.toString(allCounts.new_notices));
+//                            } else nav_notises.setVisibility(View.GONE);
+//                            if (allCounts.requests_in_friends != 0) {
+//                                nav_frinds.setVisibility(View.VISIBLE);
+//                                nav_frinds.setGravity(Gravity.CENTER_VERTICAL);
+//                                nav_frinds.setTypeface(null, Typeface.BOLD);
+//                                nav_frinds.setText(Integer.toString(allCounts.requests_in_friends));
+//                            } else nav_frinds.setVisibility(View.GONE);
+//                        }
+//
+//                        @Override
+//                        public void onError(int error_code, String error_msg) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onInternetError() {
+//
+//                        }
+//                    });
+//                }});
+//            }
+//        }, 1000, 30000);
     }
 
     @Override
@@ -190,7 +191,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         switch (id) {
             case R.id.nav_profile:
                 intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                intent.putExtra("profile_id", stgs.getSettingInt("userId"));
                 startActivity(intent);
                 finish();
                 break;
@@ -211,7 +212,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 break;
             case R.id.nav_frinds:
                 intent = new Intent(getApplicationContext(), FriendsActivity.class);
-                intent.putExtra("profile_id", 0);
+                intent.putExtra("profile_id", stgs.getSettingInt("userId"));
                 startActivity(intent);
                 finish();
                 break;
@@ -270,7 +271,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
     }
     @Override
     protected void onPause(){
-        countsTimer.cancel();
+//        countsTimer.cancel();
         super.onPause();
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onPauseSession();
     }

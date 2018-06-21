@@ -15,6 +15,7 @@ public class GiftItem {
     public String text;
     public int isPrivate;
     public int sender;
+    public cmsGroupsMembers cms_gifts_sends;
 
     public GiftItem(){
 

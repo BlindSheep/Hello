@@ -94,7 +94,7 @@ public class GroupsAdapter extends ArrayAdapter<Groups> {
         }
 
         holder.groupName.setText(group.title);
-        holder.groupsFollowers.setText(ConverterDate.getFollowers(group.members_count));
+        holder.groupsFollowers.setText(ConverterDate.getFollowers(group.membersCount));
 
         return rowView;
 

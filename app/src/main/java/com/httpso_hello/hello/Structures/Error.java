@@ -6,8 +6,8 @@ package com.httpso_hello.hello.Structures;
 
 public class Error {
 
-    public int error_code;
-    public String error_msg;
+    public int code;
+    public String message;
 
     public Error(){
 

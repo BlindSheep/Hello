@@ -8,6 +8,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
@@ -32,6 +33,7 @@ public class SettingOfProfileActivity extends SuperMainActivity {
     private LinearLayout exit;
     private LinearLayout share;
     private LinearLayout newVersion;
+    private TextView version;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         exit = (LinearLayout) findViewById(R.id.exit);
         share = (LinearLayout) findViewById(R.id.share);
         newVersion = (LinearLayout) findViewById(R.id.newVersion);
+        version = (TextView) findViewById(R.id.version);
 
         pushSettings();
         startPageSettings();
@@ -65,6 +68,7 @@ public class SettingOfProfileActivity extends SuperMainActivity {
         setExit();
         setShare();
         setNewVersion();
+        setVersion();
     }
 
     //Настройки пушей
@@ -321,5 +325,9 @@ public class SettingOfProfileActivity extends SuperMainActivity {
                 startActivity(openlinkIntent);
             }
         });
+    }
+
+    private void setVersion () {
+        version.setText("Версия: " + getResources().getString(R.string.version));
     }
 }

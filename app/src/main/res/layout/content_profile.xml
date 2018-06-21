@@ -29,38 +29,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/photo_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:text="Нет фото"
-                android:textColor="@color/main_blue_color_hello" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:id="@+id/new_photo_button"
-                android:orientation="horizontal"
-                android:gravity="right"
-                android:visibility="visible">
-
-                <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_gravity="center"
-                    android:background="@mipmap/ic_action_photo"
-                    android:backgroundTint="@color/main_dark_grey_color_hello"/>
-
                 <TextView
+                    android:id="@+id/photo_count"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Новое фото"
-                    android:gravity="center"/>
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="Нет фото"
+                    android:textColor="@color/main_blue_color_hello" />
 
-            </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:id="@+id/new_photo_button"
+                    android:orientation="horizontal"
+                    android:gravity="right"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="center"
+                        android:background="@mipmap/ic_action_photo"
+                        android:backgroundTint="@color/main_dark_grey_color_hello"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:text="Новое фото"
+                        android:gravity="center"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -74,28 +74,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent">
 
-                        <LinearLayout
-                            android:id="@+id/linearLayoutForPhoto"
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                    <LinearLayout
+                        android:id="@+id/linearLayoutForPhoto"
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
 
-                            <GridView
-                                android:id="@+id/profile_photos_list"
-                                android:layout_width="wrap_content"
-                                android:layout_height="120dp"
-                                android:paddingLeft="10dp"
-                                android:columnWidth="120dp"
-                                android:gravity="center"
-                                android:horizontalSpacing="4dp"
-                                android:scrollbarAlwaysDrawHorizontalTrack="true"
-                                android:scrollbarAlwaysDrawVerticalTrack="true"
-                                android:scrollbars="horizontal"
-                                android:stretchMode="none"
-                                android:verticalSpacing="1dp"/>
-                        </LinearLayout>
+                        <GridView
+                            android:id="@+id/profile_photos_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="120dp"
+                            android:paddingLeft="10dp"
+                            android:columnWidth="120dp"
+                            android:gravity="center"
+                            android:horizontalSpacing="4dp"
+                            android:scrollbarAlwaysDrawHorizontalTrack="true"
+                            android:scrollbarAlwaysDrawVerticalTrack="true"
+                            android:scrollbars="horizontal"
+                            android:stretchMode="none"
+                            android:verticalSpacing="1dp"/>
+                    </LinearLayout>
 
-                    </FrameLayout>
+                </FrameLayout>
 
             </HorizontalScrollView>
 
@@ -185,32 +185,6 @@
                         android:text=" "
                         android:textColor="@color/main_black_color_hello"
                         android:textSize="15dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/spProfileContener"
-                    android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="10dp"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:tint="@color/main_dark_grey_color_hello"
-                        app:srcCompat="@drawable/ic_action_otnosheniya"/>
-
-                    <TextView
-                        android:id="@+id/spProfile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:gravity="center_vertical"
-                        android:textColor="@color/main_black_color_hello"
-                        android:textSize="15dp" />
-
                 </LinearLayout>
 
                 <LinearLayout
@@ -382,124 +356,184 @@
             android:background="@color/main_white_color_hello"
             android:orientation="vertical">
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <LinearLayout
-                    android:id="@+id/friendsCountButton"
-                    android:layout_width="116dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/friendsCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="30dp"
-                        android:layout_marginLeft="10dp"
-                        android:gravity="center_vertical"
-                        android:text="Нет друзей"/>
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/friendsBlock"
+                        android:id="@+id/friendsCountButton"
                         android:layout_width="116dp"
                         android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:padding="10dp"
+                        android:layout_marginRight="20dp"
                         android:orientation="vertical">
 
-                        <LinearLayout
-                            android:id="@+id/friendsLayout1"
+                        <TextView
+                            android:id="@+id/friendsCount"
                             android:layout_width="wrap_content"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:text="Нет друзей"/>
+
+                        <LinearLayout
+                            android:id="@+id/friendsBlock"
+                            android:layout_width="116dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="3dp"
                             android:visibility="gone"
-                            android:orientation="horizontal">
+                            android:padding="10dp"
+                            android:orientation="vertical">
 
-                            <ImageView
-                                android:id="@+id/friend1"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginRight="3dp"
-                                android:visibility="gone" />
+                            <LinearLayout
+                                android:id="@+id/friendsLayout1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"
+                                android:visibility="gone"
+                                android:orientation="horizontal">
 
-                            <ImageView
-                                android:id="@+id/friend2"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginRight="3dp"
-                                android:visibility="gone" />
+                                <ImageView
+                                    android:id="@+id/friend1"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="3dp"
+                                    android:visibility="gone" />
 
-                            <ImageView
-                                android:id="@+id/friend3"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:visibility="gone" />
+                                <ImageView
+                                    android:id="@+id/friend2"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="3dp"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/friend3"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/friendsLayout2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"
+                                android:visibility="gone"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/friend4"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="3dp"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/friend5"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="3dp"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/friend6"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
-                        <LinearLayout
-                            android:id="@+id/friendsLayout2"
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/groupsCountButton"
+                        android:layout_width="116dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/groupsCount"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="3dp"
-                            android:visibility="gone"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:id="@+id/friend4"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginRight="3dp"
-                                android:visibility="gone" />
-
-                            <ImageView
-                                android:id="@+id/friend5"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginRight="3dp"
-                                android:visibility="gone" />
-
-                            <ImageView
-                                android:id="@+id/friend6"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:visibility="gone" />
-
-                        </LinearLayout>
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="center_vertical"
+                            android:text="Нет друзей"/>
 
                         <LinearLayout
-                            android:id="@+id/friendsLayout3"
-                            android:layout_width="wrap_content"
+                            android:id="@+id/groupsBlock"
+                            android:layout_width="116dp"
                             android:layout_height="wrap_content"
                             android:visibility="gone"
-                            android:orientation="horizontal">
+                            android:padding="10dp"
+                            android:orientation="vertical">
 
-                            <ImageView
-                                android:id="@+id/friend7"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginRight="3dp"
-                                android:visibility="gone" />
+                            <LinearLayout
+                                android:id="@+id/groupsLayout1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"
+                                android:visibility="gone"
+                                android:orientation="horizontal">
 
-                            <ImageView
-                                android:id="@+id/friend8"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:layout_marginRight="3dp"
-                                android:visibility="gone" />
+                                <ImageView
+                                    android:id="@+id/groups1"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="3dp"
+                                    android:visibility="gone" />
 
-                            <ImageView
-                                android:id="@+id/friend9"
-                                android:layout_width="30dp"
-                                android:layout_height="30dp"
-                                android:visibility="gone" />
+                                <ImageView
+                                    android:id="@+id/groups2"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="3dp"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/groups3"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/groupsLayout2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="3dp"
+                                android:visibility="gone"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/groups4"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="3dp"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/groups5"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:layout_marginRight="3dp"
+                                    android:visibility="gone" />
+
+                                <ImageView
+                                    android:id="@+id/groups6"
+                                    android:layout_width="30dp"
+                                    android:layout_height="30dp"
+                                    android:visibility="gone" />
+
+                            </LinearLayout>
 
                         </LinearLayout>
 
@@ -507,9 +541,7 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-        </HorizontalScrollView>
+            </HorizontalScrollView>
 
             <View
                 android:layout_width="match_parent"

@@ -19,6 +19,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.httpso_hello.hello.R;
 
+import com.httpso_hello.hello.Structures.Resp;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.helper.*;
 
@@ -139,62 +140,77 @@ public class MainActivity extends Activity{
     private void login () {
         startService(new Intent(getApplicationContext(), AlwaysOnline.class));
         Profile profile = new Profile(getApplicationContext());
+        String version = getResources().getString(R.string.version).toString();
         profile.getSmallUserInfo(
+                version,
                 FirebaseInstanceId.getInstance().getToken(),
                 new Profile.GetSmallUserInfoCallback() {
-            @Override
-            public void onSuccess(User user) {
-                    //Заполняем инфу
-                    stgs.setSetting("user_nickname", user.nickname);
-                    if (user.birth_date != null) {
-                        stgs.setSetting("user_age", ConverterDate.convertDateToAge(user.birth_date));
-                    }
-                    if (user.avatar != null) {
-                        stgs.setSetting("user_avatar.micro", Constant.host + user.avatar.micro);
-                    }
-
-                    //Переходим на нужную страницу
-                    Intent intent;
-                    if (stgs.getSettingInt("startPage") == 3) {
-                        intent = new Intent(MainActivity.this, ProfileActivity.class);
-                        intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
-                    } else if (stgs.getSettingInt("startPage") == 2) {
-                        intent = new Intent(MainActivity.this, MessagesActivity.class);
-                    } else if (stgs.getSettingInt("startPage") == 1) {
-                        intent = new Intent(MainActivity.this, SearchActivity.class);
-                    } else {
-                        intent = new Intent(MainActivity.this, BoardActivity.class);
-                    }
-                    startActivity(intent);
-                    finish();
-            }
-        }, new Help.ErrorCallback() {
-            @Override
-            public void onError(int error_code, String error_msg) {
-                auth.logout(new Auth.LogoutFinishingCallback() {
                     @Override
-                    public void onSuccess() {
-                        Toast.makeText(getApplicationContext().getApplicationContext(), "Произошла какая-то ошибка, возможно ваш аккаунт заблокирован! Попробуйте позднее или обратитесь в службу поддержки", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(MainActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                    public void onSuccess(Resp resp) {
+                        if (resp.isActivated) {
+                            //Заполняем инфу
+                            stgs.setSetting("nickname", resp.nickname);
+                            if (resp.birthDate != null) {
+                                stgs.setSetting("birthDate", ConverterDate.convertDateToAge(resp.birthDate));
+                            }
+                            if (resp.avatar != null) {
+                                stgs.setSetting("avatar.micro", Constant.upload + resp.avatar.micro);
+                            }
+
+                            //Переходим на нужную страницу
+                            Intent intent;
+                            if (stgs.getSettingInt("startPage") == 3) {
+                                intent = new Intent(MainActivity.this, ProfileActivity.class);
+                                intent.putExtra("profileId", stgs.getSettingInt("userId"));
+                            } else if (stgs.getSettingInt("startPage") == 2) {
+                                intent = new Intent(MainActivity.this, MessagesActivity.class);
+                            } else if (stgs.getSettingInt("startPage") == 1) {
+                                intent = new Intent(MainActivity.this, SearchActivity.class);
+                            } else {
+                                intent = new Intent(MainActivity.this, BoardActivity.class);
+                            }
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            // Если не активирован аккаунт, то активируем
+                            Intent intent = new Intent(MainActivity.this, AccountActivateActivity.class);
+                            intent.putExtra("isRegistration", false);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                }, new Help.ErrorCallback() {
+                    @Override
+                    public void onError(final int error_code, String error_msg) {
+                        if (error_code != 800) {
+                            auth.logout(new Auth.LogoutFinishingCallback() {
+                                @Override
+                                public void onSuccess() {
+                                    Toast.makeText(getApplicationContext().getApplicationContext(), "Произошла какая-то ошибка, возможно ваш аккаунт заблокирован! Попробуйте позднее или обратитесь в службу поддержки", Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+
+                                @Override
+                                public void onError() {
+                                }
+                            });
+                        } else {
+                            Intent intent = new Intent(MainActivity.this, RefreshAppActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
                     }
 
                     @Override
-                    public void onError() {
-
+                    public void onInternetError() {
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                login();
+                            }
+                        }, 1000);
                     }
                 });
-            }
-
-            @Override
-            public void onInternetError() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        login();
-                    }
-                }, 1000);
-            }
-        });
     }
 }

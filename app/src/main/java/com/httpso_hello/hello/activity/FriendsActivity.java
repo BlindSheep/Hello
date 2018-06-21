@@ -3,20 +3,13 @@ package com.httpso_hello.hello.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,14 +17,12 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 
-import com.httpso_hello.hello.Structures.FriendItem;
+import com.httpso_hello.hello.Structures.ForUserOnly;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.adapters.FriendsAdapter;
 import com.httpso_hello.hello.fragments.FriendsFragment;
-import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Friend;
-import com.squareup.picasso.Picasso;
 
 import static android.R.style.Animation_Dialog;
 
@@ -48,6 +39,14 @@ public class FriendsActivity extends SuperMainActivity{
     private TextView zagolovok;
     private ProgressBar launch2;
     private TextView zagolovok2;
+    private Bundle friendsAllFragmentArg;
+    private Bundle friendsOnlineFragmentArg;
+    private Bundle friendsRequestInFriendsFragmentArg;
+    private FriendsFragment friendsAllFragment;
+    private FriendsFragment friendsOnlineFragment;
+    private FriendsFragment friendsRequestInFragment;
+    private FriendsAdapter adapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,44 +66,29 @@ public class FriendsActivity extends SuperMainActivity{
         zagolovok = (TextView) popupView.findViewById(R.id.zagolovok);
         launch2 = (ProgressBar) popupView2.findViewById(R.id.launch);
         zagolovok2 = (TextView) popupView2.findViewById(R.id.zagolovok);
+        friendsAllFragmentArg = new Bundle();
+        friendsOnlineFragmentArg = new Bundle();
+        friendsRequestInFriendsFragmentArg = new Bundle();
+        friendsAllFragment = new FriendsFragment();
+        friendsOnlineFragment = new FriendsFragment();
+        friendsRequestInFragment= new FriendsFragment();
+        adapter = new FriendsAdapter(getSupportFragmentManager());
+        viewPager = (ViewPager) findViewById(R.id.viewpagerFriends);
+
         getFriends();
     }
 
     public void getFriends() {
-        Friend.getInstance(getApplicationContext()).getFriends(extras.getInt("profile_id"), this,
+        Friend.getInstance(getApplicationContext()).getFriends(extras.getInt("profile_id"), "", FriendsActivity.this,
                 new Friend.GetFriendsCallback() {
                     @Override
-                    public void onSuccess(FriendItem[] friendsAll, FriendItem[] friendsOnline, FriendItem[] request_in_friends, Activity activity, boolean isUserFriends) {
-
-                        //содаем фрагменты и аргументы
-                        Bundle friendsAllFragmentArg = new Bundle();
-                        Bundle friendsOnlineFragmentArg = new Bundle();
-                        Bundle friendsRequestInFriendsFragmentArg = new Bundle();
-                        FriendsFragment friendsAllFragment = new FriendsFragment();
-                        FriendsFragment friendsOnlineFragment = new FriendsFragment();
-                        FriendsFragment friendsRequestInFragment= new FriendsFragment();
-
+                    public void onSuccess(ForUserOnly[] friendsAll, Activity activity, boolean isUserFriends) {
                         //формируем аргументы для фрагмента со всеми друзьями
                         friendsAllFragmentArg.putSerializable("friendsArray", friendsAll);
                         friendsAllFragmentArg.putBoolean("isRequests", false);
                         friendsAllFragmentArg.putBoolean("isUserFriends", isUserFriends);
                         friendsAllFragment.setArguments(friendsAllFragmentArg);
-
-                        //формируем аргументы для фрагмента с онлайн друзьями
-                        friendsOnlineFragmentArg.putSerializable("friendsArray", friendsOnline);
-                        friendsOnlineFragmentArg.putBoolean("isRequests", false);
-                        friendsAllFragmentArg.putBoolean("isUserFriends", isUserFriends);
-                        friendsOnlineFragment.setArguments(friendsOnlineFragmentArg);
-
-                        //формируем аргументы для фрагмента с заявками в друзья
-                        friendsRequestInFriendsFragmentArg.putSerializable("friendsArray", request_in_friends);
-                        friendsRequestInFriendsFragmentArg.putBoolean("isRequests", true);
-                        friendsAllFragmentArg.putBoolean("isUserFriends", isUserFriends);
-                        friendsRequestInFragment.setArguments(friendsRequestInFriendsFragmentArg);
-
                         int friendsAllCount = friendsAll.length;
-                        int friendsOnlineCount = friendsOnline.length;
-                        int friendsRequestInFriendsCount = request_in_friends.length;
                         String friends = "";
                         if(friendsAllCount != 0) {
                             if(friendsAllCount == 1) friends = Integer.toString(friendsAllCount) + " друг";
@@ -118,54 +102,123 @@ public class FriendsActivity extends SuperMainActivity{
                         } else {
                             friends = "Нет друзей";
                         }
-
-                        // Добавляем фраменты на страницу
-                        FriendsAdapter adapter = new FriendsAdapter(getSupportFragmentManager());
-                        ViewPager viewPager = (ViewPager) findViewById(R.id.viewpagerFriends);
-
                         adapter.addFragment(friendsAllFragment, friends);
-                        adapter.addFragment(friendsOnlineFragment, Integer.toString(friendsOnlineCount) + " онлайн");
-                        if(request_in_friends.length!=0) adapter.addFragment(friendsRequestInFragment, "Заявки " + Integer.toString(friendsRequestInFriendsCount));
 
-                        viewPager.setAdapter(adapter);
-                        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayoutFriends);
-                        tabLayout.setupWithViewPager(viewPager);
+                        Friend.getInstance(getApplicationContext()).getFriends(extras.getInt("profile_id"), "online", FriendsActivity.this,
+                                new Friend.GetFriendsCallback() {
+                                    @Override
+                                    public void onSuccess(ForUserOnly[] friendsAll, Activity activity, boolean isUserFriends) {
+                                        //формируем аргументы для фрагмента с онлайн друзьями
+                                        friendsOnlineFragmentArg.putSerializable("friendsArray", friendsAll);
+                                        friendsOnlineFragmentArg.putBoolean("isRequests", false);
+                                        friendsAllFragmentArg.putBoolean("isUserFriends", isUserFriends);
+                                        friendsOnlineFragment.setArguments(friendsOnlineFragmentArg);
+                                        int friendsOnlineCount = friendsAll.length;
+                                        adapter.addFragment(friendsOnlineFragment, Integer.toString(friendsOnlineCount) + " онлайн");
 
-                        progressBarFriends.setVisibility(View.GONE);
+                                        Friend.getInstance(getApplicationContext()).getFriends(extras.getInt("profile_id"), "incoming", FriendsActivity.this,
+                                                new Friend.GetFriendsCallback() {
+                                                    @Override
+                                                    public void onSuccess(ForUserOnly[] friendsAll, Activity activity, boolean isUserFriends) {
+                                                        //формируем аргументы для фрагмента с заявками в друзья
+                                                        friendsRequestInFriendsFragmentArg.putSerializable("friendsArray", friendsAll);
+                                                        friendsRequestInFriendsFragmentArg.putBoolean("isRequests", true);
+                                                        friendsAllFragmentArg.putBoolean("isUserFriends", isUserFriends);
+                                                        friendsRequestInFragment.setArguments(friendsRequestInFriendsFragmentArg);
+                                                        int friendsRequestInFriendsCount = friendsAll.length;
+                                                        if(friendsAll.length!=0) adapter.addFragment(friendsRequestInFragment, "Заявки " + Integer.toString(friendsRequestInFriendsCount));
 
-                        toolbar.setTitle("Все друзья");
-                        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                                                        setPage();
+                                                    }
 
-                            @Override
-                            public void onPageSelected(final int position) {
-                                //Заполняем тулбар при смене вкладыки
-                                if (position == 0)toolbar.setTitle("Все друзья");
-                                if (position == 1)toolbar.setTitle("Друзья онлайн");
-                                if (position == 2)toolbar.setTitle("Заявки в друзья");
-                            }
+                                                    @Override
+                                                    public void onError(int error_code, String error_msg) {
+                                                        new Handler().postDelayed(new Runnable() {
+                                                            @Override public void run() {
+                                                                getFriends();
+                                                            }
+                                                        }, 5000);
+                                                    }
 
-                            @Override
-                            public void onPageScrolled(int position, float positionOffset,
-                                                       int positionOffsetPixels) {
-                            }
+                                                    @Override
+                                                    public void onInternetError() {
+                                                        new Handler().postDelayed(new Runnable() {
+                                                            @Override public void run() {
+                                                                getFriends();
+                                                            }
+                                                        }, 5000);
+                                                    }
+                                                }
+                                        );
+                                    }
 
-                            @Override
-                            public void onPageScrollStateChanged(int state) {
-                            }
-                        });
+                                    @Override
+                                    public void onError(int error_code, String error_msg) {
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override public void run() {
+                                                getFriends();
+                                            }
+                                        }, 5000);
+                                    }
+
+                                    @Override
+                                    public void onInternetError() {
+                                        new Handler().postDelayed(new Runnable() {
+                                            @Override public void run() {
+                                                getFriends();
+                                            }
+                                        }, 5000);
+                                    }
+                                }
+                        );
                     }
 
                     @Override
                     public void onError(int error_code, String error_msg) {
-
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                getFriends();
+                            }
+                        }, 5000);
                     }
 
                     @Override
                     public void onInternetError() {
-
+                        new Handler().postDelayed(new Runnable() {
+                            @Override public void run() {
+                                getFriends();
+                            }
+                        }, 5000);
                     }
                 }
         );
+    }
+
+    private void setPage() {
+        viewPager.setAdapter(adapter);
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tablayoutFriends);
+        tabLayout.setupWithViewPager(viewPager);
+        progressBarFriends.setVisibility(View.GONE);
+        toolbar.setTitle("Все друзья");
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
+            @Override
+            public void onPageSelected(final int position) {
+                //Заполняем тулбар при смене вкладыки
+                if (position == 0)toolbar.setTitle("Все друзья");
+                if (position == 1)toolbar.setTitle("Друзья онлайн");
+                if (position == 2)toolbar.setTitle("Заявки в друзья");
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset,
+                                       int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
     }
 
     public void getPopupForAcceptOrDelete(final int id) {
@@ -180,7 +233,7 @@ public class FriendsActivity extends SuperMainActivity{
             public void onClick(View v) {
                 zagolovok.setText("Ожидайте...");
                 launch.setVisibility(View.VISIBLE);
-                Friend.getInstance(getApplicationContext()).acceptFriend(id, new Friend.AcceptFriendCallback() {
+                Friend.getInstance(getApplicationContext()).addFriend(id, new Friend.AddFriendsCallback() {
                     @Override
                     public void onSuccess() {
                         Intent intent = new Intent(getApplicationContext(), FriendsActivity.class);
@@ -211,33 +264,30 @@ public class FriendsActivity extends SuperMainActivity{
             public void onClick(View v) {
                 zagolovok.setText("Ожидайте...");
                 launch.setVisibility(View.VISIBLE);
-                Friend.getInstance(getApplicationContext()).deleteFriend(
-                        1,
-                        id,
-                        new Friend.DeleteFriendsCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Intent intent = new Intent(getApplicationContext(), FriendsActivity.class);
-                        intent.putExtra("profile_id", 0);
-                        startActivity(intent);
-                        finish();
-                        Toast.makeText(getApplicationContext(), "Заявка удалена", Toast.LENGTH_LONG).show();
-                    }
+                Friend.getInstance(getApplicationContext()).deleteFriend(id, new Friend.DeleteFriendsCallback() {
+                            @Override
+                            public void onSuccess() {
+                                Intent intent = new Intent(getApplicationContext(), FriendsActivity.class);
+                                intent.putExtra("profile_id", 0);
+                                startActivity(intent);
+                                finish();
+                                Toast.makeText(getApplicationContext(), "Заявка удалена", Toast.LENGTH_LONG).show();
+                            }
 
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                        zagolovok.setText("Заявка в друзья");
-                        launch.setVisibility(View.GONE);
-                    }
+                            @Override
+                            public void onError(int error_code, String error_msg) {
+                                Toast.makeText(getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                                zagolovok.setText("Заявка в друзья");
+                                launch.setVisibility(View.GONE);
+                            }
 
-                    @Override
-                    public void onInternetError() {
-                        Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                        zagolovok.setText("Заявка в друзья");
-                        launch.setVisibility(View.GONE);
-                    }
-                });
+                            @Override
+                            public void onInternetError() {
+                                Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                                zagolovok.setText("Заявка в друзья");
+                                launch.setVisibility(View.GONE);
+                            }
+                        });
             }
         });
     }
@@ -268,10 +318,7 @@ public class FriendsActivity extends SuperMainActivity{
             public void onClick(View v) {
                 zagolovok2.setText("Ожидайте...");
                 launch2.setVisibility(View.VISIBLE);
-                Friend.getInstance(getApplicationContext()).deleteFriend(
-                        0,
-                        id,
-                        new Friend.DeleteFriendsCallback() {
+                Friend.getInstance(getApplicationContext()).deleteFriend(id, new Friend.DeleteFriendsCallback() {
                             @Override
                             public void onSuccess() {
                                 Intent intent = new Intent(getApplicationContext(), FriendsActivity.class);

@@ -10,7 +10,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.httpso_hello.hello.Structures.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -37,47 +36,48 @@ public class Simpation extends Help {
     }
 
     public void getInfo(
+            final String type,
             final Activity activity,
             final Simpation.GetSimpationCallback getSimpationCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.flirtiki_get_info_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("flirtiki", response);
-                            if (response != null) {
-                                Flirtiki flirtiki = gson.fromJson(response, Flirtiki.class);
-                                if(flirtiki.error==null){
-                                    getSimpationCallback.onSuccess(flirtiki.flirtiki, flirtiki.youLike, flirtiki.whoYouLike, activity);
-                                    return;
-                                }
-                                getSimpationCallback.onError(flirtiki.error.error_code, flirtiki.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.flirtiki_get_flirtik_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("flirtiki", response);
+                        if (response != null) {
+                            Flirtiki flirtiki = gson.fromJson(response, Flirtiki.class);
+                            if(flirtiki.error==null){
+                                getSimpationCallback.onSuccess(flirtiki.simpations, activity);
+                                setNewToken(flirtiki.token);
                                 return;
                             }
-                            getSimpationCallback.onInternetError();
+                            getSimpationCallback.onError(flirtiki.error.code, flirtiki.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getSimpationCallback.onInternetError();
-                        }
+                        getSimpationCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getSimpationCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap(_context);
+                params.put("type", type);
+                params.put("page", Integer.toString(0));
+                params.put("perPage", Integer.toString(30));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "flirtiki.getInfo");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "flirtiki.getInfo");
     }
 
     public void sendFlirtik(
@@ -85,98 +85,45 @@ public class Simpation extends Help {
             final Simpation.SendSimpationCallback sendSimpationCallback,
             final Help.ErrorCallback errorCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.flirtiki_send_flirtik_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("send_flirt", response);
-                            if (response != null) {
-                                FlirtikSend flirtikSend = gson.fromJson(response, FlirtikSend.class);
-                                if(flirtikSend.error==null){
-                                    sendSimpationCallback.onSuccess(flirtikSend.response);
-                                    return;
-                                }
-                                errorCallback.onError(flirtikSend.error.error_code, flirtikSend.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.flirtiki_get_info_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("send_flirt", response);
+                        if (response != null) {
+                            FlirtikSend flirtikSend = gson.fromJson(response, FlirtikSend.class);
+                            if(flirtikSend.error==null){
+                                sendSimpationCallback.onSuccess(flirtikSend.response);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(flirtikSend.error.code, flirtikSend.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap(_context);
-                    params.put("profile_id", Integer.toString(profile_id));
-                    return params;
-                };
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "flirtiki.sendFlirt");
-        }
-    }
-
-    public void getFlirtList(
-            final int city_id,
-            final int from, // Возраст от
-            final int to, // Возраст до
-            final Simpation.GetFlirtListCallback getFlirtListCallback,
-            final Help.ErrorCallback errorCallback
-    ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.flirtiki_send_flirtik_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("flirt_list", response);
-                            if (response != null) {
-                                GetFlirtListResponse getFlirtListResponse = gson.fromJson(response, GetFlirtListResponse.class);
-                                if(getFlirtListResponse.error==null){
-                                    getFlirtListCallback.onSuccess(getFlirtListResponse.users);
-                                    return;
-                                }
-                                errorCallback.onError(getFlirtListResponse.error.error_code, getFlirtListResponse.error.error_msg);
-                                return;
-                            }
-                            errorCallback.onInternetError();
-                            return;
-                        }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap(_context);
-                    if(city_id != 0)
-                        params.put("city_id", Integer.toString(city_id));
-                    if(from != 0)
-                        params.put("from", Integer.toString(from));
-                    if(to != 0)
-                        params.put("to", Integer.toString(to));
-                    return params;
-                };
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap(_context);
+                params.put("profile_id", Integer.toString(profile_id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "flirtiki.getFlirtList");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "flirtiki.sendFlirt");
     }
 
     public interface GetSimpationCallback {
-        public void onSuccess(FlirtikItem[] vz, FlirtikItem[] vam, FlirtikItem[] vi, Activity activity);
+        public void onSuccess(ForUserOnly[] vz, Activity activity);
         public void onError(int error_code, String error_msg);
         void onInternetError();
     }
@@ -184,8 +131,4 @@ public class Simpation extends Help {
     public interface SendSimpationCallback {
         public void onSuccess(String response);
     }
-    public interface GetFlirtListCallback{
-        void onSuccess(User[] users);
-    }
-
 }

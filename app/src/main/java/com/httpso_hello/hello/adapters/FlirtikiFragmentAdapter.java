@@ -9,8 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
-import com.httpso_hello.hello.Structures.FlirtikItem;
-import com.httpso_hello.hello.Structures.FriendItem;
+import com.httpso_hello.hello.Structures.ForUserOnly;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
@@ -23,13 +22,13 @@ import java.util.ArrayList;
  * Created by mixir on 23.08.2017.
  */
 
-public class FlirtikiFragmentAdapter extends ArrayAdapter<FlirtikItem> {
+public class FlirtikiFragmentAdapter extends ArrayAdapter<ForUserOnly> {
 
-    private ArrayList<FlirtikItem> flirtik;
+    private ArrayList<ForUserOnly> flirtik;
     private final Activity context;
     private Settings stgs;
 
-    public FlirtikiFragmentAdapter(Activity context, ArrayList<FlirtikItem> flirtik) {
+    public FlirtikiFragmentAdapter(Activity context, ArrayList<ForUserOnly> flirtik) {
         super(context, R.layout.content_simpation, flirtik);
         this.flirtik = flirtik;
         this.context = context;
@@ -59,13 +58,13 @@ public class FlirtikiFragmentAdapter extends ArrayAdapter<FlirtikItem> {
             holder = (FlirtikiFragmentAdapter.ViewHolder) rowView.getTag();
         }
 
-        final FlirtikItem flirtik = this.flirtik.get(position);
+        final ForUserOnly flirtik = this.flirtik.get(position);
 
 //        //Устанавливаем аватар
-        if(flirtik.avatar != null) {
+        if(flirtik.user.avatar != null) {
             Picasso
                     .with(getContext())
-                    .load(Constant.upload + flirtik.avatar.micro)
+                    .load(Constant.upload + flirtik.user.avatar.micro)
                     .resize(200, 200)
                     .centerCrop()
                     .transform(new CircularTransformation(0))
@@ -73,12 +72,12 @@ public class FlirtikiFragmentAdapter extends ArrayAdapter<FlirtikItem> {
         }
 
         //Устанавливаем имя
-        holder.userNicknameSimpatii.setText(flirtik.nickname);
+        holder.userNicknameSimpatii.setText(flirtik.user.nickname);
 
         //Устанавливаем инфу о юзере
-        if ((flirtik.birth_date != null) && (flirtik.city_cache != null)) holder.userInfoSimpatii.setText(ConverterDate.convertDateToAge(flirtik.birth_date) + ", " + flirtik.city_cache);
-        else if (flirtik.birth_date != null) holder.userInfoSimpatii.setText(ConverterDate.convertDateToAge(flirtik.birth_date));
-        else if (flirtik.city_cache != null) holder.userInfoSimpatii.setText(flirtik.city_cache);
+        if ((flirtik.user.birthDate != null) && (flirtik.user.city_cache != null)) holder.userInfoSimpatii.setText(ConverterDate.convertDateToAge(flirtik.user.birthDate) + ", " + flirtik.user.city_cache);
+        else if (flirtik.user.birthDate != null) holder.userInfoSimpatii.setText(ConverterDate.convertDateToAge(flirtik.user.birthDate));
+        else if (flirtik.user.city_cache != null) holder.userInfoSimpatii.setText(flirtik.user.city_cache);
         else holder.userInfoSimpatii.setText("");
 
         return rowView;

@@ -363,7 +363,7 @@ public class GuestsActivity extends SuperMainActivity{
 
                                 @Override
                                 public void onError(int error_code, String error_msg) {
-//                                    showMessage(error_msg);
+//                                    showMessage(message);
                                 }
 
                                 @Override

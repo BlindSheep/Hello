@@ -15,8 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.httpso_hello.hello.R;
-import com.httpso_hello.hello.Structures.FriendItem;
-import com.httpso_hello.hello.activity.FriendsActivity;
+import com.httpso_hello.hello.Structures.ForUserOnly;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.adapters.FriendsFragmentAdapter;
 import com.httpso_hello.hello.helper.Constant;
@@ -27,7 +26,7 @@ import java.util.Collections;
 
 public class FriendsFragment extends Fragment {
 
-    private FriendItem[] friendItemFragment;
+    private ForUserOnly[] friendItemFragment;
     private boolean isRequests;
     private boolean isUserFriends;
     private View header;
@@ -37,7 +36,7 @@ public class FriendsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        FriendItem[] friendItem = (FriendItem[]) args.getSerializable("friendsArray");
+        ForUserOnly[] friendItem = (ForUserOnly[]) args.getSerializable("friendsArray");
         boolean isRequests = args.getBoolean("isRequests");
         boolean isUserFriends = args.getBoolean("isUserFriends");
 
@@ -55,7 +54,7 @@ public class FriendsFragment extends Fragment {
         final ListView LV = (ListView) rootView.findViewById(R.id.listFriends);
         header = getActivity().getLayoutInflater().inflate(R.layout.footer6dp, null);
 
-        ArrayList<FriendItem> friendsAllArray = new ArrayList<FriendItem>();
+        ArrayList<ForUserOnly> friendsAllArray = new ArrayList<ForUserOnly>();
         Collections.addAll(friendsAllArray, this.friendItemFragment);
 
         FriendsFragmentAdapter friendsAdapter = new FriendsFragmentAdapter(getActivity(), friendsAllArray, isRequests, isUserFriends);
@@ -67,7 +66,7 @@ public class FriendsFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position != 0) {
                     Intent intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra("profile_id", friendItemFragment[position - 1].id);
+                    intent.putExtra("profile_id", friendItemFragment[position - 1].user.id);
                     startActivity(intent);
                 }
             }

@@ -174,9 +174,9 @@ public class SettingsLookingForFragment extends Fragment {
                     }
 
                     @Override
-                    public void onError(int error_code, String error_msg) {
+                    public void onError(int code, String message) {
                         saveButton.setText("Сохранить");
-                        Toast.makeText(getContext().getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext().getApplicationContext(), message, Toast.LENGTH_LONG).show();
                     }
 
                     @Override

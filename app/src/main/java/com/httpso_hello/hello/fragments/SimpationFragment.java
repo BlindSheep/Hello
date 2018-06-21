@@ -10,12 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.httpso_hello.hello.R;
-import com.httpso_hello.hello.Structures.FlirtikItem;
-import com.httpso_hello.hello.Structures.FriendItem;
-import com.httpso_hello.hello.Structures.NoticeItem;
+import com.httpso_hello.hello.Structures.ForUserOnly;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.adapters.FlirtikiFragmentAdapter;
-import com.httpso_hello.hello.adapters.FriendsFragmentAdapter;
 import com.httpso_hello.hello.helper.Constant;
 
 import java.util.ArrayList;
@@ -28,7 +25,7 @@ import java.util.Collections;
 
 public class SimpationFragment extends Fragment {
 
-    private FlirtikItem[] flirtikItemFragment;
+    private ForUserOnly[] flirtikItemFragment;
     private View header;
     private FlirtikiFragmentAdapter flirtikiFragmentAdapter;
 
@@ -37,7 +34,7 @@ public class SimpationFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         Bundle args = getArguments();
-        FlirtikItem[] flirtikItemFragment = (FlirtikItem[]) args.getSerializable("flirtikArray");
+        ForUserOnly[] flirtikItemFragment = (ForUserOnly[]) args.getSerializable("flirtikArray");
 
         this.flirtikItemFragment = flirtikItemFragment;
     }
@@ -50,7 +47,7 @@ public class SimpationFragment extends Fragment {
         final ListView LV = (ListView) rootView.findViewById(R.id.listSimpatii);
         header = getActivity().getLayoutInflater().inflate(R.layout.footer6dp, null);
 
-        ArrayList<FlirtikItem> flirtiki = new ArrayList<FlirtikItem>();
+        ArrayList<ForUserOnly> flirtiki = new ArrayList<ForUserOnly>();
         Collections.addAll(flirtiki, this.flirtikItemFragment);
 
         flirtikiFragmentAdapter = new FlirtikiFragmentAdapter(getActivity(), flirtiki);
@@ -62,8 +59,8 @@ public class SimpationFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
                     Intent intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra("profile_id", flirtikItemFragment[position - 1].id);
-                    intent.putExtra("profile_nickname", flirtikItemFragment[position - 1].nickname);
+                    intent.putExtra("profile_id", flirtikItemFragment[position - 1].user.id);
+                    intent.putExtra("profile_nickname", flirtikItemFragment[position - 1].user.nickname);
                     intent.putExtra("avatar", Constant.default_avatar);
                     startActivity(intent);
                 }

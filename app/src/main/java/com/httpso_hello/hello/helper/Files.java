@@ -47,52 +47,48 @@ public class Files extends Help {
             final UploadFileCallback uploadFileCallback,
             final Help.ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.temp_files_save_file,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            if (response != null) {
-                                Log.d("temp_file", response);
-                                AddFile addFile = gson.fromJson(response, AddFile.class);
-                                if(addFile.error == null){
-                                    uploadedFiles.add(addFile.id);
-                                    uploadFileCallback.onSuccess(addFile.id, position);
-                                    return;
-                                }
-                                errorCallback.onError(addFile.error.error_code, addFile.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.temp_files_save_file,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        if (response != null) {
+                            Log.d("temp_file", response);
+                            AddFile addFile = gson.fromJson(response, AddFile.class);
+                            if(addFile.error == null){
+                                uploadedFiles.add(addFile.id);
+                                uploadFileCallback.onSuccess(addFile.id, position);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(addFile.error.code, addFile.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("type", type);
-                    params.put("file_base64" , file_base64);
-                    params.put("ext" , ext);
-                    params.put("controller" , controller);
-                    params.put("content_type" , content_type);
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("auth_token", stgs.getSettingStr("auth_token"));
+                params.put("type", type);
+                params.put("file_base64" , file_base64);
+                params.put("ext" , ext);
+                params.put("controller" , controller);
+                params.put("content_type" , content_type);
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "Files.uploadFile" + Integer.toString(position));
-            return "Files.uploadFile" + Integer.toString(position);
-        }
-        return null;
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "Files.uploadFile" + Integer.toString(position));
+        return "Files.uploadFile" + Integer.toString(position);
     }
 
     public void deleteFile(
@@ -100,43 +96,41 @@ public class Files extends Help {
             final DeleteFileCallback deleteFileCallback,
             final ErrorCallback errorCallback
     ){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.temp_files_delete_file,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            if (response != null) {
-                                Log.d("temp_file.delete", response);
-                                UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
-                                if(universalResponse.error == null){
-                                    deleteFileCallback.onSuccess();
-                                    return;
-                                }
-                                errorCallback.onError(universalResponse.error.error_code, universalResponse.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.temp_files_delete_file,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        if (response != null) {
+                            Log.d("temp_file.delete", response);
+                            UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
+                            if(universalResponse.error == null){
+                                deleteFileCallback.onSuccess();
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(universalResponse.error.code, universalResponse.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("id", Integer.toString(id));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("id", Integer.toString(id));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "Files.deleteFile" + Integer.toString(id));
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "Files.deleteFile" + Integer.toString(id));
     }
 
     public void breakUploadRequest(String tag){

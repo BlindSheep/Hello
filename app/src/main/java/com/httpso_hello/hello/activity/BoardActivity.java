@@ -100,7 +100,7 @@ public class BoardActivity extends SuperMainActivity{
     public void getBoard(){
         hBoard = new HBoard(getApplicationContext());
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
-        hBoard.getBoard(this, 0, 0, page, 0, new HBoard.GetBoardCallback() {
+        hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
             @Override
             public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -137,7 +137,7 @@ public class BoardActivity extends SuperMainActivity{
             YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).reportEvent("get_new_board");
             loading = true;
             HBoard hBoard = new HBoard(getApplicationContext());
-            hBoard.getBoard(this, 0, 0, page, 0, new HBoard.GetBoardCallback() {
+            hBoard.getBoard(this, page, new HBoard.GetBoardCallback() {
                 @Override
                 public void onSuccess(final BoardItem[] boardItems, Activity activity) {
                     loading = false;

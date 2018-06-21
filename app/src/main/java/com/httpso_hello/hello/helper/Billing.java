@@ -1,6 +1,5 @@
 package com.httpso_hello.hello.helper;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 
@@ -10,7 +9,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.httpso_hello.hello.Structures.UniversalResponse;
-import com.httpso_hello.hello.Structures.Vote;
 import com.httpso_hello.hello.Structures.Votes;
 import com.httpso_hello.hello.helper.push_services.TokenReq;
 
@@ -60,7 +58,7 @@ public class Billing extends Help {
                                     getTokenCallback.onSuccess();
                                     return;
                                 }
-                                getTokenCallback.onError(votes.error.error_code, votes.error.error_msg);
+                                getTokenCallback.onError(votes.error.code, votes.error.message);
                                 return;
                             }
                             getTokenCallback.onInternetError();
@@ -94,140 +92,131 @@ public class Billing extends Help {
     public void sendToken(
             final Billing.SendTokenCallback sendTokenCallback
     ) {
-        if (Constant.api_key != "") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.rating_send_like_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response) {
-                            Log.d("like", response);
-                            if (response != null) {
-                                Votes votes = gson.fromJson(response, Votes.class);
-                                if (votes.error == null) {
-                                    sendTokenCallback.onSuccess();
-                                    return;
-                                }
-                                sendTokenCallback.onError(votes.error.error_code, votes.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.rating_send_like_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response) {
+                        Log.d("like", response);
+                        if (response != null) {
+                            Votes votes = gson.fromJson(response, Votes.class);
+                            if (votes.error == null) {
+                                sendTokenCallback.onSuccess();
                                 return;
                             }
-                            sendTokenCallback.onInternetError();
+                            sendTokenCallback.onError(votes.error.code, votes.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            sendTokenCallback.onInternetError();
-                        }
+                        sendTokenCallback.onInternetError();
+                        return;
                     }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    return params;
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        sendTokenCallback.onInternetError();
+                    }
                 }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                return params;
+            }
 
-                ;
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "rating.send_like");
-        }
+            ;
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "rating.send_like");
     }
 
     public void getRaisingToken(
             final String action,
             final Billing.GetRaisingTokenCallback getRaisingTokenCallback
     ) {
-        if (Constant.api_key != "") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.paid_services_raising_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response) {
-                            Log.d("raising", response);
-                            if (response != null) {
-                                TokenReq tokenReq = gson.fromJson(response, TokenReq.class);
-                                if (tokenReq.error == null) {
-                                    getRaisingTokenCallback.onSuccess(tokenReq);
-                                    return;
-                                }
-                                getRaisingTokenCallback.onError(tokenReq.error.error_code, tokenReq.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.paid_services_raising_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response) {
+                        Log.d("raising", response);
+                        if (response != null) {
+                            TokenReq tokenReq = gson.fromJson(response, TokenReq.class);
+                            if (tokenReq.error == null) {
+                                getRaisingTokenCallback.onSuccess(tokenReq);
                                 return;
                             }
-                            getRaisingTokenCallback.onInternetError();
+                            getRaisingTokenCallback.onError(tokenReq.error.code, tokenReq.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getRaisingTokenCallback.onInternetError();
-                        }
+                        getRaisingTokenCallback.onInternetError();
+                        return;
                     }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    if(action!=null){
-                        params.put("action", action);
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getRaisingTokenCallback.onInternetError();
                     }
-                    return params;
                 }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                if(action!=null){
+                    params.put("action", action);
+                }
+                return params;
+            }
 
-                ;
-            };
-            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.getRaisingToken");
-        }
+            ;
+        };
+        SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.getRaisingToken");
     }
 
     public void paidRaising(final String paid_token,
-            final Billing.PaidRaisingCallback paidRaisingCallback
+                            final Billing.PaidRaisingCallback paidRaisingCallback
     ) {
         Log.d("paid_raising", paid_token);
-        if (Constant.api_key != "") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.paid_services_paid_raising_uri ,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response) {
-                            Log.d("paid_raising", response);
-                            if (response != null) {
-                                UniversalResponse resp = gson.fromJson(response, UniversalResponse.class);
-                                if (resp.error == null) {
-                                    paidRaisingCallback.onSuccess(resp.response);
-                                    return;
-                                }
-                                paidRaisingCallback.onError(resp.error.error_code, resp.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.paid_services_paid_raising_uri ,
+                new Response.Listener<String>() {
+                    public void onResponse(String response) {
+                        Log.d("paid_raising", response);
+                        if (response != null) {
+                            UniversalResponse resp = gson.fromJson(response, UniversalResponse.class);
+                            if (resp.error == null) {
+                                paidRaisingCallback.onSuccess(resp.response);
                                 return;
                             }
-                            paidRaisingCallback.onInternetError();
+                            paidRaisingCallback.onError(resp.error.code, resp.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            paidRaisingCallback.onInternetError();
-                        }
+                        paidRaisingCallback.onInternetError();
+                        return;
                     }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("paid_token", paid_token);
-                    return params;
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        paidRaisingCallback.onInternetError();
+                    }
                 }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("paid_token", paid_token);
+                return params;
+            }
 
-                ;
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.getRaisingToken");
-        }
+            ;
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.getRaisingToken");
     }
 
     public void addBalance(
@@ -236,92 +225,87 @@ public class Billing extends Help {
             final Billing.AddBalanceCallback addBalanceCallback,
             final ErrorCallback errorCallback
     ) {
-        if (Constant.api_key != "") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.paid_services_add_balance_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response) {
-                            Log.d("add_balance", response);
-                            if (response != null) {
-                                TokenReq tokenReq = gson.fromJson(response, TokenReq.class);
-                                if (tokenReq.error == null) {
-                                    addBalanceCallback.onSuccess();
-                                    return;
-                                }
-                                errorCallback.onError(tokenReq.error.error_code, tokenReq.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.paid_services_add_balance_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response) {
+                        Log.d("add_balance", response);
+                        if (response != null) {
+                            TokenReq tokenReq = gson.fromJson(response, TokenReq.class);
+                            if (tokenReq.error == null) {
+                                addBalanceCallback.onSuccess();
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(tokenReq.error.code, tokenReq.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("action", "add_balance");
-                    params.put("paid_token", token);
-                    params.put("balance", Integer.toString(summa));
-                    return params;
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
                 }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("action", "add_balance");
+                params.put("paid_token", token);
+                params.put("balance", Integer.toString(summa));
+                return params;
+            }
 
-                ;
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.addBalance");
-        }
+            ;
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.addBalance");
     }
 
     public void paidViewGuests(
             final String paid_token,
             final RemovePointsCallback removePointsCallback,
             final ErrorCallback errorCallback) {
-        if (Constant.api_key != "") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.paid_services_remove_points_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response) {
-                            Log.d("paid_view_g", response);
-                            if (response != null) {
-                                UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
-                                if (universalResponse.error == null) {
-                                    removePointsCallback.onSuccess();
-                                    return;
-                                }
-                                errorCallback.onError(universalResponse.error.error_code, universalResponse.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.paid_services_remove_points_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response) {
+                        Log.d("paid_view_g", response);
+                        if (response != null) {
+                            UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
+                            if (universalResponse.error == null) {
+                                removePointsCallback.onSuccess();
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(universalResponse.error.code, universalResponse.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            ) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = getParamsMap();
-                    params.put("paid_token", paid_token);
-                    return params;
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
                 }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap();
+                params.put("paid_token", paid_token);
+                return params;
+            }
 
-                ;
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.paidViewGuests");
-        }
+            ;
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.paidViewGuests");
     }
 
     public interface RemovePointsCallback {

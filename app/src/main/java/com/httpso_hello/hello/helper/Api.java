@@ -21,7 +21,6 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.httpso_hello.hello.Structures.Contact;
 import com.httpso_hello.hello.Structures.Contacts;
 import com.httpso_hello.hello.Structures.Error;
 import com.httpso_hello.hello.Structures.Registration;
@@ -40,331 +39,265 @@ public class Api {
     private Resp result;
 
     Api(Context context){
-        //Сохраняем контекст
         this._context = context;
         GsonBuilder GB = new GsonBuilder();
         this.gson = GB.create();
         stgs = new Settings(context);
     }
 
-    //Регистрация юзера
-    public void registration(final String email, final String password, final String nickname, final RegistrationCallback callback) {
-
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Method.POST,
-                    Constant.registr_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            if(response!=null) {
-                                // Кэллбэк для обработки полученного результата
-                                Debug.systemLog(response);
-                                callback.onSuccess(gson.fromJson(response, Registration.class));
-                                return;
-                            }
-                            callback.onInternetError();
-                            return;
-                        }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            System.out.println("error");
-                            callback.onInternetError();
-                        }
-                    }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("nickname", nickname);
-                    params.put("email", email);
-                    params.put("password1", password);
-                    params.put("password2", password);
-                    params.put("render_personal_data", "1");
-                    return params;
-                };
-
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "auth.signup");
-        }
-    }
-
-    //Вход пользователя
+    /**
+     * Авторизация
+     * NewAPI
+     * @param login
+     * @param password
+     * @param callback
+     * @return
+     */
     public Resp login(final String login, final String password, final LoginCallback callback){
-
-        if(Constant.api_key!="") {
-            StringRequest SReq = new StringRequest(
-                    Method.POST,
-                    Constant.auth_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            if(response!=null) {
-                                // Кэллбэк для обработки полученного результата
-                                Debug.systemLog(response);
-                                callback.onSuccess(gson.fromJson(response, Resp.class));
-                                return;
-                            }
-                            callback.onInternetError();
+        StringRequest SReq = new StringRequest(
+                Method.POST,
+                Constant.auth_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        if(response!=null) {
+                            callback.onSuccess(gson.fromJson(response, Resp.class));
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            System.out.println("error");
-                            callback.onInternetError();
-                        }
+                        callback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("email", login);
-                    params.put("password", password);
-                    return params;
-                };
-
-
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        callback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("login", login);
+                params.put("password", password);
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "auth.login");
-        }
-
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "auth.login");
         return this.result;
     }
 
-    public void setPushUpToken(final String token){
-        if(Constant.api_key!=""){
-            Log.d("PUSHUP", "!!!");
-            StringRequest SReq = new StringRequest(
-                    Method.POST,
-                    Constant.set_token_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            if(response!=null) {
-                                Log.d("PUSHUP", response);
-                                ReqSetToken reqSetToken = gson.fromJson(response, ReqSetToken.class);
-                                if(reqSetToken.error == null){
-                                    stgs.setSettingInt("device_id", reqSetToken.device_id);
-                                    Log.d("PUSHUP", Integer.toString(stgs.getSettingInt("device_id")));
-                                    return;
-                                }
 
-                                // Кэллбэк для обработки полученного результата
-                                return;
-                            }
+    //Регистрация юзера
+    public void registration(final String telefone, final String password, final String nickname, final RegistrationCallback callback) {
+        StringRequest SReq = new StringRequest(
+                Method.POST,
+                Constant.registr_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        if(response!=null) {
+                            Debug.systemLog(response);
+                            callback.onSuccess(gson.fromJson(response, Registration.class));
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-
-                        }
+                        callback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("push_up_token", token);
-                    return params;
-                };
-
-
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("error");
+                        callback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("nickname", nickname);
+                params.put("phone", telefone);
+                params.put("password", password);
+                params.put("secondPassword", password);
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "auth.set_token");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "auth.signup");
+    }
+
+    public void setPushUpToken(final String token){
+        Log.d("PUSHUP", "!!!");
+        StringRequest SReq = new StringRequest(
+                Method.POST,
+                Constant.set_token_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        if(response!=null) {
+                            Log.d("PUSHUP", response);
+                            ReqSetToken reqSetToken = gson.fromJson(response, ReqSetToken.class);
+                            if(reqSetToken.error == null){
+                                stgs.setSettingInt("device_id", reqSetToken.device_id);
+                                Log.d("PUSHUP", Integer.toString(stgs.getSettingInt("device_id")));
+                                return;
+                            }
+
+                            // Кэллбэк для обработки полученного результата
+                            return;
+                        }
+                        return;
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("push_up_token", token);
+                return params;
+            };
+
+
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "auth.set_token");
     }
 
     public void logout(final LogoutCallback logoutCallback){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Method.POST,
-                    Constant.logout_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            if(response!=null) {
-                                logoutCallback.onSuccess();
-                                return;
-                            }
-                            logoutCallback.onInternetError();
+        StringRequest SReq = new StringRequest(
+                Method.POST,
+                Constant.logout_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        if(response!=null) {
+                            logoutCallback.onSuccess();
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            System.out.println("error");
-                            logoutCallback.onInternetError();
-                        }
+                        logoutCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    return params;
-                };
-
-
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        System.out.println("error");
+                        logoutCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "auth.logout");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "auth.logout");
     }
 
     public void getContacts(final Activity activity, final GetContactsCallback getContactsCallback){
-        if(Constant.api_key!="") {
-            StringRequest SReq = new StringRequest(
-                    Method.POST,
-                    Constant.messages_get_contacts_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("contacts", response);
-                            if(response!=null){
-                                Contacts contacts;
-                                try{
-                                    contacts = gson.fromJson(response, Contacts.class);
-                                } catch (Exception e){
-                                    Logs.getInstance(_context).add(
-                                            "error",
-                                            response,
-                                            "api_messages_get_contacts",
-                                            e.toString()
-                                    );
-                                    contacts = new Contacts();
-                                    contacts.error = new Error();
-                                    contacts.error.error_msg = "Произошла непредвиденая ошибка";
-                                    contacts.error.error_code = 998;
-                                }
-
-                                getContactsCallback.onSuccess(contacts, activity);
-                                return;
+        StringRequest SReq = new StringRequest(
+                Method.POST,
+                Constant.messages_get_contacts_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("contacts", response);
+                        if(response!=null){
+                            Contacts contacts;
+                            try{
+                                contacts = gson.fromJson(response, Contacts.class);
+                            } catch (Exception e){
+                                Logs.getInstance(_context).add(
+                                        "error",
+                                        response,
+                                        "api_messages_get_contacts",
+                                        e.toString()
+                                );
+                                contacts = new Contacts();
+                                contacts.error = new Error();
+                                contacts.error.message = "Произошла непредвиденая ошибка";
+                                contacts.error.code = 998;
                             }
-                            getContactsCallback.onInternetError();
+
+                            getContactsCallback.onSuccess(contacts, activity);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getContactsCallback.onInternetError();
-                        }
+                        getContactsCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    return params;
-                };
-
-
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getContactsCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getContacts");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getContacts");
     }
-
-    /*public void getMessages(final int contact_id, final Activity activity, final GetMessagesCallback getMessagesCallback){
-        if(Constant.api_key!=""){
-            StringRequest SReq = new StringRequest(
-                    Method.POST,
-                    Constant.messages_get_messages_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("messages", response);
-                            if(response!=null){
-                                getMessagesCallback.onSuccess(gson.fromJson(response, RequestMessages.class), activity);
-                                return;
-                            }
-                            getMessagesCallback.onInternetError();
-                            return;
-                        }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            getMessagesCallback.onInternetError();
-                        }
-                    }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("contact_id", Integer.toString(contact_id));
-                    return params;
-                };
-            };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getMessages_"+Integer.toString(contact_id));
-        }
-    }*/
 
     public void sendMessage(final String messageContent, final int contact_id, final ApiSendMessage apiSendMessage){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Method.POST,
-                    Constant.messages_send_message_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            if(response!=null){
-                                Debug.systemLog(response);
-                                apiSendMessage.onSuccess(gson.fromJson(response, RequestMessages.class));
-                                return;
-                            }
-                            apiSendMessage.onInternetError();
+        StringRequest SReq = new StringRequest(
+                Method.POST,
+                Constant.messages_send_message_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        if(response!=null){
+                            Debug.systemLog(response);
+                            apiSendMessage.onSuccess(gson.fromJson(response, RequestMessages.class));
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            apiSendMessage.onInternetError();
-                        }
+                        apiSendMessage.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    // Posting parameters to login url
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("contact_id", Integer.toString(contact_id));
-                    params.put("messageContent", messageContent);
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        apiSendMessage.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                // Posting parameters to login url
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("contact_id", Integer.toString(contact_id));
+                params.put("messageContent", messageContent);
+                return params;
             };
-            SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.sendMessage_"+Integer.toString(contact_id));
-        }
-    }
-
-    public interface RegistrationCallback {
-        void onSuccess(Registration registration);
-        void onInternetError();
+        };
+        SReq.setRetryPolicy(new DefaultRetryPolicy(0, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.sendMessage_"+Integer.toString(contact_id));
     }
 
     public interface LoginCallback {
         void onSuccess(Resp result);
+        void onInternetError();
+    }
+
+    public interface RegistrationCallback {
+        void onSuccess(Registration registration);
         void onInternetError();
     }
 
@@ -378,10 +311,6 @@ public class Api {
         void onInternetError();
     }
 
-    /*public interface GetMessagesCallback{
-        void onSuccess(RequestMessages messages, Activity activity);
-        void onInternetError();
-    }*/
     public interface ApiSendMessage{
         void onSuccess(RequestMessages requestMessages);
         void onInternetError();

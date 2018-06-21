@@ -13,22 +13,17 @@ import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Coment;
-import com.httpso_hello.hello.activity.BoardActivity;
 import com.httpso_hello.hello.activity.BoardContentActivity;
 import com.httpso_hello.hello.activity.PhotoCommentsActivity;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
-import com.httpso_hello.hello.helper.Comments;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.ConverterDate;
-import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-
-import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 /**
  * Created by mixir on 24.08.2017.
@@ -54,7 +49,7 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
     }
 
     private class ViewHolder{
-        private EmojiconTextView content;
+        private TextView content;
         private ImageView avatar;
         private TextView contactNickname;
         private TextView datePub;
@@ -73,7 +68,7 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
             LayoutInflater inflater = context.getLayoutInflater();
             rowView = inflater.inflate(R.layout.content_board_content_item, null, true);
             holder = new ViewHolder();
-            holder.content = (EmojiconTextView) rowView.findViewById(R.id.content);
+            holder.content = (TextView) rowView.findViewById(R.id.content);
             holder.avatar = (ImageView) rowView.findViewById(R.id.avatar);
             holder.contactNickname = (TextView) rowView.findViewById(R.id.contactNickname);
             holder.datePub = (TextView) rowView.findViewById(R.id.datePub);
@@ -155,7 +150,7 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
         holder.content.setText(Html.fromHtml(coment.content));
 
         //Онлайн
-        if(coment.user.is_online) holder.isOnline.setVisibility(View.VISIBLE);
+        if(coment.user.isOnline) holder.isOnline.setVisibility(View.VISIBLE);
         else holder.isOnline.setVisibility(View.GONE);
 
         //Удаление коммента

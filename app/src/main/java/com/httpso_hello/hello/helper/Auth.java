@@ -13,7 +13,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.httpso_hello.hello.Structures.Contact;
 import com.httpso_hello.hello.Structures.Registration;
 import com.httpso_hello.hello.Structures.ReqUpdateAvatar;
 import com.httpso_hello.hello.Structures.User;
@@ -31,7 +30,7 @@ public class Auth extends Help {
     Context context;
 
     public Auth(Context context){
-
+        super(context);
         stgs = new Settings(context);
         this.context = context;
         api = new Api(context);
@@ -40,7 +39,7 @@ public class Auth extends Help {
     //Функция проверки авторизованности приложения
     public boolean autoLogion(){
         // Если Есть ключ то приложение считаент что оно авторизовано
-        if((stgs.getSettingStr("auth_token")!= null) && (stgs.getSettingInt("user_id") != 0)){
+        if((stgs.getSettingStr("token")!= null) && (stgs.getSettingInt("userId") != 0)){
             return true;
         }
         return false;
@@ -58,12 +57,10 @@ public class Auth extends Help {
                     @Override
                     public void onSuccess(Registration result){
                         if(result.error == null) {
-                            if(result.user_id != 0)
-                                registrationFinishCallBack.onSuccess(result.user_id);
-                                return;
+                            registrationFinishCallBack.onSuccess(result);
+                        } else {
+                            registrationFinishCallBack.onError(result.error.code, result.error.message);
                         }
-                        registrationFinishCallBack.onError(result.error.error_code, result.error.error_msg);
-                        return;
                     }
 
                     @Override
@@ -71,8 +68,8 @@ public class Auth extends Help {
                         registrationFinishCallBack.onError(0, "Что то пошло не так.");
                     }
                 }
-                );
-        }
+        );
+    }
 
 
     public void authorize(String login, String password, final AuthFinishingCallback authFinishing){
@@ -82,21 +79,19 @@ public class Auth extends Help {
                     public void onSuccess(Resp result){
                         if(result.error == null) {
                             // Если учетные данные подошли, проверяем не заблокирован ли аккаунт
-                            if (result.user_info.is_locked) {
+                            if (result.isLocked) {
                                 authFinishing.onLoccked();
                                 return;
                             }
                             //Если аккаунт не заблокирован
-                            stgs.setSetting("session_id", result.session_id);
-                            stgs.setSetting("session_name", result.session_name);
-                            stgs.setSettingInt("user_id", result.user_id);
-                            stgs.setSetting("auth_token", result.auth_token);
-                            stgs.setSetting("user_nickname", result.user_info.nickname);
-                            if(result.user_info.birth_date != null){
-                                stgs.setSetting("user_age", ConverterDate.convertDateToAge(result.user_info.birth_date));
+                            stgs.setSetting("token", result.token);
+                            stgs.setSettingInt("userId", result.userId);
+                            stgs.setSetting("nickname", result.nickname);
+                            if(result.birthDate != null){
+                                stgs.setSetting("birthDate", ConverterDate.convertDateToAge(result.birthDate));
                             }
-                            if(result.user_info.avatar !=null) {
-                                stgs.setSetting("user_avatar.micro", Constant.upload + result.user_info.avatar.micro);
+                            if(result.avatar !=null) {
+                                stgs.setSetting("avatar.micro", Constant.upload + result.avatar.micro);
                             }
                             //Установка токена
                             String token = FirebaseInstanceId.getInstance().getToken();
@@ -105,7 +100,7 @@ public class Auth extends Help {
                             authFinishing.onSuccess(result.user_info);
                             return;
                         }
-                        authFinishing.onError(result.error.error_code, result.error.error_msg);
+                        authFinishing.onError(result.error.code, result.error.message);
                         return;
                     }
 
@@ -121,13 +116,11 @@ public class Auth extends Help {
         api.logout(new Api.LogoutCallback() {
             @Override
             public void onSuccess() {
-                stgs.setSetting("session_id", null);
-                stgs.setSetting("session_name", null);
-                stgs.setSetting("user_id", null);
-                stgs.setSetting("auth_token", null);
-                stgs.setSetting("user_nickname", null);
-                stgs.setSetting("user_age", null);
-                stgs.setSetting("user_avatar.micro", null);
+                stgs.setSetting("token", null);
+                stgs.setSetting("userId", null);
+                stgs.setSetting("nickname", null);
+                stgs.setSetting("birthDate", null);
+                stgs.setSetting("avatar.micro", null);
                 logoutFinishingCallback.onSuccess();
                 return;
             }
@@ -146,44 +139,41 @@ public class Auth extends Help {
             final Context context,
             final AuthRestoreCallBack authRestoreCallBack
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.auth_restore_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("update_avatar", response);
-                            if(response!=null){
-                                ReqUpdateAvatar reqUpdateAvatar = gson.fromJson(response, ReqUpdateAvatar.class);
-                                if(reqUpdateAvatar.error==null) {
-                                    authRestoreCallBack.onSuccess();
-                                    return;
-                                }
-                                authRestoreCallBack.onError(reqUpdateAvatar.error.error_code, reqUpdateAvatar.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.auth_restore_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("update_avatar", response);
+                        if(response!=null){
+                            ReqUpdateAvatar reqUpdateAvatar = gson.fromJson(response, ReqUpdateAvatar.class);
+                            if(reqUpdateAvatar.error==null) {
+                                authRestoreCallBack.onSuccess();
                                 return;
                             }
-                            authRestoreCallBack.onInternetError();
+                            authRestoreCallBack.onError(reqUpdateAvatar.error.code, reqUpdateAvatar.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            authRestoreCallBack.onInternetError();
-                        }
+                        authRestoreCallBack.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("email", email);
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        authRestoreCallBack.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("email", email);
+                return params;
             };
-            RequestQ.getInstance(context).addToRequestQueue(SReq, "auth_restore");
-        }
+        };
+        RequestQ.getInstance(context).addToRequestQueue(SReq, "auth_restore");
     }
 
     // Интерфейс для кэллбэка завершения авторизации
@@ -199,7 +189,7 @@ public class Auth extends Help {
     }
 
     public interface RegistrationFinishCallBack{
-        void onSuccess(int user_id);
+        void onSuccess(Registration registration);
         void onError(int error_code, String error_msg);
     }
 

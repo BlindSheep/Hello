@@ -39,38 +39,38 @@ import java.util.Map;
 
 public class Help {
 
-    public Gson gson;
-    private Settings stgs;
+public Gson gson;
+private Settings stgs;
 
-    public static final int REQUEST_ADD_PHOTO_MESSAGE = 1;
-    public static final int REQUEST_UPDATE_AVATAR_GALLERY = 2;
-    public static final int REQUEST_UPDATE_AVATAR_CAMERA = 3;
-    public static final int REQUEST_ADD_PHOTO_GALLERY = 4;
-    public static final int REQUEST_ADD_PHOTO_CAMERA = 5;
+public static final int REQUEST_ADD_PHOTO_MESSAGE = 1;
+public static final int REQUEST_UPDATE_AVATAR_GALLERY = 2;
+public static final int REQUEST_UPDATE_AVATAR_CAMERA = 3;
+public static final int REQUEST_ADD_PHOTO_GALLERY = 4;
+public static final int REQUEST_ADD_PHOTO_CAMERA = 5;
 
-    public static final int DEFAULT_NEED_SIZE = 1048576;
-    public static final int DEFAULT_QUALITY = 100;
+public static final int DEFAULT_NEED_SIZE = 1048576;
+public static final int DEFAULT_QUALITY = 100;
 
-    public Help(){
+public Help(){
         GsonBuilder GB = new GsonBuilder();
         this.gson = GB.create();
 //        this.stgs = new Settings(context);
-    }
+        }
 
-    public Help(Context context){
+public Help(Context context){
         GsonBuilder GB = new GsonBuilder();
         this.gson = GB.create();
         this.stgs = new Settings(context);
-    }
+        }
 
-    public Object fromJSON(String jsonElement, Class casckade){
+public Object fromJSON(String jsonElement, Class casckade){
         return this.gson.fromJson(jsonElement, casckade);
-    }
+        }
 
-    public interface ErrorCallback{
-        void onError(int error_code, String error_msg);
-        void onInternetError();
-    }
+public interface ErrorCallback{
+    void onError(int error_code, String error_msg);
+    void onInternetError();
+}
     // Запрос прав доступа
     public static void requestMultiplePermissions(Activity activity, String[] permissions, int request_code) {
         ActivityCompat.requestPermissions(activity, permissions, request_code);
@@ -210,7 +210,7 @@ public class Help {
 
     public static String getFileByUri(Uri file, Context context){
         return file.getPath();
-   }
+    }
 
     public static long getFileSize(Uri pathFile, Context context){
         File file = new File(Help.getFileByUri(pathFile, context));
@@ -225,15 +225,19 @@ public class Help {
     protected Map<String, String> getParamsMap(Context context){
         this.stgs = new Settings(context);
         Map<String, String> params = new HashMap<String, String>();
-        params.put("api_key", Constant.api_key);
-        params.put("auth_token", stgs.getSettingStr("auth_token"));
+        params.put("token", stgs.getSettingStr("token"));
         return params;
     }
 
     protected Map<String, String> getParamsMap(){
         Map<String, String> params = new HashMap<String, String>();
-        params.put("api_key", Constant.api_key);
-        params.put("auth_token", stgs.getSettingStr("auth_token"));
+        params.put("token", stgs.getSettingStr("token"));
         return params;
+    }
+
+    public void setNewToken (String token) {
+        if (token != null) {
+            stgs.setSetting("token", token);
+        }
     }
 }

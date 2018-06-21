@@ -27,6 +27,7 @@ import android.widget.*;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Image;
+import com.httpso_hello.hello.Structures.NewProfile;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.adapters.SettingsAdapter;
 import com.httpso_hello.hello.adapters.SimpationAdapter;
@@ -78,9 +79,9 @@ public class SettingsActivity extends SuperMainActivity{
 
         swipeRefreshLayout.setRefreshing(true);
         Profile profiles = new Profile(getApplicationContext());
-        profiles.getProfile(stgs.getSettingInt("user_id"), this, new Profile.GetProfileCallback() {
+        profiles.getProfile(stgs.getSettingInt("userId"), this, new Profile.GetProfileCallback() {
             @Override
-            public void onSuccess(final User user, Activity activity) {
+            public void onSuccess(final NewProfile user, Activity activity) {
                 //содаем фрагменты и аргументы
                 Bundle settingsIntrestingFragmentArg = new Bundle();
                 Bundle settingsProfileFragmentArg = new Bundle();
@@ -90,15 +91,15 @@ public class SettingsActivity extends SuperMainActivity{
                 SettingsLookingForFragment settingsLookingForFragment = new SettingsLookingForFragment();
 
                 //фрагмент интересы
-                settingsIntrestingFragmentArg.putParcelable("User", user);
+                settingsIntrestingFragmentArg.putParcelable("User", user.info);
                 settingsIntrestingFragment.setArguments(settingsIntrestingFragmentArg);
 
                 //фрагмент редактировать профиль
-                settingsProfileFragmentArg.putParcelable("User", user);
+                settingsProfileFragmentArg.putParcelable("User", user.info);
                 settingsProfileFragment.setArguments(settingsProfileFragmentArg);
 
                 //фрагмент кого ищу
-                settingsLookingForFragmentArg.putParcelable("User", user);
+                settingsLookingForFragmentArg.putParcelable("User", user.info);
                 settingsLookingForFragment.setArguments(settingsLookingForFragmentArg);
 
                 // Добавляем фраменты на страницу

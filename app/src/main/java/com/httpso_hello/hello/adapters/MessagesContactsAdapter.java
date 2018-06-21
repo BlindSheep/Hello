@@ -44,7 +44,7 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
     static class ViewHolder{
         public ImageView avatar;
         public TextView contactNickname;
-        public EmojiconTextView lastMessage;
+        public TextView lastMessage;
         public TextView dateLastMessage;
         public TextView numberOfNewMessages;
         public ImageView isOnline;
@@ -62,14 +62,12 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
             rowView = inflater.inflate(R.layout.content_messages_contact, null, true);
             holder = new ViewHolder();
             holder.contactNickname = (TextView) rowView.findViewById(R.id.contactNickname);
-            holder.lastMessage = (EmojiconTextView) rowView.findViewById(R.id.lastMessage);
+            holder.lastMessage = (TextView) rowView.findViewById(R.id.lastMessage);
             holder.avatar = (ImageView) rowView.findViewById(R.id.avatar);
             holder.dateLastMessage = (TextView) rowView.findViewById(R.id.dateLastMessage);
             holder.numberOfNewMessages = (TextView) rowView.findViewById(R.id.numberOfNewMessages);
             holder.isOnline = (ImageView) rowView.findViewById(R.id.isOnline);
             holder.is_unreaded = (TextView) rowView.findViewById(R.id.is_unreaded);
-//            holder.emojIcon = new (this, rootView, messageContent, emojiKeyboard);
-//            holder.emojIcon.ShowEmojIcon();
             rowView.setTag(holder);
         } else {
             holder = (ViewHolder) rowView.getTag();

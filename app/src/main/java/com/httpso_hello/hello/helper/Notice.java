@@ -43,49 +43,46 @@ public class Notice extends Help {
             final Notice.GetNoticeCallback getNoticeCallback,
             final Help.ErrorCallback errorCallback
     ){
-        if (Constant.api_key !="") {
-            StringRequest SReq = new StringRequest(
-                    Request.Method.POST,
-                    Constant.messages_get_notices_uri,
-                    new Response.Listener<String>() {
-                        public void onResponse(String response){
-                            Log.d("notices", response);
-                            if (response != null) {
-                                Notices notises = gson.fromJson(response, Notices.class);
-                                if(notises.error == null){
-                                    getNoticeCallback.onSuccess(notises.notices, activity);
-                                    return;
-                                }
-                                errorCallback.onError(notises.error.error_code, notises.error.error_msg);
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.messages_get_notices_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("notices", response);
+                        if (response != null) {
+                            Notices notises = gson.fromJson(response, Notices.class);
+                            if(notises.error == null){
+                                getNoticeCallback.onSuccess(notises.notices, activity);
                                 return;
                             }
-                            errorCallback.onInternetError();
+                            errorCallback.onError(notises.error.code, notises.error.message);
                             return;
                         }
-                    },
-                    new Response.ErrorListener(){
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            errorCallback.onInternetError();
-                        }
+                        errorCallback.onInternetError();
+                        return;
                     }
-            )
-            {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<String, String>();
-                    params.put("api_key", Constant.api_key);
-                    params.put("auth_token", stgs.getSettingStr("auth_token"));
-                    params.put("page", Integer.toString(page));
-                    return params;
-                };
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        errorCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("token", stgs.getSettingStr("auth_token"));
+                params.put("page", Integer.toString(page));
+                return params;
             };
-            RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getNotices");
-        }
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "messages.getNotices");
     }
 
-public interface GetNoticeCallback {
-    void onSuccess(NoticeItem[] noticeItem, Activity activity);
-}
+    public interface GetNoticeCallback {
+        void onSuccess(NoticeItem[] noticeItem, Activity activity);
+    }
 
 }

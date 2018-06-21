@@ -1,10 +1,7 @@
 package com.httpso_hello.hello.adapters;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.net.Uri;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +13,6 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Guest;
-import com.httpso_hello.hello.Structures.Message;
-import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.activity.GuestsActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
@@ -127,8 +122,8 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
                     .into(holder.guest_profile_avatar);
         }
 
-        if(thisGuest.user_info.birth_date != null) {
-            holder.guest_profile_city.setText(convertDateToAge(thisGuest.user_info.birth_date) + ", " + thisGuest.user_info.city_cache);
+        if(thisGuest.user_info.birthDate != null) {
+            holder.guest_profile_city.setText(convertDateToAge(thisGuest.user_info.birthDate) + ", " + thisGuest.user_info.city_cache);
         } else {
             holder.guest_profile_city.setText(thisGuest.user_info.city_cache);
         }

@@ -13,20 +13,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.Registration;
 import com.httpso_hello.hello.helper.Auth;
+import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.ConverterDate;
+import com.httpso_hello.hello.helper.Settings;
 
 public class RegistrationActivity extends AppCompatActivity {
 
     private TextView btnForReg;
     private TextView btnLinkToEnter;
     private EditText inputNameForReg;
-    private EditText inputEmailForReg;
+    private EditText inputTelefoneForReg;
     private EditText inputPasswordForReg1;
     private EditText inputPasswordForReg2;
     private Auth auth;
     private ActionBar actionBar;
     private CheckBox checkBoxPrivatePolice;
     private ProgressBar progressBarRegistration;
+    private Settings stgs;
 
     //Кнопка назад(переход на страницу входа)
     @Override
@@ -49,13 +54,14 @@ public class RegistrationActivity extends AppCompatActivity {
         auth = new Auth(getApplicationContext());
 
         inputNameForReg = (EditText) findViewById(R.id.inputNameForReg);
-        inputEmailForReg = (EditText) findViewById(R.id.inputEmailForReg);
+        inputTelefoneForReg = (EditText) findViewById(R.id.inputTelefoneForReg);
         inputPasswordForReg1 = (EditText) findViewById(R.id.inputPasswordForReg1);
         inputPasswordForReg2 = (EditText) findViewById(R.id.inputPasswordForReg2);
         btnForReg = (TextView) findViewById(R.id.btnForReg);
         btnLinkToEnter = (TextView) findViewById(R.id.btnLinkToEnter);
         actionBar = getSupportActionBar();
         checkBoxPrivatePolice = (CheckBox) findViewById(R.id.checkBoxPrivatePolice);
+        stgs = new Settings(getApplicationContext());
 
         actionBar.setDisplayShowHomeEnabled(true);
         actionBar.setHomeButtonEnabled(true);
@@ -75,18 +81,22 @@ public class RegistrationActivity extends AppCompatActivity {
         btnForReg.setOnClickListener(new View.OnClickListener() {
             public void onClick(View view) {
                 String nickname = inputNameForReg.getText().toString().trim();
-                String email = inputEmailForReg.getText().toString().trim();
+                final String telefone = inputTelefoneForReg.getText().toString().trim();
                 String password1 = inputPasswordForReg1.getText().toString().trim();
                 String password2 = inputPasswordForReg2.getText().toString().trim();
-                if ((!nickname.isEmpty()) && (!email.isEmpty()) && (!password1.isEmpty()) && (!password2.isEmpty()) && (password1.equals(password2)) && checkBoxPrivatePolice.isChecked() && (password1.length() > 5)){
+                if ((!nickname.isEmpty()) && (!telefone.isEmpty()) && (!password1.isEmpty()) && (!password2.isEmpty()) && (password1.equals(password2)) && checkBoxPrivatePolice.isChecked() && (password1.length() > 5)){
                     //Если всё заполнено правильно
                     btnForReg.setText("Регистрация...");
                     btnForReg.setTextColor(getResources().getColor(R.color.main_grey_color_hello));
-                    auth.registration(email, password1, nickname, new Auth.RegistrationFinishCallBack() {
+                    auth.registration(telefone, password1, nickname, new Auth.RegistrationFinishCallBack() {
                         @Override
-                        public void onSuccess(int user_id) {
-                            Toast.makeText(getApplicationContext(), "Вы успешно зарегистрировались, выполните вход", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(RegistrationActivity.this, MainActivity.class);
+                        public void onSuccess(Registration registration) {
+                            stgs.setSetting("token", registration.registeredUser.token);
+                            stgs.setSettingInt("userId", registration.registeredUser.userId);
+                            stgs.setSetting("nickname", registration.registeredUser.nickname);
+                            Intent intent = new Intent(RegistrationActivity.this, AccountActivateActivity.class);
+                            intent.putExtra("isRegistration", true);
+                            intent.putExtra("telefone", telefone.toString());
                             startActivity(intent);
                             finish();
                         }
@@ -103,7 +113,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 } else {
                     if (nickname.isEmpty()) Toast.makeText(getApplicationContext(), "Введите имя", Toast.LENGTH_LONG).show();
-                    else if (email.isEmpty()) Toast.makeText(getApplicationContext(), "Введите E-mail", Toast.LENGTH_LONG).show();
+                    else if (telefone.isEmpty()) Toast.makeText(getApplicationContext(), "Введите телефон", Toast.LENGTH_LONG).show();
                     else if (password1.isEmpty()) Toast.makeText(getApplicationContext(), "Введите пароль", Toast.LENGTH_LONG).show();
                     else if (password2.isEmpty()) Toast.makeText(getApplicationContext(), "Повторите пароль", Toast.LENGTH_LONG).show();
                     else if (!password1.equals(password2)) Toast.makeText(getApplicationContext(), "Пароли не совпадают", Toast.LENGTH_LONG).show();
