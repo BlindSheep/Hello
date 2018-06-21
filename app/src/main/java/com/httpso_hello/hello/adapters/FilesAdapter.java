@@ -132,6 +132,7 @@ public class FilesAdapter extends ArrayAdapter<Attachment> {
         if(file.isUploaded) {
             Files.getInstance(getContext(), activity).deleteFile(
                     file.id,
+                    position,
                     new Files.DeleteFileCallback() {
                         @Override
                         public void onSuccess() {
@@ -153,6 +154,7 @@ public class FilesAdapter extends ArrayAdapter<Attachment> {
 
             );
         } else {
+            Files.getInstance(getContext(), activity).deleteFile(position);
             Files.getInstance(getContext(), activity).breakUploadRequest(file.requestTag);
             files.remove(position);
             notifyDataSetChanged();

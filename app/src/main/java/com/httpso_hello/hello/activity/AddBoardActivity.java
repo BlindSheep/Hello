@@ -62,7 +62,7 @@ public class AddBoardActivity extends AppCompatActivity {
 
         filesLine = (GridView) findViewById(R.id.addBoardPhotos);
 
-        files = new Files(getApplicationContext(), this);
+//        files = new Files(getApplicationContext(), this);
 
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -87,13 +87,13 @@ public class AddBoardActivity extends AppCompatActivity {
                 boardSave.setVisibility(View.GONE);
                 boardTextString = boardText.getText().toString();
                 if(!uploadingFile) {
-                    if ((!boardTextString.isEmpty()) || (files.getUploadedFiles().size() != 0)) {
+                    if ((!boardTextString.isEmpty()) || (Files.getInstance(getApplicationContext(), AddBoardActivity.this).getUploadedFiles().size() != 0)) {
                         HBoard hBoard = new HBoard(getApplicationContext());
                         hBoard.addBoard(
                                 boardTextString,
                                 groupId,
                                 anonim.isChecked(),
-                                files.getUploadedFiles(),
+                                Files.getInstance(getApplicationContext(), AddBoardActivity.this).getUploadedFiles(),
                                 new HBoard.AddBoardCallback() {
                                     @Override
                                     public void onSuccess() {
@@ -208,7 +208,7 @@ public class AddBoardActivity extends AppCompatActivity {
                     Help.getFileSize(sendingImageUri, getApplicationContext()),
                     0
             );
-            String tag = files.uploadFile(
+            String tag = Files.getInstance(getApplicationContext(), this).uploadFile(
                     "photo",
                     "jpg",
                     file_base64,
