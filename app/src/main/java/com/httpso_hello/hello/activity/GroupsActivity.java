@@ -6,8 +6,6 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.DisplayMetrics;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -17,6 +15,7 @@ import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Groups;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.GroupsAdapter;
 
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ import java.util.Collections;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class GroupsActivity extends SuperMainActivity {
+public class GroupsActivity extends SocketActivity {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private GroupsAdapter groupsAdapter;

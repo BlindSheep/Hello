@@ -19,6 +19,7 @@ import com.httpso_hello.hello.R;
 
 import com.httpso_hello.hello.Structures.ForUserOnly;
 import com.httpso_hello.hello.Structures.Image;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.FriendsAdapter;
 import com.httpso_hello.hello.fragments.FriendsFragment;
 import com.httpso_hello.hello.helper.Constant;
@@ -26,7 +27,7 @@ import com.httpso_hello.hello.helper.Friend;
 
 import static android.R.style.Animation_Dialog;
 
-public class FriendsActivity extends SuperMainActivity{
+public class FriendsActivity extends SocketActivity {
 
     private ProgressBar progressBarFriends;
     private Bundle extras;
@@ -55,7 +56,7 @@ public class FriendsActivity extends SuperMainActivity{
         setContentView(R.layout.activity_friends);
         setHeader();
 
-        if (extras.getInt("profile_id") == 0) setMenuItem("FriendsActivity");
+        if (extras.getInt("profile_id") == stgs.getSettingInt("userId")) setMenuItem("FriendsActivity");
         progressBarFriends = (ProgressBar) findViewById(R.id.progressBarFriends);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_friends, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);

@@ -4,24 +4,18 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BalanceReq;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.helper.Billing;
-import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.push_services.TokenReq;
-import com.squareup.picasso.Picasso;
 
-public class UpAnketActivity extends SuperMainActivity{
+public class UpAnketActivity extends SocketActivity {
 
     private TextView position;
     private TextView priceUpAnket;

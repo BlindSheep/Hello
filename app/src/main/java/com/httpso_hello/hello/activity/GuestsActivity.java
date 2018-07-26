@@ -17,10 +17,10 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Guest;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.GuestsListAdapter;
 import com.httpso_hello.hello.helper.Billing;
 import com.httpso_hello.hello.helper.Help;
-import com.httpso_hello.hello.helper.Photo;
 import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.push_services.TokenReq;
 
@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 
-public class GuestsActivity extends SuperMainActivity{
+public class GuestsActivity extends SocketActivity {
 
     private ListView listGuestsNew;
     private Profile profile;

@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.httpso_hello.hello.Structures.AllCounts;
 import com.httpso_hello.hello.Structures.BalanceReq;
+import com.httpso_hello.hello.Structures.Filters;
 import com.httpso_hello.hello.Structures.Guest;
 import com.httpso_hello.hello.Structures.Guests;
 import com.httpso_hello.hello.Structures.IgnoreList;
@@ -97,6 +98,7 @@ public class Profile extends Help{
                 Map<String, String> params = getParamsMap(_context);
                 params.put("pushUpToken", pushUpToken);
                 params.put("version", version);
+                params.put("typeClient", "androidApp");
                 return params;
             };
         };
@@ -194,7 +196,7 @@ public class Profile extends Help{
             final GetIgnoreListCallback getIgnoreListCallback){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.users_get_ignore_list_uri,
+                Constant.settings_get_ignore_list_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         if (response != null) {
@@ -202,6 +204,7 @@ public class Profile extends Help{
                             IgnoreList ignoreList = gson.fromJson(response, IgnoreList.class);
                             if (ignoreList.error == null) {
                                 getIgnoreListCallback.onSuccess(ignoreList.ignoreUsers);
+                                setNewToken(ignoreList.token);
                                 return;
                             }
                             getIgnoreListCallback.onError(ignoreList.error.code, ignoreList.error.message);
@@ -221,8 +224,7 @@ public class Profile extends Help{
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
+                Map<String, String> params = getParamsMap(_context);
                 return params;
             };
         };
@@ -275,13 +277,14 @@ public class Profile extends Help{
             final int ageTo,
             final int gender,
             final int page,
+            final boolean isFiltered,
             final int reg_cel,
             final SearchProfilesCallback searchProfilesCallback){
 
         Map<String, String> filtersMap = new HashMap<String, String>();
+        //if (reg_cel != 0) filtersMap.put("reg_cel[]", Integer.toString(reg_cel));
         filtersMap.put("startAge", Integer.toString(ageFrom));
         filtersMap.put("finishAge", Integer.toString(ageTo));
-//        if (reg_cel != 0) filtersMap.put("reg_cel[]", Integer.toString(reg_cel));
         filtersMap.put("gender", Integer.toString(gender));
         GsonBuilder GBmap = new GsonBuilder();
         Gson gsonMap = GBmap.create();
@@ -296,15 +299,8 @@ public class Profile extends Help{
                             Log.d("sP", response);
                             SearchProfiles searchProfiles = gson.fromJson(response, SearchProfiles.class);
                             if(searchProfiles.error==null) {
-                                searchProfilesCallback.onSuccess(searchProfiles.users);
+                                searchProfilesCallback.onSuccess(searchProfiles.users, searchProfiles.filters);
                                 setNewToken(searchProfiles.token);
-                                // Сохранение инфы о фильтре с сервера
-                                if (searchProfiles.filters != null) {
-                                    stgs.setSettingInt("gender", searchProfiles.filters.gender);
-                                    stgs.setSettingInt("ageFrom", searchProfiles.filters.startAge);
-                                    stgs.setSettingInt("ageTo", searchProfiles.filters.finishAge);
-                                }
-                                // Конец
                                 return;
                             }
                             searchProfilesCallback.onError(searchProfiles.error.code, searchProfiles.error.message);
@@ -325,7 +321,7 @@ public class Profile extends Help{
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = getParamsMap(_context);
-                params.put("filters", filters.toString());
+                if (isFiltered) params.put("filters", filters.toString()); else params.put("filters", "0");
                 params.put("page", Integer.toString(page));
                 params.put("perPage", Integer.toString(30));
                 return params;
@@ -533,7 +529,7 @@ public class Profile extends Help{
         void onInternetError();
     }
     public interface SearchProfilesCallback{
-        void onSuccess(User[] users);
+        void onSuccess(User[] users, Filters filters);
         void onError(int error_code, String error_msg);
         void onInternetError();
     }

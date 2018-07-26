@@ -117,7 +117,7 @@ public class SettingsProfileFragment extends Fragment {
         delayPopup.setAnimationStyle(Animation_Dialog);
         Picasso
                 .with(getContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
+                .load(stgs.getSettingStr("avatar.micro"))
                 .resize(100, 100)
                 .transform(new CircularTransformation(0))
                 .into(settingsNewAvatar);
@@ -173,12 +173,12 @@ public class SettingsProfileFragment extends Fragment {
         if (user.rost != 0) userRostAuto.setText(Integer.toString(user.rost));
         if (user.ves != 0) userVesAuto.setText(Integer.toString(user.ves));
 
-        if (user.mat_poloz != 0) {
-            if (user.mat_poloz == 1) matPol.setSelection(0);
-            else if (user.mat_poloz == 2) matPol.setSelection(1);
-            else if (user.mat_poloz == 3) matPol.setSelection(2);
-            else if (user.mat_poloz == 4) matPol.setSelection(3);
-            else if (user.mat_poloz == 5) matPol.setSelection(4);
+        if (user.matPoloz != 0) {
+            if (user.matPoloz == 1) matPol.setSelection(0);
+            else if (user.matPoloz == 2) matPol.setSelection(1);
+            else if (user.matPoloz == 3) matPol.setSelection(2);
+            else if (user.matPoloz == 4) matPol.setSelection(3);
+            else if (user.matPoloz == 5) matPol.setSelection(4);
         }
 
 //Контакты

@@ -75,17 +75,17 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
 
         Contact contact = this.contacts.get(position);
 
-        holder.contactNickname.setText(contact.nickname);
+        holder.contactNickname.setText(contact.user.nickname);
 
-        if(contact.last_message_content != null){
-            if(contact.last_message_content.length()==0){
-                contact.last_message_content = "Фотография";
+        if(contact.lastMessageContent != null){
+            if(contact.lastMessageContent.length()==0){
+                contact.lastMessageContent = "Фотография";
             }
             // Если были сообщений
-            if(contact.lm_from_contact!=1) {
+            if(!contact.lmFromContact) {
                 // Последнее сообщение НЕ от контакта
-                holder.lastMessage.setText("Я: " + contact.last_message_content);
-                if (contact.contact_readed_messages == 1) {
+                holder.lastMessage.setText("Я: " + contact.lastMessageContent);
+                if (!contact.contactReadedMessages) {
                     // Если контакт не прочитал сообщение
                     holder.is_unreaded.setVisibility(View.VISIBLE);
                 } else {
@@ -97,11 +97,11 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
                 holder.numberOfNewMessages.setVisibility(View.GONE);
             } else {
                 // Последнее сообщение от контакта
-                holder.lastMessage.setText(contact.last_message_content);
+                holder.lastMessage.setText(contact.lastMessageContent);
                 holder.is_unreaded.setVisibility(View.GONE);
-                if(contact.inc_new_messages > 0) {
+                if(contact.newMessages > 0) {
                     // Если количество не прочитанных сообщений больше нуля
-                    holder.numberOfNewMessages.setText(Integer.toString(contact.inc_new_messages));
+                    holder.numberOfNewMessages.setText(Integer.toString(contact.newMessages));
                     holder.numberOfNewMessages.setVisibility(View.VISIBLE);
                 } else {
                     holder.numberOfNewMessages.setText("0");
@@ -109,7 +109,7 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
                 }
             }
             // Есди были сообщения устанавливаем дату последнего
-            holder.dateLastMessage.setText(ConverterDate.convertDateForContacts(contact.date_update));
+            holder.dateLastMessage.setText(ConverterDate.convertDateForContacts(contact.dateLastMsg));
             holder.dateLastMessage.setVisibility(View.VISIBLE);
             holder.lastMessage.setTextColor(getContext().getResources().getColor(R.color.main_black_color_hello));
         } else {
@@ -121,17 +121,17 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
             holder.dateLastMessage.setVisibility(View.INVISIBLE);
         }
 
-        if(contact.is_online) {
+        if(contact.user.isOnline) {
             holder.isOnline.setVisibility(View.VISIBLE);
         } else {
             holder.isOnline.setVisibility(View.INVISIBLE);
         }
 
         //// TODO: 30.07.2017 Добавить проверку наличия изображений: проверка заполнености размеров
-        if(contact.avatar != null) {
+        if(contact.user.avatar != null) {
             Picasso
                     .with(getContext())
-                    .load(Uri.parse(Constant.upload + contact.avatar.micro))
+                    .load(Uri.parse(Constant.upload + contact.user.avatar.micro))
                     .transform(new CircularTransformation(0))
                     .into(holder.avatar, new Callback() {
                         @Override

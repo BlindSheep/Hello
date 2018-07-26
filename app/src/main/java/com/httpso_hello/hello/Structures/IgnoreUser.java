@@ -6,10 +6,7 @@ package com.httpso_hello.hello.Structures;
 
 public class IgnoreUser {
 
-    public int id;
-    public int user_id;
-    public Image avatar;
-    public String nickname;
+    public User user;
 
     public IgnoreUser() {
 

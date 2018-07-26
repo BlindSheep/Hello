@@ -8,38 +8,26 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.Filters;
 import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.ProfilesListAdapter;
-import com.httpso_hello.hello.helper.CircularTransformation;
-import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Profile;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
-public class SearchActivity extends SuperMainActivity{
+public class SearchActivity extends SocketActivity {
 
     private ProfilesListAdapter plAdapter;
     private ListView profilesList;
@@ -64,6 +52,10 @@ public class SearchActivity extends SuperMainActivity{
     private View footerLoading;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Spinner cel;
+    private RadioButton radioButtonAll;
+    private RadioButton radioButtonMan;
+    private RadioButton radioButtonWoman;
+    private boolean isFiltered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,21 +84,23 @@ public class SearchActivity extends SuperMainActivity{
         birth_date_from = (Spinner) findViewById(R.id.birth_date_from);
         birth_date_to = (Spinner) findViewById(R.id.birth_date_to);
         gender = (RadioGroup) findViewById(R.id.radioGroup);
-        RadioButton radioButtonAll = (RadioButton) findViewById(R.id.radioButtonAll);
-        RadioButton radioButtonMan = (RadioButton) findViewById(R.id.radioButtonMan);
-        RadioButton radioButtonWoman = (RadioButton) findViewById(R.id.radioButtonWoman);
+        radioButtonAll = (RadioButton) findViewById(R.id.radioButtonAll);
+        radioButtonMan = (RadioButton) findViewById(R.id.radioButtonMan);
+        radioButtonWoman = (RadioButton) findViewById(R.id.radioButtonWoman);
         cel = (Spinner) findViewById(R.id.cel);
         search = (Button) findViewById(R.id.search);
         inputID = (EditText) findViewById(R.id.enterID);
-        pageNumber = 1;
+        pageNumber = 0;
+        isFiltered = false;
 
         // Свайп для обновления
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 thatsAll = false;
-                pageNumber = 1;
+                pageNumber = 0;
                 setProfiles();
+                isFiltered = false;
             }
         });
 
@@ -204,8 +198,8 @@ public class SearchActivity extends SuperMainActivity{
                 // обновление Активности после скрытия фильтра
                 if (BottomSheetBehavior.STATE_COLLAPSED == newState) {
                     if (SearchActivity.this.filterIsChanged) {
-
-                        pageNumber = 1;
+                        isFiltered = true;
+                        pageNumber = 0;
                         thatsAll = false;
 
                         setProfiles();
@@ -242,9 +236,9 @@ public class SearchActivity extends SuperMainActivity{
                 if (inputID.getText().toString().equals("")) searchID = 0;
                 else searchID = Integer.parseInt(searchIDSrt);
                 if (searchID == 0){
-                    pageNumber = 1;
+                    pageNumber = 0;
                     thatsAll = false;
-
+                    isFiltered = true;
                     setProfiles();
                     SearchActivity.this.bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                 } else {
@@ -257,29 +251,30 @@ public class SearchActivity extends SuperMainActivity{
             }
         });
 
-            this.gender_str = stgs.getSettingInt("gender");
-            this.ageFrom = stgs.getSettingInt("ageFrom");
-            this.ageTo = stgs.getSettingInt("ageTo");
+        this.gender_str = stgs.getSettingInt("gender");
+        this.ageFrom = stgs.getSettingInt("ageFrom");
+        this.ageTo = stgs.getSettingInt("ageTo");
 
-            this.setProfiles();
-            filterIsChanged = false;
+        this.setProfiles();
+        filterIsChanged = false;
     }
 
     private void setProfiles() {
         if (profilesList.getFooterViewsCount() == 0) profilesList.addFooterView(footerLoading);
         thatsAll = false;
         isLaunch = true;
-        pageNumber = 1;
+        pageNumber = 0;
         swipeRefreshLayout.setRefreshing(true);
         this.profile.searchProfiles(
                 this.ageFrom,
-                this.ageTo + 1,
+                this.ageTo,
                 this.gender_str,
                 this.pageNumber,
+                isFiltered,
                 cel.getSelectedItemPosition(),
                 new Profile.SearchProfilesCallback() {
                     @Override
-                    public void onSuccess(User[] users) {
+                    public void onSuccess(User[] users, Filters filters) {
                         pageNumber = pageNumber + 1;
                         if ((users.length == 0) || ((users.length == 1))) {
                             thatsAll = true;
@@ -293,6 +288,38 @@ public class SearchActivity extends SuperMainActivity{
                         profilesList.setAdapter(plAdapter);
                         swipeRefreshLayout.setRefreshing(false);
                         isLaunch = false;
+
+//                      Подстановка значений фильтра с сервера
+                        stgs.setSettingInt("ageFrom", filters.startAge);
+                        stgs.setSettingInt("ageTo", filters.finishAge);
+                        stgs.setSettingInt("gender", filters.gender);
+//                      Подстановка значения в РадиоБаттон пола
+                        if (stgs.getSettingInt("gender") == 0) {
+                            radioButtonAll.setChecked(true);
+                            radioButtonMan.setChecked(false);
+                            radioButtonWoman.setChecked(false);
+                            filterIsChanged = false;
+                        } else  if (stgs.getSettingInt("gender") == 1) {
+                            radioButtonAll.setChecked(false);
+                            radioButtonMan.setChecked(true);
+                            radioButtonWoman.setChecked(false);
+                            filterIsChanged = false;
+                        } else  if (stgs.getSettingInt("gender") == 2) {
+                            radioButtonAll.setChecked(false);
+                            radioButtonMan.setChecked(false);
+                            radioButtonWoman.setChecked(true);
+                            filterIsChanged = false;
+                        }
+                        //Подстановка значение в спинер возраст от
+                        birth_date_from.setSelection(stgs.getSettingInt("ageFrom"));
+                        //Прослушивание спинера возраст от
+                        //Подстановка значение в спинер возраст до
+                        birth_date_to.setSelection(stgs.getSettingInt("ageTo"));
+
+                        ageFrom = stgs.getSettingInt("ageFrom");
+                        ageTo = stgs.getSettingInt("ageTo");
+                        gender_str = stgs.getSettingInt("gender");
+                        isFiltered = true;
                     }
 
                     @Override
@@ -322,13 +349,14 @@ public class SearchActivity extends SuperMainActivity{
             isLaunch = true;
             this.profile.searchProfiles(
                     this.ageFrom,
-                    this.ageTo + 1,
+                    this.ageTo,
                     this.gender_str,
                     this.pageNumber,
+                    isFiltered,
                     cel.getSelectedItemPosition(),
                     new Profile.SearchProfilesCallback() {
                         @Override
-                        public void onSuccess(User[] users) {
+                        public void onSuccess(User[] users, Filters filters) {
                             if ((users.length == 0) || ((users.length == 1))) {
                                 thatsAll = true;
                                 profilesList.removeFooterView(footerLoading);

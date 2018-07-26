@@ -41,6 +41,7 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.GiftItem;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.NewProfile;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.GiftsGetGiftsAdapter;
 import com.httpso_hello.hello.adapters.GiftsInProfileAdapter;
 import com.httpso_hello.hello.adapters.PhotosUserAdapter;
@@ -67,7 +68,7 @@ import static android.R.style.Animation_Dialog;
 import static com.httpso_hello.hello.helper.ConverterDate.convertDateForEnter;
 import static com.httpso_hello.hello.helper.ConverterDate.convertDateToAge;
 
-public class ProfileActivity extends SuperMainActivity{
+public class ProfileActivity extends SocketActivity {
 
     private ImageView avatar;
     private int profile_id;
@@ -307,21 +308,21 @@ public class ProfileActivity extends SuperMainActivity{
             @Override
             public void onSuccess(final NewProfile user, Activity activity) {
 
-// Является ли открытая анкета, анкетой залогинившегося юзера
+                // Является ли открытая анкета, анкетой залогинившегося юзера
                 isUserProfile = (stgs.getSettingInt("userId") == user.info.id);
 
-//Устанавливаем имя и возраст в тулбар
+                //Устанавливаем имя и возраст в тулбар
                 if (user.info.birthDate != null) {
                     nameToolbar.setText(user.info.nickname + ", " +
                             convertDateToAge(user.info.birthDate));
                 } else nameToolbar.setText(user.info.nickname);
 
-//Устанавливаем дату последнего захода в тулбар
+                //Устанавливаем дату последнего захода в тулбар
                 if (user.info.isOnline) {
                     onlineToolbar.setText("В сети");
                     onlineToolbar.setTextColor(getResources().getColor(R.color.main_green_color_hello));
                 } else {
-                    onlineToolbar.setText(convertDateForEnter(user.info.date_log, user.info.gender));
+                    onlineToolbar.setText(convertDateForEnter(user.info.dateLog, user.info.gender));
                     onlineToolbar.setTextColor(getResources().getColor(R.color.main_white_color_hello));
                 }
 
@@ -332,12 +333,12 @@ public class ProfileActivity extends SuperMainActivity{
                 }
                 else iconForAva.setVisibility(View.GONE);
 
-//Устанавливаем аватар
+                //Устанавливаем аватар
                 DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
                 width = displaymetrics.widthPixels;
                 ProfileActivity.this.avatar.setMinimumWidth(width);
                 ProfileActivity.this.avatar.setMinimumHeight(width);
-//// TODO: 13.08.2017 Сделать проверку наличия пути
+                // TODO: 13.08.2017 Сделать проверку наличия пути
                 if (user.info.avatar != null) {
                     Picasso.with(getApplicationContext())
                             .load(Uri.parse(Constant.upload + user.info.avatar.normal))
@@ -354,68 +355,68 @@ public class ProfileActivity extends SuperMainActivity{
                             .into(ProfileActivity.this.avatar);
                 }
 
-//Кнопка загрузки новых фотографий
+                //Кнопка загрузки новых фотографий
                 if (isUserProfile) newPhotoButton.setVisibility(View.VISIBLE);
                 else newPhotoButton.setVisibility(View.GONE);
-//
-////Устанавливаем дополнительные фотки и их кол-во
-//                if(user.info.photos != null) {
-//                    GV.setVisibility(View.VISIBLE);
-//                    final ArrayList<com.httpso_hello.hello.Structures.Photo> defolt = new ArrayList<com.httpso_hello.hello.Structures.Photo>();
-//                    Collections.addAll(defolt, user.info.photos);
-//                    plAdapter = new PhotosUserAdapter(activity, defolt, R.layout.content_profile);
-//
-//                    photo_count.setText(defolt.size() + " фото");
-//
-//                    float density = getApplicationContext().getResources().getDisplayMetrics().density;
-//                    float llColumnWidth = defolt.size() * 120 * density;
-//                    float llHorizontalSpacing = (defolt.size() - 1) * 4 * density;
-//                    float paddingLeftAndRight = 20 * density;
-//                    ll.getLayoutParams().width = (int) (llColumnWidth + llHorizontalSpacing + paddingLeftAndRight);
-//                    ll.requestLayout();
-//                    GV.setNumColumns(defolt.size());
-//                    GV.setAdapter(plAdapter);
-//
-//// Обработчик клика по фотке
-//                    GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                        @Override
-//                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                            com.httpso_hello.hello.Structures.Photo photo = ((PhotosUserAdapter) parent.getAdapter()).getItem(position);
-//                            ArrayList<String> photoOrig = new ArrayList<String>();
-//                            ArrayList<Integer> photoLike = new ArrayList<Integer>();
-//                            ArrayList<Integer> photoId = new ArrayList<Integer>();
-//                            ArrayList<String> photoIsVoted = new ArrayList<String>();
-//                            ArrayList<Integer> photoComments = new ArrayList<Integer>();
-//                            for (int j = 0; j < user.info.photos.length; j++){
-//                                photoOrig.add(j, Constant.upload + user.info.photos[j].image.original);
-//                                photoLike.add(j, user.info.photos[j].rating);
-//                                photoId.add(j, user.info.photos[j].id);
-//                                photoIsVoted.add(j, Boolean.toString(user.info.photos[j].is_voted));
-//                                photoComments.add(j, user.info.photos[j].comments);
-//                            }
-//                            Intent intent;
-//
-//                            if(isUserProfile){
-//                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivityUser.class);
-//                            } else {
-//                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivity.class);
-//                            }
-//
-//                            intent.putStringArrayListExtra("photoOrig", photoOrig);
-//                            intent.putIntegerArrayListExtra("photoLike", photoLike);
-//                            intent.putIntegerArrayListExtra("photoId", photoId);
-//                            intent.putStringArrayListExtra("photoIsVoted", photoIsVoted);
-//                            intent.putIntegerArrayListExtra("photoComments", photoComments);
-//                            intent.putExtra("likeble", true);
-//                            intent.putExtra("position", position);
-//                            startActivity(intent);
-//                        }
-//                    });
-//                } else {
-//                    GV.setVisibility(View.GONE);
-//                }
-//
-//Устанавливаем город
+
+//////Устанавливаем дополнительные фотки и их кол-во
+////                if(user.info.photos != null) {
+////                    GV.setVisibility(View.VISIBLE);
+////                    final ArrayList<com.httpso_hello.hello.Structures.Photo> defolt = new ArrayList<com.httpso_hello.hello.Structures.Photo>();
+////                    Collections.addAll(defolt, user.info.photos);
+////                    plAdapter = new PhotosUserAdapter(activity, defolt, R.layout.content_profile);
+////
+////                    photo_count.setText(defolt.size() + " фото");
+////
+////                    float density = getApplicationContext().getResources().getDisplayMetrics().density;
+////                    float llColumnWidth = defolt.size() * 120 * density;
+////                    float llHorizontalSpacing = (defolt.size() - 1) * 4 * density;
+////                    float paddingLeftAndRight = 20 * density;
+////                    ll.getLayoutParams().width = (int) (llColumnWidth + llHorizontalSpacing + paddingLeftAndRight);
+////                    ll.requestLayout();
+////                    GV.setNumColumns(defolt.size());
+////                    GV.setAdapter(plAdapter);
+////
+////// Обработчик клика по фотке
+////                    GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+////                        @Override
+////                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+////                            com.httpso_hello.hello.Structures.Photo photo = ((PhotosUserAdapter) parent.getAdapter()).getItem(position);
+////                            ArrayList<String> photoOrig = new ArrayList<String>();
+////                            ArrayList<Integer> photoLike = new ArrayList<Integer>();
+////                            ArrayList<Integer> photoId = new ArrayList<Integer>();
+////                            ArrayList<String> photoIsVoted = new ArrayList<String>();
+////                            ArrayList<Integer> photoComments = new ArrayList<Integer>();
+////                            for (int j = 0; j < user.info.photos.length; j++){
+////                                photoOrig.add(j, Constant.upload + user.info.photos[j].image.original);
+////                                photoLike.add(j, user.info.photos[j].rating);
+////                                photoId.add(j, user.info.photos[j].id);
+////                                photoIsVoted.add(j, Boolean.toString(user.info.photos[j].is_voted));
+////                                photoComments.add(j, user.info.photos[j].comments);
+////                            }
+////                            Intent intent;
+////
+////                            if(isUserProfile){
+////                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivityUser.class);
+////                            } else {
+////                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivity.class);
+////                            }
+////
+////                            intent.putStringArrayListExtra("photoOrig", photoOrig);
+////                            intent.putIntegerArrayListExtra("photoLike", photoLike);
+////                            intent.putIntegerArrayListExtra("photoId", photoId);
+////                            intent.putStringArrayListExtra("photoIsVoted", photoIsVoted);
+////                            intent.putIntegerArrayListExtra("photoComments", photoComments);
+////                            intent.putExtra("likeble", true);
+////                            intent.putExtra("position", position);
+////                            startActivity(intent);
+////                        }
+////                    });
+////                } else {
+////                    GV.setVisibility(View.GONE);
+////                }
+////
+                //Устанавливаем город
                 if (user.info.city_cache != null) cityCache.setText(user.info.city_cache);
                 //Устанавливаем телефон
                 if(user.info.phone != null) {
@@ -423,26 +424,26 @@ public class ProfileActivity extends SuperMainActivity{
                     phoneNumProfile.setText(user.info.phone);
                 } else phoneNumProfileConteiner.setVisibility(View.GONE);
 
-//Устанавливаем скайп
+                //Устанавливаем скайп
                 if(user.info.skype != null) {
                     skypeProfileConteiner.setVisibility(View.VISIBLE);
                     skypeProfile.setText(user.info.skype);
                 } else skypeProfileConteiner.setVisibility(View.GONE);
 
-//Материальное положение
-                if ((user.info.mat_poloz == 0) || (user.info.mat_poloz == 1)) dohodProfileContener.setVisibility(View.GONE);
-                if (user.info.mat_poloz == 2) dohodProfile.setText("Нет дохода");
-                if (user.info.mat_poloz == 3) dohodProfile.setText("Низкий доход");
-                if (user.info.mat_poloz == 4) dohodProfile.setText("Стабильный средний доход");
-                if (user.info.mat_poloz == 5) dohodProfile.setText("Высокий доход");
+                //Материальное положение
+                if ((user.info.matPoloz == 0) || (user.info.matPoloz == 1)) dohodProfileContener.setVisibility(View.GONE);
+                if (user.info.matPoloz == 2) dohodProfile.setText("Нет дохода");
+                if (user.info.matPoloz == 3) dohodProfile.setText("Низкий доход");
+                if (user.info.matPoloz == 4) dohodProfile.setText("Стабильный средний доход");
+                if (user.info.matPoloz == 5) dohodProfile.setText("Высокий доход");
 
-//Автомобиль
+                //Автомобиль
                 if (user.info.avto != null) {
                     autoProfile.setText(user.info.avto);
                     autoProfileContener.setVisibility(View.VISIBLE);
                 } else autoProfileContener.setVisibility(View.GONE);
 
-//Рост и вес
+                //Рост и вес
                 if ((user.info.rost == 0) && (user.info.ves == 0)) rostAndVesProfileContener.setVisibility(View.GONE);
                 else {
                     rostAndVesProfileContener.setVisibility(View.VISIBLE);
@@ -464,11 +465,11 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 }
 
-//скрываем блок с друзьями
+                //скрываем блок с друзьями
                 if ((user.friends.length != 0) || (user.groups.length != 0)) friendsAndGiftsBlock.setVisibility(View.VISIBLE);
                 else friendsAndGiftsBlock.setVisibility(View.GONE);
 
-//Кол-во друзей
+                //Кол-во друзей
                 if(user.friends.length != 0) {
                     friendsCount.setText("Друзья");
                 } else {
@@ -584,7 +585,7 @@ public class ProfileActivity extends SuperMainActivity{
                             .into(groups6);
                 }
 
-//Кол-во подарков
+                //Кол-во подарков
                 if(user.gifts.length != 0) {
                     String giftsStr = Integer.toString(user.gifts.length);
                     if(user.gifts.length == 1) giftsCount.setText(giftsStr + " подарок");
@@ -634,9 +635,9 @@ public class ProfileActivity extends SuperMainActivity{
                                                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                                     popUpWindowSendGift.dismiss();
                                                     Intent intent = new Intent(ProfileActivity.this, SendGiftActivity.class);
-                                                    intent.putExtra("id", list.get(position).id);
-                                                    intent.putExtra("photo", list.get(position).photo.small);
-                                                    intent.putExtra("price", list.get(position).price);
+                                                    intent.putExtra("id", list.get(position).gift.id);
+                                                    intent.putExtra("photo", list.get(position).gift.photo.small);
+                                                    intent.putExtra("price", list.get(position).gift.price);
                                                     intent.putExtra("user_id", user.info.id);
                                                     startActivity(intent);
                                                 }
@@ -659,49 +660,43 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-//Скрыть блок "Ищу", если нет никакой инфы
-                if ((user.info.looking_for == 0) && (user.info.looking_for_age == 0) && (user.info.age_do == 0) && (user.info.reg_cel == null)) lookinForBar.setVisibility(View.GONE);
+                //Скрыть блок "Ищу", если нет никакой инфы
+                if ((user.info.lookingFor == 0) && (user.info.ageStart == 0) && (user.info.ageFinish == 0) && (user.info.regCel == null)) lookinForBar.setVisibility(View.GONE);
                 else lookinForBar.setVisibility(View.VISIBLE);
 
-//Скрываем полосочку в блоке Ищу
-                if ((user.info.looking_for_age == 0) && (user.info.looking_for == 0) && (user.info.age_do == 0)) findView.setVisibility(View.GONE);
+                //Скрываем полосочку в блоке Ищу
+                if ((user.info.ageStart == 0) && (user.info.lookingFor == 0) && (user.info.ageFinish == 0)) findView.setVisibility(View.GONE);
                 else findView.setVisibility(View.VISIBLE);
 
-//С кем хочет познакомиться
-                if (user.info.looking_for != 0) {
-                    if (user.info.looking_for == 1) {
-                        looking_for.setVisibility(View.VISIBLE);
-                        looking_for.setText("Познакомлюсь с парнем");
-                    }
-                    if (user.info.looking_for == 2) {
-                        looking_for.setVisibility(View.VISIBLE);
-                        looking_for.setText("Познакомлюсь с девушкой");
-                    }
-                    if (user.info.looking_for == 3) {
-                        looking_for.setVisibility(View.VISIBLE);
-                        looking_for.setText("Познакомлюсь со всеми");
-                    }
-                } else looking_for.setVisibility(View.GONE);
+                //С кем хочет познакомиться
+                looking_for.setVisibility(View.VISIBLE);
+                if (user.info.lookingFor == 1) {
+                    looking_for.setText("Познакомлюсь с парнем");
+                } else if (user.info.lookingFor == 2) {
+                    looking_for.setText("Познакомлюсь с девушкой");
+                } else if (user.info.lookingFor == 0) {
+                    looking_for.setText("Познакомлюсь со всеми");
+                }
 
-//Диапазон возраста для поиска
-                if ((user.info.looking_for_age != 0) && (user.info.age_do != 0)) {
+                //Диапазон возраста для поиска
+                if ((user.info.ageStart != 0) && (user.info.ageFinish != 0)) {
                     ageLookinFor.setVisibility(View.VISIBLE);
-                    ageLookinFor.setText("Возраст от " + Integer.toString(user.info.looking_for_age) + " до " + Integer.toString(user.info.age_do) + " лет");
+                    ageLookinFor.setText("Возраст от " + Integer.toString(user.info.ageStart) + " до " + Integer.toString(user.info.ageFinish) + " лет");
                 }
-                else if (user.info.looking_for_age != 0) {
+                else if (user.info.ageStart != 0) {
                     ageLookinFor.setVisibility(View.VISIBLE);
-                    ageLookinFor.setText("Возраст от " + Integer.toString(user.info.looking_for_age) + " лет");
+                    ageLookinFor.setText("Возраст от " + Integer.toString(user.info.ageStart) + " лет");
                 }
-                else if (user.info.age_do != 0) {
+                else if (user.info.ageFinish != 0) {
                     ageLookinFor.setVisibility(View.VISIBLE);
-                    ageLookinFor.setText("Возраст до " + Integer.toString(user.info.age_do) + " лет");
+                    ageLookinFor.setText("Возраст до " + Integer.toString(user.info.ageFinish) + " лет");
                 }
                 else ageLookinFor.setVisibility(View.GONE);
 
-//Цель знакомства
-                if (user.info.reg_cel != null) {
+                //Цель знакомства
+                if (user.info.regCel != null) {
                     celZnakomstvaProfileLL.setVisibility(View.VISIBLE);
-                    char[] cel = user.info.reg_cel.toCharArray();
+                    char[] cel = user.info.regCel.toCharArray();
                     if (cel.length >= 1) if (cel[0] == '1') celZnakomstvaProfile0.setVisibility(View.VISIBLE);
                     if (cel.length >= 2) if (cel[1] == '1') celZnakomstvaProfile1.setVisibility(View.VISIBLE);
                     if (cel.length >= 3) if (cel[2] == '1') celZnakomstvaProfile2.setVisibility(View.VISIBLE);
@@ -716,7 +711,7 @@ public class ProfileActivity extends SuperMainActivity{
                     if (cel.length >= 12) if (cel[11] == '1') celZnakomstvaProfile11.setVisibility(View.VISIBLE);
                 } else celZnakomstvaProfileLL.setVisibility(View.GONE);
 
-//Интересы
+                //Интересы
                 if ( (user.info.music != null) ||
                         (user.info.movies != null) ||
                         (user.info.books != null) ||
@@ -725,44 +720,44 @@ public class ProfileActivity extends SuperMainActivity{
                         ) anketaBar.setVisibility(View.VISIBLE);
                 else anketaBar.setVisibility(View.GONE);
 
-//Любимая музыка
+                //Любимая музыка
                 if (user.info.music != null) {
                     musicProfile.setText(user.info.music);
                     musicProfileContener.setVisibility(View.VISIBLE);
                 } else musicProfileContener.setVisibility(View.GONE);
-//Любимые фильмы
+                //Любимые фильмы
                 if (user.info.movies != null) {
                     moviesProfile.setText(user.info.movies);
                     moviesProfileContener.setVisibility(View.VISIBLE);
                 } else moviesProfileContener.setVisibility(View.GONE);
 
-//Любимые книги
+                //Любимые книги
                 if (user.info.books != null) {
                     booksProfile.setText(user.info.books);
                     booksProfileContener.setVisibility(View.VISIBLE);
                 } else booksProfileContener.setVisibility(View.GONE);
 
-//Любимые игры
+                //Любимые игры
                 if (user.info.games != null) {
                     gamesProfile.setText(user.info.games);
                     gamesProfileContener.setVisibility(View.VISIBLE);
                 } else gamesProfileContener.setVisibility(View.GONE);
 
-//Другие интересы
+                //Другие интересы
                 if (user.info.interes != null) {
                     intrestingProfile.setText(user.info.interes);
                     intrestingProfileContener.setVisibility(View.VISIBLE);
                 } else intrestingProfileContener.setVisibility(View.GONE);
 
-//Скрыть кнопок "Написать сообщение" и "Добавить в друзья" если профиль юзера
+                //Скрыть кнопок "Написать сообщение" и "Добавить в друзья" если профиль юзера
                 if (isUserProfile) msgAndFrndBtn.setVisibility(View.GONE);
                 else msgAndFrndBtn.setVisibility(View.VISIBLE);
 
-//Кнопка отправки симпатии, скрыть если профиль юзера или если уже отправлял
-                if((isUserProfile) || (user.flirtState == 4)) fab.setVisibility(View.GONE);
+                //Кнопка отправки симпатии, скрыть если профиль юзера или если уже отправлял
+                if((isUserProfile) || (user.simpationState == 4)) fab.setVisibility(View.GONE);
                 else fab.setVisibility(View.VISIBLE);
 
-                if (user.flirtState == 0) { // никто никому не отправлял симпатию
+                if (user.simpationState == 0) { // никто никому не отправлял симпатию
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(final View view) {
@@ -794,7 +789,7 @@ public class ProfileActivity extends SuperMainActivity{
 
                         }
                     });
-                } else if (user.flirtState == 1) { // пользователь отправил просматриеваемому пользователю симпатию
+                } else if (user.simpationState == 1) { // пользователь отправил просматриеваемому пользователю симпатию
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(final View view) {
@@ -803,7 +798,7 @@ public class ProfileActivity extends SuperMainActivity{
 
                         }
                     });
-                } else if (user.flirtState == 2) { //просматриваемый пользователь отправил пользователю симпатию
+                } else if (user.simpationState == 2) { //просматриваемый пользователь отправил пользователю симпатию
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(final View view) {
@@ -835,7 +830,7 @@ public class ProfileActivity extends SuperMainActivity{
                             });
                         }
                     });
-                } else if (user.flirtState == 3) { //симпатия взаимна
+                } else if (user.simpationState == 3) { //симпатия взаимна
                     fab.setImageResource(R.drawable.ic_action_two_heart);
                     fab.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -846,7 +841,7 @@ public class ProfileActivity extends SuperMainActivity{
                     });
                 }
 
-// клик по аве
+                // клик по аве
                 if (!isUserProfile){
                     avatar.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View view) {
@@ -868,7 +863,7 @@ public class ProfileActivity extends SuperMainActivity{
                         popUpWindow.setAnimationStyle(Animation_Dialog);
                         popUpWindow.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
 
-// Открыть аву
+                        // Открыть аву
                         popUpWindow.getContentView().findViewById(R.id.avaOpen).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -883,7 +878,7 @@ public class ProfileActivity extends SuperMainActivity{
                             }
                         });
 
-// Загрузить аву из галереи
+                        // Загрузить аву из галереи
                         popUpWindow.getContentView().findViewById(R.id.avaFromGalery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -894,7 +889,7 @@ public class ProfileActivity extends SuperMainActivity{
                             }
                         });
 
-// Загрузить аву с камеры
+                        // Загрузить аву с камеры
                         popUpWindow.getContentView().findViewById(R.id.avaFromCamera).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -916,7 +911,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-// Обработчик клика по кнопке загрузки новых фоток
+                // Обработчик клика по кнопке загрузки новых фоток
                 newPhotoButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -927,7 +922,7 @@ public class ProfileActivity extends SuperMainActivity{
                         popUpWindow2.setAnimationStyle(Animation_Dialog);
                         popUpWindow2.showAtLocation(profile_content2, Gravity.CENTER, 0, 0);
 
-// Загрузка новых фоток из галереи
+                        // Загрузка новых фоток из галереи
                         popUpWindow2.getContentView().findViewById(R.id.newPhotoFromGalery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -938,7 +933,7 @@ public class ProfileActivity extends SuperMainActivity{
                             }
                         });
 
-// Загрузка новых фоток с камеры
+                        // Загрузка новых фоток с камеры
                         popUpWindow2.getContentView().findViewById(R.id.newPhotoFromCamera).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -959,7 +954,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-// Обработчик клика по кол-ву друзей
+                // Обработчик клика по кол-ву друзей
                 friendsCountButton.setOnClickListener(new View.OnClickListener() {
                     public void onClick(View view) {
                         Intent intent = new Intent(ProfileActivity.this, FriendsActivity.class);
@@ -968,7 +963,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-//Обработка нажатия кнопки "Сообщение"
+                //Обработка нажатия кнопки "Сообщение"
                 TextView writeMes = (TextView) findViewById(R.id.write_message);
                 writeMes.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -985,7 +980,7 @@ public class ProfileActivity extends SuperMainActivity{
                     }
                 });
 
-//Обработка нажатия кнопки "Добавить в друзья"
+                //Обработка нажатия кнопки "Добавить в друзья"
                 final TextView toFriends = (TextView) findViewById(R.id.to_friends);
                 if (user.friendsState == 0) {
                     toFriends.setText("Добавить в друзья");

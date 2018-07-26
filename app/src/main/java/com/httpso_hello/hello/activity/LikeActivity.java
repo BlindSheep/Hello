@@ -11,6 +11,7 @@ import android.widget.ListView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Vote;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.LikesAdapter;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.Like;
@@ -18,7 +19,7 @@ import com.httpso_hello.hello.helper.Like;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class LikeActivity extends SuperMainActivity{
+public class LikeActivity extends SocketActivity {
 
     private Bundle extras;
     private int target_id;

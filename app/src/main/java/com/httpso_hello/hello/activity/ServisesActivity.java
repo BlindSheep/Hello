@@ -2,23 +2,18 @@ package com.httpso_hello.hello.activity;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BalanceReq;
-import com.httpso_hello.hello.helper.CircularTransformation;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.helper.Profile;
-import com.squareup.picasso.Picasso;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-public class ServisesActivity extends SuperMainActivity{
+public class ServisesActivity extends SocketActivity {
 
     private LinearLayout billing;
     private TextView priceUpAnket;

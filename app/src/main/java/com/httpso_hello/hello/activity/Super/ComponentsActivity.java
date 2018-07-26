@@ -1,13 +1,8 @@
-package com.httpso_hello.hello.activity;
+package com.httpso_hello.hello.activity.Super;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -15,43 +10,46 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
-import com.httpso_hello.hello.Structures.AllCounts;
-import com.httpso_hello.hello.Structures.Message;
+import com.httpso_hello.hello.activity.BoardActivity;
+import com.httpso_hello.hello.activity.ChatActivity;
+import com.httpso_hello.hello.activity.FriendsActivity;
+import com.httpso_hello.hello.activity.GroupsActivity;
+import com.httpso_hello.hello.activity.GuestsActivity;
+import com.httpso_hello.hello.activity.MessagesActivity;
+import com.httpso_hello.hello.activity.NotisesActivity;
+import com.httpso_hello.hello.activity.ProfileActivity;
+import com.httpso_hello.hello.activity.SearchActivity;
+import com.httpso_hello.hello.activity.ServisesActivity;
+import com.httpso_hello.hello.activity.SettingOfProfileActivity;
+import com.httpso_hello.hello.activity.SettingsActivity;
+import com.httpso_hello.hello.activity.SimpationActivity;
 import com.httpso_hello.hello.helper.Auth;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
-import com.httpso_hello.hello.helper.Help;
-import com.httpso_hello.hello.helper.Messages;
-import com.httpso_hello.hello.helper.Profile;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 import com.yandex.metrica.YandexMetrica;
 
-import java.util.Timer;
-import java.util.TimerTask;
+/**
+ * Created by mixir on 26.07.2018.
+ */
 
-public class SuperMainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ComponentsActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    protected Auth auth;
-    protected Settings stgs;
-    protected Toolbar toolbar;
-    protected DrawerLayout drawer;
-    protected ActionBarDrawerToggle toggle;
-    protected ImageView headerImageView;
-    protected TextView nav_messages, nav_guests, nav_notises, nav_frinds;
-    private static Handler countsHandler = new Handler();
-    private Timer countsTimer;
-    private NavigationView navigationView;
+    public Auth auth;
+    public Settings stgs;
+    public TextView nav_messages, nav_guests, nav_notises, nav_frinds, nav_simpations;
+    public Toolbar toolbar;
+    public DrawerLayout drawer;
+    public ActionBarDrawerToggle toggle;
+    public NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,19 +57,16 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         stgs = new Settings(getApplicationContext());
         YandexMetrica.activate(getApplicationContext(), Constant.metrika_api_key);
         YandexMetrica.enableActivityAutoTracking(getApplication());
-
     }
 
     public void setHeader() {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerLayout = navigationView.getHeaderView(0);
@@ -79,6 +74,7 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         nav_guests = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_guests));
         nav_notises = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_notises));
         nav_frinds = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_frinds));
+        nav_simpations = (TextView) MenuItemCompat.getActionView(navigationView.getMenu().findItem(R.id.nav_simpatii));
         headerLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,11 +94,11 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
                 .centerCrop()
                 .transform(new CircularTransformation(0))
                 .into(headerImageView);
-
         if(stgs.getSettingStr("user_age") != null) {
             user_name_and_age_header.setText(stgs.getSettingStr("nickname") + ", " + stgs.getSettingStr("birthDate"));
         } else user_name_and_age_header.setText(stgs.getSettingStr("nickname"));
         user_id_header.setText("Ваш ID " + Integer.toString(stgs.getSettingInt("userId")));
+        setCounters();
     }
 
     public void setMenuItem(String activityName) {
@@ -120,73 +116,9 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         else if (activityName.equals("GroupsActivity")) ((MenuItem) navigationView.getMenu().findItem(R.id.nav_groups)).setChecked(true);
     }
 
-    private void getCountIntoDrawer() {
-//        countsTimer = new Timer();
-//        countsTimer.schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                countsHandler.post(new Runnable() {public void run() {
-//                    Profile.getInstance(getApplicationContext())
-//                            .getCount(new Profile.GetCountCallback() {
-//                        @Override
-//                        public void onSuccess(AllCounts allCounts) {
-//                            //Новые сообщения
-//                            if (allCounts.new_messages != 0) {
-//                                nav_messages.setVisibility(View.VISIBLE);
-//                                nav_messages.setGravity(Gravity.CENTER_VERTICAL);
-//                                nav_messages.setTypeface(null, Typeface.BOLD);
-//                                nav_messages.setText(Integer.toString(allCounts.new_messages));
-//                            } else nav_messages.setVisibility(View.GONE);
-//                            if (allCounts.new_guests != 0) {
-//                                nav_guests.setVisibility(View.VISIBLE);
-//                                nav_guests.setGravity(Gravity.CENTER_VERTICAL);
-//                                nav_guests.setTypeface(null, Typeface.BOLD);
-//                                nav_guests.setText(Integer.toString(allCounts.new_guests));
-//                            } else nav_guests.setVisibility(View.GONE);
-//                            if (allCounts.new_notices != 0) {
-//                                nav_notises.setVisibility(View.VISIBLE);
-//                                nav_notises.setGravity(Gravity.CENTER_VERTICAL);
-//                                nav_notises.setTypeface(null, Typeface.BOLD);
-//                                nav_notises.setText(Integer.toString(allCounts.new_notices));
-//                            } else nav_notises.setVisibility(View.GONE);
-//                            if (allCounts.requests_in_friends != 0) {
-//                                nav_frinds.setVisibility(View.VISIBLE);
-//                                nav_frinds.setGravity(Gravity.CENTER_VERTICAL);
-//                                nav_frinds.setTypeface(null, Typeface.BOLD);
-//                                nav_frinds.setText(Integer.toString(allCounts.requests_in_friends));
-//                            } else nav_frinds.setVisibility(View.GONE);
-//                        }
-//
-//                        @Override
-//                        public void onError(int error_code, String error_msg) {
-//
-//                        }
-//
-//                        @Override
-//                        public void onInternetError() {
-//
-//                        }
-//                    });
-//                }});
-//            }
-//        }, 1000, 30000);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-//"StatementWithEmptyBody"
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-
         Intent intent;
         switch (id) {
             case R.id.nav_profile:
@@ -269,30 +201,74 @@ public class SuperMainActivity extends AppCompatActivity implements NavigationVi
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    @Override
-    protected void onPause(){
-//        countsTimer.cancel();
-        super.onPause();
-        YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onPauseSession();
+
+    public void setCounters() {
+        if (stgs.getSettingInt("messages") != 0) {
+            nav_messages.setText(Integer.toString(stgs.getSettingInt("messages")));
+            nav_messages.setVisibility(View.VISIBLE);
+            nav_messages.setGravity(Gravity.CENTER_VERTICAL);
+            nav_messages.setTypeface(null, Typeface.BOLD);
+        } else{
+            nav_messages.setVisibility(View.GONE);
+            nav_messages.setText(Integer.toString(stgs.getSettingInt("messages")));
+        }
+        if (stgs.getSettingInt("guests") != 0) {
+            nav_guests.setText(Integer.toString(stgs.getSettingInt("guests")));
+            nav_guests.setVisibility(View.VISIBLE);
+            nav_guests.setGravity(Gravity.CENTER_VERTICAL);
+            nav_guests.setTypeface(null, Typeface.BOLD);
+        } else{
+            nav_guests.setVisibility(View.GONE);
+            nav_notises.setText(Integer.toString(stgs.getSettingInt("notices")));
+        }
+        if (stgs.getSettingInt("notices") != 0) {
+            nav_notises.setText(Integer.toString(stgs.getSettingInt("notices")));
+            nav_notises.setVisibility(View.VISIBLE);
+            nav_notises.setGravity(Gravity.CENTER_VERTICAL);
+            nav_notises.setTypeface(null, Typeface.BOLD);
+        } else{
+            nav_notises.setVisibility(View.GONE);
+            nav_notises.setText(Integer.toString(stgs.getSettingInt("notices")));
+        }
+        if (stgs.getSettingInt("newFriends") != 0) {
+            nav_frinds.setText(Integer.toString(stgs.getSettingInt("newFriends")));
+            nav_frinds.setVisibility(View.VISIBLE);
+            nav_frinds.setGravity(Gravity.CENTER_VERTICAL);
+            nav_frinds.setTypeface(null, Typeface.BOLD);
+        } else{
+            nav_frinds.setVisibility(View.GONE);
+            nav_frinds.setText(Integer.toString(stgs.getSettingInt("newFriends")));
+        }
+        if (stgs.getSettingInt("mutuallySimpations") + stgs.getSettingInt("incomingSimpations") != 0) {
+            nav_simpations.setText(Integer.toString(stgs.getSettingInt("mutuallySimpations") + stgs.getSettingInt("incomingSimpations")));
+            nav_simpations.setVisibility(View.VISIBLE);
+            nav_simpations.setGravity(Gravity.CENTER_VERTICAL);
+            nav_simpations.setTypeface(null, Typeface.BOLD);
+        } else{
+            nav_simpations.setVisibility(View.GONE);
+            nav_simpations.setText(Integer.toString(stgs.getSettingInt("mutuallySimpations") + stgs.getSettingInt("incomingSimpations")));
+        }
     }
+
     @Override
     protected void onResume(){
-        getCountIntoDrawer();
         super.onResume();
         YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onResumeSession();
     }
 
-    public void refreshMenuAvatar(){
-        Picasso
-                .with(getApplicationContext())
-                .load(stgs.getSettingStr("user_avatar.micro"))
-                .resize(300, 300)
-                .centerCrop()
-                .transform(new CircularTransformation(0))
-                .into(headerImageView);
+    @Override
+    protected void onPause(){
+        super.onPause();
+        YandexMetrica.getReporter(getApplicationContext(), Constant.metrika_api_key).onPauseSession();
     }
 
-    protected void showMessage(String text){
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

@@ -64,13 +64,6 @@
             android:name=".activity.MessagesActivity"
             android:label="Hello"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:mimeType="image/*" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activity.SettingsActivity"
@@ -178,10 +171,6 @@
             android:name=".activity.IgnorListActivity"
             android:label="Чёрный список" />
         <activity
-            android:name=".activity.SendFlirtiksActivity"
-            android:label="@string/title_activity_send_flirtiks"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".activity.FilterActivity"
             android:label="Фильтр" />
         <activity
@@ -210,6 +199,11 @@
         <activity
             android:name=".activity.AccountActivateActivity"
             android:label="Подтвердите телефон" />
+
+        <service
+            android:name=".helper.Socket.SocketConnect"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>

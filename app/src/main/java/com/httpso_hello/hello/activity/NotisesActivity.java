@@ -6,14 +6,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.NoticeItem;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.NoticesAdapter;
 import com.httpso_hello.hello.helper.Help;
 import com.httpso_hello.hello.helper.Notice;
@@ -21,7 +19,7 @@ import com.httpso_hello.hello.helper.Notice;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class NotisesActivity extends SuperMainActivity{
+public class NotisesActivity extends SocketActivity {
 
     private ListView notices_list_new;
     private View footerForLoading;

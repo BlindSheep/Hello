@@ -12,10 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.helper.AlwaysOnline;
 import com.httpso_hello.hello.helper.Auth;
 
-public class SettingOfProfileActivity extends SuperMainActivity {
+public class SettingOfProfileActivity extends SocketActivity {
 
     private Switch switchMsg;
     private Switch switchComm;

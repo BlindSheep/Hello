@@ -71,7 +71,7 @@ public class GiftsInProfileAdapter extends ArrayAdapter<GiftItem> {
         } else {
             final GiftItem gift = this.gifts.get(position - 1);
             Picasso.with(getContext())
-                    .load(Constant.upload + gift.photo.small)
+                    .load(Constant.upload + gift.gift.photo.small)
                     .resize((int) (displaymetrics.density * 60), (int) (displaymetrics.density * 60))
                     .into(holder.imageView);
         }

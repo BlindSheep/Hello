@@ -58,10 +58,10 @@ public class GiftsGetGiftsAdapter extends ArrayAdapter<GiftItem> {
         GiftItem giftItem = gifts.get(position);
 
         Picasso.with(getContext())
-                .load(Constant.upload + giftItem.photo.small)
+                .load(Constant.upload + giftItem.gift.photo.small)
                 .into(holder.imageGift);
 
-        holder.prise.setText("Цена: " + Integer.toString(giftItem.price) + " баллов");
+        holder.prise.setText("Цена: " + Integer.toString(giftItem.gift.price) + " баллов");
 
         return rowView;
     }

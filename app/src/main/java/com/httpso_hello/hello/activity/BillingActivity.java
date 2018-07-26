@@ -13,14 +13,8 @@ import android.os.RemoteException;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
@@ -31,9 +25,9 @@ import android.widget.Toast;
 import com.android.vending.billing.IInAppBillingService;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BalanceReq;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.helper.*;
 import com.httpso_hello.hello.helper.push_services.TokenReq;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,7 +36,7 @@ import java.util.ArrayList;
 
 import static android.R.style.Animation_Dialog;
 
-public class BillingActivity extends SuperMainActivity {
+public class BillingActivity extends SocketActivity {
 
     private PopupWindow popUpWindow;
     private View popupView;

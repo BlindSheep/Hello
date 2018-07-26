@@ -13,12 +13,13 @@ public class Resp extends SuperStructure {
 
     public NewProfile profile;
 
-    public int userId;
+    public int id;
     public String nickname;
     public String birthDate;
     public Image avatar;
     public boolean isLocked;
     public boolean isActivated;
+    public boolean isDeleted;
 
     public Resp(){
 

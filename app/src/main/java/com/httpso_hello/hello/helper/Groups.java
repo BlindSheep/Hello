@@ -47,9 +47,13 @@ public class Groups extends Help {
             final String search,
             final GetGroupsCallback getGroupsCallback
     ){
+        String req = null;
+        if (parameters == 0) req = Constant.groups_get_all_groups_uri;
+        else if (parameters == 1) req = Constant.groups_get_my_groups_uri;
+        else if (parameters == 2) req = Constant.groups_get_one_group_uri;
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.groups_get_groups_uri,
+                req,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("like", response);
@@ -57,6 +61,7 @@ public class Groups extends Help {
                             AllGroups allGroups = gson.fromJson(response, AllGroups.class);
                             if(allGroups.error==null){
                                 getGroupsCallback.onSuccess(allGroups.groups);
+                                setNewToken(allGroups.token);
                                 return;
                             }
                             getGroupsCallback.onError(allGroups.error.code, allGroups.error.message);
@@ -76,10 +81,9 @@ public class Groups extends Help {
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = getParamsMap();
-                if (group_id != 0) params.put("group_id", Integer.toString(group_id));
+                Map<String, String> params = getParamsMap(_context);
+                if (group_id != 0) params.put("groupId", Integer.toString(group_id));
                 if (search != null) params.put("search", search);
-                params.put("parameters", Integer.toString(parameters));
                 return params;
             };
         };

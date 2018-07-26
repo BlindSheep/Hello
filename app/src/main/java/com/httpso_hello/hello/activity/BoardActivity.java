@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -17,7 +15,7 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BoardItem;
-import com.httpso_hello.hello.Structures.Image;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.BoardAdapter;
 import com.httpso_hello.hello.helper.Complaint;
 import com.httpso_hello.hello.helper.Constant;
@@ -30,14 +28,14 @@ import java.util.Collections;
 
 import static android.R.style.Animation_Dialog;
 
-public class BoardActivity extends SuperMainActivity{
+public class BoardActivity extends SocketActivity {
 
     private HBoard hBoard;
     private BoardAdapter bAdapter;
     private ListView LV;
     private View header;
     private View footerLoading;
-    private int page = 1;
+    private int page = 0;
     private boolean loading = false;
     private SwipeRefreshLayout swipeRefreshLayout;
     private View popupViewUser;
@@ -90,7 +88,7 @@ public class BoardActivity extends SuperMainActivity{
             @Override
             public void onRefresh() {
                 swipeRefreshLayout.setRefreshing(true);
-                page = 1;
+                page = 0;
                 getBoard();
             }
         });
@@ -187,7 +185,7 @@ public class BoardActivity extends SuperMainActivity{
                             .deleteContent(boardItem.id, "board", 0, new Content.DeleteContentCallback() {
                                 @Override
                                 public void onSuccess() {
-                                    page = 1;
+                                    page = 0;
                                     getBoard();
                                     Toast.makeText(getApplicationContext(), "Сообщение удалено", Toast.LENGTH_LONG).show();
                                 }
@@ -216,12 +214,12 @@ public class BoardActivity extends SuperMainActivity{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(BoardActivity.this, ChatActivity.class);
-                    intent.putExtra("contact_id", boardItem.user_id);
-                    intent.putExtra("nickname", boardItem.user_nickname);
-                    if (boardItem.avatar == null) {
+                    intent.putExtra("contact_id", boardItem.userId);
+                    intent.putExtra("nickname", boardItem.User.nickname);
+                    if (boardItem.User.avatar == null) {
                         intent.putExtra("avatar", Constant.default_avatar);
                     } else {
-                        intent.putExtra("avatar", boardItem.avatar.micro);
+                        intent.putExtra("avatar", boardItem.User.avatar.micro);
                     }
                     startActivity(intent);
                     popUpWindowOther.dismiss();

@@ -71,12 +71,12 @@ public class GiftsUserAdapter  extends ArrayAdapter<GiftItem> {
         final GiftItem giftItem = this.gifts.get(position);
 
         //Если подарки этого юзера или не приватно
-        if (isUserProfile || (giftItem.isPrivate == 0)) {
+        if (isUserProfile || (giftItem.gift.isPrivate == 0)) {
             //Аватарка
-            if (giftItem.avatar_micro != null) {
+            if (giftItem.user.avatar.micro != null) {
                 Picasso
                         .with(getContext())
-                        .load(Uri.parse(Constant.upload + giftItem.avatar_micro))
+                        .load(Uri.parse(Constant.upload + giftItem.user.avatar.micro))
                         .transform(new CircularTransformation(0))
                         .into(holder.userAvatarGift, new Callback() {
                             @Override
@@ -101,21 +101,21 @@ public class GiftsUserAdapter  extends ArrayAdapter<GiftItem> {
                         .into(holder.userAvatarGift);
             }
             //Имя
-            holder.userNicknameGifts.setText(giftItem.nickname);
+            holder.userNicknameGifts.setText(giftItem.user.nickname);
 
             //Дата
-            holder.dateGift.setText(ConverterDate.convertDateForGuest(giftItem.date));
+            holder.dateGift.setText(ConverterDate.convertDateForGuest(giftItem.gift.date));
 
             //Картинка подарка
             Picasso
                     .with(getContext())
-                    .load(Uri.parse(Constant.upload + giftItem.photo.normal))
+                    .load(Uri.parse(Constant.upload + giftItem.gift.photo.normal))
                     .into(holder.photoGift);
 
             //Тест коммента
-            if (giftItem.text != null) {
+            if (giftItem.gift.text != null) {
                 holder.commentGift.setVisibility(View.VISIBLE);
-                holder.commentGift.setText(giftItem.text);
+                holder.commentGift.setText(giftItem.gift.text);
             } else holder.commentGift.setVisibility(View.GONE);
 
         } else {
@@ -128,12 +128,12 @@ public class GiftsUserAdapter  extends ArrayAdapter<GiftItem> {
             holder.userNicknameGifts.setText("Анонимно");
 
             //Дата
-            holder.dateGift.setText(ConverterDate.convertDateForGuest(giftItem.date));
+            holder.dateGift.setText(ConverterDate.convertDateForGuest(giftItem.gift.date));
 
             //Картинка подарка
             Picasso
                     .with(getContext())
-                    .load(Uri.parse(Constant.upload + giftItem.photo.normal))
+                    .load(Uri.parse(Constant.upload + giftItem.gift.photo.normal))
                     .into(holder.photoGift);
 
             //Тест коммента

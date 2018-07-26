@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -15,13 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.FirebaseMessagingService;
 import com.httpso_hello.hello.R;
 
 import com.httpso_hello.hello.Structures.Resp;
 import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.helper.*;
+import com.httpso_hello.hello.helper.Socket.SocketConnect;
 
 public class MainActivity extends Activity{
 
@@ -196,10 +194,12 @@ public class MainActivity extends Activity{
                                 public void onError() {
                                 }
                             });
-                        } else {
+                        } else if (error_code == 800) {
                             Intent intent = new Intent(MainActivity.this, RefreshAppActivity.class);
                             startActivity(intent);
                             finish();
+                        } else {
+
                         }
                     }
 

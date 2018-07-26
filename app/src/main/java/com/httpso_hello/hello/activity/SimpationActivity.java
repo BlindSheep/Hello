@@ -10,11 +10,12 @@ import android.widget.ProgressBar;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.ForUserOnly;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.SimpationAdapter;
 import com.httpso_hello.hello.fragments.SimpationFragment;
 import com.httpso_hello.hello.helper.Simpation;
 
-public class SimpationActivity extends SuperMainActivity{
+public class SimpationActivity extends SocketActivity {
 
     private ProgressBar progressBarSimpation;
     private Bundle simpationYouFragmentArg;

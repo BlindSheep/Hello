@@ -130,31 +130,31 @@ public class FilesAdapter extends ArrayAdapter<Attachment> {
     public void deleteFile(final int position){
         Attachment file = this.files.get(position);
         if(file.isUploaded) {
-            Files.getInstance(getContext(), activity).deleteFile(
-                    file.id,
-                    position,
-                    new Files.DeleteFileCallback() {
-                        @Override
-                        public void onSuccess() {
-                            files.remove(position);
-                            notifyDataSetChanged();
-                        }
-                    },
-                    new Help.ErrorCallback() {
-                        @Override
-                        public void onError(int error_code, String error_msg) {
-
-                        }
-
-                        @Override
-                        public void onInternetError() {
-
-                        }
-                    }
-
-            );
+//            Files.getInstance(getContext(), activity).deleteFile(
+//                    file.id,
+//                    position,
+//                    new Files.DeleteFileCallback() {
+//                        @Override
+//                        public void onSuccess() {
+//                            files.remove(position);
+//                            notifyDataSetChanged();
+//                        }
+//                    },
+//                    new Help.ErrorCallback() {
+//                        @Override
+//                        public void onError(int error_code, String error_msg) {
+//
+//                        }
+//
+//                        @Override
+//                        public void onInternetError() {
+//
+//                        }
+//                    }
+//
+//            );
         } else {
-            Files.getInstance(getContext(), activity).deleteFile(position);
+//            Files.getInstance(getContext(), activity).deleteFile(position);
             Files.getInstance(getContext(), activity).breakUploadRequest(file.requestTag);
             files.remove(position);
             notifyDataSetChanged();

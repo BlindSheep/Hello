@@ -12,7 +12,10 @@ public class NewProfile {
     public GiftItem[] gifts;
 
     public int friendsState;
-    public int flirtState;
+    public int simpationState;
+
+    public boolean isIgnored;
+    public boolean isItIgnored;
 
     public NewProfile () {
 

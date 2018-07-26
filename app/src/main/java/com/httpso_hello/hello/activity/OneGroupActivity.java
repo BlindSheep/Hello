@@ -532,12 +532,12 @@ public class OneGroupActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(OneGroupActivity.this, ChatActivity.class);
-                    intent.putExtra("contact_id", boardItem.user_id);
-                    intent.putExtra("nickname", boardItem.user_nickname);
-                    if (boardItem.avatar == null) {
+                    intent.putExtra("contact_id", boardItem.userId);
+                    intent.putExtra("nickname", boardItem.User.nickname);
+                    if (boardItem.User.avatar == null) {
                         intent.putExtra("avatar", Constant.default_avatar);
                     } else {
-                        intent.putExtra("avatar", boardItem.avatar.micro);
+                        intent.putExtra("avatar", boardItem.User.avatar.micro);
                     }
                     startActivity(intent);
                     popUpWindowOther.dismiss();

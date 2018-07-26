@@ -70,7 +70,7 @@ public class IgnorListActivity extends AppCompatActivity {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                 Intent intent = new Intent(IgnorListActivity.this, ProfileActivity.class);
-                                intent.putExtra("profile_id", ignoreUsers.get(position - 1).user_id);
+                                intent.putExtra("profile_id", ignoreUsers.get(position - 1).user.id);
                                 startActivity(intent);
                             }
                         });

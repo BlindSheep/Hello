@@ -1,7 +1,6 @@
 package com.httpso_hello.hello.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -10,18 +9,17 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.RemoteException;
+import android.text.format.Time;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageButton;
@@ -37,9 +35,10 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Attachment;
 import com.httpso_hello.hello.Structures.Message;
+import com.httpso_hello.hello.Structures.SocketObject;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.MessagesAttachmentsAdapter;
 import com.httpso_hello.hello.adapters.MessagesMessagesAdapter;
-import com.httpso_hello.hello.helper.AsyncTasks;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Complaint;
 import com.httpso_hello.hello.helper.Constant;
@@ -52,16 +51,13 @@ import com.wang.avi.AVLoadingIndicatorView;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 import static android.R.style.Animation_Dialog;
 
-public class ChatActivity extends SuperMainActivity{
+public class ChatActivity extends SocketActivity {
 
     private Messages messages;
     private ListView chatList;
@@ -70,40 +66,27 @@ public class ChatActivity extends SuperMainActivity{
     private int contact_id;
     private String contact_nickname;
     private EmojiconEditText messageContent;
-    private static Handler Tread1_Handler = new Handler(), sendedMessagesHandler = new Handler(), writingHandler = new Handler();
-    private boolean firstItemScrolled = false;
-    private Timer timer = new Timer(), sendedMessagesTimer = new Timer(), onlineTimer = new Timer(), writingTimer = new Timer();
-    private boolean isStartedSendedMessagesTimer;
     private ProgressBar progressBarChat;
     private ImageButton emojiKeyboard;
-    private View headerForSupport;
     private View header;
-    private View launchHeader;
     public EmojIconActions emojIcon;
     private PopupWindow popUpWindow;
     private View popupView;
     private PopupWindow popUpWindowForMenu;
     private View popupViewForMenu;
-    private LinearLayout ll;
-    private float density;
-    private String dateLastUpdate;
     private TextView textOnline;
     private Uri sendingImageUri;
-    private int user_id;
     private MessagesAttachmentsAdapter maAdapter;
     private GridView attachmentsListView;
     private AVLoadingIndicatorView avi;
     private boolean  canSendMessage = true;
-    private boolean isLaunching = false;
     private int lastId = 0;
     private ArrayList<Message> allMsg;
-    private boolean isLaunchingNewPage = false;
-    private boolean thatsAll = false;
-    private int thisPage = 0;
-    private int allPage = 0;
     private ArrayList<Message> allMessagesForMenu;
-    private boolean contactIsOnline;
-    private boolean is_writing;
+    private int recipientId;
+    private Time curentDate;
+    private Time lastWriteMsgDate;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,47 +96,26 @@ public class ChatActivity extends SuperMainActivity{
         setHeader();
         setMenuItem("MessagesActivity");
 
-        user_id = stgs.getSettingInt("user_id");
         RelativeLayout rootView = (RelativeLayout) findViewById(R.id.rootView);
         progressBarChat = (ProgressBar) findViewById(R.id.progressBarChat);
         messageContent = (EmojiconEditText) findViewById(R.id.messageContent);
         emojiKeyboard = (ImageButton) findViewById(R.id.emojiKeyboard) ;
         emojIcon = new EmojIconActions(this, rootView, messageContent, emojiKeyboard);
         header = getLayoutInflater().inflate(R.layout.header, null);
-        launchHeader = getLayoutInflater().inflate(R.layout.header_for_chat_loading, null);
-        headerForSupport = getLayoutInflater().inflate(R.layout.header_for_support, null);
         popupView = getLayoutInflater().inflate(R.layout.popup_for_msg, null);
         popUpWindow = new PopupWindow(popupView, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         popupViewForMenu = getLayoutInflater().inflate(R.layout.popup_for_message_menu, null);
         popUpWindowForMenu = new PopupWindow(popupViewForMenu, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        ll = (LinearLayout) findViewById(R.id.forImage);
-        density = getApplicationContext().getResources().getDisplayMetrics().density;
         textOnline = (TextView) findViewById(R.id.textOnline);
         emojIcon.ShowEmojIcon();
         avi = (AVLoadingIndicatorView) findViewById(R.id.avi);
         allMsg = new ArrayList<Message>();
         allMessagesForMenu = new ArrayList<Message>();
+        lastWriteMsgDate = new Time(Time.getCurrentTimezone());
+        curentDate = new Time(Time.getCurrentTimezone());
 
         this.contact_nickname = extras.getString("nickname");
         ((TextView) findViewById(R.id.textName)).setText(this.contact_nickname);
-
-        //  Uri imageUri - переменная где хранится ссылка на фотографию
-        //Если хотят отправить фото через наше приложение
-        //Передаем экстрас в данную активность с ссылкой на фотографию строкой "imageForSend"
-        String image = extras.getString("imageForSend");
-        if (image != null){
-            //Показ миниатюры для отправки
-            ImageView iv = new ImageView(getApplicationContext());
-            LinearLayout ll = (LinearLayout) findViewById(R.id.forImage);
-            float density = getApplicationContext().getResources().getDisplayMetrics().density;
-            Uri imageUri = Uri.parse(image);
-            iv.setPadding((int) (density * 5), (int) (density * 5), 0, (int) (density * 5));
-            Picasso.with(getApplicationContext())
-                    .load(imageUri)
-                    .resize(0, (int) (density * 100))
-                    .into(iv);
-            ll.addView(iv);
-        }
 
         textOnline.setText("не в сети");
 
@@ -216,35 +178,8 @@ public class ChatActivity extends SuperMainActivity{
         chatList = (ListView) findViewById(R.id.chatList);
 
         this.contact_id = extras.getInt("contact_id", 0);
-        if(this.contact_id == 0){
-//            this.contact_id = Integer.getInteger(extras.getString("contact_id"));
-        }
+        recipientId = extras.getInt("recipientId", 0);
         messages = new Messages(getApplicationContext(), this);
-
-        getMsg();
-        chatList.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-                if((firstVisibleItem < (allMsg.size() / 2)) && (mmAdapter != null) && (thisPage == allPage) && (!isLaunchingNewPage)) {
-                    GetNewPage getNewPage = new GetNewPage();
-                    getNewPage.execute();
-                }
-                if((firstVisibleItem <= 1) && (mmAdapter != null) && (thisPage != allPage)) {
-                    getNewPage();
-                }
-
-                if(totalItemCount-firstVisibleItem>visibleItemCount){
-                    firstItemScrolled = true;
-                } else {
-                    firstItemScrolled = false;
-                }
-            }
-        });
 
         // Обработка кнопки прикрепления файлов
         ((ImageButton)findViewById(R.id.docSend)).setOnClickListener(new View.OnClickListener() {
@@ -270,48 +205,22 @@ public class ChatActivity extends SuperMainActivity{
                     messageContent.setText(null);
 
                     Message message = new Message();
-                    message.from_id = stgs.getSettingInt("user_id");
-                    message.contact_id = contact_id;
+                    message.contact_id = recipientId;
                     if(messageContentString.length()!=0)
                         message.content = messageContentString;
                     if(maAdapter!=null) {
-                        message.attachments = maAdapter.getAttachments();
+                        message.photos = maAdapter.getAttachments();
                     } else{
-                        message.attachments = new Attachment[]{};
+                        message.photos = new Attachment[]{};
                     }
                     message.deviceMessageId = System.currentTimeMillis();
                     chatList.setTranscriptMode(2);
-                    int message_number = mmAdapter.addMessage(message);
                     if(maAdapter!=null){
                         maAdapter.deleteAllAttachments();
                         attachmentsListView.getLayoutParams().width = Help.getPxFromDp(130, getApplicationContext());
-//                        maAdapter = null;
                     }
-                    messages.sendMessage(
-                            ChatActivity.this.contact_id,
-                            messageContentString,
-                            message_number-1,
-                            message.deviceMessageId,
-                            new Messages.MessagesSendMessage() {
-                                @Override
-                                public void onSuccess(Message message, String dateLU, int message_number) {
 
-//                                    dateLastUpdate = dateLU;
-                                    mmAdapter.setMessage(message, message_number);
-                                }
-
-                            }, new Help.ErrorCallback() {
-
-                                @Override
-                                public void onError(int error_code, String error_msg) {
-                                    Toast.makeText(getApplicationContext(), error_msg, Toast.LENGTH_LONG).show();
-                                }
-
-                                @Override
-                                public void onInternetError() {
-                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                                }
-                            });
+                    sendMessageToSocket(messageContentString, recipientId, contact_id);
                 } else {
                     if(!canSendMessage) {
                         showMessage("Дождитесь загрузки фотографии...");
@@ -321,8 +230,244 @@ public class ChatActivity extends SuperMainActivity{
                 }
             }
         });
-
         attachmentsListView = (GridView)findViewById(R.id.messageAttachments);
+    }
+
+    private void setMsg(Message[] messages) {
+        ((LinearLayout) findViewById(R.id.chatWindow)).setVisibility(View.VISIBLE);
+        progressBarChat.setVisibility(View.GONE);
+        ChatActivity chatActivity = ((ChatActivity) this);
+
+        ArrayList<Message> asd = new ArrayList<Message>();
+        if (messages.length != 0) {
+            lastId = messages[0].id;
+            for (Message message : messages) {
+                asd.add(message);
+                if (message.id < lastId) lastId = message.id;
+                allMessagesForMenu.add(message);
+            }
+            allMsg.addAll(asd);
+        }
+
+        mmAdapter = new MessagesMessagesAdapter(
+                this,
+                asd,
+                stgs.getSettingStr("avatar.micro"),
+                Constant.upload + chatActivity.pathContactAvatar
+        );
+        chatList.addFooterView(header);
+        chatList.setAdapter(mmAdapter);
+        chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                popupForMsgMenu(allMessagesForMenu.get(position), position);
+            }
+        });
+    }
+
+    private void popupForMsgMenu (final Message message, final int position) {
+        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
+
+        popUpWindowForMenu.setWidth(displaymetrics.widthPixels);
+        popUpWindowForMenu.setHeight(displaymetrics.heightPixels);
+        popUpWindowForMenu.setAnimationStyle(Animation_Dialog);
+        popUpWindowForMenu.showAtLocation(chatList, Gravity.CENTER, 0, 0);
+
+        //Копировать сообщение
+        ((TextView) popupViewForMenu.findViewById(R.id.copy)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("", message.content);
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(ChatActivity.this, "Текст скопирован в буфер обмена", Toast.LENGTH_LONG).show();
+                popUpWindowForMenu.dismiss();
+            }
+        });
+        //Отправить жалобу
+        ((TextView) popupViewForMenu.findViewById(R.id.badContent)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Complaint complaint = new Complaint(getApplicationContext());
+                complaint.addComplaint(message.content, "Message", "Message", message.id, new Complaint.SendComplaintCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(ChatActivity.this, "Жалоба успешно отправлена", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        Toast.makeText(ChatActivity.this, "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+
+                    @Override
+                    public void onInternetError() {
+                        Toast.makeText(ChatActivity.this, "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+                });
+            }
+        });
+        //Удалить сообщение
+        ((TextView) popupViewForMenu.findViewById(R.id.deleteContent)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int from = 0;
+                if (!message.incoming) from = 1;
+                else from = 0;
+                messages.deleteMessage(message.id, from, new Messages.DeleteMessageCallback() {
+                    @Override
+                    public void onSuccess() {
+                        mmAdapter.deleteMessege(position);
+                        Toast.makeText(ChatActivity.this, "Сообщение удалено", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+
+                    @Override
+                    public void onError(int error_code, String error_msg) {
+                        Toast.makeText(ChatActivity.this, "Что-то пошло не так", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+
+                    @Override
+                    public void onInternetError() {
+                        Toast.makeText(ChatActivity.this, "Ошибка", Toast.LENGTH_LONG).show();
+                        popUpWindowForMenu.dismiss();
+                    }
+                });
+                popUpWindowForMenu.dismiss();
+            }
+        });
+    }
+
+    //Обрабатываем результат выбора фоток из галереи или с камеры
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch (requestCode) {
+            case 1:
+                if (resultCode == RESULT_OK) {
+                    sendingImageUri = imageReturnedIntent.getData();
+                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        if(Help.runTaskAfterPermission(
+                                ChatActivity.this,
+                                new String[]{
+                                        Manifest.permission.READ_EXTERNAL_STORAGE
+                                },
+                                Help.REQUEST_ADD_PHOTO_MESSAGE
+                        )){
+                            sendImageFromGallery();
+                        }
+                    } else {
+                        sendImageFromGallery();
+                    }
+                }
+                break;
+            default:
+                System.out.println("Какая-то ошибка");
+                break;
+        }
+    }
+    @Override
+    public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case Help.REQUEST_ADD_PHOTO_MESSAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sendImageFromGallery();
+                } else {
+                }
+                break;
+        }
+
+    }
+
+
+    public void sendImageFromGallery(){
+        String file_base64 = "";
+        final ArrayList<String> points = new ArrayList<>();
+        try {
+            final InputStream imageStream = getContentResolver().openInputStream(this.sendingImageUri);
+            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+            int position = 0;
+            points.add("1");
+            if(maAdapter != null){
+                Attachment defoltAttachment = new Attachment();
+                defoltAttachment.previewAttachmentUri = this.sendingImageUri;
+                position = maAdapter.addAttachment(defoltAttachment);
+                points.add("2");
+//                attachmentsListView.setNumColumns(attachmentsListView.getColumnWidth()+1);
+            } else {
+                Attachment defoltAttachment = new Attachment();
+                defoltAttachment.previewAttachmentUri = this.sendingImageUri;
+                ArrayList <Attachment> defoltListAttachment = new ArrayList<>();
+                defoltListAttachment.add(defoltAttachment);
+                points.add("3");
+                maAdapter = new MessagesAttachmentsAdapter(
+                        ChatActivity.this,
+                        defoltListAttachment,
+                        messages
+                );
+                this.attachmentsListView.setAdapter(maAdapter);
+                points.add("4");
+            }
+
+            attachmentsListView.getLayoutParams().width =
+                    attachmentsListView.getLayoutParams().width +
+                            Help.getPxFromDp(130, this);
+            points.add("5");
+            file_base64 = Help.getBase64FromImage(
+                    selectedImage,
+                    Bitmap.CompressFormat.JPEG,
+                    Help.getFileSize(sendingImageUri, getApplicationContext()),
+                    0
+            );
+
+            points.add("6");
+            canSendMessage = false;
+            Logs.getInstance(getApplicationContext()).add(
+                    "info",
+                    points.toString(),
+                    "send_image_from_gellery",
+                    "no-exception"
+            );
+            String tag = messages.addFileToMessage(
+                    "photo",
+                    "jpg",
+                    file_base64,
+                    position,
+                    new Messages.AddFileToMessageCallback() {
+                        @Override
+                        public void onSuccess(boolean response, final int id, final int position) {
+                            points.add("7");
+                            maAdapter.setLoadedAttachment(position, id);
+                            canSendMessage = true;
+                        }
+                    }, new Help.ErrorCallback() {
+                        @Override
+                        public void onError(int error_code, String error_msg) {
+                            canSendMessage = true;
+                        }
+
+                        @Override
+                        public void onInternetError() {
+                            canSendMessage = true;
+                        }
+                    });
+
+        } catch (Exception e){
+            e.printStackTrace();
+            Logs.getInstance(getApplicationContext()).add(
+                    "error",
+                    points.toString(),
+                    "send_image_from_gellery",
+                    e.toString()
+            );
+        }
     }
 
     @Override
@@ -399,417 +544,20 @@ public class ChatActivity extends SuperMainActivity{
         return super.onOptionsItemSelected(item);
     }
 
-    private void getMsg() {
-        isLaunching = true;
-        messages.getMessages(
-                this.contact_id,
-                lastId,
-                new Messages.GetMessagesCallback() {
-            @Override
-            public void onSuccess(
-                    Message messages[],
-                    Activity activity,
-                    int user_id,
-                    String user_avatar_micro,
-                    Message[] sendedUnreadedMessagesIDs,
-                    String dateLU,
-                    boolean contactIsOnline
-            ) {
-                thisPage = thisPage + 1;
-                allPage = allPage + 1;
-
-                ((LinearLayout) findViewById(R.id.chatWindow)).setVisibility(View.VISIBLE);
-
-                isLaunching = false;
-
-                dateLastUpdate = dateLU;
-
-                progressBarChat.setVisibility(View.GONE);
-                ChatActivity chatActivity = ((ChatActivity) activity);
-
-                ArrayList<Message> asd = new ArrayList<Message>();
-                if (messages.length != 0) {
-                    lastId = messages[0].id;
-                    for (Message message : messages) {
-                        asd.add(message);
-                        if (message.id < lastId) lastId = message.id;
-                        allMessagesForMenu.add(message);
-                    }
-                    allMsg.addAll(asd);
-                } else thatsAll = true;
-
-                mmAdapter = new MessagesMessagesAdapter(
-                        activity,
-                        asd,
-                        user_id,
-                        user_avatar_micro,
-                        Constant.upload + chatActivity.pathContactAvatar
-                );
-                chatList.addFooterView(header);
-                chatList.setAdapter(mmAdapter);
-                chatList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        popupForMsgMenu(allMessagesForMenu.get(position), position);
-                    }
-                });
-                contactOnline(contactIsOnline);
-            }
-        }, new Help.ErrorCallback() {
-            @Override
-            public void onError(int error_code, String error_msg) {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        getMsg();
-                    }
-                }, 5000);
-            }
-
-            @Override
-            public void onInternetError() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override public void run() {
-                        getMsg();
-                    }
-                }, 5000);
-            }
-        });
-    }
-
-    public void getNewPage(){
-        thisPage = thisPage + 1;
-        chatList.setTranscriptMode(0);
-        mmAdapter.setNewPage(allMsg);
-        chatList.clearFocus();
-        chatList.setFocusable(true);
-        chatList.setSelection(allMsg.size() + 2);
-    }
-
-    private void refresh() {
-        if (!isLaunching) {
-            isLaunching = true;
-            boolean writing = false;
-            if (messageContent.getText().length() != 0) {
-                writing = true;
-            } else {
-                writing = false;
-            }
-            messages.refreshMessages(dateLastUpdate, contact_id, writing, new Messages.RefreshMessagesCallback() {
-                @Override
-                public void onSuccess(Message[] messages, String dateLU, boolean contactIsOnline, boolean is_writing) {
-                    isLaunching = false;
-                    dateLastUpdate = dateLU;
-                    if (messages.length != 0) {
-                        if (firstItemScrolled) {
-                            chatList.setTranscriptMode(0);
-                        } else {
-                            chatList.setTranscriptMode(2);
-                        }
-                        mmAdapter.addMessages(messages);
-                    }
-
-                    if ((ChatActivity.this.contactIsOnline != contactIsOnline) || (ChatActivity.this.is_writing != is_writing)) {
-                        if (is_writing) contactIsWriting();
-                        else contactOnline(contactIsOnline);
-                    }
-                    ChatActivity.this.contactIsOnline = contactIsOnline;
-                    ChatActivity.this.is_writing = is_writing;
-                }
-            }, new Help.ErrorCallback() {
-                @Override
-                public void onError(int error_code, String error_msg) {
-                    isLaunching = false;
-                }
-
-                @Override
-                public void onInternetError() {
-                    isLaunching = false;
-                }
-            });
-        }
-    }
-
-    private void popupForMsgMenu (final Message message, final int position) {
-        DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
-
-        popUpWindowForMenu.setWidth(displaymetrics.widthPixels);
-        popUpWindowForMenu.setHeight(displaymetrics.heightPixels);
-        popUpWindowForMenu.setAnimationStyle(Animation_Dialog);
-        popUpWindowForMenu.showAtLocation(chatList, Gravity.CENTER, 0, 0);
-
-        //Копировать сообщение
-        ((TextView) popupViewForMenu.findViewById(R.id.copy)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("", message.content);
-                clipboard.setPrimaryClip(clip);
-                Toast.makeText(ChatActivity.this, "Текст скопирован в буфер обмена", Toast.LENGTH_LONG).show();
-                popUpWindowForMenu.dismiss();
-            }
-        });
-        //Отправить жалобу
-        ((TextView) popupViewForMenu.findViewById(R.id.badContent)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Complaint complaint = new Complaint(getApplicationContext());
-                complaint.addComplaint(message.content, "Message", "Message", message.id, new Complaint.SendComplaintCallback() {
-                    @Override
-                    public void onSuccess() {
-                        Toast.makeText(ChatActivity.this, "Жалоба успешно отправлена", Toast.LENGTH_LONG).show();
-                        popUpWindowForMenu.dismiss();
-                    }
-
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        Toast.makeText(ChatActivity.this, "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                        popUpWindowForMenu.dismiss();
-                    }
-
-                    @Override
-                    public void onInternetError() {
-                        Toast.makeText(ChatActivity.this, "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                        popUpWindowForMenu.dismiss();
-                    }
-                });
-            }
-        });
-        //Удалить сообщение
-        ((TextView) popupViewForMenu.findViewById(R.id.deleteContent)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int from = 0;
-                if (message.from_id == stgs.getSettingInt("user_id")) from = 1;
-                else from = 0;
-                messages.deleteMessage(message.id, from, new Messages.DeleteMessageCallback() {
-                    @Override
-                    public void onSuccess() {
-                        mmAdapter.deleteMessege(position);
-                        Toast.makeText(ChatActivity.this, "Сообщение удалено", Toast.LENGTH_LONG).show();
-                        popUpWindowForMenu.dismiss();
-                    }
-
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        Toast.makeText(ChatActivity.this, "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                        popUpWindowForMenu.dismiss();
-                    }
-
-                    @Override
-                    public void onInternetError() {
-                        Toast.makeText(ChatActivity.this, "Ошибка", Toast.LENGTH_LONG).show();
-                        popUpWindowForMenu.dismiss();
-                    }
-                });
-                popUpWindowForMenu.dismiss();
-            }
-        });
-    }
-
-    //Обрабатываем результат выбора фоток из галереи или с камеры
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
-        switch (requestCode) {
-            case 1:
-                if (resultCode == RESULT_OK) {
-                    sendingImageUri = imageReturnedIntent.getData();
-                    if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                        if(Help.runTaskAfterPermission(
-                                ChatActivity.this,
-                                new String[]{
-                                        Manifest.permission.READ_EXTERNAL_STORAGE
-                                },
-                                Help.REQUEST_ADD_PHOTO_MESSAGE
-                        )){
-                            sendImageFromGallery();
-                        }
-                    } else {
-                        sendImageFromGallery();
-                    }
-                }
-                break;
-            default:
-                System.out.println("Какая-то ошибка");
-                break;
-        }
-    }
-    @Override
-    public void onRequestPermissionsResult(final int requestCode, final String[] permissions, final int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case Help.REQUEST_ADD_PHOTO_MESSAGE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // Permission granted.
-                    sendImageFromGallery();
-                } else {
-                    // User refused to grant permission.
-//                    Toast.makeText(this, "Для доступа к фото необходимо ваше разрешение", Toast.LENGTH_LONG).show();
-
-                }
-                break;
-        }
-
-    }
-
-
-    public void sendImageFromGallery(){
-        String file_base64 = "";
-        final ArrayList<String> points = new ArrayList<>();
-        try {
-            final InputStream imageStream = getContentResolver().openInputStream(this.sendingImageUri);
-            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-            int position = 0;
-            points.add("1");
-            if(maAdapter != null){
-                Attachment defoltAttachment = new Attachment();
-                defoltAttachment.previewAttachmentUri = this.sendingImageUri;
-                position = maAdapter.addAttachment(defoltAttachment);
-                points.add("2");
-//                attachmentsListView.setNumColumns(attachmentsListView.getColumnWidth()+1);
-            } else {
-                Attachment defoltAttachment = new Attachment();
-                defoltAttachment.previewAttachmentUri = this.sendingImageUri;
-                ArrayList <Attachment> defoltListAttachment = new ArrayList<>();
-                defoltListAttachment.add(defoltAttachment);
-                points.add("3");
-                maAdapter = new MessagesAttachmentsAdapter(
-                        ChatActivity.this,
-                        defoltListAttachment,
-                        messages
-                );
-                this.attachmentsListView.setAdapter(maAdapter);
-                points.add("4");
-            }
-
-            attachmentsListView.getLayoutParams().width =
-                    attachmentsListView.getLayoutParams().width +
-                            Help.getPxFromDp(130, this);
-            points.add("5");
-            //Преобразование для отправки на серв
-            file_base64 = Help.getBase64FromImage(
-                    selectedImage,
-                    Bitmap.CompressFormat.JPEG,
-                    Help.getFileSize(sendingImageUri, getApplicationContext()),
-                    0
-            );
-
-//            if(file_base64!=null)
-//                points.add(file_base64);
-
-            points.add("6");
-            canSendMessage = false;
-            Logs.getInstance(getApplicationContext()).add(
-                    "info",
-                    points.toString(),
-                    "send_image_from_gellery",
-                    "no-exception"
-            );
-            String tag = messages.addFileToMessage(
-                    "photo",
-                    "jpg",
-                    file_base64,
-                    position,
-                    new Messages.AddFileToMessageCallback() {
-                        @Override
-                        public void onSuccess(boolean response, final int id, final int position) {
-                            points.add("7");
-                            maAdapter.setLoadedAttachment(position, id);
-                            canSendMessage = true;
-                        }
-                    }, new Help.ErrorCallback() {
-                        @Override
-                        public void onError(int error_code, String error_msg) {
-                            canSendMessage = true;
-                        }
-
-                        @Override
-                        public void onInternetError() {
-                            canSendMessage = true;
-                        }
-                    });
-
-        } catch (Exception e){
-            e.printStackTrace();
-            Logs.getInstance(getApplicationContext()).add(
-                    "error",
-                    points.toString(),
-                    "send_image_from_gellery",
-                    e.toString()
-            );
-        }
-    }
-
-    private void contactIsWriting(){
-        avi.setVisibility(View.VISIBLE);
+    private void setWriteMsg() {
         textOnline.setText("печатает");
-    }
+        avi.setVisibility(View.VISIBLE);
 
-    private void contactOnline(boolean contactIsOnline){
-        avi.setVisibility(View.INVISIBLE);
-        if(contactIsOnline){
-            textOnline.setText("онлайн");
-        } else {
-            textOnline.setText("не в сети");
-        }
-    }
-
-    //Сюда надо автообновление
-    class GetNewPage extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            if(!isLaunchingNewPage && !thatsAll) {
-                isLaunchingNewPage = true;
-                messages.getMessages(
-                        contact_id,
-                        lastId,
-                        new Messages.GetMessagesCallback() {
-                            @Override
-                            public void onSuccess(
-                                    Message messages[],
-                                    Activity activity,
-                                    int user_id,
-                                    String user_avatar_micro,
-                                    Message[] sendedUnreadedMessagesIDs,
-                                    String dateLU,
-                                    boolean contactIsOnline
-                            ) {
-                                if (messages.length != 0) {
-                                    if (messages != null) {
-                                        allMsg.clear();
-                                        for (Message message : messages) {
-                                            allMsg.add(0, message);
-                                            if (message.id < lastId) lastId = message.id;
-                                        }
-                                    }
-                                    allPage = allPage + 1;
-                                } else thatsAll = true;
-                                isLaunchingNewPage = false;
-                            }
-                        }, new Help.ErrorCallback() {
-                            @Override
-                            public void onError(int error_code, String error_msg) {
-                                isLaunchingNewPage = false;
-                            }
-
-                            @Override
-                            public void onInternetError() {
-                                isLaunchingNewPage = false;
-                            }
-                        });
+        handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override public void run() {
+                curentDate.setToNow();
+                if (curentDate.second - lastWriteMsgDate.second > 1) {
+                    textOnline.setText("в сети");
+                    avi.setVisibility(View.GONE);
+                }
             }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-
-
-        }
+        }, 2000);
     }
 
     public void setAllMsgForMenu(ArrayList<Message> allMessagesForMenu) {
@@ -823,61 +571,11 @@ public class ChatActivity extends SuperMainActivity{
         else super.onBackPressed();
     }
 
-    @Override
-    public void onResume(){
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Tread1_Handler.post(new Runnable() {public void run() {
-                    refresh();
-                }});
-            }
-        }, 3000, 3000);
-
-        isStartedSendedMessagesTimer = true;
-        sendedMessagesTimer = new Timer();
-        sendedMessagesTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                sendedMessagesHandler.post(new Runnable() {
-                    public void run() {
-                        if(mmAdapter != null && mmAdapter.getReadStateLastSendedMessage()){
-                            messages.getReadStateMessages(contact_id, new Messages.GetReadStateMessages() {
-                                @Override
-                                public void onSuccess(boolean state) {
-                                    if(state)
-                                        mmAdapter.setReadedMessages();
-                                }
-                            }, new Help.ErrorCallback() {
-                                @Override
-                                public void onError(int error_code, String error_msg) {
-                                }
-
-                                @Override
-                                public void onInternetError() {
-                                }
-                            });
-                        }
-                    }
-                });
-            }
-        }, 3000, 3000);
-
-        super.onResume();
-    }
 
     @Override
     public void onPause() {
         if (popUpWindowForMenu != null) popUpWindowForMenu.dismiss();
         if (popUpWindow != null) popUpWindow.dismiss();
-        timer.cancel();
-        if(isStartedSendedMessagesTimer) {
-            sendedMessagesTimer.cancel();
-            isStartedSendedMessagesTimer = false;
-        }
-        onlineTimer.cancel();
-        writingTimer.cancel();
         super.onPause();
     }
 
@@ -885,13 +583,25 @@ public class ChatActivity extends SuperMainActivity{
     public void onDestroy() {
         if (popUpWindowForMenu != null) popUpWindowForMenu.dismiss();
         if (popUpWindow != null) popUpWindow.dismiss();
-        timer.cancel();
-        if(isStartedSendedMessagesTimer) {
-            sendedMessagesTimer.cancel();
-            isStartedSendedMessagesTimer = false;
-        }
-        onlineTimer.cancel();
-        writingTimer.cancel();
         super.onDestroy();
+    }
+
+    @Override
+    public void onSocketConnect() {
+        getMessagesFromSocket(contact_id);
+        super.onSocketConnect();
+    }
+
+    @Override
+    public void onSocketResponse (SocketObject info) {
+        super.onSocketResponse(info);
+        if (info.type.equals("get-messages")) {setMsg(info.payload.messages);}
+        else if (info.type.equals("read-message")) {mmAdapter.setReadedMessages();}
+        else if (info.type.equals("on-write-message")) {
+            if (contact_id == info.payload.dialogId) setWriteMsg();
+            lastWriteMsgDate.setToNow();
+        }
+        else if (info.type.equals("incoming-message")) {mmAdapter.add(info.payload.message);}
+        else if (info.type.equals("send-message")) {mmAdapter.add(info.payload.message);}
     }
 }

@@ -7,7 +7,7 @@ package com.httpso_hello.hello.helper;
 public class Constant {
 
     //Domen
-    public static String host = "http://t-hello.ru/";
+    public static String host = "https://o-hello.com/";
     //Uploads
     public static String upload = "https://o-hello.com/upload/";
     // Standart avatar
@@ -59,18 +59,23 @@ public class Constant {
     // Uri for friends methods
     private static String friendsController = host + "friends/";
 
-    public static String friends_get_all_friends_uri = friendsController;
+    public static String friends_get_all_friends_uri = friendsController + "list";
     public static String friends_get_online_friends_uri = friendsController + "online";
     public static String friends_get_incoming_friends_uri = friendsController + "incoming";
     public static String friends_add_friend_uri = friendsController + "add";
     public static String friends_delete_friend_uri = friendsController + "remove";
 
 
+    //Uri for groops methods
+    public static String groups_get_my_groups_uri = host + "groups";
+    public static String groups_get_all_groups_uri = host + "groups/" + "search";
+    public static String groups_get_one_group_uri = host + "group/";
 
 
+    //Uri for settings methods
+    private static String settingsController = host + "settings/";
 
-
-
+    public static String settings_get_ignore_list_uri = settingsController + "blacklist";
 
 
 
@@ -79,16 +84,9 @@ public class Constant {
     public static String set_token_uri = "auth.set_token";
     public static String auth_restore_uri = "auth.restore";
 
-    public static String messages_get_contacts_uri = "messages.get_contacts";
-    public static String messages_get_messages_uri = "messages.get_messages";
-    public static String messages_send_message_uri = "messages.send_message";
     public static String messages_get_notices_uri = "messages.get_notices";
     public static String messages_delete_contact_uri = "messages.delete_contact";
     public static String messages_delete_message_uri = "messages.delete_message";
-    public static String messages_refresh_contacts_uri = "messages.refresh_contacts";
-    public static String messages_refresh_messages_uri = "messages.refresh_messages";
-    public static String messages_get_state_messages_uri = "messages.get_state_messages";
-    public static String messages_get_read_state_messages_uri = "messages.get_read_state_messages";
     public static String messages_add_file_to_message_uri = "messages.add_file_to_message";
 
     public static String board_add_item_uri = "content.add_item";
@@ -96,7 +94,6 @@ public class Constant {
     public static String users_update_avatar = "users.update_avatar";
     public static String users_get_balance_uri = "users.get_balance";
     public static String users_get_counts_uri = "users.get_counts";
-    public static String users_get_ignore_list_uri = "users.get_ignore_list";
     public static String users_ignor_contact_uri = "users.ignore_user";
     public static String users_delete_user_ignore_uri = "users.delete_user_ignore";
 
@@ -126,7 +123,6 @@ public class Constant {
 
     public static String flirtiki_get_info_uri = "flirtiki.get_flirtiki";
 
-    public static String groups_get_groups_uri = "groups.get_groups";
     public static String groups_get_members_uri = "groups.get_members";
     public static String groups_subscribe_uri = "groups.subscribe";
     public static String groups_create_group_uri = "groups.add_group";

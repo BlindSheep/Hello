@@ -84,27 +84,27 @@ public class SettingsLookingForFragment extends Fragment {
         saveButton = (TextView) rootView.findViewById(R.id.saveButton);
 
         //Ищу
-        if (user.looking_for == 3) {
+        if (user.lookingFor == 3) {
             lookingForAll.setChecked(true);
             lookingForMan.setChecked(false);
             lookingForWoman.setChecked(false);
-        } else  if (user.looking_for == 2) {
+        } else  if (user.lookingFor == 2) {
             lookingForAll.setChecked(false);
             lookingForMan.setChecked(false);
             lookingForWoman.setChecked(true);
-        } else  if (user.looking_for == 1) {
+        } else  if (user.lookingFor == 1) {
             lookingForAll.setChecked(false);
             lookingForMan.setChecked(true);
             lookingForWoman.setChecked(false);
-        } else  if (user.looking_for == 0) {
+        } else  if (user.lookingFor == 0) {
             lookingForAll.setChecked(false);
             lookingForMan.setChecked(false);
             lookingForWoman.setChecked(false);
         }
-        birthDateFrom.setSelection(user.looking_for_age);
-        birthDateTo.setSelection(user.age_do);
-        if (user.reg_cel != null) {
-            char[] cel = user.reg_cel.toCharArray();
+        birthDateFrom.setSelection(user.ageStart);
+        birthDateTo.setSelection(user.ageFinish);
+        if (user.regCel != null) {
+            char[] cel = user.regCel.toCharArray();
             if (cel.length >= 1) if (cel[0] == '1') checkBoxLookinFor0.setChecked(true);
             if (cel.length >= 2) if (cel[1] == '1') checkBoxLookinFor1.setChecked(true);
             if (cel.length >= 3) if (cel[2] == '1') checkBoxLookinFor2.setChecked(true);

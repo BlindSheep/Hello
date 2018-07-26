@@ -27,6 +27,7 @@ import com.httpso_hello.hello.Structures.Registration;
 import com.httpso_hello.hello.Structures.RequestMessages;
 import com.httpso_hello.hello.Structures.ReqSetToken;
 import com.httpso_hello.hello.Structures.Resp;
+import com.httpso_hello.hello.Structures.UniversalResponse;
 
 
 public class Api {
@@ -60,7 +61,8 @@ public class Api {
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         if(response!=null) {
-                            callback.onSuccess(gson.fromJson(response, Resp.class));
+                            UniversalResponse universalResponse = gson.fromJson(response, UniversalResponse.class);
+                            callback.onSuccess(universalResponse.data);
                             return;
                         }
                         callback.onInternetError();

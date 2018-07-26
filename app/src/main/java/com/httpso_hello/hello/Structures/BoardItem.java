@@ -7,20 +7,19 @@ package com.httpso_hello.hello.Structures;
 public class BoardItem {
 
     public int id;
-    public String date_pub;
+    public String dateApproved;
     public int rating;
     public Image[] photos;
-    public String user_nickname;
-    public int user_id;
-    public Image avatar;
-    public boolean is_voted;
+    public User User;
+    public int userId;
+    public boolean isVoted;
     public String content;
-    public int count_readed;
+    public int countReaded;
     public String city_cache;
     public int comments;
-    public String is_anonim;
+    public boolean isAnonim;
 
-    public int group_id;
+    public int groupId;
     public Groups groupInfo;
 
     public BoardItem(){

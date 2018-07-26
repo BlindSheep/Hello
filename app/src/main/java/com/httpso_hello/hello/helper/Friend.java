@@ -102,6 +102,7 @@ public class Friend extends Help {
                             Friends friends = gson.fromJson(response, Friends.class);
                             if(friends.error == null){
                                 addFriendsCallback.onSuccess();
+                                setNewToken(friends.token);
                                 return;
                             }
                             addFriendsCallback.onError(friends.error.code, friends.error.message);
@@ -144,6 +145,7 @@ public class Friend extends Help {
                             Friends friends = gson.fromJson(response, Friends.class);
                             if(friends.error == null){
                                 deleteFriendsCallback.onSuccess();
+                                setNewToken(friends.token);
                                 return;
                             }
                             deleteFriendsCallback.onError(friends.error.code, friends.error.message);

@@ -85,7 +85,7 @@ public class Auth extends Help {
                             }
                             //Если аккаунт не заблокирован
                             stgs.setSetting("token", result.token);
-                            stgs.setSettingInt("userId", result.userId);
+                            stgs.setSettingInt("userId", result.id);
                             stgs.setSetting("nickname", result.nickname);
                             if(result.birthDate != null){
                                 stgs.setSetting("birthDate", ConverterDate.convertDateToAge(result.birthDate));

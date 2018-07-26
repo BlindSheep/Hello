@@ -159,7 +159,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             if ((position < 10) || (settings != 0)) boardItem = this.boardItems.get(position);
             else boardItem = this.boardItems.get(position - position / 10);
             final boolean anonim;
-            if (boardItem.is_anonim.equals("0")) anonim = false;
+            if (!boardItem.isAnonim) anonim = false;
             else anonim = true;
 
 
@@ -175,7 +175,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     @Override
                     public void onClick(View v) {
                         holder.accept.setText("Публикуем...");
-                        groups.moderateGroupItem(1, boardItem.id, boardItem.group_id, new Groups.ModerateGroupItemCallback() {
+                        groups.moderateGroupItem(1, boardItem.id, boardItem.groupId, new Groups.ModerateGroupItemCallback() {
                             @Override
                             public void onSuccess() {
                                 geleteItem(position);
@@ -202,7 +202,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     @Override
                     public void onClick(View v) {
                         holder.delete.setText("Удаляем...");
-                        groups.moderateGroupItem(0, boardItem.id, boardItem.group_id, new Groups.ModerateGroupItemCallback() {
+                        groups.moderateGroupItem(0, boardItem.id, boardItem.groupId, new Groups.ModerateGroupItemCallback() {
                             @Override
                             public void onSuccess() {
                                 geleteItem(position);
@@ -234,7 +234,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     if (boardItem.groupInfo.owner_id == stgs.getSettingInt("user_id")) isAdmin = true;
                     else isAdmin = false;
                 } else isAdmin = false;
-                if ((boardItem.user_id == stgs.getSettingInt("user_id")) || (3008 == stgs.getSettingInt("user_id")) || (isAdmin)) {
+                if ((boardItem.userId == stgs.getSettingInt("user_id")) || (3008 == stgs.getSettingInt("user_id")) || (isAdmin)) {
                     holder.writeButton.setVisibility(View.VISIBLE);
                     holder.writeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -266,7 +266,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                 //Начало лайки
                 holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
-                if (!boardItem.is_voted) {
+                if (!boardItem.isVoted) {
                     holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                     holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
                 }
@@ -277,8 +277,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 holder.likeBlock.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!boardItem.is_voted) {
-                            boardItem.is_voted = true;
+                        if (!boardItem.isVoted) {
+                            boardItem.isVoted = true;
                             boardItem.rating += 1;
                             holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                             holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
@@ -290,7 +290,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                                 @Override
                                 public void onError(int error_code, String error_msg) {
-                                    boardItem.is_voted = false;
+                                    boardItem.isVoted = false;
                                     boardItem.rating -= 1;
                                     holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                                     holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
@@ -300,7 +300,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                                 @Override
                                 public void onInternetError() {
-                                    boardItem.is_voted = false;
+                                    boardItem.isVoted = false;
                                     boardItem.rating -= 1;
                                     holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                                     holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
@@ -309,7 +309,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                                 }
                             });
                         } else {
-                            boardItem.is_voted = false;
+                            boardItem.isVoted = false;
                             boardItem.rating -= 1;
                             holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                             holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
@@ -321,7 +321,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                                 @Override
                                 public void onError(int error_code, String error_msg) {
-                                    boardItem.is_voted = true;
+                                    boardItem.isVoted = true;
                                     boardItem.rating += 1;
                                     holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                                     holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
@@ -331,7 +331,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                                 @Override
                                 public void onInternetError() {
-                                    boardItem.is_voted = true;
+                                    boardItem.isVoted = true;
                                     boardItem.rating += 1;
                                     holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                                     holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
@@ -357,12 +357,13 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 //Конец комменты
 
                 //Начало кол-во просмотров
-                holder.countReaded.setText(Integer.toString(boardItem.count_readed));
+                holder.countReaded.setText(Integer.toString(boardItem.countReaded));
                 //Конец кол-во просмотров
             }
 
             //Начало дата объявления
-            holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.date_pub));
+            if (boardItem.dateApproved != null) holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.dateApproved));
+            else holder.datePubBoard.setText(" ");
             //Конец дата объявления
 
             //Начало текст объявления
@@ -375,24 +376,24 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             //Конец текст объявления
 
             //Начало имя и аватарка отправителя
-            if (boardItem.group_id == 0) {
+            if (boardItem.groupId == 0) {
                 holder.ifGroupLayout.setVisibility(View.GONE);
                 //Если не анонимно и не в группе
                 if (!anonim) {
-                    holder.userNameBoard.setText(boardItem.user_nickname);
+                    holder.userNameBoard.setText(boardItem.User.nickname);
                     holder.userNameBoard.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProfileActivity.class);
-                            intent.putExtra("profile_id", boardItem.user_id);
-                            intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
+                            intent.putExtra("profile_id", boardItem.userId);
+                            intent.putExtra("profile_nickname", " " + boardItem.User.nickname);
                             context.startActivity(intent);
                         }
                     });
-                    if (boardItem.avatar != null) {
+                    if (boardItem.User.avatar != null) {
                         Picasso
                                 .with(getContext())
-                                .load(Uri.parse(Constant.upload + boardItem.avatar.micro))
+                                .load(Uri.parse(Constant.upload + boardItem.User.avatar.micro))
                                 .transform(new CircularTransformation(0))
                                 .into(holder.userAvatarBoard, new Callback() {
                                     @Override
@@ -420,8 +421,8 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProfileActivity.class);
-                            intent.putExtra("profile_id", boardItem.user_id);
-                            intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
+                            intent.putExtra("profile_id", boardItem.userId);
+                            intent.putExtra("profile_nickname", " " + boardItem.User.nickname);
                             context.startActivity(intent);
                         }
                     });
@@ -479,7 +480,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), OneGroupActivity.class);
-                        intent.putExtra("id", boardItem.group_id);
+                        intent.putExtra("id", boardItem.groupId);
                         if (settings == 0) ((BoardActivity) getContext()).startActivity(intent);
                         else if (settings == 1) ((OneGroupActivity) getContext()).startActivity(intent);
                     }
@@ -488,27 +489,27 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getContext(), OneGroupActivity.class);
-                        intent.putExtra("id", boardItem.group_id);
+                        intent.putExtra("id", boardItem.groupId);
                         if (settings == 0) ((BoardActivity) getContext()).startActivity(intent);
                         else if (settings == 1) ((OneGroupActivity) getContext()).startActivity(intent);
                     }
                 });
                 //Если не анонимно и в группе
                 if (!anonim) {
-                    holder.nameOfUser.setText(boardItem.user_nickname);
+                    holder.nameOfUser.setText(boardItem.User.nickname);
                     holder.nameOfUser.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProfileActivity.class);
-                            intent.putExtra("profile_id", boardItem.user_id);
-                            intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
+                            intent.putExtra("profile_id", boardItem.userId);
+                            intent.putExtra("profile_nickname", " " + boardItem.User.nickname);
                             context.startActivity(intent);
                         }
                     });
-                    if (boardItem.avatar != null) {
+                    if (boardItem.User.avatar != null) {
                         Picasso
                                 .with(getContext())
-                                .load(Uri.parse(Constant.upload + boardItem.avatar.micro))
+                                .load(Uri.parse(Constant.upload + boardItem.User.avatar.micro))
                                 .transform(new CircularTransformation(0))
                                 .into(holder.userAvatar, new Callback() {
                                     @Override
@@ -536,14 +537,14 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProfileActivity.class);
-                            intent.putExtra("profile_id", boardItem.user_id);
-                            intent.putExtra("profile_nickname", " " + boardItem.user_nickname);
+                            intent.putExtra("profile_id", boardItem.userId);
+                            intent.putExtra("profile_nickname", " " + boardItem.User.nickname);
                             context.startActivity(intent);
                         }
                     });
                 } else {
                     //есди анонимно и в группе
-                    if (boardItem.user_id == boardItem.groupInfo.owner_id) holder.nameOfUser.setText("Администратор");
+                    if (boardItem.userId == boardItem.groupInfo.owner_id) holder.nameOfUser.setText("Администратор");
                     else holder.nameOfUser.setText("Анонимно");
                     holder.nameOfUser.setOnClickListener(new View.OnClickListener() {
                         @Override

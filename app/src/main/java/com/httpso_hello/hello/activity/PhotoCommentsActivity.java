@@ -20,8 +20,7 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Coment;
-import com.httpso_hello.hello.Structures.Image;
-import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.CommentsAdapter;
 import com.httpso_hello.hello.helper.Comments;
 import com.httpso_hello.hello.helper.ConverterDate;
@@ -38,7 +37,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 import static android.R.style.Animation_Dialog;
 
-public class PhotoCommentsActivity extends SuperMainActivity {
+public class PhotoCommentsActivity extends SocketActivity {
 
     private Bundle extras;
     private SwipeRefreshLayout swipeRefreshLayout;

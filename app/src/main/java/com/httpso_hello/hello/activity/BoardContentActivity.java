@@ -8,37 +8,28 @@ import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Html;
 import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
-import com.httpso_hello.hello.Structures.Attachment;
 import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Coment;
-import com.httpso_hello.hello.Structures.Image;
-import com.httpso_hello.hello.Structures.Message;
-import com.httpso_hello.hello.Structures.Photo;
-import com.httpso_hello.hello.Structures.User;
+import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.CommentsAdapter;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Comments;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Content;
 import com.httpso_hello.hello.helper.ConverterDate;
-import com.httpso_hello.hello.helper.Help;
-import com.httpso_hello.hello.helper.Messages;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -52,7 +43,7 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 import static android.R.style.Animation_Dialog;
 
-public class BoardContentActivity extends SuperMainActivity {
+public class BoardContentActivity extends SocketActivity {
 
     private Bundle extras;
     private ListView LV;
@@ -286,20 +277,20 @@ public class BoardContentActivity extends SuperMainActivity {
                             @Override
                             public void onSuccess(final BoardItem item) {
                                 boolean anonim = true;
-                                if(item.is_anonim.equals("1")) anonim = true;
+                                if(!item.isAnonim) anonim = true;
                                 else anonim = false;
                                 if (!anonim) {
                                     answer.setVisibility(View.VISIBLE);
                                     answer.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            setAnswer(item.user_id, item.user_nickname);
+                                            setAnswer(item.userId, item.User.nickname);
                                         }
                                     });
-                                    if (item.avatar != null) {
+                                    if (item.User.avatar != null) {
                                         Picasso
                                                 .with(getApplicationContext())
-                                                .load(Uri.parse(Constant.upload + item.avatar.micro))
+                                                .load(Uri.parse(Constant.upload + item.User.avatar.micro))
                                                 .transform(new CircularTransformation(0))
                                                 .into(userAvatarBoardItem, new Callback() {
                                                     @Override
@@ -365,8 +356,8 @@ public class BoardContentActivity extends SuperMainActivity {
                                         });
                                     }
 
-                                    userNameBoardItem.setText(item.user_nickname);
-                                    datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.date_pub));
+                                    userNameBoardItem.setText(item.User.nickname);
+                                    datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.dateApproved));
 
                                     if (!item.content.equals("-")) {
                                         boardTextItem.setText(Html.fromHtml(item.content));
@@ -391,7 +382,7 @@ public class BoardContentActivity extends SuperMainActivity {
                                             @Override
                                             public void onClick(View v) {
                                                 Intent intent = new Intent(BoardContentActivity.this, ProfileActivity.class);
-                                                intent.putExtra("profile_id", item.user_id);
+                                                intent.putExtra("profile_id", item.userId);
                                                 startActivity(intent);
                                             }
                                         });
@@ -403,7 +394,7 @@ public class BoardContentActivity extends SuperMainActivity {
                                             .transform(new CircularTransformation(0))
                                             .into(userAvatarBoardItem);
                                     userNameBoardItem.setText("Анонимно");
-                                    datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.date_pub));
+                                    datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.dateApproved));
 
                                     if (item.photos != null) {
                                         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();

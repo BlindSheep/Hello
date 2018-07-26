@@ -72,10 +72,10 @@ public class IgnorListAdapter extends ArrayAdapter<IgnoreUser> {
 
         final IgnoreUser thisGuest = this.ignoreUserList.get(position);
 
-        if(thisGuest.avatar != null) {
+        if(thisGuest.user.avatar != null) {
             Picasso
                     .with(getContext())
-                    .load(Uri.parse(Constant.upload + thisGuest.avatar.micro))
+                    .load(Uri.parse(Constant.upload + thisGuest.user.avatar.micro))
                     .transform(new CircularTransformation(0))
                     .into(holder.userAvatarIgnore, new Callback() {
                         @Override
@@ -100,7 +100,7 @@ public class IgnorListAdapter extends ArrayAdapter<IgnoreUser> {
                     .into(holder.userAvatarIgnore);
         }
 
-        holder.userNicknameIgnore.setText(thisGuest.nickname);
+        holder.userNicknameIgnore.setText(thisGuest.user.nickname);
 
         holder.deleteButton.setVisibility(View.VISIBLE);
         holder.progress.setVisibility(View.GONE);
@@ -111,12 +111,12 @@ public class IgnorListAdapter extends ArrayAdapter<IgnoreUser> {
                 holder.deleteButton.setVisibility(View.GONE);
                 holder.progress.setVisibility(View.VISIBLE);
                 Profile.getInstance(getContext())
-                        .deleteUserFromIgnore(thisGuest.user_id, new Profile.DeleteUserIgnoreCallback() {
+                        .deleteUserFromIgnore(thisGuest.user.id, new Profile.DeleteUserIgnoreCallback() {
                             @Override
                             public void onSuccess() {
                                 IgnorListActivity ILA = ((IgnorListActivity) context);
                                 ILA.setContent();
-                                Toast.makeText(getContext(), thisGuest.nickname + " удален из черного списка", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getContext(), thisGuest.user.nickname + " удален из черного списка", Toast.LENGTH_LONG).show();
                                 holder.deleteButton.setVisibility(View.VISIBLE);
                                 holder.progress.setVisibility(View.GONE);
                             }

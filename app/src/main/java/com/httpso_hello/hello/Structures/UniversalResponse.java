@@ -8,6 +8,7 @@ public class UniversalResponse {
 
     public boolean response;
     public int id;
+    public Resp data;
     public Error error;
 
     public UniversalResponse(){
