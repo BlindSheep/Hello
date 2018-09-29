@@ -40,7 +40,7 @@ public class FollowersActivity extends AppCompatActivity {
     private PopupWindow popUpWindowUser;
     private View popupViewUser;
     private ProgressBar launch;
-    private int page = 1;
+    private int page = 0;
     private boolean isLaunch = false;
     private boolean thatsAll = false;
     private View footerLoading;
@@ -91,7 +91,7 @@ public class FollowersActivity extends AppCompatActivity {
         if (followers.getFooterViewsCount() == 0) followers.addFooterView(footerLoading);
         thatsAll = false;
         isLaunch = true;
-        page = 1;
+        page = 0;
         swipeRefreshLayout.setRefreshing(true);
         Groups groups = new Groups(getApplicationContext());
         groups.getFollowers(

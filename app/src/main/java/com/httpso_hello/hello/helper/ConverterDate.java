@@ -2,54 +2,18 @@ package com.httpso_hello.hello.helper;
 
 import android.text.format.Time;
 
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by mixir on 14.08.2017.
  */
 
 public class ConverterDate {
-
-
-    //Склонение подписчиков
-    public static String getFollowers (int count) {
-        String result = null;
-        if (count != 0) {
-            if (count == 1) result = "1 подписчик";
-            if ((count == 2) || (count == 3) || (count == 4)) result = Integer.toString(count) + " подписчика";
-            if ((count >= 5) && (count < 21)) result = Integer.toString(count) + " подписчиков";
-            if ((count >= 21) && (count % 10 == 1)) result = Integer.toString(count) + " подписчик";
-            else if ((count >= 22) && (count % 10 == 2)) result = Integer.toString(count) + " подписчика";
-            else if ((count >= 23) && (count % 10 == 3)) result = Integer.toString(count) + " подписчика";
-            else if ((count >= 24) && (count % 10 == 4)) result = Integer.toString(count) + " подписчика";
-            else if (count >= 25) result = Integer.toString(count) + " подписчиков";
-        } else result = "Нет подписчиков";
-        return result;
-    }
-
-    //Входящее int лайков, исходящее Strung вида "Понравилось 5 людям"
-    public static String likeStr(int likeInt){
-        String likeStr = "";
-        if (likeInt != 0) {
-            if (likeInt == 1) likeStr = "Понравилось 1 человеку"; else likeStr = "Понравилось " + likeInt + " людям";
-            if ((likeInt > 20) && (likeInt % 10 == 1)) likeStr = "Понравилось " + likeInt + " человеку";
-        } else likeStr = "Нет оценок";
-        return likeStr;
-    }
-
-    //конвертер URL аватарки
-    public static String convertUrlAvatar(String oldAva) {
-        char[] choldAva = oldAva.toCharArray();
-        String newAva = "https://o-hello.com/upload/";
-//        for (int i = 0; i < choldAva.length; i++){
-//            if (i > 19) newAva = newAva + Character.toString(choldAva[i]);
-//        }
-        newAva += oldAva.substring(20);
-        return newAva;
-    }
-
-    public static String convertUriSubHost(String path){
-        return path.substring(20);
-    }
-
     // метод для обработки даты в чате
     public static String convertDayForChat(String oldDate) {
         String nameOfMonth;
@@ -110,186 +74,95 @@ public class ConverterDate {
 
     // метод для обработки времени в чате
     public static String convertDateForChat(String oldDate) {
-        String nameOfMonth;
-
-        //распарсиваем дату с серва
-        char[] chOldDate = oldDate.toCharArray();
-        String year = Character.toString(chOldDate[0]) + Character.toString(chOldDate[1]) + Character.toString(chOldDate[2]) + Character.toString(chOldDate[3]);
-        String month = Character.toString(chOldDate[5]) + Character.toString(chOldDate[6]);
-        String day = Character.toString(chOldDate[8]) + Character.toString(chOldDate[9]);
-        String hour = Character.toString(chOldDate[11]) + Character.toString(chOldDate[12]);
-        String minute = Character.toString(chOldDate[14]) + Character.toString(chOldDate[15]);
-
-        //получение текущей даты
+        Date date = getAppDateFromServerDate(oldDate);
         Time time = new Time(Time.getCurrentTimezone());
         time.setToNow();
 
-        //распарсиваем текущую дату
-        char[] chCurrentDate = time.toString().toCharArray();
-        String yearCurrent = Character.toString(chCurrentDate[0]) + Character.toString(chCurrentDate[1]) + Character.toString(chCurrentDate[2]) + Character.toString(chCurrentDate[3]);
-        String monthCurrent = Character.toString(chCurrentDate[4]) + Character.toString(chCurrentDate[5]);
-        String dayCurrent = Character.toString(chCurrentDate[6]) + Character.toString(chCurrentDate[7]);
-        String hourCurrent = Character.toString(chCurrentDate[9]) + Character.toString(chCurrentDate[10]);
-        String minuteCurrent = Character.toString(chCurrentDate[11]) + Character.toString(chCurrentDate[12]);
+        int hourInt = date.getHours();
 
-        int dayCurrentInt = Integer.parseInt(dayCurrent);
-        int dayInt = Integer.parseInt(day);
+        String minutToString;
+        if (date.getMinutes() > 10) minutToString = Integer.toString(date.getMinutes());
+        else minutToString = "0" + Integer.toString(date.getMinutes());
 
-        int monthCurrentInt = Integer.parseInt(monthCurrent);
-        int monthInt = Integer.parseInt(month);
-
-        int yearCurrentInt = Integer.parseInt(yearCurrent);
-        int yearInt = Integer.parseInt(year);
-
-        //присваеваем имена месяцам
-        if (Integer.parseInt(month) == 1) nameOfMonth = "янв";
-        else if (Integer.parseInt(month) == 2) nameOfMonth = "фев";
-        else if (Integer.parseInt(month) == 3) nameOfMonth = "мар";
-        else if (Integer.parseInt(month) == 4) nameOfMonth = "апр";
-        else if (Integer.parseInt(month) == 5) nameOfMonth = "май";
-        else if (Integer.parseInt(month) == 6) nameOfMonth = "июн";
-        else if (Integer.parseInt(month) == 7) nameOfMonth = "июл";
-        else if (Integer.parseInt(month) == 8) nameOfMonth = "авг";
-        else if (Integer.parseInt(month) == 9) nameOfMonth = "сен";
-        else if (Integer.parseInt(month) == 10) nameOfMonth = "окт";
-        else if (Integer.parseInt(month) == 11) nameOfMonth = "ноя";
-        else if (Integer.parseInt(month) == 12) nameOfMonth = "дек";
-        else nameOfMonth = "";
-
-        return hour + ":" + minute;
+        return Integer.toString(hourInt) + ":" + minutToString;
     }
-
-
-
-
 
     // метод для обработки даты в списке контактов
     public static String convertDateForContacts(String oldDate) {
-        String nameOfMonth;
-
-        //распарсиваем дату с серва
-        char[] chOldDate = oldDate.toCharArray();
-        String year = Character.toString(chOldDate[0]) + Character.toString(chOldDate[1]) + Character.toString(chOldDate[2]) + Character.toString(chOldDate[3]);
-        String month = Character.toString(chOldDate[5]) + Character.toString(chOldDate[6]);
-        String day = Character.toString(chOldDate[8]) + Character.toString(chOldDate[9]);
-        String hour = Character.toString(chOldDate[11]) + Character.toString(chOldDate[12]);
-        String minute = Character.toString(chOldDate[14]) + Character.toString(chOldDate[15]);
-
-        //получение текущей даты
+        Date date = getAppDateFromServerDate(oldDate);
         Time time = new Time(Time.getCurrentTimezone());
         time.setToNow();
+        Date curentDate = getCurentDateFromTime(time);
 
-        //распарсиваем текущую дату
-        char[] chCurrentDate = time.toString().toCharArray();
-        String yearCurrent = Character.toString(chCurrentDate[0]) + Character.toString(chCurrentDate[1]) + Character.toString(chCurrentDate[2]) + Character.toString(chCurrentDate[3]);
-        String monthCurrent = Character.toString(chCurrentDate[4]) + Character.toString(chCurrentDate[5]);
-        String dayCurrent = Character.toString(chCurrentDate[6]) + Character.toString(chCurrentDate[7]);
-        String hourCurrent = Character.toString(chCurrentDate[9]) + Character.toString(chCurrentDate[10]);
-        String minuteCurrent = Character.toString(chCurrentDate[11]) + Character.toString(chCurrentDate[12]);
+        int yearCurrentInt = curentDate.getYear() + 1900;
+        int yearInt = date.getYear() + 1900;
 
-        int dayCurrentInt = Integer.parseInt(dayCurrent);
-        int dayInt = Integer.parseInt(day);
+        int monthCurrentInt = curentDate.getMonth();
+        int monthInt = date.getMonth();
+        String nameOfMonth = getNameOfMonth(monthInt, "little");
 
-        int monthCurrentInt = Integer.parseInt(monthCurrent);
-        int monthInt = Integer.parseInt(month);
+        int dayCurrentInt = curentDate.getDate();
+        int dayInt = date.getDate();
 
-        int yearCurrentInt = Integer.parseInt(yearCurrent);
-        int yearInt = Integer.parseInt(year);
+        int hourCurrentInt = curentDate.getHours();
+        int hourInt = date.getHours();
 
-        //присваеваем имена месяцам
-        if (Integer.parseInt(month) == 1) nameOfMonth = "янв";
-        else if (Integer.parseInt(month) == 2) nameOfMonth = "фев";
-        else if (Integer.parseInt(month) == 3) nameOfMonth = "мар";
-        else if (Integer.parseInt(month) == 4) nameOfMonth = "апр";
-        else if (Integer.parseInt(month) == 5) nameOfMonth = "май";
-        else if (Integer.parseInt(month) == 6) nameOfMonth = "июн";
-        else if (Integer.parseInt(month) == 7) nameOfMonth = "июл";
-        else if (Integer.parseInt(month) == 8) nameOfMonth = "авг";
-        else if (Integer.parseInt(month) == 9) nameOfMonth = "сен";
-        else if (Integer.parseInt(month) == 10) nameOfMonth = "окт";
-        else if (Integer.parseInt(month) == 11) nameOfMonth = "ноя";
-        else if (Integer.parseInt(month) == 12) nameOfMonth = "дек";
-        else nameOfMonth = "";
+        int minuteCurrentInt = curentDate.getMinutes();
+        int minuteInt = date.getMinutes();
+        String minutToString;
+        if (date.getMinutes() > 10) minutToString = Integer.toString(date.getMinutes());
+        else minutToString = "0" + Integer.toString(date.getMinutes());
 
+        if (dayInt < 10) dayInt = dayInt % 10;
         //Если сегодня то выводим только время, если вчера то выводим "вчера"
         if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
-            return hour + ":" + minute;
+            return Integer.toString(hourInt) + ":" + minutToString;
         } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
             return "вчера";
         } else {
-            return day + nameOfMonth;
+            return Integer.toString(dayInt) + nameOfMonth;
         }
     }
 
-
-
-
-
     // метод для обработки даты последнего входа
     public static String convertDateForEnter(String oldDate, int gender) {
-        String nameOfMonth;
-
-        //распарсиваем дату с серва
-        char[] chOldDate = oldDate.toCharArray();
-        String year = Character.toString(chOldDate[0]) + Character.toString(chOldDate[1]) + Character.toString(chOldDate[2]) + Character.toString(chOldDate[3]);
-        String month = Character.toString(chOldDate[5]) + Character.toString(chOldDate[6]);
-        String day = Character.toString(chOldDate[8]) + Character.toString(chOldDate[9]);
-        String hour = Character.toString(chOldDate[11]) + Character.toString(chOldDate[12]);
-        String minute = Character.toString(chOldDate[14]) + Character.toString(chOldDate[15]);
-
-        //получение текущей даты
+        Date date = getAppDateFromServerDate(oldDate);
         Time time = new Time(Time.getCurrentTimezone());
         time.setToNow();
+        Date curentDate = getCurentDateFromTime(time);
 
-        //распарсиваем текущую дату
-        char[] chCurrentDate = time.toString().toCharArray();
-        String yearCurrent = Character.toString(chCurrentDate[0]) + Character.toString(chCurrentDate[1]) + Character.toString(chCurrentDate[2]) + Character.toString(chCurrentDate[3]);
-        String monthCurrent = Character.toString(chCurrentDate[4]) + Character.toString(chCurrentDate[5]);
-        String dayCurrent = Character.toString(chCurrentDate[6]) + Character.toString(chCurrentDate[7]);
-        String hourCurrent = Character.toString(chCurrentDate[9]) + Character.toString(chCurrentDate[10]);
-        String minuteCurrent = Character.toString(chCurrentDate[11]) + Character.toString(chCurrentDate[12]);
+        int yearCurrentInt = curentDate.getYear() + 1900;
+        int yearInt = date.getYear() + 1900;
 
-        int monthCurrentInt = Integer.parseInt(monthCurrent);
-        int monthInt = Integer.parseInt(month);
-        int yearCurrentInt = Integer.parseInt(yearCurrent);
-        int yearInt = Integer.parseInt(year);
-        int dayCurrentInt = Integer.parseInt(dayCurrent);
-        int dayInt = Integer.parseInt(day);
-        int hourCurrentInt = Integer.parseInt(hourCurrent);
-        int hourInt = Integer.parseInt(hour);
-        int minuteCurrentInt = Integer.parseInt(minuteCurrent);
-        int minuteInt = Integer.parseInt(minute);
+        int monthCurrentInt = curentDate.getMonth();
+        int monthInt = date.getMonth();
+        String nameOfMonth = getNameOfMonth(monthInt, "full");
 
-        //присваеваем имена месяцам
-        if (Integer.parseInt(month) == 1) nameOfMonth = "января";
-        else if (Integer.parseInt(month) == 2) nameOfMonth = "февраля";
-        else if (Integer.parseInt(month) == 3) nameOfMonth = "марта";
-        else if (Integer.parseInt(month) == 4) nameOfMonth = "апреля";
-        else if (Integer.parseInt(month) == 5) nameOfMonth = "мая";
-        else if (Integer.parseInt(month) == 6) nameOfMonth = "июня";
-        else if (Integer.parseInt(month) == 7) nameOfMonth = "июля";
-        else if (Integer.parseInt(month) == 8) nameOfMonth = "августа";
-        else if (Integer.parseInt(month) == 9) nameOfMonth = "сентября";
-        else if (Integer.parseInt(month) == 10) nameOfMonth = "октября";
-        else if (Integer.parseInt(month) == 11) nameOfMonth = "ноября";
-        else if (Integer.parseInt(month) == 12) nameOfMonth = "декабря";
-        else nameOfMonth = "";
+        int dayCurrentInt = curentDate.getDate();
+        int dayInt = date.getDate();
 
-        if (Integer.parseInt(day) < 10) day = Integer.toString(Integer.parseInt(day) % 10);
+        int hourCurrentInt = curentDate.getHours();
+        int hourInt = date.getHours();
 
-        //Если сегодня то выводим только время, если вчера то выводим "вчера"
+        int minuteCurrentInt = curentDate.getMinutes();
+        int minuteInt = date.getMinutes();
+        String minutToString;
+        if (date.getMinutes() > 10) minutToString = Integer.toString(date.getMinutes());
+        else minutToString = "0" + Integer.toString(date.getMinutes());
+
+        if (dayInt < 10) dayInt = dayInt % 10;
         if (gender == 2) {
-            if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
+            if ((dayInt == dayCurrentInt) && (monthCurrentInt == (monthInt + 1)) && (yearInt == yearCurrentInt)) {
                 if (hourCurrentInt == hourInt){
                     if (minuteCurrentInt == minuteInt) return "Была в сети только что";
                     else return "Была в сети " + Integer.toString(minuteCurrentInt-minuteInt) + " минут назад";
                 }
                 else if ((hourCurrentInt - hourInt == 1) && (minuteInt > minuteCurrentInt)) return "Была в сети " + Integer.toString(60 - minuteInt + minuteCurrentInt) + " минут назад";
-                else return "Была в сети сегодня в " + hour + ":" + minute;
+                else return "Была в сети сегодня в " + Integer.toString(hourInt) + ":" + minutToString;
             } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
-                return "Была в сети вчера в " + hour + ":" + minute;
+                return "Была в сети вчера в " + Integer.toString(hourInt) + ":" + minutToString;
             } else {
-                return "Была в сети " + day + " " +  nameOfMonth + " в " + hour + ":" + minute;
+                return "Была в сети " + Integer.toString(dayInt) + " " +  nameOfMonth + " в " + Integer.toString(hourInt) + ":" + minutToString;
             }
         } else {
             if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
@@ -298,89 +171,55 @@ public class ConverterDate {
                     else return "Был в сети " + Integer.toString(minuteCurrentInt-minuteInt) + " минут назад";
                 }
                 else if ((hourCurrentInt - hourInt == 1) && (minuteInt > minuteCurrentInt)) return "Был в сети " + Integer.toString(60 - minuteInt + minuteCurrentInt) + " минут назад";
-                else return "Был в сети сегодня в " + hour + ":" + minute;
-            } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
-                return "Был в сети вчера в " + hour + ":" + minute;
+                else return "Был в сети сегодня в " + Integer.toString(hourInt) + ":" + minutToString;
+            } else if ((dayInt - dayCurrentInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
+                return "Был в сети вчера в " + Integer.toString(hourInt) + ":" + minutToString;
             } else {
-                return "Был в сети " + day + " " + nameOfMonth + " в " + hour + ":" + minute;
+                return "Был в сети " + Integer.toString(dayInt) + " " + nameOfMonth + " в " + Integer.toString(hourInt) + ":" + minutToString;
             }
         }
     }
 
-
-
-
-
     //метод для обработки гостя
     public static String convertDateForGuest(String oldDate) {
-        String nameOfMonth;
-
-        //распарсиваем дату с серва
-        char[] chOldDate = oldDate.toCharArray();
-        String year = Character.toString(chOldDate[0]) + Character.toString(chOldDate[1]) + Character.toString(chOldDate[2]) + Character.toString(chOldDate[3]);
-        String month = Character.toString(chOldDate[5]) + Character.toString(chOldDate[6]);
-        String day = Character.toString(chOldDate[8]) + Character.toString(chOldDate[9]);
-        String hour = Character.toString(chOldDate[11]) + Character.toString(chOldDate[12]);
-        String minute = Character.toString(chOldDate[14]) + Character.toString(chOldDate[15]);
-
-        //получение текущей даты
+        Date date = getAppDateFromServerDate(oldDate);
         Time time = new Time(Time.getCurrentTimezone());
         time.setToNow();
+        Date curentDate = getCurentDateFromTime(time);
 
-        //распарсиваем текущую дату
-        char[] chCurrentDate = time.toString().toCharArray();
-        String yearCurrent = Character.toString(chCurrentDate[0]) + Character.toString(chCurrentDate[1]) + Character.toString(chCurrentDate[2]) + Character.toString(chCurrentDate[3]);
-        String monthCurrent = Character.toString(chCurrentDate[4]) + Character.toString(chCurrentDate[5]);
-        String dayCurrent = Character.toString(chCurrentDate[6]) + Character.toString(chCurrentDate[7]);
-        String hourCurrent = Character.toString(chCurrentDate[9]) + Character.toString(chCurrentDate[10]);
-        String minuteCurrent = Character.toString(chCurrentDate[11]) + Character.toString(chCurrentDate[12]);
+        int yearCurrentInt = curentDate.getYear() + 1900;
+        int yearInt = date.getYear() + 1900;
 
-        int monthCurrentInt = Integer.parseInt(monthCurrent);
-        int monthInt = Integer.parseInt(month);
-        int yearCurrentInt = Integer.parseInt(yearCurrent);
-        int yearInt = Integer.parseInt(year);
-        int dayCurrentInt = Integer.parseInt(dayCurrent);
-        int dayInt = Integer.parseInt(day);
-        int hourCurrentInt = Integer.parseInt(hourCurrent);
-        int hourInt = Integer.parseInt(hour);
-        int minuteCurrentInt = Integer.parseInt(minuteCurrent);
-        int minuteInt = Integer.parseInt(minute);
+        int monthCurrentInt = curentDate.getMonth();
+        int monthInt = date.getMonth();
+        String nameOfMonth = getNameOfMonth(monthInt, "full");
 
-        //присваеваем имена месяцам
-        if (Integer.parseInt(month) == 1) nameOfMonth = "января";
-        else if (Integer.parseInt(month) == 2) nameOfMonth = "февраля";
-        else if (Integer.parseInt(month) == 3) nameOfMonth = "марта";
-        else if (Integer.parseInt(month) == 4) nameOfMonth = "апреля";
-        else if (Integer.parseInt(month) == 5) nameOfMonth = "мая";
-        else if (Integer.parseInt(month) == 6) nameOfMonth = "июня";
-        else if (Integer.parseInt(month) == 7) nameOfMonth = "июля";
-        else if (Integer.parseInt(month) == 8) nameOfMonth = "августа";
-        else if (Integer.parseInt(month) == 9) nameOfMonth = "сентября";
-        else if (Integer.parseInt(month) == 10) nameOfMonth = "октября";
-        else if (Integer.parseInt(month) == 11) nameOfMonth = "ноября";
-        else if (Integer.parseInt(month) == 12) nameOfMonth = "декабря";
-        else nameOfMonth = "";
+        int dayCurrentInt = curentDate.getDate();
+        int dayInt = date.getDate();
 
-        if (Integer.parseInt(day) < 10) day = Integer.toString(Integer.parseInt(day) % 10);
+        int hourCurrentInt = curentDate.getHours();
+        int hourInt = date.getHours();
 
-        //Если сегодня то выводим только время, если вчера то выводим "вчера"
+        int minuteCurrentInt = curentDate.getMinutes();
+        int minuteInt = date.getMinutes();
+        String minutToString;
+        if (date.getMinutes() > 10) minutToString = Integer.toString(date.getMinutes());
+        else minutToString = "0" + Integer.toString(date.getMinutes());
+
+        if (dayInt < 10) dayInt = dayInt % 10;
         if ((dayInt == dayCurrentInt) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
             if (hourCurrentInt == hourInt) {
                 if (minuteCurrentInt == minuteInt) return "Только что";
                 else return Integer.toString(minuteCurrentInt - minuteInt) + " минут назад";
             } else if ((hourCurrentInt - hourInt == 1) && (minuteInt > minuteCurrentInt))
                 return Integer.toString(60 - minuteInt + minuteCurrentInt) + " минут назад";
-            else return "Сегодня в " + hour + ":" + minute;
+            else return "Сегодня в " + Integer.toString(hourInt) + ":" + minutToString;
         } else if ((dayCurrentInt - dayInt == 1) && (monthInt == monthCurrentInt) && (yearInt == yearCurrentInt)) {
-            return "Вчера в " + hour + ":" + minute;
+            return "Вчера в " + Integer.toString(hourInt) + ":" + minutToString;
         } else {
-            return day + " " + nameOfMonth;
+            return Integer.toString(dayInt) + " " + nameOfMonth + " в " + Integer.toString(hourInt) + ":" + minutToString;
         }
     }
-
-
-
-
 
     // метод для обработки даты в возраст(возращает ввиде "20 лет")
     public static String convertDateToAge(String oldDate) {
@@ -437,25 +276,7 @@ public class ConverterDate {
 
         return age + ageStr;
     }
-    //Метод для получения кол-ва баллов по ID
-    public static int getSummaById(String id) {
-        if (id.equals("tobuy10points")) return 10;
-        else if (id.equals("buy20points")) return 20;
-        else if (id.equals("buy30points")) return 30;
-        else if (id.equals("buy40points")) return 40;
-        else if (id.equals("buy50points")) return 50;
-        else if (id.equals("buy60points")) return 60;
-        else if (id.equals("buy70points")) return 70;
-        else if (id.equals("buy80points")) return 80;
-        else if (id.equals("buy90points")) return 90;
-        else if (id.equals("buy100points")) return 100;
-        else if (id.equals("buy200points")) return 200;
-        else if (id.equals("buy300points")) return 300;
-        else if (id.equals("buy400points")) return 400;
-        else if (id.equals("buy500points")) return 500;
-        else if (id.equals("buy1000points")) return 1000;
-        else return 1;
-    }
+
     //Конвертер даты рождения с сервера
     public static String getBirthdate(String oldDate) {
         String monthStr = "";
@@ -506,28 +327,82 @@ public class ConverterDate {
         return Integer.parseInt(month) - 1;
     }
 
-    //Получение название месяца
-    public static String getMonthName(int id) {
-        if (id == 1) return " января ";
-        else if (id == 2) return " февраля ";
-        else if (id == 3) return " марта ";
-        else if (id == 4) return " апреля ";
-        else if (id == 5) return " мая ";
-        else if (id == 6) return " июня ";
-        else if (id == 7) return " июля ";
-        else if (id == 8) return " августа ";
-        else if (id == 9) return " сентября ";
-        else if (id == 10) return " октября ";
-        else if (id == 11) return " ноября ";
-        else if (id == 12) return " декабря ";
-        else return "";
-    }
-
     //Получение дня
     public static int getDay(String oldDate) {
         char[] chOldDate = oldDate.toCharArray();
         String day = Character.toString(chOldDate[8]) + Character.toString(chOldDate[9]);
 
         return Integer.parseInt(day);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public static Date getAppDateFromServerDate(String oldDate) {
+        Locale locale = new Locale("ru");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", locale);
+        Date date = null;
+        try {
+            date = dateFormat.parse(oldDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+//        date.setHours(date.getHours() - (date.getTimezoneOffset()/60));
+        return date;
+    }
+    public static Date getCurentDateFromTime(Time time) {
+        Locale locale = new Locale("ru");
+        DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd'T'HHmmss", locale);
+        Date date = null;
+        try {
+            date = dateFormat.parse(time.toString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+    public static String getNameOfMonth(int monthInt, String howLong) {
+        String nameOfMonth = "";
+        if (howLong.equals("full")) {
+            if (monthInt == 0) nameOfMonth = "января";
+            else if (monthInt == 1) nameOfMonth = "февраля";
+            else if (monthInt == 2) nameOfMonth = "марта";
+            else if (monthInt == 3) nameOfMonth = "апреля";
+            else if (monthInt == 4) nameOfMonth = "мая";
+            else if (monthInt == 5) nameOfMonth = "июня";
+            else if (monthInt == 6) nameOfMonth = "июля";
+            else if (monthInt == 7) nameOfMonth = "августа";
+            else if (monthInt == 8) nameOfMonth = "сентября";
+            else if (monthInt == 9) nameOfMonth = "октября";
+            else if (monthInt == 10) nameOfMonth = "ноября";
+            else if (monthInt == 11) nameOfMonth = "декабря";
+            else nameOfMonth = "";
+        }
+        if (howLong.equals("little")) {
+            if (monthInt == 0) nameOfMonth = "янв";
+            else if (monthInt == 1) nameOfMonth = "фев";
+            else if (monthInt == 2) nameOfMonth = "мар";
+            else if (monthInt == 3) nameOfMonth = "апр";
+            else if (monthInt == 4) nameOfMonth = "май";
+            else if (monthInt == 5) nameOfMonth = "июн";
+            else if (monthInt == 6) nameOfMonth = "июл";
+            else if (monthInt == 7) nameOfMonth = "авг";
+            else if (monthInt == 8) nameOfMonth = "сен";
+            else if (monthInt == 9) nameOfMonth = "окт";
+            else if (monthInt == 10) nameOfMonth = "ноя";
+            else if (monthInt == 11) nameOfMonth = "дек";
+            else nameOfMonth = "";
+        }
+
+        return nameOfMonth;
     }
 }

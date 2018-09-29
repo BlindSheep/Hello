@@ -37,18 +37,19 @@ public class Gifts extends Help {
 
     //Получения списка подарков
     public void getGifts(
-            final int user_id,
+            final int userId,
             final Gifts.GetGiftsCallback getGiftsCallback
     ) {
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.gifts_get_gifts_uri,
+                Constant.gifts_get_list_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response) {
                         Log.d("gifts", response);
                         if (response != null) {
                             com.httpso_hello.hello.Structures.Gifts gifts = gson.fromJson(response, com.httpso_hello.hello.Structures.Gifts.class);
                             if (gifts.error == null) {
+                                setNewToken(gifts.token);
                                 getGiftsCallback.onSuccess(gifts.gifts);
                                 return;
                             }
@@ -68,9 +69,8 @@ public class Gifts extends Help {
         ) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                if (user_id != 0) params.put("user_id", Integer.toString(user_id));
+                Map<String, String> params =getParamsMap(_context);
+                if (userId != 0) params.put("userId", Integer.toString(userId));
                 return params;
             }
 
@@ -133,7 +133,7 @@ public class Gifts extends Help {
     }
 
     public interface GetGiftsCallback {
-        void onSuccess(GiftItem[] gi);
+        void onSuccess(com.httpso_hello.hello.Structures.GiftItem[] gi);
 
         void onError(int error_code, String error_msg);
 

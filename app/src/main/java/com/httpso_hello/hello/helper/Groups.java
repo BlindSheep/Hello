@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.httpso_hello.hello.Structures.AllGroups;
+import com.httpso_hello.hello.Structures.OneGroup;
 import com.httpso_hello.hello.Structures.ReqCSRFToken;
 import com.httpso_hello.hello.Structures.SearchProfiles;
 import com.httpso_hello.hello.Structures.UniversalResponse;
@@ -41,7 +42,7 @@ public class Groups extends Help {
     }
 
     public void getGroups(
-            //если 0 - все группы, если 1 - мои группы, если 2 - то одна группа
+            //если 0 - все группы, если 1 - мои группы
             final int parameters,
             final int group_id,
             final String search,
@@ -50,7 +51,6 @@ public class Groups extends Help {
         String req = null;
         if (parameters == 0) req = Constant.groups_get_all_groups_uri;
         else if (parameters == 1) req = Constant.groups_get_my_groups_uri;
-        else if (parameters == 2) req = Constant.groups_get_one_group_uri;
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
                 req,
@@ -90,14 +90,59 @@ public class Groups extends Help {
         RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.getGroups");
     }
 
-    public void getFollowers(
+    public void getOneGroups(
             final int group_id,
+            final String search,
+            final GetOneGroupsCallback getGroupsCallback
+    ){
+        String req = null;
+        StringRequest SReq = new StringRequest(
+                Request.Method.POST,
+                Constant.group_get_one_group_uri,
+                new Response.Listener<String>() {
+                    public void onResponse(String response){
+                        Log.d("like", response);
+                        if (response != null) {
+                            OneGroup oneGroup = gson.fromJson(response, OneGroup.class);
+                            if(oneGroup.error==null){
+                                getGroupsCallback.onSuccess(oneGroup);
+                                setNewToken(oneGroup.token);
+                                return;
+                            }
+                            getGroupsCallback.onError(oneGroup.error.code, oneGroup.error.message);
+                            return;
+                        }
+                        getGroupsCallback.onInternetError();
+                        return;
+                    }
+                },
+                new Response.ErrorListener(){
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        getGroupsCallback.onInternetError();
+                    }
+                }
+        )
+        {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = getParamsMap(_context);
+                if (group_id != 0) params.put("groupId", Integer.toString(group_id));
+                if (search != null) params.put("search", search);
+                return params;
+            };
+        };
+        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.getGroups");
+    }
+
+    public void getFollowers(
+            final int groupId,
             final int page,
             final GetFollowersCallback getFollowersCallback
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.groups_get_members_uri,
+                Constant.group_get_subscribers_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("like", response);
@@ -125,8 +170,9 @@ public class Groups extends Help {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = getParamsMap();
-                params.put("group_id", Integer.toString(group_id));
+                params.put("groupId", Integer.toString(groupId));
                 params.put("page", Integer.toString(page));
+                params.put("perPage", Integer.toString(30));
                 return params;
             };
         };
@@ -135,13 +181,16 @@ public class Groups extends Help {
 
     public void subscribe(
             final int action, //1 - добавление , 0 - удаление
-            final int group_id,
+            final int groupId,
             final int user_id,
             final GetSubscribeCallback getSubscribeCallback
     ){
+                String uri = "";
+                if (action == 0) uri = Constant.users_unsubscribe_uri;
+                else if (action == 1) uri = Constant.users_subscribe_uri;
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.groups_subscribe_uri,
+                uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("like", response);
@@ -169,8 +218,7 @@ public class Groups extends Help {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = getParamsMap();
-                params.put("group_id", Integer.toString(group_id));
-                params.put("action", Integer.toString(action));
+                params.put("groupId", Integer.toString(groupId));
                 if (user_id != 0) params.put("user_id", Integer.toString(user_id));
                 return params;
             };
@@ -180,20 +228,21 @@ public class Groups extends Help {
 
     public void createGroup(
             final String title,
-            final String desc,
-            final boolean isModeration,
+            final String description,
+            final boolean moderate,
             final CreateGroupCallback createGroupCallback
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.groups_create_group_uri,
+                Constant.groups_create_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("like", response);
                         if (response != null) {
-                            UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
+                            OneGroup res = gson.fromJson(response, OneGroup.class);
                             if(res.error==null){
-                                createGroupCallback.onSuccess(res.id);
+                                setNewToken(res.token);
+                                createGroupCallback.onSuccess(res.groupInfo.id);
                                 return;
                             }
                             createGroupCallback.onError(res.error.code, res.error.message);
@@ -213,11 +262,10 @@ public class Groups extends Help {
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = getParamsMap();
+                Map<String, String> params = getParamsMap(_context);
                 params.put("title", title);
-                params.put("description", desc);
-                if (isModeration) params.put("moderate", Integer.toString(1));
-                else params.put("moderate", Integer.toString(0));
+                params.put("description", description);
+                params.put("moderate", Boolean.toString(moderate));
                 return params;
             };
         };
@@ -363,57 +411,14 @@ public class Groups extends Help {
         RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.editGroups");
     }
 
-    public void requestDeleteGroup(
-            final int id,
-            final RequestDeleteGroupCallback requestDeleteGroupCallback,
-            final ErrorCallback errorCallback
-    ){
-        StringRequest SReq = new StringRequest(
-                Request.Method.POST,
-                Constant.groups_request_delete_group_uri,
-                new Response.Listener<String>() {
-                    public void onResponse(String response){
-                        Log.d("request_d_g", response);
-                        if (response != null) {
-                            ReqCSRFToken res = gson.fromJson(response, ReqCSRFToken.class);
-                            if(res.error==null){
-                                requestDeleteGroupCallback.onSuccess(res.csrf_token);
-                                return;
-                            }
-                            errorCallback.onError(res.error.code, res.error.message);
-                            return;
-                        }
-                        errorCallback.onInternetError();
-                        return;
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        errorCallback.onInternetError();
-                    }
-                }
-        )
-        {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = getParamsMap();
-                params.put("id", Integer.toString(id));
-                return params;
-            };
-        };
-        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "groups.requestDeleteGroup");
-    }
-
     public void deleteGroup(
             final int id,
-            final String csrf_token,
             final DeleteGroupCallback deleteGroupCallback,
             final ErrorCallback errorCallback
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.groups_delete_group_uri,
+                Constant.group_delete_group_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("delete_group", response);
@@ -442,10 +447,6 @@ public class Groups extends Help {
             protected Map<String, String> getParams() {
                 Map<String, String> params = getParamsMap();
                 params.put("id", Integer.toString(id));
-                params.put("csrf_token", csrf_token);
-                params.put("submit", "1");
-                params.put("is_delete_content", "1");
-                params.put("request_in_api", "1");
                 return params;
             };
         };
@@ -456,16 +457,18 @@ public class Groups extends Help {
         void onSuccess();
     }
 
-    public interface RequestDeleteGroupCallback{
-        void onSuccess(String CSRFToken);
-    }
-
     public interface UpdateAvatarCallback{
         void onSuccess();
     }
 
     public interface GetGroupsCallback {
         public void onSuccess(com.httpso_hello.hello.Structures.Groups[] groupItem);
+        public void onError(int error_code, String error_msg);
+        void onInternetError();
+    }
+
+    public interface GetOneGroupsCallback {
+        public void onSuccess(OneGroup groupItem);
         public void onError(int error_code, String error_msg);
         void onInternetError();
     }

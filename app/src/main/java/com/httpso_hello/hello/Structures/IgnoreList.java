@@ -6,7 +6,7 @@ package com.httpso_hello.hello.Structures;
 
 public class IgnoreList extends SuperStructure {
 
-    public IgnoreUser[] ignoreUsers;
+    public IgnoreUser[] ignoredUsers;
 
     public IgnoreList(){
 

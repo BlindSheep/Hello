@@ -14,7 +14,7 @@ public class Attachment {
     // Тип прикладываемого файла
     public String type;
     // Пути до загруженных изображений
-    public Image image;
+    public Photo photo;
     // Строковое представлвение до прикладываемого файла на устройстве
     public String pathPreviewAttachment;
     // URI до preview изображения прикладываемого файла

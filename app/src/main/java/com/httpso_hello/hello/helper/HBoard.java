@@ -78,21 +78,20 @@ public class HBoard extends Help {
     }
 
     public void addBoard(
-            final String content,
+            final String text,
             final int groupId,
-            final boolean is_anonim,
+            final boolean isAnonim,
             final ArrayList<Integer> uploadedFiles,
             final AddBoardCallback addBoardCallback,
             final Help.ErrorCallback errorCallback
     ) {
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.board_add_item_uri,
+                Constant.group_add_post_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response) {
                         Log.d("add_board", response);
                         if (response != null) {
-                            YandexMetrica.getReporter(_context, Constant.metrika_api_key).reportEvent("add_board");
                             addBoardCallback.onSuccess();
 //                                Board board = gson.fromJson(response, Board.class);
 //                                Log.d("add_item", board.content_error);
@@ -117,13 +116,10 @@ public class HBoard extends Help {
         ) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("content", content);
-                params.put("ctype_name", "board");
-                params.put("group_id", Integer.toString(groupId));
-                if (is_anonim) params.put("is_anonim", "1");
-                else params.put("is_anonim", "0");
+                Map<String, String> params = getParamsMap(_context);
+                params.put("groupId", Integer.toString(groupId));
+                params.put("isAnonim", Boolean.toString(isAnonim));
+                params.put("text", text);
                 if (uploadedFiles.size() != 0) {
                     params.put("uploaded_files", gson.toJson(uploadedFiles.toArray()));
                 }

@@ -87,8 +87,10 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
         if (coment.user.avatar != null) {
 
             String ava;
-            if (!coment.date_pub.equals("Только что")) ava = Constant.upload + coment.user.avatar.micro;
-            else ava = coment.user.avatar.micro;
+            if (coment.createdAt != null) {
+                if (!coment.createdAt.equals("Только что")) ava = Constant.upload + coment.user.avatar.micro;
+                else ava = coment.user.avatar.micro;
+            } ava = Constant.upload + coment.user.avatar.micro;
 
             Picasso
                     .with(getContext())
@@ -121,8 +123,10 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
         holder.contactNickname.setText(coment.user.nickname);
 
         //Дата публикации
-        if (!coment.date_pub.equals("Только что")) holder.datePub.setText(ConverterDate.convertDateForGuest(coment.date_pub));
-        else holder.datePub.setText("Только что");
+        if (coment.createdAt != null){
+            if (!coment.createdAt.equals("Только что")) holder.datePub.setText(ConverterDate.convertDateForGuest(coment.createdAt));
+            else holder.datePub.setText("Только что");
+        }
 
         //Кому ответ
         if (coment.parent_user != null) {
@@ -155,7 +159,7 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
 
         //Удаление коммента
         if (type.equals("board")){
-            if (stgs.getSettingInt("user_id") == coment.user_id) {
+            if (stgs.getSettingInt("userId") == coment.userId) {
                 holder.popupButton.setVisibility(View.VISIBLE);
                 holder.popupButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -171,12 +175,12 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra("profile_id", coment.user_id);
+                    intent.putExtra("profile_id", coment.userId);
                     ((BoardContentActivity) getContext()).startActivity(intent);
                 }
             });
         } else if (type.equals("photo")) {
-            if ((stgs.getSettingInt("user_id") == coment.user_id) || isMyPhoto) {
+            if ((stgs.getSettingInt("userId") == coment.userId) || isMyPhoto) {
                 holder.popupButton.setVisibility(View.VISIBLE);
                 holder.popupButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -192,7 +196,7 @@ public class CommentsAdapter extends ArrayAdapter<Coment> {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(getContext(), ProfileActivity.class);
-                    intent.putExtra("profile_id", coment.user_id);
+                    intent.putExtra("profile_id", coment.userId);
                     ((PhotoCommentsActivity) getContext()).startActivity(intent);
                 }
             });

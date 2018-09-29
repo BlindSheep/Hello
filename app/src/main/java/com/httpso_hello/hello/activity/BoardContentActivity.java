@@ -29,6 +29,7 @@ import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Comments;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Content;
+import com.httpso_hello.hello.helper.Converter;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -151,7 +152,6 @@ public class BoardContentActivity extends SocketActivity {
                 if (!messageContentString.isEmpty()) {
                     new Comments(getApplicationContext())
                             .sendComments("content",
-                                    "board",
                                     extras.getInt("id"),
                                     idAnswer,
                                     messageContentString,
@@ -189,7 +189,6 @@ public class BoardContentActivity extends SocketActivity {
         new Comments(getApplicationContext())
                 .getComments(
                         "content",
-                        "board",
                         extras.getInt("id"),
                         this,
                         new Comments.GetCommentsCallback() {
@@ -205,7 +204,7 @@ public class BoardContentActivity extends SocketActivity {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                         if ((position != 0) && (position != (defolt.size() + 1))) {
-                                            setAnswer(defolt.get(position - 1).user_id, defolt.get(position-1).user.nickname);
+                                            setAnswer(defolt.get(position - 1).userId, defolt.get(position-1).user.nickname);
                                         }
                                     }
                                 });
@@ -240,7 +239,6 @@ public class BoardContentActivity extends SocketActivity {
             new Comments(getApplicationContext())
                     .getComments(
                             "content",
-                            "board",
                             extras.getInt("id"),
                             this,
                             new Comments.GetCommentsCallback() {
@@ -277,20 +275,20 @@ public class BoardContentActivity extends SocketActivity {
                             @Override
                             public void onSuccess(final BoardItem item) {
                                 boolean anonim = true;
-                                if(!item.isAnonim) anonim = true;
+                                if(item.isAnonim) anonim = true;
                                 else anonim = false;
                                 if (!anonim) {
                                     answer.setVisibility(View.VISIBLE);
                                     answer.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            setAnswer(item.userId, item.User.nickname);
+                                            setAnswer(item.userId, item.user.nickname);
                                         }
                                     });
-                                    if (item.User.avatar != null) {
+                                    if (item.user.avatar != null) {
                                         Picasso
                                                 .with(getApplicationContext())
-                                                .load(Uri.parse(Constant.upload + item.User.avatar.micro))
+                                                .load(Uri.parse(Constant.upload + item.user.avatar.micro))
                                                 .transform(new CircularTransformation(0))
                                                 .into(userAvatarBoardItem, new Callback() {
                                                     @Override
@@ -328,7 +326,7 @@ public class BoardContentActivity extends SocketActivity {
                                             firstPhotoBoard.setMinimumHeight(height);
                                             Picasso
                                                     .with(getApplicationContext())
-                                                    .load(Uri.parse(ConverterDate.convertUrlAvatar(item.photos[0].original)))
+                                                    .load(Uri.parse(Converter.convertUrlAvatar(item.photos[0].original)))
                                                     .resize(widthScreen, height)
                                                     .into(firstPhotoBoard);
                                         } else {
@@ -337,7 +335,7 @@ public class BoardContentActivity extends SocketActivity {
                                             firstPhotoBoard.setMinimumHeight(width);
                                             Picasso
                                                     .with(getApplicationContext())
-                                                    .load(Uri.parse(ConverterDate.convertUrlAvatar(item.photos[0].normal)))
+                                                    .load(Uri.parse(Converter.convertUrlAvatar(item.photos[0].normal)))
                                                     .resize(width, width)
                                                     .centerCrop()
                                                     .into(firstPhotoBoard);
@@ -346,7 +344,7 @@ public class BoardContentActivity extends SocketActivity {
                                             @Override
                                             public void onClick(View v) {
                                                 ArrayList<String> photoOrig = new ArrayList<String>();
-                                                Collections.addAll(photoOrig, ConverterDate.convertUrlAvatar(item.photos[0].original));
+                                                Collections.addAll(photoOrig, Converter.convertUrlAvatar(item.photos[0].original));
                                                 Intent intent = new Intent(getApplicationContext(), FullscreenPhotoActivity.class);
                                                 intent.putStringArrayListExtra("photoOrig", photoOrig);
                                                 intent.putExtra("likeble", false);
@@ -356,8 +354,8 @@ public class BoardContentActivity extends SocketActivity {
                                         });
                                     }
 
-                                    userNameBoardItem.setText(item.User.nickname);
-                                    datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.dateApproved));
+                                    userNameBoardItem.setText(item.user.nickname);
+                                    if (item.createdAt != null) datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.createdAt));
 
                                     if (!item.content.equals("-")) {
                                         boardTextItem.setText(Html.fromHtml(item.content));
@@ -366,7 +364,7 @@ public class BoardContentActivity extends SocketActivity {
                                         boardTextItem.setVisibility(View.GONE);
                                     }
 
-                                    boardLikeItem.setText(ConverterDate.likeStr(item.rating));
+                                    boardLikeItem.setText(Converter.likeStr(item.rating));
                                     boardLikeItem.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -394,7 +392,7 @@ public class BoardContentActivity extends SocketActivity {
                                             .transform(new CircularTransformation(0))
                                             .into(userAvatarBoardItem);
                                     userNameBoardItem.setText("Анонимно");
-                                    datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.dateApproved));
+                                    if (item.createdAt != null) datePubBoardItem.setText(ConverterDate.convertDateForGuest(item.createdAt));
 
                                     if (item.photos != null) {
                                         DisplayMetrics displaymetrics = getApplicationContext().getResources().getDisplayMetrics();
@@ -409,7 +407,7 @@ public class BoardContentActivity extends SocketActivity {
                                             firstPhotoBoard.setMinimumHeight(height);
                                             Picasso
                                                     .with(getApplicationContext())
-                                                    .load(Uri.parse(ConverterDate.convertUrlAvatar(item.photos[0].original)))
+                                                    .load(Uri.parse(Converter.convertUrlAvatar(item.photos[0].original)))
                                                     .resize(widthScreen, height)
                                                     .into(firstPhotoBoard);
                                         } else {
@@ -418,7 +416,7 @@ public class BoardContentActivity extends SocketActivity {
                                             firstPhotoBoard.setMinimumHeight(width);
                                             Picasso
                                                     .with(getApplicationContext())
-                                                    .load(Uri.parse(ConverterDate.convertUrlAvatar(item.photos[0].normal)))
+                                                    .load(Uri.parse(Converter.convertUrlAvatar(item.photos[0].normal)))
                                                     .resize(width, width)
                                                     .centerCrop()
                                                     .into(firstPhotoBoard);
@@ -427,7 +425,7 @@ public class BoardContentActivity extends SocketActivity {
                                             @Override
                                             public void onClick(View v) {
                                                 ArrayList<String> photoOrig = new ArrayList<String>();
-                                                Collections.addAll(photoOrig, ConverterDate.convertUrlAvatar(item.photos[0].original));
+                                                Collections.addAll(photoOrig, Converter.convertUrlAvatar(item.photos[0].original));
                                                 Intent intent = new Intent(getApplicationContext(), FullscreenPhotoActivity.class);
                                                 intent.putStringArrayListExtra("photoOrig", photoOrig);
                                                 intent.putExtra("likeble", false);
@@ -444,7 +442,7 @@ public class BoardContentActivity extends SocketActivity {
                                         boardTextItem.setVisibility(View.GONE);
                                     }
 
-                                    boardLikeItem.setText(ConverterDate.likeStr(item.rating));
+                                    boardLikeItem.setText(Converter.likeStr(item.rating));
                                     boardLikeItem.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -517,7 +515,6 @@ public class BoardContentActivity extends SocketActivity {
                 handler.post(new Runnable() {public void run() {
                         new Comments(getApplicationContext())
                                 .getCountsComments("content",
-                                        "board",
                                         extras.getInt("id"),
                                         new Comments.GetCountsCommentsCallback() {
                                             @Override
@@ -538,7 +535,7 @@ public class BoardContentActivity extends SocketActivity {
             @Override
             public void onClick(View v) {
                 new Comments(getApplicationContext())
-                        .deleteComments(id, target_controller, content_type, contentId, new Comments.DeleteCommentCallback() {
+                        .deleteComments(id, new Comments.DeleteCommentCallback() {
                             @Override
                             public void onSuccess() {
                                 popUpWindowDelete.dismiss();

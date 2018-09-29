@@ -74,26 +74,8 @@ public class BillingActivity extends SocketActivity {
         priceOfPoints = (TextView) findViewById(R.id.priceOfPoints);
         priceOfOnePoints = (TextView) findViewById(R.id.priceOfOnePoints);
         skidka = (TextView) findViewById(R.id.skidka);
-
-//Запросить на сервере кол-во баллов
-        Profile.getInstance(getApplicationContext())
-                .getBalance(new Profile.GetBalanceCallback() {
-                    @Override
-                    public void onSuccess(BalanceReq balanceReq) {
-                        getSupportActionBar().setSubtitle("На счету "+Integer.toString(balanceReq.balance)+" баллов");
-                        progressBarBilling.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-                        progressBarBilling.setVisibility(View.GONE);
-                    }
-
-                    @Override
-                    public void onInternetError() {
-                        progressBarBilling.setVisibility(View.GONE);
-                    }
-                });
+        getSupportActionBar().setSubtitle(Integer.toString(stgs.getSettingInt("balance"))+ " баллов");
+        progressBarBilling.setVisibility(View.GONE);
 
 //Сбрасываем все покупки, потом доработать сделать проверку, передалась ли вся инфа о покупке на сервер
         try {
@@ -266,51 +248,30 @@ public class BillingActivity extends SocketActivity {
                                                  @Override
                                                  public void onClick(View v) {
                                                      if (!product.equals("...")) {
-//Запросить на сервере токен
-                                                         progressBarBilling.setVisibility(View.VISIBLE);
-                                                         Billing.getInstance(getApplicationContext())
-                                                                 .getRaisingToken(
-                                                                         "add_balance",
-                                                                         new Billing.GetRaisingTokenCallback() {
-                                                                             @Override
-                                                                             public void onSuccess(TokenReq token) {
-                                                                                 progressBarBilling.setVisibility(View.GONE);
-                                                                                 Bundle buyIntentBundle = null;
-                                                                                 try {
-                                                                                     buyIntentBundle = mService.getBuyIntent(3, getPackageName(), product, "inapp", token.token);
-                                                                                 } catch (RemoteException e) {
-                                                                                     e.printStackTrace();
-                                                                                 }
+                                                         progressBarBilling.setVisibility(View.GONE);
+                                                         Bundle buyIntentBundle = null;
+                                                         try {
+                                                             buyIntentBundle = mService.getBuyIntent(3, getPackageName(), product, "inapp", "");
+                                                         } catch (RemoteException e) {
+                                                             e.printStackTrace();
+                                                         }
 
-                                                                                 PendingIntent pendingIntent = null;
-                                                                                 if (buyIntentBundle != null) {
-                                                                                     pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
-                                                                                 }
+                                                         PendingIntent pendingIntent = null;
+                                                         if (buyIntentBundle != null) {
+                                                             pendingIntent = buyIntentBundle.getParcelable("BUY_INTENT");
+                                                         }
 
-                                                                                 try {
-                                                                                     if (pendingIntent != null) {
-                                                                                         startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), 0, 0, 0);
-                                                                                     }
-                                                                                 } catch (IntentSender.SendIntentException e) {
-                                                                                     e.printStackTrace();
-                                                                                 }
-                                                                             }
-
-                                                                             @Override
-                                                                             public void onError(int error_code, String error_msg) {
-                                                                                 Toast.makeText(getApplicationContext(), "Ошибка соединения с сервером" , Toast.LENGTH_LONG).show();
-                                                                                 progressBarBilling.setVisibility(View.GONE);
-                                                                             }
-
-                                                                             @Override
-                                                                             public void onInternetError() {
-                                                                                 Toast.makeText(getApplicationContext(), "Ошибка интернет соединения" , Toast.LENGTH_LONG).show();
-                                                                                 progressBarBilling.setVisibility(View.GONE);
-                                                                             }
-                                                                         });
+                                                         try {
+                                                             if (pendingIntent != null) {
+                                                                 startIntentSenderForResult(pendingIntent.getIntentSender(), 1001, new Intent(), 0, 0, 0);
+                                                             }
+                                                         } catch (IntentSender.SendIntentException e) {
+                                                             e.printStackTrace();
+                                                         }
                                                      } else Toast.makeText(getApplicationContext(), "Не выбрано сколько баллов Вы желаете купить!" , Toast.LENGTH_LONG).show();
                                                  }
-                                             });
+                                             }
+        );
     }
 
     //Ответ Гугла о покупке
@@ -357,7 +318,7 @@ public class BillingActivity extends SocketActivity {
     private void SendAddBalance(final String productId, final String developerPayload, final String purchaseToken){
         Billing.getInstance(getApplicationContext())
                 .addBalance(
-                        ConverterDate.getSummaById(productId),
+                        Converter.getSummaById(productId),
                         developerPayload,
                         new Billing.AddBalanceCallback() {
                             @Override
@@ -367,7 +328,7 @@ public class BillingActivity extends SocketActivity {
                                 } catch (RemoteException e) {
                                     e.printStackTrace();
                                 }
-                                Toast.makeText(getApplicationContext(), "Вы успешно приобрели " + Integer.toString(ConverterDate.getSummaById(productId)) + " баллов, спасибо за покупку!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(), "Вы успешно приобрели " + Integer.toString(Converter.getSummaById(productId)) + " баллов, спасибо за покупку!", Toast.LENGTH_LONG).show();
                                 finish();
                             }
                         }, new Help.ErrorCallback() {

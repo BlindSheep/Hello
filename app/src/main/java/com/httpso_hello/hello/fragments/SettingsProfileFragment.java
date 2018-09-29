@@ -318,7 +318,7 @@ public class SettingsProfileFragment extends Fragment {
             SettingsProfileFragment.year = year;
             SettingsProfileFragment.month = monthOfYear;
             SettingsProfileFragment.day = dayOfMonth;
-            currentDateTime.setText(Integer.toString(dayOfMonth) + ConverterDate.getMonthName(monthOfYear + 1) + Integer.toString(year) + " г.");
+            currentDateTime.setText(Integer.toString(dayOfMonth) + ConverterDate.getNameOfMonth(monthOfYear, "full") + Integer.toString(year) + " г.");
         }
     };
 

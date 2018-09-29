@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.activity.Super.SocketActivity;
-import com.httpso_hello.hello.helper.AlwaysOnline;
 import com.httpso_hello.hello.helper.Auth;
 
 public class SettingOfProfileActivity extends SocketActivity {
@@ -30,7 +29,6 @@ public class SettingOfProfileActivity extends SocketActivity {
     private RadioButton radioButtonSearch;
     private RadioButton radioButtonBoard;
     private LinearLayout ignorList;
-    private Switch switchOnline;
     private LinearLayout exit;
     private LinearLayout share;
     private LinearLayout newVersion;
@@ -56,7 +54,6 @@ public class SettingOfProfileActivity extends SocketActivity {
         radioButtonSearch = (RadioButton) findViewById(R.id.radioButtonSearch);
         radioButtonBoard = (RadioButton) findViewById(R.id.radioButtonBoard);
         ignorList = (LinearLayout) findViewById(R.id.ignorList);
-        switchOnline = (Switch) findViewById(R.id.switchOnline);
         exit = (LinearLayout) findViewById(R.id.exit);
         share = (LinearLayout) findViewById(R.id.share);
         newVersion = (LinearLayout) findViewById(R.id.newVersion);
@@ -65,7 +62,6 @@ public class SettingOfProfileActivity extends SocketActivity {
         pushSettings();
         startPageSettings();
         setOnClickOnIgnorList();
-        setAlwaysOnline();
         setExit();
         setShare();
         setNewVersion();
@@ -264,21 +260,6 @@ public class SettingOfProfileActivity extends SocketActivity {
         });
     }
 
-    private void setAlwaysOnline() {
-        if (stgs.getSettingInt("always_online") == 0) {
-            switchOnline.setChecked(false);
-        } else switchOnline.setChecked(true);
-        switchOnline.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) stgs.setSettingInt("always_online", 1);
-                else stgs.setSettingInt("always_online", 0);
-
-                startService(new Intent(getApplicationContext(), AlwaysOnline.class));
-            }
-        });
-    }
-
     private void setExit() {
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,8 +268,6 @@ public class SettingOfProfileActivity extends SocketActivity {
                 auth.logout(new Auth.LogoutFinishingCallback() {
                     @Override
                     public void onSuccess() {
-                        stgs.setSettingInt("always_online", 0);
-                        startService(new Intent(getApplicationContext(), AlwaysOnline.class));
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(intent);
                         finish();

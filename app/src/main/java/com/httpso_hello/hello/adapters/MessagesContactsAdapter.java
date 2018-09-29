@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Contact;
 
+import com.httpso_hello.hello.Structures.Message;
+import com.httpso_hello.hello.Structures.User;
 import com.httpso_hello.hello.activity.MessagesActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
@@ -109,7 +111,7 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
                 }
             }
             // Есди были сообщения устанавливаем дату последнего
-            holder.dateLastMessage.setText(ConverterDate.convertDateForContacts(contact.dateLastMsg));
+            if (contact.dateLastMsg != null) holder.dateLastMessage.setText(ConverterDate.convertDateForContacts(contact.dateLastMsg));
             holder.dateLastMessage.setVisibility(View.VISIBLE);
             holder.lastMessage.setTextColor(getContext().getResources().getColor(R.color.main_black_color_hello));
         } else {
@@ -186,7 +188,42 @@ public class MessagesContactsAdapter extends ArrayAdapter<Contact>{
         this.contacts.addAll(contacts);
         this.notifyDataSetChanged();
     }
-    public void updateContacts(ArrayList<Contact> contacts){
+    public void newMessage(Message message) {
+        boolean isSet = false;
+        int i = this.contacts.size()-1;
+        while (i>=0){
+            if(this.contacts.get(i).id == message.contactId) {
+                isSet = true;
+                Contact contact = this.contacts.get(i);
+                contact.lastMessageContent = message.content;
+                if (message.incoming) contact.newMessages += 1;
+                else contact.newMessages = 0;
+                contact.dateLastMsg = message.createdAt;
+                contact.contactReadedMessages = !message.isNew;
+                contact.lmFromContact = message.incoming;
+                this.contacts.set(i, contact);
+                break;
+            }
+            else
+                i--;
+        }
+        if (!isSet) {
+            Contact contact = new Contact();
+            User user = new User();
+            user.nickname = "Загрузка";
+            user.isOnline = true;
+            user.avatar.micro = null;
+            contact.user = user;
+            contact.lastMessageContent = message.content;
+            contact.newMessages += 1;
+            contact.dateLastMsg = message.createdAt;
+            contact.contactReadedMessages = !message.isNew;
+            contact.lmFromContact = message.incoming;
+            this.contacts.add(0, contact);
+        }
+        this.notifyDataSetChanged();
+    }
+    public void updateContacts(Message message){
 
         for(Contact newContact : contacts){
             int position = this.getContactById(newContact.id);

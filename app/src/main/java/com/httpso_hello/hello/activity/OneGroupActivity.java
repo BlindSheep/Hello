@@ -31,11 +31,13 @@ import android.widget.Toast;
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.BoardItem;
 import com.httpso_hello.hello.Structures.Groups;
+import com.httpso_hello.hello.Structures.OneGroup;
 import com.httpso_hello.hello.adapters.BoardAdapter;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Complaint;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Content;
+import com.httpso_hello.hello.helper.Converter;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.HBoard;
 import com.httpso_hello.hello.helper.Help;
@@ -162,15 +164,14 @@ public class OneGroupActivity extends AppCompatActivity {
 
     private void getGroupHeader () {
         com.httpso_hello.hello.helper.Groups groups = new com.httpso_hello.hello.helper.Groups(getApplicationContext());
-        groups.getGroups(2, groupId, null, new com.httpso_hello.hello.helper.Groups.GetGroupsCallback() {
+        groups.getOneGroups(groupId, null, new com.httpso_hello.hello.helper.Groups.GetOneGroupsCallback() {
             @Override
-            public void onSuccess(Groups[] groupItems) {
-                final Groups groupItem = groupItems[0];
-                OneGroupActivity.this.isFollowing = groupItem.isFollowing;
-                if(groupItem.logo != null) {
+            public void onSuccess(final OneGroup groupItems) {
+                OneGroupActivity.this.isFollowing = groupItems.groupInfo.isSubscribed;
+                if(groupItems.groupInfo.logo != null) {
                     Picasso
                             .with(getApplicationContext())
-                            .load(Uri.parse(Constant.upload + groupItem.logo.small))
+                            .load(Uri.parse(Constant.upload + groupItems.groupInfo.logo.small))
                             .transform(new CircularTransformation(0))
                             .into(logotip, new Callback() {
                                 @Override
@@ -194,10 +195,10 @@ public class OneGroupActivity extends AppCompatActivity {
                             .transform(new CircularTransformation(0))
                             .into(logotip);
                 }
-                actionBar.setTitle(groupItem.title);
-                name.setText(groupItem.title);
-                descr.setText(groupItem.description);
-                members.setText(ConverterDate.getFollowers(groupItem.membersCount));
+                actionBar.setTitle(groupItems.groupInfo.title);
+                name.setText(groupItems.groupInfo.title);
+                descr.setText(groupItems.groupInfo.description);
+                members.setText(Converter.getFollowers(groupItems.groupInfo.membersCount));
                 membersLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -208,13 +209,13 @@ public class OneGroupActivity extends AppCompatActivity {
                     }
                 });
 
-                if (groupItem.moderate) {
+                if (groupItems.groupInfo.moderate) {
                     isModer.setVisibility(View.VISIBLE);
                 } else {
                     isModer.setVisibility(View.GONE);
                 }
 
-                if (groupItem.owner_id == stgs.getSettingInt("user_id")) {
+                if (groupItems.groupInfo.ownerId == stgs.getSettingInt("user_id")) {
                     adminLayout.setVisibility(View.VISIBLE);
                     adminBar.setVisibility(View.VISIBLE);
                     adminBar.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +226,7 @@ public class OneGroupActivity extends AppCompatActivity {
                             startActivity(intent);
                         }
                     });
-                    if (groupItem.moderate) {
+                    if (groupItems.groupInfo.moderate) {
                         moderation.setVisibility(View.VISIBLE);
                         moderation.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -235,12 +236,12 @@ public class OneGroupActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                         });
-                        if (groupItem.count_of_moderate != 0) {
+                        if (groupItems.groupInfo.count_of_moderate != 0) {
                             countOfModerate.setVisibility(View.VISIBLE);
-                            countOfModerate.setText(Integer.toString(groupItem.count_of_moderate));
+                            countOfModerate.setText(Integer.toString(groupItems.groupInfo.count_of_moderate));
                         } else {
                             countOfModerate.setVisibility(View.GONE);
-                            countOfModerate.setText(Integer.toString(groupItem.count_of_moderate));
+                            countOfModerate.setText(Integer.toString(groupItems.groupInfo.count_of_moderate));
                         }
                     } else {
                         moderation.setVisibility(View.GONE);
@@ -260,7 +261,7 @@ public class OneGroupActivity extends AppCompatActivity {
                                 public void onClick(View v) {
                                     popUpWindow.dismiss();
                                     ArrayList<String> photoOrig = new ArrayList<String>();
-                                    photoOrig.add(0, Constant.upload + groupItem.logo.original);
+                                    photoOrig.add(0, Constant.upload + groupItems.groupInfo.logo.original);
                                     Intent intent = new Intent(OneGroupActivity.this, FullscreenPhotoActivity.class);
                                     intent.putStringArrayListExtra("photoOrig", photoOrig);
                                     intent.putExtra("likeble", false);
@@ -305,7 +306,7 @@ public class OneGroupActivity extends AppCompatActivity {
                     adminLayout.setVisibility(View.GONE);
                     adminBar.setVisibility(View.GONE);
                     moderation.setVisibility(View.GONE);
-                    if (groupItem.isFollowing) {
+                    if (groupItems.groupInfo.isSubscribed) {
                         following.setVisibility(View.VISIBLE);
                         following.setText("Отписаться");
                         following.setOnClickListener(new View.OnClickListener() {
@@ -328,7 +329,7 @@ public class OneGroupActivity extends AppCompatActivity {
                         @Override
                         public void onClick(View v) {
                             ArrayList<String> photoOrig = new ArrayList<String>();
-                            photoOrig.add(0, Constant.upload + groupItem.logo.original);
+                            photoOrig.add(0, Constant.upload + groupItems.groupInfo.logo.original);
                             Intent intent = new Intent(OneGroupActivity.this, FullscreenPhotoActivity.class);
                             intent.putStringArrayListExtra("photoOrig", photoOrig);
                             intent.putExtra("likeble", false);
@@ -343,8 +344,8 @@ public class OneGroupActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(OneGroupActivity.this, AddBoardActivity.class);
-                        intent.putExtra("groupId", groupItem.id);
-                        if (groupItem.moderate) intent.putExtra("isModeratble", true);
+                        intent.putExtra("groupId", groupItems.groupInfo.id);
+                        if (groupItems.groupInfo.moderate) intent.putExtra("isModeratble", true);
                         else intent.putExtra("isModeratble", false);
                         startActivity(intent);
                     }
@@ -500,7 +501,7 @@ public class OneGroupActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     swipeRefreshLayout.setRefreshing(true);
                     Content.getInstance(getApplicationContext())
-                            .deleteContent(boardItem.id, "board", group_id, new Content.DeleteContentCallback() {
+                            .deleteContent(boardItem.id, new Content.DeleteContentCallback() {
                                 @Override
                                 public void onSuccess() {
                                     page = 1;
@@ -533,11 +534,11 @@ public class OneGroupActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(OneGroupActivity.this, ChatActivity.class);
                     intent.putExtra("contact_id", boardItem.userId);
-                    intent.putExtra("nickname", boardItem.User.nickname);
-                    if (boardItem.User.avatar == null) {
+                    intent.putExtra("nickname", boardItem.user.nickname);
+                    if (boardItem.user.avatar == null) {
                         intent.putExtra("avatar", Constant.default_avatar);
                     } else {
-                        intent.putExtra("avatar", boardItem.User.avatar.micro);
+                        intent.putExtra("avatar", boardItem.user.avatar.micro);
                     }
                     startActivity(intent);
                     popUpWindowOther.dismiss();

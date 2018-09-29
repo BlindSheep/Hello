@@ -32,9 +32,8 @@ public class Comments extends Help{
     }
 
     public void getComments(
-            final String controller,
-            final String content_type,
-            final int target_id,
+            final String targetController,
+            final int targetId,
             final Activity activity,
             final GetCommentsCallback getCommentsCallback){
         Log.d("board", "Enter");
@@ -47,6 +46,7 @@ public class Comments extends Help{
                         if (response != null) {
                             ReqComments comment = gson.fromJson(response, ReqComments.class);
                             if (comment.error==null){
+                                setNewToken(comment.token);
                                 getCommentsCallback.onSuccess(comment.comments, activity);
                                 return;
                             }
@@ -67,11 +67,9 @@ public class Comments extends Help{
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("controller", controller);
-                params.put("content_type", content_type);
-                params.put("target_id", Integer.toString(target_id));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("targetController", targetController);
+                params.put("targetId", Integer.toString(targetId));
                 return params;
             };
         };
@@ -79,22 +77,22 @@ public class Comments extends Help{
     }
 
     public void sendComments(
-            final String controller,
-            final String content_type,
-            final int target_id,
+            final String targetController,
+            final int targetId,
             final int idAns,
             final String content,
             final SendCommentsCallback sendCommentsCallback){
         Log.d("board", "Enter");
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.comments_send_comments_uri,
+                Constant.comments_add_comment_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("comments", response);
                         if (response != null) {
                             UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
                             if (res.error==null){
+                                setNewToken(res.token);
                                 sendCommentsCallback.onSuccess(res.response);
                                 return;
                             }
@@ -115,11 +113,9 @@ public class Comments extends Help{
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("controller", controller);
-                params.put("content_type", content_type);
-                params.put("target_id", Integer.toString(target_id));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("targetId", Integer.toString(targetId));
+                params.put("targetController", targetController);
                 params.put("content", content);
                 if (idAns != 0) params.put("parent_user_id", Integer.toString(idAns));
                 return params;
@@ -129,20 +125,20 @@ public class Comments extends Help{
     }
 
     public void getCountsComments(
-            final String controller,
-            final String content_type,
-            final int target_id,
+            final String targetController,
+            final int targetId,
             final GetCountsCommentsCallback getCountsCommentsCallback){
         Log.d("board", "Enter");
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.comments_get_counts_comments_uri,
+                Constant.comments_get_counts_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("comments", response);
                         if (response != null) {
                             Counts count_comments = gson.fromJson(response, Counts.class);
-                            getCountsCommentsCallback.onSuccess(count_comments.count_comments);
+                            setNewToken(count_comments.token);
+                            getCountsCommentsCallback.onSuccess(count_comments.count);
                             return;
                         }
                         return;
@@ -157,11 +153,9 @@ public class Comments extends Help{
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("controller", controller);
-                params.put("content_type", content_type);
-                params.put("target_id", Integer.toString(target_id));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("targetController", targetController);
+                params.put("targetId", Integer.toString(targetId));
                 return params;
             };
         };
@@ -170,20 +164,18 @@ public class Comments extends Help{
 
     public void deleteComments(
             final int id,
-            final String target_controller,
-            final String content_type,
-            final int target_id,
             final DeleteCommentCallback deleteCommentCallback){
         Log.d("board", "Enter");
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.comments_delete_comments_uri,
+                Constant.comments_delete_comment_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("comments", response);
                         if (response != null) {
                             UniversalResponse res = gson.fromJson(response, UniversalResponse.class);
                             if (res.error==null){
+                                setNewToken(res.token);
                                 deleteCommentCallback.onSuccess();
                                 return;
                             }
@@ -204,12 +196,8 @@ public class Comments extends Help{
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
+                Map<String, String> params = getParamsMap(_context);
                 params.put("id", Integer.toString(id));
-                params.put("target_controller", target_controller);
-                params.put("content_type", content_type);
-                params.put("target_id", Integer.toString(target_id));
                 return params;
             };
         };

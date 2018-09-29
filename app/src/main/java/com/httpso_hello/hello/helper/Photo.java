@@ -85,10 +85,9 @@ public class Photo extends Help {
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.photos_delete_photo,
+                Constant.users_remove_photo,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
-
                         if(response!=null){
                             Log.d("delete_photo", response);
                             deletePhotoCalback.onSuccess();
@@ -108,10 +107,8 @@ public class Photo extends Help {
         {
             @Override
             protected Map<String, String> getParams() {
-                // Posting parameters to login url
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("photo_id", Integer.toString(photoId));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("photoId", Integer.toString(photoId));
                 return params;
             };
         };

@@ -196,14 +196,14 @@ public class Profile extends Help{
             final GetIgnoreListCallback getIgnoreListCallback){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.settings_get_ignore_list_uri,
+                Constant.blacklist_get_ignore_list_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         if (response != null) {
                             Log.d("User", response);
                             IgnoreList ignoreList = gson.fromJson(response, IgnoreList.class);
                             if (ignoreList.error == null) {
-                                getIgnoreListCallback.onSuccess(ignoreList.ignoreUsers);
+                                getIgnoreListCallback.onSuccess(ignoreList.ignoredUsers);
                                 setNewToken(ignoreList.token);
                                 return;
                             }
@@ -225,6 +225,8 @@ public class Profile extends Help{
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = getParamsMap(_context);
+                params.put("page", Integer.toString(0));
+                params.put("perPage", Integer.toString(1000));
                 return params;
             };
         };
@@ -232,17 +234,18 @@ public class Profile extends Help{
     }
 
     public void deleteUserFromIgnore (
-            final int contact_id,
+            final int ignoredUserId,
             final DeleteUserIgnoreCallback deleteUserIgnoreCallback){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.users_delete_user_ignore_uri,
+                Constant.blacklist_remove_ignore_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         if (response != null) {
                             Log.d("User", response);
                             IgnoreList ignoreList = gson.fromJson(response, IgnoreList.class);
                             if (ignoreList.error == null) {
+                                setNewToken(ignoreList.token);
                                 deleteUserIgnoreCallback.onSuccess();
                                 return;
                             }
@@ -263,9 +266,8 @@ public class Profile extends Help{
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("contact_id", Integer.toString(contact_id));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("ignoredUserId", Integer.toString(ignoredUserId));
                 return params;
             };
         };
@@ -283,8 +285,10 @@ public class Profile extends Help{
 
         Map<String, String> filtersMap = new HashMap<String, String>();
         //if (reg_cel != 0) filtersMap.put("reg_cel[]", Integer.toString(reg_cel));
-        filtersMap.put("startAge", Integer.toString(ageFrom));
-        filtersMap.put("finishAge", Integer.toString(ageTo));
+        if (ageFrom != 0) filtersMap.put("startAge", Integer.toString(ageFrom));
+        else filtersMap.put("startAge", "");
+        if (ageTo != 0) filtersMap.put("finishAge", Integer.toString(ageTo));
+        else filtersMap.put("finishAge", "");
         filtersMap.put("gender", Integer.toString(gender));
         GsonBuilder GBmap = new GsonBuilder();
         Gson gsonMap = GBmap.create();
@@ -330,16 +334,20 @@ public class Profile extends Help{
         RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.searchProfiles");
     }
 
-    public void getGuests(final int page, final Activity activity, final GetGuestsCallback getGuestsCallback){
+    public void getGuests(
+            final int page,
+            final Activity activity,
+            final GetGuestsCallback getGuestsCallback){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.guests_get_guests_uri,
+                Constant.guests_get_list_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         if(response!=null){
                             Log.d("guests", response);
                             Guests guests = gson.fromJson(response, Guests.class);
                             if(guests.error==null) {
+                                setNewToken(guests.token);
                                 getGuestsCallback.onSuccess(guests.guests, activity);
                                 return;
                             }
@@ -360,21 +368,21 @@ public class Profile extends Help{
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
+                Map<String, String> params = getParamsMap(_context);
                 params.put("page", Integer.toString(page));
+                params.put("perPage", Integer.toString(30));
                 return params;
             };
         };
         RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users.getGuests");
     }
 
-    public void getBalance(
-            final GetBalanceCallback getBalanceCallback
+    public void getPosistion(
+            final GetPosistionCallback getPosistionCallback
     ) {
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.users_get_balance_uri,
+                Constant.users_get_position_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response) {
                         Log.d("balance", response);
@@ -382,74 +390,33 @@ public class Profile extends Help{
                         if (response != null) {
 
                             if (balanceReq.error == null) {
-                                getBalanceCallback.onSuccess(balanceReq);
+                                getPosistionCallback.onSuccess(balanceReq);
+                                setNewToken(balanceReq.token);
                                 return;
                             }
-                            getBalanceCallback.onError(balanceReq.error.code, balanceReq.error.message);
+                            getPosistionCallback.onError(balanceReq.error.code, balanceReq.error.message);
                             return;
                         }
-                        getBalanceCallback.onInternetError();
+                        getPosistionCallback.onInternetError();
                         return;
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        getBalanceCallback.onInternetError();
+                        getPosistionCallback.onInternetError();
                     }
                 }
         ) {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
+                Map<String, String> params = getParamsMap(_context);
                 return params;
             }
 
             ;
         };
         RequestQ.getInstance(this._context).addToRequestQueue(SReq, "billing.getPoints");
-    }
-
-    public void getCount(
-            final GetCountCallback getCountCallback
-    ) {
-        StringRequest SReq = new StringRequest(
-                Request.Method.POST,
-                Constant.users_get_counts_uri,
-                new Response.Listener<String>() {
-                    public void onResponse(String response) {
-                        Log.d("users_get_counts", response);
-                        AllCounts allCounts = gson.fromJson(response, AllCounts.class);
-                        if (response != null) {
-                            if (allCounts.error == null) {
-                                getCountCallback.onSuccess(allCounts);
-                                return;
-                            }
-                            getCountCallback.onError(allCounts.error.code, allCounts.error.message);
-                            return;
-                        }
-                        getCountCallback.onInternetError();
-                        return;
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        getCountCallback.onInternetError();
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                return params;
-            }
-
-            ;
-        };
-        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "users_get_counts");
     }
 
     //Загрузка аватарки
@@ -538,13 +505,8 @@ public class Profile extends Help{
         void onError(int error_code, String error_msg);
         void onInternetError();
     }
-    public interface GetBalanceCallback {
+    public interface GetPosistionCallback {
         public void onSuccess(BalanceReq balanceReq);
-        public void onError(int error_code, String error_msg);
-        void onInternetError();
-    }
-    public interface GetCountCallback {
-        public void onSuccess(AllCounts allCounts);
         public void onError(int error_code, String error_msg);
         void onInternetError();
     }

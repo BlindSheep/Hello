@@ -45,13 +45,14 @@ public class Notice extends Help {
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.messages_get_notices_uri,
+                Constant.notices_get_notices_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("notices", response);
                         if (response != null) {
                             Notices notises = gson.fromJson(response, Notices.class);
                             if(notises.error == null){
+                                setNewToken(notises.token);
                                 getNoticeCallback.onSuccess(notises.notices, activity);
                                 return;
                             }
@@ -72,9 +73,9 @@ public class Notice extends Help {
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
+                Map<String, String> params = getParamsMap(_context);
                 params.put("page", Integer.toString(page));
+                params.put("perPage", "30");
                 return params;
             };
         };

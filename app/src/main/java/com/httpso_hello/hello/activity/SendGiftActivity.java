@@ -79,88 +79,88 @@ public class SendGiftActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                setAll();
+//                setAll();
             }
         });
     }
 
-    private void setAll() {
-        swipeRefreshLayout.setRefreshing(true);
-        Billing.getInstance(getApplicationContext())
-                .getRaisingToken("paid_gift", new Billing.GetRaisingTokenCallback() {
-                    @Override
-                    public void onSuccess(final TokenReq token) {
-                        balanceUser.setText("На счету: " + token.balance + " баллов");
-                        swipeRefreshLayout.setRefreshing(false);
-                        //Если хватает денег
-                        if (Integer.parseInt(token.balance) >= price) {
-                            send.setVisibility(View.GONE);
-                            dontHavePoints.setVisibility(View.GONE);
-                            accept.setVisibility(View.VISIBLE);
-                            accept.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    swipeRefreshLayout.setRefreshing(true);
-                                    int anon = 0;
-                                    if(isAnon.isChecked()){
-                                        anon = 1;
-                                    }
-                                    Gifts.getInstance(getApplicationContext())
-                                            .sendGifts(id, userId, comment.getText().toString(), anon, token.token, price, new Gifts.SendGiftsCallback() {
-                                                @Override
-                                                public void onSuccess() {
-                                                    Toast.makeText(getApplicationContext(), "Подарок успешно отправлен", Toast.LENGTH_LONG).show();
-                                                    finish();
-                                                    swipeRefreshLayout.setRefreshing(false);
-                                                }
-
-                                                @Override
-                                                public void onError(int error_code, String error_msg) {
-                                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                                                    finish();
-                                                    swipeRefreshLayout.setRefreshing(false);
-                                                }
-
-                                                @Override
-                                                public void onInternetError() {
-                                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                                                    finish();
-                                                    swipeRefreshLayout.setRefreshing(false);
-                                                }
-                                            });
-                                }
-                            });
-                        } else {
-                            //Если не хватает денег
-                            accept.setVisibility(View.GONE);
-                            send.setVisibility(View.VISIBLE);
-                            dontHavePoints.setVisibility(View.VISIBLE);
-                            send.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    Intent intent = new Intent(SendGiftActivity.this, BillingActivity.class);
-                                    startActivity(intent);
-                                }
-                            });
-                        }
-
-                    }
-
-                    @Override
-                    public void onError(int error_code, String error_msg) {
-
-                    }
-
-                    @Override
-                    public void onInternetError() {
-
-                    }
-                });
-    }
-
-    @Override
-    public void onResume () {
-        setAll();
-        super.onResume();
-    }
+//    private void setAll() {
+//        swipeRefreshLayout.setRefreshing(true);
+//        Billing.getInstance(getApplicationContext())
+//                .getRaisingToken("paid_gift", new Billing.GetRaisingTokenCallback() {
+//                    @Override
+//                    public void onSuccess(final TokenReq token) {
+//                        balanceUser.setText("На счету: " + token.balance + " баллов");
+//                        swipeRefreshLayout.setRefreshing(false);
+//                        //Если хватает денег
+//                        if (Integer.parseInt(token.balance) >= price) {
+//                            send.setVisibility(View.GONE);
+//                            dontHavePoints.setVisibility(View.GONE);
+//                            accept.setVisibility(View.VISIBLE);
+//                            accept.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    swipeRefreshLayout.setRefreshing(true);
+//                                    int anon = 0;
+//                                    if(isAnon.isChecked()){
+//                                        anon = 1;
+//                                    }
+//                                    Gifts.getInstance(getApplicationContext())
+//                                            .sendGifts(id, userId, comment.getText().toString(), anon, token.token, price, new Gifts.SendGiftsCallback() {
+//                                                @Override
+//                                                public void onSuccess() {
+//                                                    Toast.makeText(getApplicationContext(), "Подарок успешно отправлен", Toast.LENGTH_LONG).show();
+//                                                    finish();
+//                                                    swipeRefreshLayout.setRefreshing(false);
+//                                                }
+//
+//                                                @Override
+//                                                public void onError(int error_code, String error_msg) {
+//                                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+//                                                    finish();
+//                                                    swipeRefreshLayout.setRefreshing(false);
+//                                                }
+//
+//                                                @Override
+//                                                public void onInternetError() {
+//                                                    Toast.makeText(getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
+//                                                    finish();
+//                                                    swipeRefreshLayout.setRefreshing(false);
+//                                                }
+//                                            });
+//                                }
+//                            });
+//                        } else {
+//                            //Если не хватает денег
+//                            accept.setVisibility(View.GONE);
+//                            send.setVisibility(View.VISIBLE);
+//                            dontHavePoints.setVisibility(View.VISIBLE);
+//                            send.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View v) {
+//                                    Intent intent = new Intent(SendGiftActivity.this, BillingActivity.class);
+//                                    startActivity(intent);
+//                                }
+//                            });
+//                        }
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(int error_code, String error_msg) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onInternetError() {
+//
+//                    }
+//                });
+//    }
+//
+//    @Override
+//    public void onResume () {
+//        setAll();
+//        super.onResume();
+//    }
 }

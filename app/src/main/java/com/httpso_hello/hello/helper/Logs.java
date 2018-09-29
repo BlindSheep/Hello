@@ -31,45 +31,45 @@ public class Logs extends Help{
         }
         return instance;
     }
-    public void add(
-            final String type,
-            final String data,
-            final String caption,
-            final String exception
-    ){
-        StringRequest SReq = new StringRequest(
-                Request.Method.POST,
-                Constant.logs_add_uri,
-                new Response.Listener<String>() {
-                    public void onResponse(String response){
-                        Log.d("Log", response);
-                        return;
-                    }
-                },
-                new Response.ErrorListener(){
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        )
-        {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = getParamsMap();
-                if(type!=null)
-                    params.put("type", type);
-                if(data!=null)
-                    params.put("data",data);
-                if(caption!=null)
-                    params.put("caption", caption);
-                if(exception != null)
-                    params.put("exception", exception);
-                return params;
-            };
-        };
-        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "logs.add");
-    }
-    public interface AddCallback{
-        void onSuccess();
-    }
+//    public void add(
+//            final String type,
+//            final String data,
+//            final String caption,
+//            final String exception
+//    ){
+//        StringRequest SReq = new StringRequest(
+//                Request.Method.POST,
+//                Constant.logs_add_uri,
+//                new Response.Listener<String>() {
+//                    public void onResponse(String response){
+//                        Log.d("Log", response);
+//                        return;
+//                    }
+//                },
+//                new Response.ErrorListener(){
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                    }
+//                }
+//        )
+//        {
+//            @Override
+//            protected Map<String, String> getParams() {
+//                Map<String, String> params = getParamsMap();
+//                if(type!=null)
+//                    params.put("type", type);
+//                if(data!=null)
+//                    params.put("data",data);
+//                if(caption!=null)
+//                    params.put("caption", caption);
+//                if(exception != null)
+//                    params.put("exception", exception);
+//                return params;
+//            };
+//        };
+//        RequestQ.getInstance(this._context).addToRequestQueue(SReq, "logs.add");
+//    }
+//    public interface AddCallback{
+//        void onSuccess();
+//    }
 }

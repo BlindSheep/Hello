@@ -8,6 +8,10 @@ public class GiftItem {
 
     public GiftItemNew gift;
     public User user;
+    public String text;
+    public boolean isPrivate;
+    public String createdAt;
+
     public cmsGroupsMembers cms_gifts_sends;
 
     public GiftItem(){

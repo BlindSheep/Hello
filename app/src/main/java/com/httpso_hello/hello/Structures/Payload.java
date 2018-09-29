@@ -12,9 +12,12 @@ public class Payload {
     public Contact[] contacts;
     public Message[] messages;
     public Message message;
+    public int balance;
 
     public int dialogId;
 
+    //Нотис
+    public PopupNotice notice;
 
     public Payload(){
 

@@ -205,7 +205,7 @@ public class ChatActivity extends SocketActivity {
                     messageContent.setText(null);
 
                     Message message = new Message();
-                    message.contact_id = recipientId;
+                    message.contactId = recipientId;
                     if(messageContentString.length()!=0)
                         message.content = messageContentString;
                     if(maAdapter!=null) {
@@ -213,14 +213,15 @@ public class ChatActivity extends SocketActivity {
                     } else{
                         message.photos = new Attachment[]{};
                     }
-                    message.deviceMessageId = System.currentTimeMillis();
+                    message.tempMessageId = System.currentTimeMillis();
                     chatList.setTranscriptMode(2);
+                    mmAdapter.addMessage(message);
                     if(maAdapter!=null){
                         maAdapter.deleteAllAttachments();
                         attachmentsListView.getLayoutParams().width = Help.getPxFromDp(130, getApplicationContext());
                     }
 
-                    sendMessageToSocket(messageContentString, recipientId, contact_id);
+                    sendMessageToSocket(message, recipientId, contact_id);
                 } else {
                     if(!canSendMessage) {
                         showMessage("Дождитесь загрузки фотографии...");
@@ -429,12 +430,6 @@ public class ChatActivity extends SocketActivity {
 
             points.add("6");
             canSendMessage = false;
-            Logs.getInstance(getApplicationContext()).add(
-                    "info",
-                    points.toString(),
-                    "send_image_from_gellery",
-                    "no-exception"
-            );
             String tag = messages.addFileToMessage(
                     "photo",
                     "jpg",
@@ -461,12 +456,6 @@ public class ChatActivity extends SocketActivity {
 
         } catch (Exception e){
             e.printStackTrace();
-            Logs.getInstance(getApplicationContext()).add(
-                    "error",
-                    points.toString(),
-                    "send_image_from_gellery",
-                    e.toString()
-            );
         }
     }
 
@@ -571,9 +560,14 @@ public class ChatActivity extends SocketActivity {
         else super.onBackPressed();
     }
 
+    public void onResume() {
+        stgs.setSettingInt("showingChatId", this.contact_id);
+        super.onResume();
+    }
 
     @Override
     public void onPause() {
+        stgs.setSettingInt("showingChatId", 0);
         if (popUpWindowForMenu != null) popUpWindowForMenu.dismiss();
         if (popUpWindow != null) popUpWindow.dismiss();
         super.onPause();
@@ -588,20 +582,46 @@ public class ChatActivity extends SocketActivity {
 
     @Override
     public void onSocketConnect() {
-        getMessagesFromSocket(contact_id);
+        getMessagesFromSocket(contact_id, recipientId);
         super.onSocketConnect();
     }
 
     @Override
     public void onSocketResponse (SocketObject info) {
-        super.onSocketResponse(info);
-        if (info.type.equals("get-messages")) {setMsg(info.payload.messages);}
-        else if (info.type.equals("read-message")) {mmAdapter.setReadedMessages();}
-        else if (info.type.equals("on-write-message")) {
+        if (info.type.equals("get-messages")) {
+            if ((this.contact_id == 0) && info.payload.dialogId != 0) this.contact_id = info.payload.dialogId;
+            if (this.contact_id == info.payload.dialogId) {
+                setMsg(info.payload.messages);
+                for (int i = 0; i < info.payload.messages.length; i++) {
+                    if (info.payload.messages[i].isNew && info.payload.messages[i].incoming) {
+                        sendIsMessageReadedToSocket(info.payload.messages[i].id, recipientId);
+                    }
+                }
+            }
+        }
+        if (info.type.equals("read-message")) {
+            mmAdapter.setReadedMessages();
+        }
+        if (info.type.equals("on-write-message")) {
             if (contact_id == info.payload.dialogId) setWriteMsg();
             lastWriteMsgDate.setToNow();
         }
-        else if (info.type.equals("incoming-message")) {mmAdapter.add(info.payload.message);}
-        else if (info.type.equals("send-message")) {mmAdapter.add(info.payload.message);}
+        if (info.type.equals("incoming-message")) {
+            if (info.payload.message.contactId == this.contact_id) {
+                mmAdapter.add(info.payload.message);
+                sendIsMessageReadedToSocket(info.payload.message.id, recipientId);
+            }
+        }
+        if (info.type.equals("send-message")) {
+            if (this.contact_id != 0) {
+                if (info.payload.message.contactId == this.contact_id) {
+                    mmAdapter.setMessage(info.payload.message);
+                }
+            } else {
+                mmAdapter.setMessage(info.payload.message);
+                this.contact_id = info.payload.message.contactId;
+            }
+        }
+        super.onSocketResponse(info);
     }
 }

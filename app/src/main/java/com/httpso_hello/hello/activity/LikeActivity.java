@@ -13,6 +13,7 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Vote;
 import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.LikesAdapter;
+import com.httpso_hello.hello.helper.Converter;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.Like;
 
@@ -67,7 +68,7 @@ public class LikeActivity extends SocketActivity {
 
     //Получение юзеров, поставивших лайк
     private void getLikes() {
-        Like.getInstance(getApplicationContext()).getInfo(this, target_id, subject, target_controller,
+        Like.getInstance(getApplicationContext()).getInfo(this, target_id, target_controller,
                 new Like.GetInfoCallback() {
                     @Override
                     public void onSuccess(final Vote[] votes, Activity activity) {
@@ -75,7 +76,7 @@ public class LikeActivity extends SocketActivity {
                         Collections.addAll(defolt, votes);
                         likesAdapter = new LikesAdapter(activity, defolt);
                         LV.setAdapter(likesAdapter);
-                        getSupportActionBar().setTitle(ConverterDate.likeStr(votes.length));
+                        getSupportActionBar().setTitle(Converter.likeStr(votes.length));
 
                         ((ListView) findViewById(R.id.listLikes)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
@@ -84,8 +85,8 @@ public class LikeActivity extends SocketActivity {
                                 Vote vote = votes[position - 1];
 // Открытие профиля
                                 Intent intent = new Intent(LikeActivity.this, ProfileActivity.class);
-                                intent.putExtra("profile_id", vote.user_id);
-                                intent.putExtra("profile_nickname", " " + vote.user_nickname);
+                                intent.putExtra("profile_id", vote.user.id);
+                                intent.putExtra("profile_nickname", " " + vote.user.nickname);
                                 startActivity(intent);
                             }
                         });

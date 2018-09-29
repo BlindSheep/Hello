@@ -40,30 +40,14 @@ public class UpAnketActivity extends SocketActivity {
         nedostatochno = (TextView) findViewById(R.id.nedostatochno);
         progressBarUpAnket = (ProgressBar) findViewById(R.id.progressBarUpAnket);
 
-        billing.getInstance(getApplicationContext()).getRaisingToken(null, new Billing.GetRaisingTokenCallback() {
-            @Override
-            public void onSuccess(TokenReq token) {
-                raisingToken = token.token;
-            }
-
-            @Override
-            public void onError(int error_code, String error_msg) {
-
-            }
-
-            @Override
-            public void onInternetError() {
-
-            }
-        });
-
         Profile.getInstance(getApplicationContext())
-                .getBalance(new Profile.GetBalanceCallback() {
+                .getPosistion(new Profile.GetPosistionCallback() {
                     @Override
                     public void onSuccess(BalanceReq balanceReq) {
-                        balance.setText(Integer.toString(balanceReq.balance) + " баллов");
-                        priceUpAnket.setText(Integer.toString(balanceReq.paid_raising) + " баллов");
-                        if (!balanceReq.good_position) {
+                        int balanceInt = stgs.getSettingInt("balance");
+                        balance.setText(Integer.toString(balanceInt) + " баллов");
+                        priceUpAnket.setText(Integer.toString(balanceReq.paidRaising) + " баллов");
+                        if (!balanceReq.goodPosition) {
                             position.setTextColor(getResources().getColor(R.color.main_red_color_hello));
                         } else {
                             position.setTextColor(getResources().getColor(R.color.main_green_color_hello));
@@ -72,7 +56,7 @@ public class UpAnketActivity extends SocketActivity {
 
                         progressBarUpAnket.setVisibility(View.GONE);
 
-                        if(balanceReq.balance - balanceReq.paid_raising < 0) {
+                        if(balanceInt - balanceReq.paidRaising < 0) {
                             // если не хватает средств
                             riseAnket.setText("Пополнить баланс");
                             nedostatochno.setVisibility(View.VISIBLE);
@@ -93,56 +77,21 @@ public class UpAnketActivity extends SocketActivity {
                                 public void onClick(View v) {
                                     //поднимаем анкету
                                 progressBarUpAnket.setVisibility(View.VISIBLE);
-                                billing.getInstance(getApplicationContext()).paidRaising(raisingToken ,new Billing.PaidRaisingCallback() {
+                                billing.getInstance(getApplicationContext()).pay("RAIZING" ,new Billing.PayCallback() {
                                     @Override
-                                    public void onSuccess(Boolean response) {
+                                    public void onSuccess() {
                                         Toast.makeText(getApplicationContext(), "Анкета успешно поднята", Toast.LENGTH_LONG).show();
                                         finish();
                                     }
 
                                     @Override
                                     public void onError(int error_code, String error_msg) {
-                                        if(error_code==401){
-                                            // Если время вышло повторяем получение токена и оплату
-                                            Log.d("paid_raising", "error");
-                                            billing.getInstance(getApplicationContext()).getRaisingToken(null, new Billing.GetRaisingTokenCallback() {
-                                                @Override
-                                                public void onSuccess(TokenReq token) {
-                                                    billing.getInstance(getApplicationContext()).paidRaising(token.token, new Billing.PaidRaisingCallback() {
-                                                        @Override
-                                                        public void onSuccess(Boolean response) {
-                                                            Toast.makeText(getApplicationContext(), "Анкета успешно поднята", Toast.LENGTH_LONG).show();
-                                                            finish();
-                                                        }
-
-                                                        @Override
-                                                        public void onError(int error_code, String error_msg) {
-                                                            progressBarUpAnket.setVisibility(View.GONE);
-                                                        }
-
-                                                        @Override
-                                                        public void onInternetError() {
-                                                            progressBarUpAnket.setVisibility(View.GONE);
-                                                        }
-                                                    });
-                                                }
-
-                                                @Override
-                                                public void onError(int error_code, String error_msg) {
-                                                    progressBarUpAnket.setVisibility(View.GONE);
-                                                }
-
-                                                @Override
-                                                public void onInternetError() {
-                                                    progressBarUpAnket.setVisibility(View.GONE);
-                                                }
-                                            });
-                                        }
+                                        showMessage("Что-то пошло не так, попробуйте позднее!");
                                     }
 
                                     @Override
                                     public void onInternetError() {
-
+                                        showMessage("Ошибка интернет соединения");
                                     }
                                 });
 

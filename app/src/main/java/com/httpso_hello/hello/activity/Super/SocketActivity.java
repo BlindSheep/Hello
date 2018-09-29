@@ -41,25 +41,26 @@ public class SocketActivity extends MethodsActivity{
 
 
     //Запрос списка сообщений из сокета
-    public void getMessagesFromSocket(final int contact_id ) {
+    public void getMessagesFromSocket(final int contact_id , final int recipientId) {
         new Handler().postDelayed(new Runnable() {
             @Override public void run() {
                 if (serviseIsConnect) {
                     android.os.Message msg = android.os.Message.obtain(null, 3);
                     msg.replyTo = messenger;
                     msg.arg1 = contact_id;
+                    msg.arg2 = recipientId;
                     try {toServiceMessenger.send(msg);}
                     catch (RemoteException e) {
                     }
                 } else {
-                    getMessagesFromSocket(contact_id);
+                    getMessagesFromSocket(contact_id, recipientId);
                 }
             }
         }, 1000);
     }
 
     //Отправка сообщения на сокет
-    public void sendMessageToSocket (final String content, final int recipientId, final int contact_id) {
+    public void sendMessageToSocket (final com.httpso_hello.hello.Structures.Message message, final int recipientId, final int contact_id) {
         new Handler().postDelayed(new Runnable() {
             @Override public void run() {
                 if (serviseIsConnect) {
@@ -67,12 +68,12 @@ public class SocketActivity extends MethodsActivity{
                     msg.replyTo = messenger;
                     msg.arg1 = contact_id;
                     msg.arg2 = recipientId;
-                    msg.obj = content;
+                    msg.obj = message;
                     try {toServiceMessenger.send(msg);}
                     catch (RemoteException e) {
                     }
                 } else {
-                    sendMessageToSocket (content, recipientId, contact_id);
+                    sendMessageToSocket (message, recipientId, contact_id);
                 }
             }
         }, 1000);
@@ -95,6 +96,24 @@ public class SocketActivity extends MethodsActivity{
         }, 1000);
     }
 
+    //Отправка статуса прочитанности на сокет
+    public void sendIsMessageReadedToSocket (final int messageId, final int contact) {
+        new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                if (serviseIsConnect) {
+                    android.os.Message msg = android.os.Message.obtain(null, 5);
+                    msg.replyTo = messenger;
+                    msg.arg1 = messageId;
+                    msg.arg2 = contact;
+                    try {toServiceMessenger.send(msg);}
+                    catch (RemoteException e) {
+                    }
+                } else {
+                    sendIsMessageReadedToSocket (messageId, contact);
+                }
+            }
+        }, 1000);
+    }
 
 
 
@@ -153,6 +172,7 @@ public class SocketActivity extends MethodsActivity{
             stgs.setSettingInt("newFriends", info.payload.counters.newFriends);
             stgs.setSettingInt("mutuallySimpations", info.payload.counters.mutuallySimpations);
             stgs.setSettingInt("incomingSimpations", info.payload.counters.incomingSimpations);
+            stgs.setSettingInt("balance", info.payload.counters.balance);
             setCounters();
         } else if (info.type.equals("ADD_COUNT")) {
 //            Изменения счётчиков +1

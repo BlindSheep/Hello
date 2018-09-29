@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.GiftItem;
+import com.httpso_hello.hello.Structures.GiftItemNew;
 import com.httpso_hello.hello.Structures.Image;
 import com.httpso_hello.hello.Structures.NewProfile;
 import com.httpso_hello.hello.activity.Super.SocketActivity;
@@ -322,7 +323,7 @@ public class ProfileActivity extends SocketActivity {
                     onlineToolbar.setText("В сети");
                     onlineToolbar.setTextColor(getResources().getColor(R.color.main_green_color_hello));
                 } else {
-                    onlineToolbar.setText(convertDateForEnter(user.info.dateLog, user.info.gender));
+                    if (user.info.dateLog != null) onlineToolbar.setText(convertDateForEnter(user.info.dateLog, user.info.gender));
                     onlineToolbar.setTextColor(getResources().getColor(R.color.main_white_color_hello));
                 }
 
@@ -359,63 +360,63 @@ public class ProfileActivity extends SocketActivity {
                 if (isUserProfile) newPhotoButton.setVisibility(View.VISIBLE);
                 else newPhotoButton.setVisibility(View.GONE);
 
-//////Устанавливаем дополнительные фотки и их кол-во
-////                if(user.info.photos != null) {
-////                    GV.setVisibility(View.VISIBLE);
-////                    final ArrayList<com.httpso_hello.hello.Structures.Photo> defolt = new ArrayList<com.httpso_hello.hello.Structures.Photo>();
-////                    Collections.addAll(defolt, user.info.photos);
-////                    plAdapter = new PhotosUserAdapter(activity, defolt, R.layout.content_profile);
-////
-////                    photo_count.setText(defolt.size() + " фото");
-////
-////                    float density = getApplicationContext().getResources().getDisplayMetrics().density;
-////                    float llColumnWidth = defolt.size() * 120 * density;
-////                    float llHorizontalSpacing = (defolt.size() - 1) * 4 * density;
-////                    float paddingLeftAndRight = 20 * density;
-////                    ll.getLayoutParams().width = (int) (llColumnWidth + llHorizontalSpacing + paddingLeftAndRight);
-////                    ll.requestLayout();
-////                    GV.setNumColumns(defolt.size());
-////                    GV.setAdapter(plAdapter);
-////
-////// Обработчик клика по фотке
-////                    GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-////                        @Override
-////                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////                            com.httpso_hello.hello.Structures.Photo photo = ((PhotosUserAdapter) parent.getAdapter()).getItem(position);
-////                            ArrayList<String> photoOrig = new ArrayList<String>();
-////                            ArrayList<Integer> photoLike = new ArrayList<Integer>();
-////                            ArrayList<Integer> photoId = new ArrayList<Integer>();
-////                            ArrayList<String> photoIsVoted = new ArrayList<String>();
-////                            ArrayList<Integer> photoComments = new ArrayList<Integer>();
-////                            for (int j = 0; j < user.info.photos.length; j++){
-////                                photoOrig.add(j, Constant.upload + user.info.photos[j].image.original);
-////                                photoLike.add(j, user.info.photos[j].rating);
-////                                photoId.add(j, user.info.photos[j].id);
-////                                photoIsVoted.add(j, Boolean.toString(user.info.photos[j].is_voted));
-////                                photoComments.add(j, user.info.photos[j].comments);
-////                            }
-////                            Intent intent;
-////
-////                            if(isUserProfile){
-////                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivityUser.class);
-////                            } else {
-////                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivity.class);
-////                            }
-////
-////                            intent.putStringArrayListExtra("photoOrig", photoOrig);
-////                            intent.putIntegerArrayListExtra("photoLike", photoLike);
-////                            intent.putIntegerArrayListExtra("photoId", photoId);
-////                            intent.putStringArrayListExtra("photoIsVoted", photoIsVoted);
-////                            intent.putIntegerArrayListExtra("photoComments", photoComments);
-////                            intent.putExtra("likeble", true);
-////                            intent.putExtra("position", position);
-////                            startActivity(intent);
-////                        }
-////                    });
-////                } else {
-////                    GV.setVisibility(View.GONE);
-////                }
-////
+//Устанавливаем дополнительные фотки и их кол-во
+                if(user.info.photos != null) {
+                    GV.setVisibility(View.VISIBLE);
+                    final ArrayList<com.httpso_hello.hello.Structures.Photo> defolt = new ArrayList<com.httpso_hello.hello.Structures.Photo>();
+                    Collections.addAll(defolt, user.info.photos);
+                    plAdapter = new PhotosUserAdapter(activity, defolt, R.layout.content_profile);
+
+                    photo_count.setText(defolt.size() + " фото");
+
+                    float density = getApplicationContext().getResources().getDisplayMetrics().density;
+                    float llColumnWidth = defolt.size() * 120 * density;
+                    float llHorizontalSpacing = (defolt.size() - 1) * 4 * density;
+                    float paddingLeftAndRight = 20 * density;
+                    ll.getLayoutParams().width = (int) (llColumnWidth + llHorizontalSpacing + paddingLeftAndRight);
+                    ll.requestLayout();
+                    GV.setNumColumns(defolt.size());
+                    GV.setAdapter(plAdapter);
+
+// Обработчик клика по фотке
+                    GV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            com.httpso_hello.hello.Structures.Photo photo = ((PhotosUserAdapter) parent.getAdapter()).getItem(position);
+                            ArrayList<String> photoOrig = new ArrayList<String>();
+                            ArrayList<Integer> photoLike = new ArrayList<Integer>();
+                            ArrayList<Integer> photoId = new ArrayList<Integer>();
+                            ArrayList<String> photoIsVoted = new ArrayList<String>();
+                            ArrayList<Integer> photoComments = new ArrayList<Integer>();
+                            for (int j = 0; j < user.info.photos.length; j++){
+                                photoOrig.add(j, Constant.upload + user.info.photos[j].image.original);
+                                photoLike.add(j, user.info.photos[j].rating);
+                                photoId.add(j, user.info.photos[j].id);
+                                photoIsVoted.add(j, Boolean.toString(user.info.photos[j].is_voted));
+                                photoComments.add(j, user.info.photos[j].comments);
+                            }
+                            Intent intent;
+
+                            if(isUserProfile){
+                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivityUser.class);
+                            } else {
+                                intent = new Intent(ProfileActivity.this, FullscreenPhotoActivity.class);
+                            }
+
+                            intent.putStringArrayListExtra("photoOrig", photoOrig);
+                            intent.putIntegerArrayListExtra("photoLike", photoLike);
+                            intent.putIntegerArrayListExtra("photoId", photoId);
+                            intent.putStringArrayListExtra("photoIsVoted", photoIsVoted);
+                            intent.putIntegerArrayListExtra("photoComments", photoComments);
+                            intent.putExtra("likeble", true);
+                            intent.putExtra("position", position);
+                            startActivity(intent);
+                        }
+                    });
+                } else {
+                    GV.setVisibility(View.GONE);
+                }
+
                 //Устанавливаем город
                 if (user.info.city_cache != null) cityCache.setText(user.info.city_cache);
                 //Устанавливаем телефон
@@ -537,67 +538,87 @@ public class ProfileActivity extends SocketActivity {
                     groupsBlock.setVisibility(View.VISIBLE);
                     groups1.setVisibility(View.VISIBLE);
                     groupsLayout1.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.groups[0].logo.micro)
-                            .transform(new CircularTransformation(0))
-                            .error(R.mipmap.avatar)
-                            .into(groups1);
+                    if (user.groups[0].logo != null) {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.upload + user.groups[0].logo.micro)
+                                .transform(new CircularTransformation(0))
+                                .error(R.mipmap.avatar)
+                                .into(groups1);
+                    }
                 } else groupsBlock.setVisibility(View.GONE);
                 if (user.groups.length > 1) {
                     groups2.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.groups[1].logo.micro)
-                            .transform(new CircularTransformation(0))
-                            .error(R.mipmap.avatar)
-                            .into(groups2);
+                    if (user.groups[1].logo != null) {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.upload + user.groups[1].logo.micro)
+                                .transform(new CircularTransformation(0))
+                                .error(R.mipmap.avatar)
+                                .into(groups2);
+                    }
                 }
                 if (user.groups.length > 2) {
                     groups3.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.groups[2].logo.micro)
-                            .transform(new CircularTransformation(0))
-                            .error(R.mipmap.avatar)
-                            .into(groups3);
+                    if (user.groups[2].logo != null) {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.upload + user.groups[2].logo.micro)
+                                .transform(new CircularTransformation(0))
+                                .error(R.mipmap.avatar)
+                                .into(groups3);
+                    }
                 }
                 if (user.groups.length > 3) {
                     groups4.setVisibility(View.VISIBLE);
                     groupsLayout2.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.groups[3].logo.micro)
-                            .transform(new CircularTransformation(0))
-                            .error(R.mipmap.avatar)
-                            .into(groups4);
+                    if (user.groups[3].logo != null) {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.upload + user.groups[3].logo.micro)
+                                .transform(new CircularTransformation(0))
+                                .error(R.mipmap.avatar)
+                                .into(groups4);
+                    }
                 }
                 if (user.groups.length > 4) {
                     groups5.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.groups[4].logo.micro)
-                            .transform(new CircularTransformation(0))
-                            .error(R.mipmap.avatar)
-                            .into(groups5);
+                    if (user.groups[4].logo != null) {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.upload + user.groups[4].logo.micro)
+                                .transform(new CircularTransformation(0))
+                                .error(R.mipmap.avatar)
+                                .into(groups5);
+                    }
                 }
                 if (user.groups.length > 5) {
                     groups6.setVisibility(View.VISIBLE);
-                    Picasso.with(getApplicationContext())
-                            .load(Constant.upload + user.groups[5].logo.micro)
-                            .transform(new CircularTransformation(0))
-                            .error(R.mipmap.avatar)
-                            .into(groups6);
+                    if (user.groups[5].logo != null) {
+                        Picasso.with(getApplicationContext())
+                                .load(Constant.upload + user.groups[5].logo.micro)
+                                .transform(new CircularTransformation(0))
+                                .error(R.mipmap.avatar)
+                                .into(groups6);
+                    }
                 }
 
                 //Кол-во подарков
-                if(user.gifts.length != 0) {
-                    String giftsStr = Integer.toString(user.gifts.length);
-                    if(user.gifts.length == 1) giftsCount.setText(giftsStr + " подарок");
-                    else if((user.gifts.length >= 2) && (user.gifts.length < 5)) giftsCount.setText(giftsStr + " подарка");
-                    else if((user.gifts.length >= 5) && (user.gifts.length < 21)) giftsCount.setText(giftsStr + " подарков");
-                    else if((user.gifts.length >= 21) && (user.gifts.length % 10 == 1)) giftsCount.setText(giftsStr + " подарок");
-                    else if((user.gifts.length >= 21) && (user.gifts.length % 10 == 2)) giftsCount.setText(giftsStr + " подарка");
-                    else if((user.gifts.length >= 21) && (user.gifts.length % 10 == 3)) giftsCount.setText(giftsStr + " подарка");
-                    else if((user.gifts.length >= 21) && (user.gifts.length % 10 == 4)) giftsCount.setText(giftsStr + " подарка");
-                    else giftsCount.setText(giftsStr + " подарков");
-                } else {
-                    giftsCount.setText("Нет подарков");
+                if (user.gifts != null) {
+                    if (user.gifts.length != 0) {
+                        String giftsStr = Integer.toString(user.gifts.length);
+                        if (user.gifts.length == 1) giftsCount.setText(giftsStr + " подарок");
+                        else if ((user.gifts.length >= 2) && (user.gifts.length < 5))
+                            giftsCount.setText(giftsStr + " подарка");
+                        else if ((user.gifts.length >= 5) && (user.gifts.length < 21))
+                            giftsCount.setText(giftsStr + " подарков");
+                        else if ((user.gifts.length >= 21) && (user.gifts.length % 10 == 1))
+                            giftsCount.setText(giftsStr + " подарок");
+                        else if ((user.gifts.length >= 21) && (user.gifts.length % 10 == 2))
+                            giftsCount.setText(giftsStr + " подарка");
+                        else if ((user.gifts.length >= 21) && (user.gifts.length % 10 == 3))
+                            giftsCount.setText(giftsStr + " подарка");
+                        else if ((user.gifts.length >= 21) && (user.gifts.length % 10 == 4))
+                            giftsCount.setText(giftsStr + " подарка");
+                        else giftsCount.setText(giftsStr + " подарков");
+                    } else {
+                        giftsCount.setText("Нет подарков");
+                    }
                 }
 
                 ArrayList<GiftItem> defoltNew = new ArrayList<>();
@@ -969,8 +990,9 @@ public class ProfileActivity extends SocketActivity {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(ProfileActivity.this, ChatActivity.class);
-                        intent.putExtra("contact_id", user.info.id);
+//                        intent.putExtra("contact_id", null);
                         intent.putExtra("nickname", user.info.nickname);
+                        intent.putExtra("recipientId", user.info.id);
                         if(user.info.avatar != null){
                             intent.putExtra("avatar", user.info.avatar.micro);
                         } else {

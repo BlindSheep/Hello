@@ -79,7 +79,7 @@ public class ComponentsActivity extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                intent.putExtra("profile_id", stgs.getSettingInt("user_id"));
+                intent.putExtra("profile_id", stgs.getSettingInt("userId"));
                 startActivity(intent);
                 finish();
             }
@@ -185,7 +185,6 @@ public class ComponentsActivity extends AppCompatActivity implements NavigationV
                 break;
             case R.id.nav_support:
                 intent = new Intent(getApplicationContext(), ChatActivity.class);
-                intent.putExtra("contact_id", 3008);
                 intent.putExtra("nickname", "Поддержка");
                 intent.putExtra("avatar", "ic_launcher.png");
                 startActivity(intent);

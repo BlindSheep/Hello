@@ -142,6 +142,12 @@ public class MessagesActivity extends SocketActivity {
     }
 
     @Override
+    public void onResume() {
+        onSocketConnect();
+        super.onResume();
+    }
+
+    @Override
     public void onBackPressed() {
         if (popUpWindow.isShowing()) popUpWindow.dismiss();
         else super.onBackPressed();
@@ -169,5 +175,11 @@ public class MessagesActivity extends SocketActivity {
     public void onSocketResponse (SocketObject info) {
         super.onSocketResponse(info);
         if (info.type.equals("get-contacts")) setContacts(info.payload.contacts);
+        else if (info.type.equals("incoming-message")) {
+            mcAdapter.newMessage(info.payload.message);
+        }
+        else if (info.type.equals("send-message")) {
+            mcAdapter.newMessage(info.payload.message);
+        }
     }
 }

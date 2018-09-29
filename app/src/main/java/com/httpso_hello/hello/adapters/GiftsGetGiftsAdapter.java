@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.GiftItem;
+import com.httpso_hello.hello.Structures.GiftItemNew;
 import com.httpso_hello.hello.helper.Constant;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Picasso;

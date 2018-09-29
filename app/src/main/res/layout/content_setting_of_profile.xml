@@ -27,70 +27,6 @@
                 android:padding="20dp"
                 android:textSize="18sp"
                 android:textColor="@color/main_blue_color_hello"
-                android:text="Всегда Онлайн" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/view" />
-
-            <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_gravity="center_vertical"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="20dp"
-                    android:tint="@color/main_dark_grey_color_hello"
-                    app:srcCompat="@mipmap/ic_action_star"/>
-
-                <Switch
-                    android:id="@+id/switchOnline"
-                    android:paddingTop="20dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="20dp"
-                    android:paddingBottom="20dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Включить" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/view" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:textColor="@color/main_dark_grey_color_hello"
-                android:text="Вы всегда будете Онлайн.\nПривлеките больше внимания!" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/new_view" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_marginTop="5dp"
-            android:background="@color/main_white_color_hello"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:textSize="18sp"
-                android:textColor="@color/main_blue_color_hello"
                 android:text="Push-уведомления *" />
 
             <View
@@ -345,6 +281,7 @@
 
             </LinearLayout>
 
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -371,6 +308,52 @@
                     android:paddingRight="20dp"
                     android:paddingBottom="20dp"
                     android:textColor="@color/main_black_color_hello"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/new_view" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="5dp"
+            android:background="@color/main_white_color_hello"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:textSize="18sp"
+                android:textColor="@color/main_blue_color_hello"
+                android:text="Удалить профиль" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/view" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:paddingTop="20dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingBottom="20dp"
+                    android:gravity="center_horizontal"
+                    android:textColor="@color/main_black_color_hello"
+                    android:tint="@color/main_dark_grey_color_hello"
+                    android:text="После удаления, информация о Вашем профиле будет недоступна!\n\nВы сможете восстановить свой аккаунт в любой момент!"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

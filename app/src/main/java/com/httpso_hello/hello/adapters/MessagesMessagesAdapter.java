@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Attachment;
@@ -245,7 +246,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                     if(thisMessage.photos[0].previewAttachmentUri!=null){
                         downloadPath = thisMessage.photos[0].previewAttachmentUri.toString();
                     }else{
-                        downloadPath = Constant.upload + thisMessage.photos[0].image.small;
+                        downloadPath = Constant.upload + thisMessage.photos[0].photo.image.small;
                     }
                     Picasso.with(getContext())
                             .load(downloadPath)
@@ -268,7 +269,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                         public void onClick(View v) {
                             ArrayList<String> photoOrig = new ArrayList<String>();
                             for (int j = 0; j < thisMessage.photos.length; j++) {
-                                photoOrig.add(j, Constant.upload + thisMessage.photos[j].image.big);
+                                photoOrig.add(j, Constant.upload + thisMessage.photos[j].photo.image.original);
                             }
                             Intent intent = new Intent(getContext(), FullscreenPhotoActivity.class);
                             intent.putStringArrayListExtra("photoOrig", photoOrig);
@@ -362,7 +363,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                     holder.chat_message_imgae1.setMinimumHeight(width);
                     holder.progressPhoto1.setVisibility(View.VISIBLE);
                     Picasso.with(getContext())
-                            .load(Constant.upload + thisMessage.photos[0].image.small)
+                            .load(Constant.upload + thisMessage.photos[0].photo.image.micro)
                             .resize(width, width)
                             .centerCrop()
                             .into(holder.chat_message_imgae1, new Callback() {
@@ -382,7 +383,7 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                         public void onClick(View v) {
                             ArrayList<String> photoOrig = new ArrayList<String>();
                             for (int j = 0; j < thisMessage.photos.length; j++) {
-                                photoOrig.add(j, Constant.upload + thisMessage.photos[j].image.big);
+                                photoOrig.add(j, Constant.upload + thisMessage.photos[j].photo.image.original);
                             }
                             Intent intent = new Intent(getContext(), FullscreenPhotoActivity.class);
                             intent.putStringArrayListExtra("photoOrig", photoOrig);
@@ -411,11 +412,6 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         return convertView;
     }
 
-    public void setNewPage(ArrayList<Message> messages) {
-        this.messages.addAll(0, messages);
-        ca.setAllMsgForMenu(this.messages);
-        notifyDataSetChanged();
-    }
     public int addMessage(Message message){
         this.messages.add(this.messages.size(), message);
         ca.setAllMsgForMenu(this.messages);
@@ -423,37 +419,30 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
         return this.messages.size();
     }
 
-    public void setMessage(Message message, int message_number){
-        int i = this.messages.size()-1;
-        while (i>=0){
-            if(this.messages.get(i).deviceMessageId == message.deviceMessageId)
-                break;
-            else
-                i--;
-        }
-        int j = 0;
-        for (Attachment attachment : this.messages.get(i).photos) {
-            if(message.photos[j].id == attachment.id) {
-                message.photos[j].previewAttachmentUri = attachment.previewAttachmentUri;
-            } else {
-                message.photos[j] = attachment;
+    public void setMessage(Message message){
+        if (this.messages.size() != 1) {
+            int i = this.messages.size() - 1;
+            while (i >= 0) {
+                if (this.messages.get(i).tempMessageId == message.tempMessageId) {
+                    break;
+                } else
+                    i--;
             }
-            j++;
+//        int j = 0;
+//        for (Attachment attachment : this.messages.get(i).photos) {
+//            if(message.photos[j].id == attachment.id) {
+//                message.photos[j].previewAttachmentUri = attachment.previewAttachmentUri;
+//            } else {
+//                message.photos[j] = attachment;
+//            }
+//            j++;
+//        }
+            this.messages.set(i, message);
+        } else {
+            this.messages.set(0, message);
         }
-        this.messages.set(i, message);
         ca.setAllMsgForMenu(this.messages);
         this.notifyDataSetChanged();
-    }
-
-    public int containMessage(Message message){
-        int i = 0;
-        for (Message msg: this.messages){
-            if(msg.id == message.id){
-                return i;
-            }
-            i++;
-        }
-        return -1;
     }
 
     public void setReadedMessages(){
@@ -467,17 +456,6 @@ public class MessagesMessagesAdapter extends ArrayAdapter<Message> {
                 break;
             }
         }
-        this.notifyDataSetChanged();
-    }
-
-    public void addMessages(Message[] messages){
-        for (Message message: messages) {
-            int index = this.containMessage(message);
-            if(index == -1){
-                this.messages.add(message);
-            }
-        }
-        ca.setAllMsgForMenu(this.messages);
         this.notifyDataSetChanged();
     }
 

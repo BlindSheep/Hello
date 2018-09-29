@@ -10,10 +10,10 @@ public class Message {
     public int id;
     public String content;
     public int user_id;
-    public int contact_id;
+    public int contactId;
     public String createdAt;
     public boolean isNew;
-    public long deviceMessageId;
+    public long tempMessageId;
     public boolean incoming;
 
     //attachments

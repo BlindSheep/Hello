@@ -72,12 +72,12 @@ public class ServisesActivity extends SocketActivity {
     protected void onResume() {
         progressBarServises.setVisibility(View.VISIBLE);
         Profile.getInstance(getApplicationContext())
-                .getBalance(new Profile.GetBalanceCallback() {
+                .getPosistion(new Profile.GetPosistionCallback() {
                     @Override
                     public void onSuccess(BalanceReq balanceReq) {
-                        getSupportActionBar().setSubtitle("На счету " + Integer.toString(balanceReq.balance) + " баллов");
-                        priceUpAnket.setText("Цена: " + Integer.toString(balanceReq.paid_raising) + " баллов");
-                        if (!balanceReq.good_position) {
+                        getSupportActionBar().setSubtitle("На счету " + stgs.getSettingInt("balance") + " баллов");
+                        priceUpAnket.setText("Цена: " + Integer.toString(balanceReq.paidRaising) + " баллов");
+                        if (!balanceReq.goodPosition) {
                             position.setTextColor(getResources().getColor(R.color.main_red_color_hello));
                             recomendationUpAnket.setText("Станьте заметнее и увеличьте количество просмотров, подняв Вашу анкету на первое место!");
                         } else {

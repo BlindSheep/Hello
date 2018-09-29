@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.GiftItem;
+import com.httpso_hello.hello.Structures.GiftItemNew;
 import com.httpso_hello.hello.Structures.Vote;
 import com.httpso_hello.hello.adapters.GiftsUserAdapter;
 import com.httpso_hello.hello.adapters.LikesAdapter;
@@ -69,7 +70,7 @@ public class GiftsUserActivity extends AppCompatActivity {
                         LV.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                if (extras.getBoolean("isUserProfile") || (defolt.get(position).gift.isPrivate == 0)) {
+                                if (extras.getBoolean("isUserProfile") || (!defolt.get(position).isPrivate)) {
                                     Intent intent = new Intent(GiftsUserActivity.this, ProfileActivity.class);
                                     intent.putExtra("profile_id", defolt.get(position).user.id);
                                     startActivity(intent);

@@ -136,7 +136,6 @@ public class MainActivity extends Activity{
     }
 
     private void login () {
-        startService(new Intent(getApplicationContext(), AlwaysOnline.class));
         Profile profile = new Profile(getApplicationContext());
         String version = getResources().getString(R.string.version).toString();
         profile.getSmallUserInfo(

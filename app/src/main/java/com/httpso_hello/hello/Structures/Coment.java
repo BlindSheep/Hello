@@ -8,9 +8,9 @@ public class Coment {
 
     public int id;
     public String content;
-    public int user_id;
+    public int userId;
     public User user;
-    public String date_pub;
+    public String createdAt;
     public User parent_user;
 
     public Coment(){

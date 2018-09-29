@@ -182,7 +182,7 @@ public class BoardActivity extends SocketActivity {
                 public void onClick(View v) {
                     swipeRefreshLayout.setRefreshing(true);
                     Content.getInstance(getApplicationContext())
-                            .deleteContent(boardItem.id, "board", 0, new Content.DeleteContentCallback() {
+                            .deleteContent(boardItem.id, new Content.DeleteContentCallback() {
                                 @Override
                                 public void onSuccess() {
                                     page = 0;
@@ -214,12 +214,12 @@ public class BoardActivity extends SocketActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(BoardActivity.this, ChatActivity.class);
-                    intent.putExtra("contact_id", boardItem.userId);
-                    intent.putExtra("nickname", boardItem.User.nickname);
-                    if (boardItem.User.avatar == null) {
+                    intent.putExtra("nickname", boardItem.user.nickname);
+                    intent.putExtra("recipientId", boardItem.user.id);
+                    if (boardItem.user.avatar == null) {
                         intent.putExtra("avatar", Constant.default_avatar);
                     } else {
-                        intent.putExtra("avatar", boardItem.User.avatar.micro);
+                        intent.putExtra("avatar", boardItem.user.avatar.micro);
                     }
                     startActivity(intent);
                     popUpWindowOther.dismiss();

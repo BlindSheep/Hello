@@ -41,13 +41,11 @@ public class Content extends Help {
     //Удаление контента
     public void deleteContent(
             final int id,
-            final String content_type,
-            final int group_id,
             final Content.DeleteContentCallback deleteContentCallback
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.content_delete_item_uri,
+                Constant.group_delete_post_uri + Integer.toString(id),
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("content", response);
@@ -55,6 +53,7 @@ public class Content extends Help {
                             Friends friends = gson.fromJson(response, Friends.class);
                             if(friends.error == null){
                                 deleteContentCallback.onSuccess();
+                                setNewToken(friends.token);
                                 return;
                             }
                             deleteContentCallback.onError(friends.error.code, friends.error.message);
@@ -74,11 +73,8 @@ public class Content extends Help {
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("id", Integer.toString(id));
-                params.put("content_type", content_type);
-                if(group_id!=0) params.put("group_id", Integer.toString(group_id));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("postId", Integer.toString(id));
                 return params;
             };
         };
@@ -92,13 +88,14 @@ public class Content extends Help {
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.content_get_item_board_uri,
+                Constant.board_get_item_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("content", response);
                         if (response != null) {
                             Board board = gson.fromJson(response, Board.class);
                             if(board.error == null){
+                                setNewToken(board.token);
                                 getContentItemCallback.onSuccess(board.items[0]);
                                 return;
                             }
@@ -119,8 +116,8 @@ public class Content extends Help {
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = getParamsMap();
-                params.put("item_id", Integer.toString(id));
+                Map<String, String> params = getParamsMap(_context);
+                params.put("id", Integer.toString(id));
                 return params;
             };
         };

@@ -73,7 +73,9 @@ public class Auth extends Help {
 
 
     public void authorize(String login, String password, final AuthFinishingCallback authFinishing){
-        api.login(login, password,
+        //Установка токена
+        String token = FirebaseInstanceId.getInstance().getToken();
+        api.login(login, password, token,
                 new Api.LoginCallback() {
                     @Override
                     public void onSuccess(Resp result){
@@ -93,9 +95,7 @@ public class Auth extends Help {
                             if(result.avatar !=null) {
                                 stgs.setSetting("avatar.micro", Constant.upload + result.avatar.micro);
                             }
-                            //Установка токена
-                            String token = FirebaseInstanceId.getInstance().getToken();
-                            api.setPushUpToken(token);
+                            stgs.setSetting("deviceId", result.deviseId);
 
                             authFinishing.onSuccess(result.user_info);
                             return;
@@ -121,6 +121,7 @@ public class Auth extends Help {
                 stgs.setSetting("nickname", null);
                 stgs.setSetting("birthDate", null);
                 stgs.setSetting("avatar.micro", null);
+                stgs.setSetting("deviceId", null);
                 logoutFinishingCallback.onSuccess();
                 return;
             }

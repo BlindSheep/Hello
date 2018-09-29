@@ -7,7 +7,7 @@ package com.httpso_hello.hello.Structures;
 public class Groups {
 
     public int id;
-    public int owner_id;
+    public int ownerId;
     public String title;
     public String description;
     public Image logo;
@@ -17,7 +17,7 @@ public class Groups {
 
     public cmsGroupsMembers cms_groups_members;
 
-    public boolean isFollowing;
+    public boolean isSubscribed;
 
     Groups() {
 

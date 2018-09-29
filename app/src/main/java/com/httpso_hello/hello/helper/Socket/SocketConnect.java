@@ -1,7 +1,11 @@
 package com.httpso_hello.hello.helper.Socket;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -11,8 +15,14 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.Process;
 import android.os.RemoteException;
-import android.widget.Switch;
+import android.support.v4.app.NotificationCompat;
+import android.app.NotificationChannel;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.httpso_hello.hello.R;
+import com.httpso_hello.hello.Structures.SocketObject;
+import com.httpso_hello.hello.activity.BoardActivity;
 import com.httpso_hello.hello.helper.Settings;
 
 import org.json.JSONObject;
@@ -32,8 +42,15 @@ public class SocketConnect extends Service {
     HandlerThread thread;
 
     public SocketConnect() {
-        SocketThreed socketThreed = new SocketThreed();
-        socketThreed.execute();
+        if (socket == null) {
+            SocketThreed socketThreed = new SocketThreed();
+            socketThreed.execute();
+        }
+    }
+
+    @Override
+    public IBinder onBind(Intent arg0) {
+        return messanger.getBinder();
     }
 
     @Override
@@ -50,16 +67,12 @@ public class SocketConnect extends Service {
     }
 
     @Override
-    public IBinder onBind(Intent arg0) {
-        return messanger.getBinder();
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        try {
-        } catch (Exception e) {
-
-        }
         super.onDestroy();
     }
 
@@ -80,15 +93,17 @@ public class SocketConnect extends Service {
                     @Override
                     public void call(Object... args) {
                         //Получаем счётчики
-                        JSONObject obj = new JSONObject();
-                        JSONObject payload = new JSONObject();
-                        try{
-                            obj.put("type", "get-counters");
-                            payload.put("token", settings.getSettingStr("token"));
-                            obj.put("payload", payload);
+                        if (settings.getSettingStr("token") != null) {
+                            JSONObject obj = new JSONObject();
+                            JSONObject payload = new JSONObject();
+                            try {
+                                obj.put("type", "get-counters");
+                                payload.put("token", settings.getSettingStr("token"));
+                                obj.put("payload", payload);
+                            } catch (Exception e) {
+                            }
+                            socket.emit("action", obj);
                         }
-                        catch (Exception e){}
-                        socket.emit("action", obj);
                         System.out.println("!!!!!!!!!!!!!Коннект сокета");
                     }
 
@@ -98,13 +113,16 @@ public class SocketConnect extends Service {
                         Message outMsg = Message.obtain(inHandler, 1);
                         outMsg.obj = args[0];
                         outMsg.replyTo = messanger;
+                        GsonBuilder GB = new GsonBuilder();
+                        Gson gson = GB.create();
+                        SocketObject msg = gson.fromJson(args[0].toString(), SocketObject.class);
                         try {
-                            if( toActivityMessenger != null )
+                            if (toActivityMessenger != null)
                                 toActivityMessenger.send(outMsg);
-                        }
-                        catch (RemoteException e) {
+                        } catch (RemoteException e) {
                             e.printStackTrace();
                         }
+
                     }
 
                 }).on(Socket.EVENT_DISCONNECT, new Emitter.Listener() {
@@ -166,7 +184,8 @@ public class SocketConnect extends Service {
                     try{
                         obj.put("type", "get-messages");
                         payload.put("token", settings.getSettingStr("token"));
-                        payload.put("dialogId", msg.arg1);
+                        if (msg.arg1 != 0) payload.put("dialogId", msg.arg1);
+                        else payload.put("profileId", msg.arg2);
                         payload.put("page", Integer.toString(0));
                         payload.put("perPage", Integer.toString(1000));
                         obj.put("payload", payload);
@@ -180,7 +199,20 @@ public class SocketConnect extends Service {
                         payload.put("token", settings.getSettingStr("token"));
                         payload.put("dialogId", msg.arg1);
                         payload.put("recipientId", msg.arg2);
-                        payload.put("content", msg.obj);
+                        com.httpso_hello.hello.Structures.Message object = (com.httpso_hello.hello.Structures.Message) msg.obj;
+                        payload.put("content", object.content);
+                        payload.put("tempMessageId", object.tempMessageId);
+                        obj.put("payload", payload);
+                    }
+                    catch (Exception e){}
+                    socket.emit("action", obj);
+                    break;
+                case 5: // Сообщение прочитанно
+                    try{
+                        obj.put("type", "read-message");
+                        payload.put("token", settings.getSettingStr("token"));
+                        payload.put("messageId", msg.arg1);
+                        payload.put("contactId", msg.arg2);
                         obj.put("payload", payload);
                     }
                     catch (Exception e){}

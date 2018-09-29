@@ -146,7 +146,7 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
         if (userFirst.isOnline){
             holder.isOnline.setVisibility(View.VISIBLE);
         } else holder.isOnline.setVisibility(View.INVISIBLE);
-        holder.search_profile_city.setText(convertDateToAge(userFirst.birthDate) + ", " + userFirst.city_cache);
+        if (userFirst.birthDate != null) holder.search_profile_city.setText(convertDateToAge(userFirst.birthDate) + ", " + userFirst.city_cache);
         holder.search_profile_nickname.setText(userFirst.nickname);
         holder.click.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -198,7 +198,7 @@ public class ProfilesListAdapter extends ArrayAdapter<User> {
         if (userSecond.isOnline){
             holder.isOnline_second.setVisibility(View.VISIBLE);
         } else holder.isOnline_second.setVisibility(View.INVISIBLE);
-        holder.search_profile_city_second.setText(convertDateToAge(userSecond.birthDate) + ", " + userSecond.city_cache);
+        if (userSecond.birthDate != null) holder.search_profile_city_second.setText(convertDateToAge(userSecond.birthDate) + ", " + userSecond.city_cache);
         holder.search_profile_nickname_second.setText(userSecond.nickname);
         holder.click_second.setOnClickListener(new View.OnClickListener() {
             @Override

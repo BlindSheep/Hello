@@ -39,20 +39,20 @@ public class Like extends Help {
 
     public void getInfo(
             final Activity activity,
-            final int target_id,
-            final String subject,
-            final String target_controller,
+            final int targetId,
+            final String targetController,
             final GetInfoCallback getInfoCallback
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.rating_get_info_uri,
+                Constant.rating_get_votes_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("like", response);
                         if (response != null) {
                             Votes votes = gson.fromJson(response, Votes.class);
                             if(votes.error==null){
+                                setNewToken(votes.token);
                                 getInfoCallback.onSuccess(votes.votes, activity);
                                 return;
                             }
@@ -73,11 +73,9 @@ public class Like extends Help {
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("target_id", Integer.toString(target_id));
-                params.put("subject", subject);
-                params.put("target_controller", target_controller);
+                Map<String, String> params = getParamsMap(_context);
+                params.put("targetId", Integer.toString(targetId));
+                params.put("targetController", targetController);
                 return params;
             };
         };
@@ -85,21 +83,24 @@ public class Like extends Help {
     }
 
     public void sendLike(
-            final int target_id,
+            final int targetId,
             final String direction,
-            final String content_type,
-            final String target_controller,
+            final String targetController,
             final SendLikeCallback sendLikeCallback
     ){
+        String uri = "";
+        if (direction.equals("up")) uri = Constant.rating_up_uri;
+        else if (direction.equals("down")) uri = Constant.rating_down_uri;
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.rating_send_like_uri,
+                uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("like", response);
                         if (response != null) {
                             Votes votes = gson.fromJson(response, Votes.class);
                             if(votes.error==null){
+                                setNewToken(votes.token);
                                 sendLikeCallback.onSuccess();
                                 return;
                             }
@@ -120,12 +121,9 @@ public class Like extends Help {
         {
             @Override
             protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("token", stgs.getSettingStr("auth_token"));
-                params.put("direction", direction);
-                params.put("target_id", Integer.toString(target_id));
-                params.put("content_type", content_type);
-                params.put("target_controller", target_controller);
+                Map<String, String> params = getParamsMap(_context);
+                params.put("targetId", Integer.toString(targetId));
+                params.put("targetController", targetController);
                 return params;
             };
         };

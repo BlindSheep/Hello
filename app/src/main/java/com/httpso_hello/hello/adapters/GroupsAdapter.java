@@ -13,7 +13,7 @@ import com.httpso_hello.hello.R;
 import com.httpso_hello.hello.Structures.Groups;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
-import com.httpso_hello.hello.helper.ConverterDate;
+import com.httpso_hello.hello.helper.Converter;
 import com.httpso_hello.hello.helper.Settings;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -94,7 +94,7 @@ public class GroupsAdapter extends ArrayAdapter<Groups> {
         }
 
         holder.groupName.setText(group.title);
-        holder.groupsFollowers.setText(ConverterDate.getFollowers(group.membersCount));
+        holder.groupsFollowers.setText(Converter.getFollowers(group.membersCount));
 
         return rowView;
 

@@ -81,23 +81,23 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
         Guest lastGuest = null;
         if (position != 0) lastGuest = this.guests.get(position - 1);
 
-        if ((position == 0) && thisGuest.status == 0) {
+        if ((position == 0) && !thisGuest.readed) {
             holder.new_guests.setVisibility(View.VISIBLE);
             holder.old_guests.setVisibility(View.GONE);
         }
-        else if ((position == 0) && thisGuest.status == 1){
+        else if ((position == 0) && thisGuest.readed){
             holder.new_guests.setVisibility(View.GONE);
             holder.old_guests.setVisibility(View.VISIBLE);
         } else {
             holder.new_guests.setVisibility(View.GONE);
-            if ((lastGuest != null) && (thisGuest.status != lastGuest.status)) holder.old_guests.setVisibility(View.VISIBLE);
+            if ((lastGuest != null) && (thisGuest.readed != lastGuest.readed)) holder.old_guests.setVisibility(View.VISIBLE);
             else holder.old_guests.setVisibility(View.GONE);
         }
 
-        if(thisGuest.user_info.avatar != null) {
+        if(thisGuest.user.avatar != null) {
             Picasso
                     .with(getContext())
-                    .load(Uri.parse(Constant.upload + thisGuest.user_info.avatar.micro))
+                    .load(Uri.parse(Constant.upload + thisGuest.user.avatar.micro))
                     .transform(new CircularTransformation(0))
                     .into(holder.guest_profile_avatar, new Callback() {
                         @Override
@@ -122,27 +122,27 @@ public class GuestsListAdapter extends ArrayAdapter<Guest> {
                     .into(holder.guest_profile_avatar);
         }
 
-        if(thisGuest.user_info.birthDate != null) {
-            holder.guest_profile_city.setText(convertDateToAge(thisGuest.user_info.birthDate) + ", " + thisGuest.user_info.city_cache);
+        if(thisGuest.user.birthDate != null) {
+            holder.guest_profile_city.setText(convertDateToAge(thisGuest.user.birthDate) + ", " + thisGuest.user.city_cache);
         } else {
-            holder.guest_profile_city.setText(thisGuest.user_info.city_cache);
+            holder.guest_profile_city.setText(thisGuest.user.city_cache);
         }
-        holder.guest_profile_nickname.setText(thisGuest.user_info.nickname);
+        holder.guest_profile_nickname.setText(thisGuest.user.nickname);
 
-        holder.guest_time_enter.setText(ConverterDate.convertDateForGuest(thisGuest.date));
+        holder.guest_time_enter.setText(ConverterDate.convertDateForGuest(thisGuest.createdAt));
 
-        holder.count.setText(Integer.toString(thisGuest.inc_count));
+        holder.count.setText(Integer.toString(thisGuest.count));
 
         holder.countLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext().getApplicationContext(), thisGuest.user_info.nickname + " просмотрел(а) ваш профиль " + Integer.toString(thisGuest.inc_count) + " раз(а)", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext().getApplicationContext(), thisGuest.user.nickname + " просмотрел(а) ваш профиль " + Integer.toString(thisGuest.count) + " раз(а)", Toast.LENGTH_LONG).show();
             }
         });
 
         GuestsActivity ba = ((GuestsActivity) getContext());
         if(position == (this.guests.size() - 1)) {
-            ba.getNewGuests();
+//            ba.getNewGuests();
         }
 
         return rowView;

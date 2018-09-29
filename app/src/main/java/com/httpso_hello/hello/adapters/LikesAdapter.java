@@ -69,10 +69,10 @@ public class LikesAdapter extends ArrayAdapter<Vote> {
 
 
         //// TODO: 30.07.2017 Добавить проверку наличия изображений: проверка заполнености размеров
-        if(vote.user_avatar != null) {
+        if(vote.user.avatar != null) {
             Picasso
                     .with(getContext())
-                    .load(Uri.parse(Constant.upload + vote.user_avatar.micro))
+                    .load(Uri.parse(Constant.upload + vote.user.avatar.micro))
                     .transform(new CircularTransformation(0))
                     .into(holder.userAvatarLike, new Callback() {
                         @Override
@@ -97,10 +97,10 @@ public class LikesAdapter extends ArrayAdapter<Vote> {
                     .into(holder.userAvatarLike);
         }
 
-        holder.userNicknameLike.setText(vote.user_nickname);
-        if ((vote.birth_date != null) && (vote.city_cache != null)) holder.userInfoLike.setText(ConverterDate.convertDateToAge(vote.birth_date) + ", " + vote.city_cache);
-        else if (vote.birth_date != null) holder.userInfoLike.setText(ConverterDate.convertDateToAge(vote.birth_date));
-        else if (vote.city_cache != null) holder.userInfoLike.setText(vote.city_cache);
+        holder.userNicknameLike.setText(vote.user.nickname);
+        if ((vote.user.birthDate != null) && (vote.user.city_cache != null)) holder.userInfoLike.setText(ConverterDate.convertDateToAge(vote.user.birthDate) + ", " + vote.user.city_cache);
+        else if (vote.user.birthDate != null) holder.userInfoLike.setText(ConverterDate.convertDateToAge(vote.user.birthDate));
+        else if (vote.user.city_cache != null) holder.userInfoLike.setText(vote.user.city_cache);
         else holder.userInfoLike.setText("");
 
         return rowView;

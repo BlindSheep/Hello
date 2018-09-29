@@ -81,19 +81,20 @@ public class Simpation extends Help {
     }
 
     public void sendFlirtik(
-            final int profile_id,
+            final int toUserId,
             final Simpation.SendSimpationCallback sendSimpationCallback,
             final Help.ErrorCallback errorCallback
     ){
         StringRequest SReq = new StringRequest(
                 Request.Method.POST,
-                Constant.flirtiki_get_info_uri,
+                Constant.flirtiki_add_uri,
                 new Response.Listener<String>() {
                     public void onResponse(String response){
                         Log.d("send_flirt", response);
                         if (response != null) {
                             FlirtikSend flirtikSend = gson.fromJson(response, FlirtikSend.class);
                             if(flirtikSend.error==null){
+                                setNewToken(flirtikSend.token);
                                 sendSimpationCallback.onSuccess(flirtikSend.response);
                                 return;
                             }
@@ -115,7 +116,7 @@ public class Simpation extends Help {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = getParamsMap(_context);
-                params.put("profile_id", Integer.toString(profile_id));
+                params.put("toUserId", Integer.toString(toUserId));
                 return params;
             };
         };

@@ -20,6 +20,7 @@ public class Resp extends SuperStructure {
     public boolean isLocked;
     public boolean isActivated;
     public boolean isDeleted;
+    public String deviseId;
 
     public Resp(){
 

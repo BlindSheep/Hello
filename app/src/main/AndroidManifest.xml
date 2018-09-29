@@ -47,12 +47,6 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".helper.AlwaysOnline">
-            <intent-filter>
-                <action android:name="com.hello.alwaysOnline" />
-            </intent-filter>
-        </service>
-
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -62,9 +56,8 @@
         </activity>
         <activity
             android:name=".activity.MessagesActivity"
-            android:label="Hello"
-            android:theme="@style/AppTheme.NoActionBar">
-        </activity>
+            android:label="Сообщения"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".activity.SettingsActivity"
             android:label="@string/edit_profile_title"
@@ -171,9 +164,6 @@
             android:name=".activity.IgnorListActivity"
             android:label="Чёрный список" />
         <activity
-            android:name=".activity.FilterActivity"
-            android:label="Фильтр" />
-        <activity
             android:name=".activity.GroupsActivity"
             android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
@@ -203,7 +193,12 @@
         <service
             android:name=".helper.Socket.SocketConnect"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
+        <receiver android:name=".helper.Socket.BootBroadcast">
+            <intent-filter >
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

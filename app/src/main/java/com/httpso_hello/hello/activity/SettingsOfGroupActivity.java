@@ -90,31 +90,14 @@ public class SettingsOfGroupActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         ((TextView) popupViewForDelete.findViewById(R.id.delete)).setText("Удаляем...");
                         final Groups groups = new Groups(getApplicationContext());
-                        groups.requestDeleteGroup(groupId, new Groups.RequestDeleteGroupCallback() {
+                        groups.deleteGroup(groupId, new Groups.DeleteGroupCallback() {
                             @Override
-                            public void onSuccess(String CSRFToken) {
-                                groups.deleteGroup(groupId, CSRFToken, new Groups.DeleteGroupCallback() {
-                                    @Override
-                                    public void onSuccess() {
-                                        popUpWindowForDelete.dismiss();
-                                        Toast.makeText(getApplicationContext().getApplicationContext(), "Группа удалена", Toast.LENGTH_LONG).show();
-                                        Intent intent = new Intent(SettingsOfGroupActivity.this, GroupsActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                }, new Help.ErrorCallback() {
-                                    @Override
-                                    public void onError(int error_code, String error_msg) {
-                                        ((TextView) popupViewForDelete.findViewById(R.id.delete)).setText("Удалить");
-                                        Toast.makeText(getApplicationContext().getApplicationContext(), "Что-то пошло не так", Toast.LENGTH_LONG).show();
-                                    }
-
-                                    @Override
-                                    public void onInternetError() {
-                                        ((TextView) popupViewForDelete.findViewById(R.id.delete)).setText("Удалить");
-                                        Toast.makeText(getApplicationContext().getApplicationContext(), "Ошибка интернет соединения", Toast.LENGTH_LONG).show();
-                                    }
-                                });
+                            public void onSuccess() {
+                                popUpWindowForDelete.dismiss();
+                                Toast.makeText(getApplicationContext().getApplicationContext(), "Группа удалена", Toast.LENGTH_LONG).show();
+                                Intent intent = new Intent(SettingsOfGroupActivity.this, GroupsActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
                         }, new Help.ErrorCallback() {
                             @Override
@@ -130,6 +113,7 @@ public class SettingsOfGroupActivity extends AppCompatActivity {
                             }
                         });
                     }
+
                 });
             }
         });

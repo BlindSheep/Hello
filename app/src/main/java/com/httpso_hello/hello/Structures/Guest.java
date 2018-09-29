@@ -7,15 +7,13 @@ package com.httpso_hello.hello.Structures;
 public class Guest {
 
     public int id;
-    public int user_id;
+    public int userId;
     public int guest_id;
-    public String date;
-    public int status;
-    public int readed;
-//    public int inc_count;
+    public String createdAt;
+    public boolean readed;
     public String header;
-    public User user_info;
-    public int inc_count;
+    public User user;
+    public int count;
 
     public Guest(){
 

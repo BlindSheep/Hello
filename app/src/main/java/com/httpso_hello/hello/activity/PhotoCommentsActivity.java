@@ -23,6 +23,7 @@ import com.httpso_hello.hello.Structures.Coment;
 import com.httpso_hello.hello.activity.Super.SocketActivity;
 import com.httpso_hello.hello.adapters.CommentsAdapter;
 import com.httpso_hello.hello.helper.Comments;
+import com.httpso_hello.hello.helper.Converter;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -131,7 +132,6 @@ public class PhotoCommentsActivity extends SocketActivity {
                 if (!messageContentString.isEmpty()) {
                     new Comments(getApplicationContext())
                             .sendComments("photos",
-                                    "photo",
                                     extras.getInt("id"),
                                     idAnswer,
                                     messageContentString,
@@ -169,7 +169,6 @@ public class PhotoCommentsActivity extends SocketActivity {
         new Comments(getApplicationContext())
                 .getComments(
                         "photos",
-                        "photo",
                         extras.getInt("id"),
                         this,
                         new Comments.GetCommentsCallback() {
@@ -185,7 +184,7 @@ public class PhotoCommentsActivity extends SocketActivity {
                                     @Override
                                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                                         if ((position != 0) && (position != (defolt.size() + 1))) {
-                                            setAnswer(defolt.get(position - 1).user_id, defolt.get(position-1).user.nickname);
+                                            setAnswer(defolt.get(position - 1).userId, defolt.get(position-1).user.nickname);
                                         }
                                     }
                                 });
@@ -220,7 +219,6 @@ public class PhotoCommentsActivity extends SocketActivity {
             new Comments(getApplicationContext())
                     .getComments(
                             "photos",
-                            "photo",
                             extras.getInt("id"),
                             this,
                             new Comments.GetCommentsCallback() {
@@ -278,7 +276,7 @@ public class PhotoCommentsActivity extends SocketActivity {
                     .resize(width, 0)
                     .into(photo);
         }
-        like.setText(ConverterDate.likeStr(likes));
+        like.setText(Converter.likeStr(likes));
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -301,7 +299,6 @@ public class PhotoCommentsActivity extends SocketActivity {
                     if (!launching) {
                         new Comments(getApplicationContext())
                                 .getCountsComments("photos",
-                                        "photo",
                                         extras.getInt("id"),
                                         new Comments.GetCountsCommentsCallback() {
                                             @Override
@@ -344,7 +341,7 @@ public class PhotoCommentsActivity extends SocketActivity {
             @Override
             public void onClick(View v) {
                 new Comments(getApplicationContext())
-                        .deleteComments(id, target_controller, content_type, contentId, new Comments.DeleteCommentCallback() {
+                        .deleteComments(id, new Comments.DeleteCommentCallback() {
                             @Override
                             public void onSuccess() {
                                 popUpWindowDelete.dismiss();

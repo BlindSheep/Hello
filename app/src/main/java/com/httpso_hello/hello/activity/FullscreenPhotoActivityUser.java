@@ -173,7 +173,7 @@ public class FullscreenPhotoActivityUser extends AppCompatActivity {
 //Заполняем лайки
         if (likeble) {
             if (photoLike.get(posit) != 0) {
-                like_string.setText(ConverterDate.likeStr(photoLike.get(posit)));
+                like_string.setText(Converter.likeStr(photoLike.get(posit)));
             } else like_string.setText("Нет оценок");
         }
 
@@ -212,7 +212,7 @@ public class FullscreenPhotoActivityUser extends AppCompatActivity {
                         photoIsVoted.set(posit, "true");
                         photoLike.set(posit, (photoLike.get(posit) + 1));
                         like_string.setText(Integer.toString(photoLike.get(posit)));
-                        Like.getInstance(getApplicationContext()).sendLike(photoId.get(posit),"up", "photo", "photos", new Like.SendLikeCallback() {
+                        Like.getInstance(getApplicationContext()).sendLike(photoId.get(posit),"up", "photos", new Like.SendLikeCallback() {
                             @Override
                             public void onSuccess() {
                             }
@@ -243,7 +243,7 @@ public class FullscreenPhotoActivityUser extends AppCompatActivity {
                         photoIsVoted.set(posit, "false");
                         photoLike.set(posit, (photoLike.get(posit) - 1));
                         like_string.setText(Integer.toString(photoLike.get(posit)));
-                        Like.getInstance(getApplicationContext()).sendLike(photoId.get(posit), "down", "photo", "photos", new Like.SendLikeCallback() {
+                        Like.getInstance(getApplicationContext()).sendLike(photoId.get(posit), "down", "photos", new Like.SendLikeCallback() {
                             @Override
                             public void onSuccess() {
                             }
@@ -322,7 +322,7 @@ public class FullscreenPhotoActivityUser extends AppCompatActivity {
                                 photoIsVoted.set(position, "true");
                                 photoLike.set(position, (photoLike.get(position) + 1));
                                 like_string.setText(Integer.toString(photoLike.get(position)));
-                                Like.getInstance(getApplicationContext()).sendLike(photoId.get(position), "up", "photo", "photos", new Like.SendLikeCallback() {
+                                Like.getInstance(getApplicationContext()).sendLike(photoId.get(position), "up", "photos", new Like.SendLikeCallback() {
                                     @Override
                                     public void onSuccess() {
                                     }
@@ -353,7 +353,7 @@ public class FullscreenPhotoActivityUser extends AppCompatActivity {
                                 photoIsVoted.set(position, "false");
                                 photoLike.set(position, (photoLike.get(position) - 1));
                                 like_string.setText(Integer.toString(photoLike.get(position)));
-                                Like.getInstance(getApplicationContext()).sendLike(photoId.get(position), "down", "photo", "photos", new Like.SendLikeCallback() {
+                                Like.getInstance(getApplicationContext()).sendLike(photoId.get(position), "down", "photos", new Like.SendLikeCallback() {
                                     @Override
                                     public void onSuccess() {
                                     }

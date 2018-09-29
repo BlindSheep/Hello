@@ -33,6 +33,7 @@ import com.httpso_hello.hello.activity.OneGroupActivity;
 import com.httpso_hello.hello.activity.ProfileActivity;
 import com.httpso_hello.hello.helper.CircularTransformation;
 import com.httpso_hello.hello.helper.Constant;
+import com.httpso_hello.hello.helper.Converter;
 import com.httpso_hello.hello.helper.ConverterDate;
 import com.httpso_hello.hello.helper.Groups;
 import com.httpso_hello.hello.helper.Like;
@@ -230,17 +231,17 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
 
                 //Начало Попап
                 boolean isAdmin;
-                if (boardItem.groupInfo != null) {
-                    if (boardItem.groupInfo.owner_id == stgs.getSettingInt("user_id")) isAdmin = true;
+                if (boardItem.group != null) {
+                    if (boardItem.group.ownerId == stgs.getSettingInt("userId")) isAdmin = true;
                     else isAdmin = false;
                 } else isAdmin = false;
-                if ((boardItem.userId == stgs.getSettingInt("user_id")) || (3008 == stgs.getSettingInt("user_id")) || (isAdmin)) {
+                if ((boardItem.userId == stgs.getSettingInt("userId")) || (3008 == stgs.getSettingInt("userId")) || (isAdmin)) {
                     holder.writeButton.setVisibility(View.VISIBLE);
                     holder.writeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (settings == 0) ((BoardActivity) getContext()).showPopup(true, boardItem);
-                            else if (settings == 1) ((OneGroupActivity) getContext()).showPopup(true, boardItem, boardItem.groupInfo.id);
+                            else if (settings == 1) ((OneGroupActivity) getContext()).showPopup(true, boardItem, boardItem.group.id);
                         }
                     });
                 } else {
@@ -250,7 +251,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                             @Override
                             public void onClick(View v) {
                                 if (settings == 0) ((BoardActivity) getContext()).showPopup(false, boardItem);
-                                else if (settings == 1) ((OneGroupActivity) getContext()).showPopup(false, boardItem, boardItem.groupInfo.id);
+                                else if (settings == 1) ((OneGroupActivity) getContext()).showPopup(false, boardItem, boardItem.group.id);
                             }
                         });
                     } else {
@@ -283,7 +284,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                             holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_blue_color_hello), PorterDuff.Mode.MULTIPLY);
                             holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_blue_color_hello));
                             holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
-                            Like.getInstance(getContext()).sendLike(boardItem.id, "up", "board", "content", new Like.SendLikeCallback() {
+                            Like.getInstance(getContext()).sendLike(boardItem.id, "up", "content", new Like.SendLikeCallback() {
                                 @Override
                                 public void onSuccess() {
                                 }
@@ -314,7 +315,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                             holder.likeButtonBoard.getBackground().setColorFilter(getContext().getResources().getColor(R.color.main_grey_color_hello), PorterDuff.Mode.MULTIPLY);
                             holder.likeTextBoard.setTextColor(getContext().getResources().getColor(R.color.main_dark_grey_color_hello));
                             holder.likeTextBoard.setText(Integer.toString(boardItem.rating));
-                            Like.getInstance(getContext()).sendLike(boardItem.id, "down", "board", "content", new Like.SendLikeCallback() {
+                            Like.getInstance(getContext()).sendLike(boardItem.id, "down", "content", new Like.SendLikeCallback() {
                                 @Override
                                 public void onSuccess() {
                                 }
@@ -362,7 +363,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
             }
 
             //Начало дата объявления
-            if (boardItem.dateApproved != null) holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.dateApproved));
+            if (boardItem.createdAt != null) holder.datePubBoard.setText(ConverterDate.convertDateForGuest(boardItem.createdAt));
             else holder.datePubBoard.setText(" ");
             //Конец дата объявления
 
@@ -380,20 +381,20 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 holder.ifGroupLayout.setVisibility(View.GONE);
                 //Если не анонимно и не в группе
                 if (!anonim) {
-                    holder.userNameBoard.setText(boardItem.User.nickname);
+                    holder.userNameBoard.setText(boardItem.user.nickname);
                     holder.userNameBoard.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProfileActivity.class);
                             intent.putExtra("profile_id", boardItem.userId);
-                            intent.putExtra("profile_nickname", " " + boardItem.User.nickname);
+                            intent.putExtra("profile_nickname", " " + boardItem.user.nickname);
                             context.startActivity(intent);
                         }
                     });
-                    if (boardItem.User.avatar != null) {
+                    if (boardItem.user.avatar != null) {
                         Picasso
                                 .with(getContext())
-                                .load(Uri.parse(Constant.upload + boardItem.User.avatar.micro))
+                                .load(Uri.parse(Constant.upload + boardItem.user.avatar.micro))
                                 .transform(new CircularTransformation(0))
                                 .into(holder.userAvatarBoard, new Callback() {
                                     @Override
@@ -422,7 +423,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProfileActivity.class);
                             intent.putExtra("profile_id", boardItem.userId);
-                            intent.putExtra("profile_nickname", " " + boardItem.User.nickname);
+                            intent.putExtra("profile_nickname", " " + boardItem.user.nickname);
                             context.startActivity(intent);
                         }
                     });
@@ -447,12 +448,12 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 }
             } else {
                 holder.ifGroupLayout.setVisibility(View.VISIBLE);
-                if (boardItem.groupInfo.title != null) holder.userNameBoard.setText(boardItem.groupInfo.title);
+                if (boardItem.group.title != null) holder.userNameBoard.setText(boardItem.group.title);
                 else holder.userNameBoard.setText("Без названия");
-                if (boardItem.groupInfo.logo != null) {
+                if (boardItem.group.logo != null) {
                     Picasso
                             .with(getContext())
-                            .load(Uri.parse(Constant.upload + boardItem.groupInfo.logo.micro))
+                            .load(Uri.parse(Constant.upload + boardItem.group.logo.micro))
                             .transform(new CircularTransformation(0))
                             .into(holder.userAvatarBoard, new Callback() {
                                 @Override
@@ -496,20 +497,20 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 });
                 //Если не анонимно и в группе
                 if (!anonim) {
-                    holder.nameOfUser.setText(boardItem.User.nickname);
+                    holder.nameOfUser.setText(boardItem.user.nickname);
                     holder.nameOfUser.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProfileActivity.class);
                             intent.putExtra("profile_id", boardItem.userId);
-                            intent.putExtra("profile_nickname", " " + boardItem.User.nickname);
+                            intent.putExtra("profile_nickname", " " + boardItem.user.nickname);
                             context.startActivity(intent);
                         }
                     });
-                    if (boardItem.User.avatar != null) {
+                    if (boardItem.user.avatar != null) {
                         Picasso
                                 .with(getContext())
-                                .load(Uri.parse(Constant.upload + boardItem.User.avatar.micro))
+                                .load(Uri.parse(Constant.upload + boardItem.user.avatar.micro))
                                 .transform(new CircularTransformation(0))
                                 .into(holder.userAvatar, new Callback() {
                                     @Override
@@ -538,14 +539,13 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                         public void onClick(View v) {
                             Intent intent = new Intent(getContext(), ProfileActivity.class);
                             intent.putExtra("profile_id", boardItem.userId);
-                            intent.putExtra("profile_nickname", " " + boardItem.User.nickname);
+                            intent.putExtra("profile_nickname", " " + boardItem.user.nickname);
                             context.startActivity(intent);
                         }
                     });
                 } else {
                     //есди анонимно и в группе
-                    if (boardItem.userId == boardItem.groupInfo.owner_id) holder.nameOfUser.setText("Администратор");
-                    else holder.nameOfUser.setText("Анонимно");
+                    holder.nameOfUser.setText("Анонимно");
                     holder.nameOfUser.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -579,7 +579,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     holder.firstPhoto.setMinimumHeight(height);
                     Picasso
                             .with(getContext())
-                            .load(Uri.parse(ConverterDate.convertUrlAvatar(boardItem.photos[0].original)))
+                            .load(Uri.parse(Converter.convertUrlAvatar(boardItem.photos[0].original)))
                             .resize(widthScreen, height)
                             .into(holder.firstPhoto);
                 } else {
@@ -588,7 +588,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                     holder.firstPhoto.setMinimumHeight(width);
                     Picasso
                             .with(getContext())
-                            .load(Uri.parse(ConverterDate.convertUrlAvatar(boardItem.photos[0].normal)))
+                            .load(Uri.parse(Converter.convertUrlAvatar(boardItem.photos[0].normal)))
                             .resize(width, width)
                             .centerCrop()
                             .into(holder.firstPhoto);
@@ -603,7 +603,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                             if (boardItem.photos[i].small != null) {
                                 Photo photo = new Photo();
                                 photo.image = new Image();
-                                photo.image.micro = ConverterDate.convertUriSubHost(boardItem.photos[i].small);
+                                photo.image.micro = Converter.convertUriSubHost(boardItem.photos[i].small);
                                 defolt.add(i - 1, photo);
                             }
                         }
@@ -625,7 +625,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                         public void onItemClick(AdapterView<?> parent, View view, int positions, long id) {
                             ArrayList<String> photoOrig = new ArrayList<String>();
                             for (int j = 0; j < boardItem.photos.length; j++) {
-                                photoOrig.add(j, ConverterDate.convertUrlAvatar(boardItem.photos[j].original));
+                                photoOrig.add(j, Converter.convertUrlAvatar(boardItem.photos[j].original));
                             }
                             Intent intent = new Intent(getContext(), FullscreenPhotoActivity.class);
                             intent.putStringArrayListExtra("photoOrig", photoOrig);
@@ -646,7 +646,7 @@ public class BoardAdapter extends ArrayAdapter<BoardItem> {
                 public void onClick(View v) {
                     ArrayList<String> photoOrig = new ArrayList<String>();
                     for (int j = 0; j < boardItem.photos.length; j++) {
-                        photoOrig.add(j, ConverterDate.convertUrlAvatar(boardItem.photos[j].original));
+                        photoOrig.add(j, Converter.convertUrlAvatar(boardItem.photos[j].original));
                     }
                     Intent intent = new Intent(getContext(), FullscreenPhotoActivity.class);
                     intent.putStringArrayListExtra("photoOrig", photoOrig);

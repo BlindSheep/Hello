@@ -7,12 +7,9 @@ package com.httpso_hello.hello.Structures;
 public class Vote {
 
     public int id;
-    public int user_id;
-    public int target_id;
-    public String user_nickname;
-    public Image user_avatar;
-    public String birth_date;
-    public String city_cache;
+    public int userId;
+    public int targetId;
+    public User user;
 
     public Vote(){
 
